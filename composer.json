@@ -4,19 +4,21 @@
     "keywords": [
         "pagebuilder"
     ],
+    "homepage": "https://github.com/HansSchouten/PHPagebuilder",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Hans Schouten",
             "email": "hans@falcosolutions.nl"
         }
     ],
-    "license": "MIT",
     "require": {
         "php": ">=7.0"
     },
     "autoload": {
         "psr-4": {
-            "PHPageBuilder\\": "src/PHPageBuilder/"
+            "PHPageBuilder\\": "src/"
         }
     }
 }
