@@ -10,20 +10,30 @@ class PHPageBuilder
     protected $config;
 
     /**
+     * @var Theme $theme
+     */
+    protected $theme;
+
+    /**
      * PHPageBuilder constructor.
      *
-     * @param array $config   configuration in the format defined in config/pagebuilder.example.php
+     * @param array $config         configuration in the format defined in config/pagebuilder.example.php
+     * @param string $themeSlug
      */
-    public function __construct($config)
+    public function __construct(array $config, string $themeSlug)
     {
         $this->config = $config;
+        $this->theme = new Theme($config['themes'], $themeSlug);
     }
 
     /**
-     * Return all blocks of the current theme.
+     * Return the Theme instance of this PageBuilder instance.
+     *
+     * @return Theme
      */
-    public function getThemeBlocks()
+    public function getTheme()
     {
+        return $this->theme;
     }
 
     /**

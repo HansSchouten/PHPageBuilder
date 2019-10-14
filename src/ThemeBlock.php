@@ -1,0 +1,30 @@
+<?php
+
+namespace PHPageBuilder;
+
+use DirectoryIterator;
+
+class ThemeBlock
+{
+    /**
+     * @var Theme $theme
+     */
+    protected $theme;
+
+    /**
+     * @var string $blockSlug
+     */
+    protected $blockSlug;
+
+    /**
+     * Theme constructor.
+     *
+     * @param Theme $theme         the theme this block belongs to
+     * @param string $blockSlug
+     */
+    public function __construct(Theme $theme, string $blockSlug)
+    {
+        $this->theme = $theme;
+        $this->blockSlug = $blockSlug;
+    }
+}

@@ -24,6 +24,5 @@ return [
      */
     'themes' => [
         'folder' => '',
-        'active_theme' => ''
     ],
 ];
