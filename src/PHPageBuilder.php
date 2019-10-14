@@ -23,7 +23,7 @@ class PHPageBuilder
     public function __construct(array $config, string $themeSlug)
     {
         $this->config = $config;
-        $this->theme = new Theme($config['themes'], $themeSlug);
+        $this->theme = new Theme($this, $config['themes'], $themeSlug);
     }
 
     /**
@@ -37,12 +37,31 @@ class PHPageBuilder
     }
 
     /**
-     * Render the pagebuilder.
+     * Render the PageBuilder.
      */
-    public function render()
+    public function renderPageBuilder()
     {
-        // render the pagebuilder view while passing this class instance as $pagebuilder
-        $pagebuilder = $this;
+        // pass this PageBuilder instance
+        $builder = $this;
         require_once 'resources/views/pagebuilder.php';
+    }
+
+    /**
+     * Render the page of the given route.
+     *
+     * @param string $pageRoute
+     */
+    public function renderPage(string $pageRoute)
+    {
+    }
+
+    /**
+     * Render the block identified with the given block slug.
+     *
+     * @param string $blockSlug
+     */
+    public function renderBlock(string $blockSlug)
+    {
+        $this->theme->renderBlock($blockSlug);
     }
 }

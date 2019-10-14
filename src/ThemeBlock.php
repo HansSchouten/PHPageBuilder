@@ -27,4 +27,14 @@ class ThemeBlock
         $this->theme = $theme;
         $this->blockSlug = $blockSlug;
     }
+
+    /**
+     * Return the absolute folder path of this theme block.
+     *
+     * @return string
+     */
+    public function getFolder()
+    {
+        return $this->theme->getFolder() . '/blocks/' . $this->blockSlug;
+    }
 }

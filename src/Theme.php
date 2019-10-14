@@ -7,6 +7,11 @@ use DirectoryIterator;
 class Theme
 {
     /**
+     * @var PHPageBuilder $pageBuilder
+     */
+    protected $pageBuilder;
+
+    /**
      * @var array $config
      */
     protected $config;
@@ -24,11 +29,13 @@ class Theme
     /**
      * Theme constructor.
      *
+     * @param PHPageBuilder $pageBuilder
      * @param array $config         themes configuration
      * @param string $themeSlug
      */
-    public function __construct(array $config, string $themeSlug)
+    public function __construct(PHPageBuilder $pageBuilder, array $config, string $themeSlug)
     {
+        $this->pageBuilder = $pageBuilder;
         $this->config = $config;
         $this->themeSlug = $themeSlug;
 
@@ -67,5 +74,45 @@ class Theme
     public function getThemeBlocks()
     {
         return $this->blocks;
+    }
+
+    /**
+     * Render the block identified with the given block slug.
+     *
+     * @param string $blockSlug
+     */
+    public function renderBlock(string $blockSlug)
+    {
+        if (! isset($this->blocks[$blockSlug])) {
+            return;
+        }
+
+        // pass the PageBuilder instance, this theme and the given block
+        /* @var ThemeBlock $block */
+        $builder = $this->pageBuilder;
+        $theme = $this;
+        $block = $this->blocks[$blockSlug];
+
+        ob_start();
+        require_once $block->getFolder() . '/view.php';
+        $body = ob_get_contents();
+        ob_end_clean();
+
+        // render the body inside the defined layout
+        $this->renderBodyInLayout($body);
+    }
+
+    /**
+     * Render the given page body inside the master layout.
+     *
+     * @param $body
+     */
+    protected function renderBodyInLayout($body)
+    {
+        // pass the PageBuilder instance, this theme and the given block
+        $builder = $this->pageBuilder;
+        $theme = $this;
+
+        require_once $this->getFolder() . '/layout.php';
     }
 }
