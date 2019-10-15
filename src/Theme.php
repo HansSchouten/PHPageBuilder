@@ -112,6 +112,7 @@ class Theme
         // pass the PageBuilder instance, this theme and the given block
         $builder = $this->pageBuilder;
         $theme = $this;
+        $page = new Page;
 
         require_once $this->getFolder() . '/layout.php';
     }
