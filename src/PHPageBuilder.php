@@ -2,6 +2,8 @@
 
 namespace PHPageBuilder;
 
+use PHPageBuilder\Router\RouterContract;
+
 class PHPageBuilder
 {
     /**
@@ -47,12 +49,14 @@ class PHPageBuilder
     }
 
     /**
-     * Render the page of the given route.
+     * Render the page of the given URI.
      *
-     * @param string $pageRoute
+     * @param RouterContract $router
+     * @param string $URI
      */
-    public function renderPage(string $pageRoute)
+    public function renderPage(RouterContract $router, string $URI)
     {
+        $page = $router->resolve($URI);
     }
 
     /**
