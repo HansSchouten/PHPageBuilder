@@ -2,6 +2,8 @@
 
 namespace PHPageBuilder\Router;
 
+use PHPageBuilder\Contracts\RouterContract;
+
 class DatabasePageRouter implements RouterContract
 {
     /**
@@ -12,5 +14,6 @@ class DatabasePageRouter implements RouterContract
      */
     public function resolve($route)
     {
+        return null;
     }
 }

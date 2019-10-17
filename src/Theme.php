@@ -3,8 +3,9 @@
 namespace PHPageBuilder;
 
 use DirectoryIterator;
+use PHPageBuilder\Contracts\ThemeContract;
 
-class Theme
+class Theme implements ThemeContract
 {
     /**
      * @var PHPageBuilder $pageBuilder

@@ -2,7 +2,9 @@
 
 namespace PHPageBuilder;
 
-use PHPageBuilder\Router\RouterContract;
+use PHPageBuilder\Contracts\PageBuilderContract;
+use PHPageBuilder\Contracts\RouterContract;
+use PHPageBuilder\Contracts\ThemeContract;
 
 class PHPageBuilder
 {
@@ -12,26 +14,69 @@ class PHPageBuilder
     protected $config;
 
     /**
-     * @var Theme $theme
+     * @var ThemeContract $theme
      */
     protected $theme;
+
+    /**
+     * @var RouterContract $router
+     */
+    protected $router;
+
+    /**
+     * @var PageBuilderContract $pageBuilder
+     */
+    protected $pageBuilder;
 
     /**
      * PHPageBuilder constructor.
      *
      * @param array $config         configuration in the format defined in config/pagebuilder.example.php
-     * @param string $themeSlug
+     * @param string|null $themeSlug
      */
-    public function __construct(array $config, string $themeSlug)
+    public function __construct(array $config, string $themeSlug = null)
     {
         $this->config = $config;
-        $this->theme = new Theme($this, $config['themes'], $themeSlug);
+
+        if (isset($themeSlug)) {
+            $this->theme = new Theme($this, $config['themes'], $themeSlug);
+        }
+    }
+
+    /**
+     * Set a custom theme.
+     *
+     * @param ThemeContract $theme
+     */
+    public function setTheme(ThemeContract $theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * Set a custom router.
+     *
+     * @param RouterContract $router
+     */
+    public function setRouter(RouterContract $router)
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * Set a custom PageBuilder.
+     *
+     * @param PageBuilderContract $pageBuilder
+     */
+    public function setPageBuilder(PageBuilderContract $pageBuilder)
+    {
+        $this->pageBuilder = $pageBuilder;
     }
 
     /**
      * Return the Theme instance of this PageBuilder instance.
      *
-     * @return Theme
+     * @return ThemeContract
      */
     public function getTheme()
     {
@@ -43,20 +88,17 @@ class PHPageBuilder
      */
     public function renderPageBuilder()
     {
-        // pass this PageBuilder instance
-        $builder = $this;
-        require_once 'resources/views/pagebuilder.php';
+        $this->pageBuilder->renderPageBuilder();
     }
 
     /**
      * Render the page of the given URI.
      *
-     * @param RouterContract $router
      * @param string $URI
      */
-    public function renderPage(RouterContract $router, string $URI)
+    public function renderPage(string $URI)
     {
-        $page = $router->resolve($URI);
+        $page = $this->router->resolve($URI);
     }
 
     /**

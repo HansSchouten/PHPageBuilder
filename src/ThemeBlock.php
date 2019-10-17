@@ -2,8 +2,6 @@
 
 namespace PHPageBuilder;
 
-use DirectoryIterator;
-
 class ThemeBlock
 {
     /**
