@@ -19,6 +19,9 @@
     "autoload": {
         "psr-4": {
             "PHPageBuilder\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }

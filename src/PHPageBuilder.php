@@ -5,6 +5,7 @@ namespace PHPageBuilder;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\GrapesJS\PageBuilder;
 
 class PHPageBuilder
 {
@@ -41,6 +42,7 @@ class PHPageBuilder
         if (isset($themeSlug)) {
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
+        $this->pageBuilder = new PageBuilder;
     }
 
     /**
