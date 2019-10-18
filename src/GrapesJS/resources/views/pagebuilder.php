@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= asset('app.css') ?>">
+    <link rel="stylesheet" href="<?= asset('pagebuilder/app.css') ?>">
 
     <script src="https://unpkg.com/grapesjs"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>

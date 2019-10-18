@@ -3,9 +3,11 @@
 namespace PHPageBuilder;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\WebsiteManager\WebsiteManager;
 use PHPageBuilder\GrapesJS\PageBuilder;
 use PHPageBuilder\Router\DatabasePageRouter;
 
@@ -32,6 +34,11 @@ class PHPageBuilder
     protected $pageBuilder;
 
     /**
+     * @var WebsiteManagerContract $websiteManager
+     */
+    protected $websiteManager;
+
+    /**
      * PHPageBuilder constructor.
      *
      * @param array $config         configuration in the format defined in config/pagebuilder.example.php
@@ -44,6 +51,7 @@ class PHPageBuilder
         if (isset($themeSlug)) {
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
+        $this->websiteManager = new WebsiteManager;
         $this->pageBuilder = new PageBuilder;
         $this->router = new DatabasePageRouter;
 
@@ -75,6 +83,16 @@ class PHPageBuilder
     }
 
     /**
+     * Set a custom website manager.
+     *
+     * @param WebsiteManagerContract $websiteManager
+     */
+    public function setWebsiteManager(WebsiteManagerContract $websiteManager)
+    {
+        $this->websiteManager = $websiteManager;
+    }
+
+    /**
      * Set a custom PageBuilder.
      *
      * @param PageBuilderContract $pageBuilder
@@ -84,6 +102,7 @@ class PHPageBuilder
         $this->pageBuilder = $pageBuilder;
     }
 
+
     /**
      * Return the Theme instance of this PageBuilder instance.
      *
@@ -92,6 +111,31 @@ class PHPageBuilder
     public function getTheme()
     {
         return $this->theme;
+    }
+
+
+    /**
+     * Render the website manager overview (with pages and menus).
+     */
+    public function renderOverview()
+    {
+        $this->websiteManager->renderOverview();
+    }
+
+    /**
+     * Render page settings.
+     */
+    public function renderPageSettings()
+    {
+        $this->websiteManager->renderPageSettings();
+    }
+
+    /**
+     * Render menu settings.
+     */
+    public function renderMenuSettings()
+    {
+        $this->websiteManager->renderMenuSettings();
     }
 
     /**

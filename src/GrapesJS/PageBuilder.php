@@ -7,13 +7,6 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 class PageBuilder implements PageBuilderContract
 {
     /**
-     * PageBuilderController constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Render the PageBuilder.
      */
     public function renderPageBuilder()
