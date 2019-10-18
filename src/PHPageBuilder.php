@@ -6,6 +6,7 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\GrapesJS\PageBuilder;
+use PHPageBuilder\Router\DatabasePageRouter;
 
 class PHPageBuilder
 {
@@ -43,6 +44,7 @@ class PHPageBuilder
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
         $this->pageBuilder = new PageBuilder;
+        $this->router = new DatabasePageRouter;
     }
 
     /**
