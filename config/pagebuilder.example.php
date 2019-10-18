@@ -11,6 +11,29 @@ return [
      */
     'project' => [
         'public_folder' => '',
+        'use_database' => true,
+        'database' => [
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'database'  => '',
+            'username'  => '',
+            'password'  => '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ]
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | PageBuilder settings
+     |--------------------------------------------------------------------------
+     |
+     | By default a PageBuilder is provided based on GrapesJS.
+     |
+     */
+    'pagebuilder' => [
+        'pagebuilder_class' => 'GrapesJS/PageBuilder',
     ],
 
     /*
@@ -36,7 +59,6 @@ return [
      |
      */
     'routing' => [
-        //
-        'router_class' => '',
+        'router_class' => 'Router/DatabasePageRouter',
     ],
 ];

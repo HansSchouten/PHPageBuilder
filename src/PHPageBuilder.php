@@ -2,6 +2,7 @@
 
 namespace PHPageBuilder;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
@@ -45,6 +46,12 @@ class PHPageBuilder
         }
         $this->pageBuilder = new PageBuilder;
         $this->router = new DatabasePageRouter;
+
+        if ($config['project']['use_database']) {
+            $capsule = new Capsule;
+            $capsule->addConnection($config['project']['database']);
+            $capsule->setAsGlobal();
+        }
     }
 
     /**
