@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= phpagebuilder_asset('pagebuilder/app.css') ?>">
+    <link rel="stylesheet" href="<?= phpb_asset('pagebuilder/app.css') ?>">
 
     <script src="https://unpkg.com/grapesjs"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
@@ -25,6 +25,9 @@
             autoload: false,
             autosave: false
         },
+        styleManager: {
+            textNoElement: '<?= phpb_trans('pagebuilder.text-no-element') ?>'
+        },
         fromElement: true,
         canvas: {
             styles: [
@@ -41,22 +44,8 @@
     // styling for elements of the page that is build
     editor.addComponents(`
 <style>
-
-/* Layout */
-
-.container, .container-fluid,
-.row, .col, * [class^="col-"] {
-	min-height: 1.5rem !important;
-}
-.gjs-dashed img {
-	min-width: 25px;
-	min-height: 25px;
-	background-color: rgba(0,0,0,0.5);
-}
-
 </style>
 		`);
-
 
     var domc = editor.DomComponents;
 

@@ -43,26 +43,46 @@ class PHPageBuilder
      *
      * @param array $config         configuration in the format defined in config/pagebuilder.example.php
      * @param string|null $themeSlug
+     * @param string $language
      */
-    public function __construct(array $config, string $themeSlug = null)
+    public function __construct(array $config, string $themeSlug = null, string $language = 'en')
     {
         $this->config = $config;
 
         if (isset($themeSlug)) {
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
+
+        // init the default page builder and page router
         $this->pageBuilder = new PageBuilder;
         $this->router = new DatabasePageRouter;
 
+        // init the default website manager, if enabled
+        if ($config['website_manager']['use_website_manager']) {
+            $this->websiteManager = new WebsiteManager;
+        }
+
+        // load translations of the configured language
+        $this->loadTranslations($language);
+
+        // create database connection and boot eloquent models on classes extending Eloquent\Model
         if ($config['storage']['use_database']) {
             $capsule = new Capsule;
             $capsule->addConnection($config['storage']['database']);
             $capsule->setAsGlobal();
             $capsule->bootEloquent();
         }
-        if ($config['website_manager']['use_website_manager']) {
-            $this->websiteManager = new WebsiteManager;
-        }
+    }
+
+    /**
+     * Load translations of the given language into a global variable.
+     *
+     * @param $language
+     */
+    public function loadTranslations($language)
+    {
+        global $phpb_translations;
+        $phpb_translations = require __DIR__ . '/../lang/' . $language . '.php';
     }
 
 

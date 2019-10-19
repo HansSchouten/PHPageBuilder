@@ -14,15 +14,50 @@ if (! function_exists('e')) {
     }
 }
 
-if (! function_exists('phpagebuilder_asset')) {
+if (! function_exists('phpb_asset')) {
     /**
      * Return the public path of a PHPageBuilder asset
      *
      * @param  string  $path
      * @return string
      */
-    function phpagebuilder_asset($path)
+    function phpb_asset($path)
     {
         return '/packages/phpagebuilder/dist/' . $path;
+    }
+}
+
+if (! function_exists('phpb_trans')) {
+    /**
+     * Return the translation of the given dot-separated multidimensional array key.
+     *
+     * @param  string  $key
+     * @return string
+     */
+    function phpb_trans($key)
+    {
+        global $phpb_translations;
+
+        // if no dot notation is used, return 1st dimension value or empty string
+        if (strpos($key, '.') === false) {
+            return $phpb_translations[$key] ?? '';
+        }
+
+        // if dot notation is used, traverse translations string
+        $segments = explode('.', $key);
+        $subArray = $phpb_translations;
+        foreach ($segments as $segment) {
+            if (isset($subArray[$segment])) {
+                $subArray = &$subArray[$segment];
+            } else {
+                return '';
+            }
+        }
+
+        // if the remaining sub array is a string, return this value
+        if (is_string($subArray)) {
+            return $subArray;
+        }
+        return '';
     }
 }

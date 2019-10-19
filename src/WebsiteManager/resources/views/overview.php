@@ -38,7 +38,7 @@
                                 <?= e($page->route) ?>
                             </td>
                             <td class="actions">
-                                <a href="<?= e($page->route) ?>" target="_blank" class="btn btn-info btn-sm">
+                                <a href="<?= e($page->route) ?>" target="_blank" class="btn btn-light btn-sm">
                                     View <i class="fas fa-eye"></i>
                                 </a>
                                 <a href="?route=pagebuilder&action=edit&page=<?= e($page->id) ?>" class="btn btn-primary btn-sm">
