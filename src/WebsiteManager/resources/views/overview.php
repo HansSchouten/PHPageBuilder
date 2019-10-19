@@ -38,11 +38,14 @@
                                 <?= e($page->route) ?>
                             </td>
                             <td class="actions">
-                                <a href="<?= e($page->route) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                                <a href="<?= e($page->route) ?>" target="_blank" class="btn btn-info btn-sm">
                                     View <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="?route=page_settings&action=edit&page=<?= e($page->id) ?>" class="btn btn-primary btn-sm">
+                                <a href="?route=pagebuilder&action=edit&page=<?= e($page->id) ?>" class="btn btn-primary btn-sm">
                                     Edit <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="?route=page_settings&action=edit&page=<?= e($page->id) ?>" class="btn btn-secondary btn-sm">
+                                    Settings <i class="fas fa-cog"></i>
                                 </a>
                                 <a href="?route=page_settings&action=destroy&page=<?= e($page->id) ?>" class="btn btn-danger btn-sm">
                                     Remove <i class="fas fa-trash"></i>

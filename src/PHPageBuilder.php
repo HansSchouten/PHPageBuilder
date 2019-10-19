@@ -159,6 +159,7 @@ class PHPageBuilder
         if ($this->config['website_manager']['use_website_manager']) {
             $this->websiteManager->handleRequest($route, $action);
         }
+        $this->pageBuilder->handleRequest($route, $action);
     }
 
     /**
