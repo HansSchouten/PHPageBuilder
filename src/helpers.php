@@ -38,7 +38,7 @@ if (! function_exists('phpb_trans')) {
     {
         global $phpb_translations;
 
-        // if no dot notation is used, return 1st dimension value or empty string
+        // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
             return $phpb_translations[$key] ?? '';
         }

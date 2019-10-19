@@ -26,7 +26,10 @@
             autosave: false
         },
         styleManager: {
-            textNoElement: '<?= phpb_trans('pagebuilder.text-no-element') ?>'
+            textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
+        },
+        traitManager: {
+            textNoElement: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>'
         },
         fromElement: true,
         canvas: {

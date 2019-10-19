@@ -2,6 +2,7 @@
 
 return [
     'pagebuilder' => [
-        'text-no-element' => 'Select an element een element to modify the style.'
+        'style-no-element-selected' => 'Select an element to modify the style.',
+        'trait-no-element-selected' => 'Select an element to modify any attributes.'
     ]
 ];
