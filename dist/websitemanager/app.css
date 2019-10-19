@@ -1,23 +1,17 @@
-.container {
-  max-width: 960px;
+.tab-content {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-top: none;
 }
 
-.lh-condensed {
-  line-height: 1.25;
+.tab-content .table {
+  margin-top: 30px;
 }
 
-.bd-placeholder-img {
-  font-size: 1.125rem;
-  text-anchor: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-@media (min-width: 768px) {
-  .bd-placeholder-img-lg {
-    font-size: 3.5rem;
-  }
+.tab-content .table td.actions {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
 }
 

@@ -11,6 +11,17 @@ return [
      */
     'project' => [
         'public_folder' => '',
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Storage settings
+     |--------------------------------------------------------------------------
+     |
+     | Database and file storage settings.
+     |
+     */
+    'storage' => [
         'use_database' => true,
         'database' => [
             'driver'    => 'mysql',
@@ -22,6 +33,19 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
         ]
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | WebsiteManager settings
+     |--------------------------------------------------------------------------
+     |
+     | By default a basic WebsiteManager is provided for creating/editing pages.
+     |
+     */
+    'website_manager' => [
+        'use_website_manager' => true,
+        'website_manager_class' => 'WebsiteManager/WebsiteManager',
     ],
 
     /*

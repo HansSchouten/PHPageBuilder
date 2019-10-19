@@ -8,6 +8,19 @@ use PHPageBuilder\PageRepository;
 class WebsiteManager implements WebsiteManagerContract
 {
     /**
+     * Process the current GET or POST request and redirect or render the requested page.
+     *
+     * @param $route
+     * @param $action
+     */
+    public function handleRequest($route, $action)
+    {
+        if (is_null($route)) {
+            $this->renderOverview();
+        }
+    }
+
+    /**
      * Render the website manager overview page.
      */
     public function renderOverview()

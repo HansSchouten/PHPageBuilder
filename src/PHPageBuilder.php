@@ -51,36 +51,29 @@ class PHPageBuilder
         if (isset($themeSlug)) {
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
-        $this->websiteManager = new WebsiteManager;
         $this->pageBuilder = new PageBuilder;
         $this->router = new DatabasePageRouter;
 
-        if ($config['project']['use_database']) {
+        if ($config['storage']['use_database']) {
             $capsule = new Capsule;
-            $capsule->addConnection($config['project']['database']);
+            $capsule->addConnection($config['storage']['database']);
             $capsule->setAsGlobal();
             $capsule->bootEloquent();
         }
+        if ($config['website_manager']['use_website_manager']) {
+            $this->websiteManager = new WebsiteManager;
+        }
     }
 
-    /**
-     * Set a custom theme.
-     *
-     * @param ThemeContract $theme
-     */
-    public function setTheme(ThemeContract $theme)
-    {
-        $this->theme = $theme;
-    }
 
     /**
-     * Set a custom router.
+     * Set a custom PageBuilder.
      *
-     * @param RouterContract $router
+     * @param PageBuilderContract $pageBuilder
      */
-    public function setRouter(RouterContract $router)
+    public function setPageBuilder(PageBuilderContract $pageBuilder)
     {
-        $this->router = $router;
+        $this->pageBuilder = $pageBuilder;
     }
 
     /**
@@ -94,18 +87,58 @@ class PHPageBuilder
     }
 
     /**
-     * Set a custom PageBuilder.
+     * Set a custom router.
      *
-     * @param PageBuilderContract $pageBuilder
+     * @param RouterContract $router
      */
-    public function setPageBuilder(PageBuilderContract $pageBuilder)
+    public function setRouter(RouterContract $router)
     {
-        $this->pageBuilder = $pageBuilder;
+        $this->router = $router;
+    }
+
+    /**
+     * Set a custom theme.
+     *
+     * @param ThemeContract $theme
+     */
+    public function setTheme(ThemeContract $theme)
+    {
+        $this->theme = $theme;
     }
 
 
     /**
-     * Return the Theme instance of this PageBuilder instance.
+     * Return the PageBuilder instance of this PHPageBuilder.
+     *
+     * @return PageBuilderContract
+     */
+    public function getPageBuilder()
+    {
+        return $this->pageBuilder;
+    }
+
+    /**
+     * Return the WebsiteManager instance of this PHPageBuilder.
+     *
+     * @return WebsiteManagerContract
+     */
+    public function getWebsiteManager()
+    {
+        return $this->websiteManager;
+    }
+
+    /**
+     * Return the Router instance of this PHPageBuilder.
+     *
+     * @return RouterContract
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
+     * Return the Theme instance of this PHPageBuilder.
      *
      * @return ThemeContract
      */
@@ -116,27 +149,16 @@ class PHPageBuilder
 
 
     /**
-     * Render the website manager overview (with pages and menus).
+     * Process the current GET or POST request and redirect or render the requested page.
      */
-    public function renderOverview()
+    public function handleRequest()
     {
-        $this->websiteManager->renderOverview();
-    }
+        $route = isset($_GET['route']) ? $_GET['route'] : null;
+        $action = isset($_GET['action']) ? $_GET['action'] : null;
 
-    /**
-     * Render page settings.
-     */
-    public function renderPageSettings()
-    {
-        $this->websiteManager->renderPageSettings();
-    }
-
-    /**
-     * Render menu settings.
-     */
-    public function renderMenuSettings()
-    {
-        $this->websiteManager->renderMenuSettings();
+        if ($this->config['website_manager']['use_website_manager']) {
+            $this->websiteManager->handleRequest($route, $action);
+        }
     }
 
     /**
