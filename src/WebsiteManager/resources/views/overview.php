@@ -19,6 +19,34 @@
 
                     <h4 class="mb-3">Pages</h4>
 
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Route</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach ($pages as $page):
+                            ?>
+                            <tr>
+                                <td>
+                                    <?= e($page->name) ?>
+                                </td>
+                                <td>
+                                    <?= e($page->route) ?>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <?php
+                            endforeach;
+                            ?>
+                        </tbody>
+                    </table>
+
                 </div>
                 <div id="menus" class="tab-pane">
 

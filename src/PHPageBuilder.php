@@ -59,6 +59,7 @@ class PHPageBuilder
             $capsule = new Capsule;
             $capsule->addConnection($config['project']['database']);
             $capsule->setAsGlobal();
+            $capsule->bootEloquent();
         }
     }
 

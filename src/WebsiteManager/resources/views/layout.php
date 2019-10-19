@@ -7,7 +7,7 @@
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="<?= asset('websitemanager/app.css') ?>" rel="stylesheet">
+    <link href="<?= phpagebuilder_asset('websitemanager/app.css') ?>" rel="stylesheet">
 </head>
 <body class="bg-light">
 <?php

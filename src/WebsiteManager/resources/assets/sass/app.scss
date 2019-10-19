@@ -3,5 +3,12 @@
 }
 
 .tab-content {
-  padding: 15px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-top: none;
+
+  .table {
+    margin-top: 30px;
+  }
 }

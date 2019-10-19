@@ -3,6 +3,7 @@
 namespace PHPageBuilder\WebsiteManager;
 
 use PHPageBuilder\Contracts\WebsiteManagerContract;
+use PHPageBuilder\PageRepository;
 
 class WebsiteManager implements WebsiteManagerContract
 {
@@ -11,6 +12,9 @@ class WebsiteManager implements WebsiteManagerContract
      */
     public function renderOverview()
     {
+        $pageRepository = new PageRepository;
+        $pages = $pageRepository->getAll();
+
         $page = 'overview';
         require_once 'resources/views/layout.php';
     }
