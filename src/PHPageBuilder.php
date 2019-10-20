@@ -3,10 +3,12 @@
 namespace PHPageBuilder;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use PHPageBuilder\Contracts\LoginContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Login\Login;
 use PHPageBuilder\WebsiteManager\WebsiteManager;
 use PHPageBuilder\GrapesJS\PageBuilder;
 use PHPageBuilder\Router\DatabasePageRouter;
@@ -19,14 +21,14 @@ class PHPageBuilder
     protected $config;
 
     /**
-     * @var ThemeContract $theme
+     * @var LoginContract $login
      */
-    protected $theme;
+    protected $login;
 
     /**
-     * @var RouterContract $router
+     * @var WebsiteManagerContract $websiteManager
      */
-    protected $router;
+    protected $websiteManager;
 
     /**
      * @var PageBuilderContract $pageBuilder
@@ -34,9 +36,14 @@ class PHPageBuilder
     protected $pageBuilder;
 
     /**
-     * @var WebsiteManagerContract $websiteManager
+     * @var RouterContract $router
      */
-    protected $websiteManager;
+    protected $router;
+
+    /**
+     * @var ThemeContract $theme
+     */
+    protected $theme;
 
     /**
      * PHPageBuilder constructor.
@@ -47,20 +54,27 @@ class PHPageBuilder
      */
     public function __construct(array $config, string $themeSlug = null, string $language = 'en')
     {
+        session_start();
+
         $this->config = $config;
 
         if (isset($themeSlug)) {
             $this->theme = new Theme($this, $config['themes'], $themeSlug);
         }
 
-        // init the default page builder and page router
-        $this->pageBuilder = new PageBuilder;
-        $this->router = new DatabasePageRouter;
+        // init the default login, if enabled
+        if ($config['login']['use_login']) {
+            $this->login = new Login;
+        }
 
         // init the default website manager, if enabled
         if ($config['website_manager']['use_website_manager']) {
             $this->websiteManager = new WebsiteManager;
         }
+
+        // init the default page builder and page router
+        $this->pageBuilder = new PageBuilder;
+        $this->router = new DatabasePageRouter;
 
         // load translations of the configured language
         $this->loadTranslations($language);
@@ -87,13 +101,13 @@ class PHPageBuilder
 
 
     /**
-     * Set a custom PageBuilder.
+     * Set a custom login.
      *
-     * @param PageBuilderContract $pageBuilder
+     * @param LoginContract $login
      */
-    public function setPageBuilder(PageBuilderContract $pageBuilder)
+    public function setLogin(LoginContract $login)
     {
-        $this->pageBuilder = $pageBuilder;
+        $this->login = $login;
     }
 
     /**
@@ -104,6 +118,16 @@ class PHPageBuilder
     public function setWebsiteManager(WebsiteManagerContract $websiteManager)
     {
         $this->websiteManager = $websiteManager;
+    }
+
+    /**
+     * Set a custom PageBuilder.
+     *
+     * @param PageBuilderContract $pageBuilder
+     */
+    public function setPageBuilder(PageBuilderContract $pageBuilder)
+    {
+        $this->pageBuilder = $pageBuilder;
     }
 
     /**
@@ -128,13 +152,13 @@ class PHPageBuilder
 
 
     /**
-     * Return the PageBuilder instance of this PHPageBuilder.
+     * Return the Login instance of this PHPageBuilder.
      *
-     * @return PageBuilderContract
+     * @return LoginContract
      */
-    public function getPageBuilder()
+    public function getLogin()
     {
-        return $this->pageBuilder;
+        return $this->login;
     }
 
     /**
@@ -145,6 +169,16 @@ class PHPageBuilder
     public function getWebsiteManager()
     {
         return $this->websiteManager;
+    }
+
+    /**
+     * Return the PageBuilder instance of this PHPageBuilder.
+     *
+     * @return PageBuilderContract
+     */
+    public function getPageBuilder()
+    {
+        return $this->pageBuilder;
     }
 
     /**
@@ -176,11 +210,15 @@ class PHPageBuilder
         $route = isset($_GET['route']) ? $_GET['route'] : null;
         $action = isset($_GET['action']) ? $_GET['action'] : null;
 
+        if ($this->config['login']['use_login']) {
+            $this->login->handleRequest($route, $action);
+        }
         if ($this->config['website_manager']['use_website_manager']) {
             $this->websiteManager->handleRequest($route, $action);
         }
         $this->pageBuilder->handleRequest($route, $action);
     }
+
 
     /**
      * Render the PageBuilder.

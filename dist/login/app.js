@@ -60,24 +60,30 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 4:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(5);
+(function webpackMissingModule() { throw new Error("Cannot find module \"/home/falco/domains/falcosolutions.nl/phpagebuilder/packages/phpagebuilder/src/Login/resources/assets/js/app.js\""); }());
+(function webpackMissingModule() { throw new Error("Cannot find module \"/home/falco/domains/falcosolutions.nl/phpagebuilder/packages/phpagebuilder/src/Login/resources/assets/sass/app.scss\""); }());
+__webpack_require__(1);
+module.exports = __webpack_require__(2);
 
 
 /***/ }),
-
-/***/ 5:
+/* 1 */
 /***/ (function(module, exports) {
 
-console.log('Hello World!');
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
-
-/******/ });
+/******/ ]);

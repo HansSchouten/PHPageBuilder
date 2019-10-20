@@ -37,6 +37,22 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Login settings
+     |--------------------------------------------------------------------------
+     |
+     | By default a login class is provided which checks for the credentials
+     | configured in this setting block.
+     |
+     */
+    'login' => [
+        'use_login' => true,
+        'login_class' => 'Login/Login',
+        'username' => 'admin',
+        'password' => 'changethispassword'
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | WebsiteManager settings
      |--------------------------------------------------------------------------
      |

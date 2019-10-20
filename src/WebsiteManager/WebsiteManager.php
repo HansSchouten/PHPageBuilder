@@ -17,6 +17,7 @@ class WebsiteManager implements WebsiteManagerContract
     {
         if (is_null($route)) {
             $this->renderOverview();
+            exit();
         }
     }
 

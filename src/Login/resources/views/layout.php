@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= phpb_trans('website-manager.title') ?></title>
+    <title><?= phpb_trans('login.title') ?></title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.css" integrity="sha256-hIzRfkDG8yoX/o/xO8mmqvlHMAOHQsUetvMFu3Fa/vY=" crossorigin="anonymous" />
 
-    <link href="<?= phpb_asset('websitemanager/app.css') ?>" rel="stylesheet">
+    <link href="<?= phpb_asset('login/app.css') ?>" rel="stylesheet">
 </head>
 <body class="bg-light">
 
