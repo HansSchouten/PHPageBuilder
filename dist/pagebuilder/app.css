@@ -1,0 +1,201 @@
+html,
+body,
+#gjs {
+  height: 100% !important;
+  margin: 0;
+}
+
+.gjs-editor {
+  font-size: 0.9rem;
+}
+
+.gjs-pn-panel {
+  padding: 0;
+}
+
+.gjs-pn-panel .gjs-pn-buttons {
+  border-right: 2px solid #dfe0e1;
+}
+
+.gjs-pn-commands,
+.gjs-pn-options,
+.gjs-pn-devices-c {
+  display: none;
+}
+
+.gjs-devices-c {
+  padding: 0;
+}
+
+.gjs-one-bg {
+  background-color: #fff;
+  border-bottom: none;
+}
+
+.gjs-two-color {
+  color: #363535;
+}
+
+.gjs-four-color {
+  color: #fff;
+}
+
+.gjs-four-color-h:hover {
+  color: #fff;
+}
+
+.gjs-pn-commands {
+  width: 100%;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.gjs-pn-views .gjs-pn-btn {
+  width: 25%;
+  margin-right: 0;
+  padding: 16px 15px 16px 15px;
+  border-radius: 0;
+  background: #fff;
+  color: #575757;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.gjs-pn-views .gjs-pn-btn.gjs-pn-active {
+  padding: 15px;
+  background-color: #16b8ec;
+  border-bottom-left-radius: unset;
+  border-bottom-right-radius: unset;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  border-bottom: 3px solid #0087b3;
+}
+
+.gjs-pn-options {
+  right: 0;
+}
+
+.gjs-pn-views,
+.gjs-pn-views-container {
+  left: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  width: 300px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.gjs-pn-views-container {
+  border-right: 2px solid #dfe0e1;
+  padding-top: 64px;
+  background: #e1e8eb;
+}
+
+.gjs-pn-views-container > div > div {
+  background: #fff;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.gjs-cv-canvas,
+.gjs-pn-devices-c {
+  left: 300px;
+}
+
+.gjs-cv-canvas {
+  height: 100%;
+  top: 0;
+  width: calc(100% - 300px);
+}
+
+.gjs-trt-trait {
+  display: block;
+}
+
+.gjs-trt-trait .gjs-label,
+.gjs-trt-trait .gjs-field {
+  width: 100%;
+}
+
+.gjs-trt-trait select {
+  color: #fff;
+}
+
+.gjs-field-checkbox {
+  height: 17px !important;
+  width: 17px !important;
+}
+
+.gjs-block {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.gjs-block:hover {
+  color: #16b8ec !important;
+}
+
+.gjs-blocks-c {
+  background: #e1e8eb;
+}
+
+.gjs-block-categories {
+  background: #e1e8eb;
+}
+
+.gjs-block-label {
+  font-size: 0.8rem;
+}
+
+.gjs-block-category {
+  background: #fff;
+  margin-bottom: 10px;
+}
+
+.gjs-block-category.gjs-open {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.gjs-layer .gjs-layer-title {
+  background: #fff !important;
+}
+
+.gjs-layer.gjs-selected .gjs-layer-title {
+  background-color: #16b8ec !important;
+}
+
+.gjs-layer.gjs-hovered .gjs-layer-title {
+  background-color: #16b8ec70 !important;
+}
+
+.gjs-category-title,
+.gjs-sm-sector .gjs-sm-title,
+.gjs-clm-tags .gjs-sm-title,
+.gjs-block-category .gjs-title,
+.gjs-layer-title {
+  background: #fff !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+  letter-spacing: 0;
+  font-size: 16px;
+}
+
+.gjs-layer-name {
+  padding-top: 2px;
+  padding-bottom: 13px;
+}
+
+.gjs-layer-vis {
+  padding-top: 11px;
+}
+
+.gjs-field input,
+.gjs-field select,
+.gjs-field textarea {
+  padding: 3px;
+}
+

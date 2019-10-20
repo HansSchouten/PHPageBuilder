@@ -1,0 +1,17 @@
+.tab-content {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-top: none;
+}
+
+.tab-content .table {
+  margin-top: 30px;
+}
+
+.tab-content .table td.actions {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
