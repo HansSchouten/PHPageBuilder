@@ -10,6 +10,17 @@ return [
     ],
     'website-manager' => [
         'title' => 'Websitebeheer',
+        'logout' => 'Uitloggen',
+        'pages' => 'Pagina\'s',
+        'menus' => 'Menus',
+        'name' => 'Naam',
+        'route' => 'Route',
+        'actions' => 'Acties',
+        'view' => 'Bekijk',
+        'edit' => 'Wijzig',
+        'settings' => 'Instellingen',
+        'remove' => 'Verwijder',
+        'add-new-page' => 'Pagina toevoegen',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',

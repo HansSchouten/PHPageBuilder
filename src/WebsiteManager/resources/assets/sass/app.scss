@@ -1,3 +1,17 @@
+
+/*    GENERAL    */
+
+.container {
+  max-width: 1140px;
+}
+
+a {
+  outline: 0;
+}
+
+
+/*    TAB PANE    */
+
 .tab-content {
   padding: 20px;
   background: #fff;
@@ -6,9 +20,38 @@
 
   .table {
     margin-top: 30px;
+    min-width: 400px;
 
     td.actions {
       width: min-content;
+    }
+  }
+}
+
+
+/*    TABLE    */
+
+@media all and (max-width: 1140px) {
+  td.actions {
+    width: min-content;
+
+    a {
+      width: 100%;
+      max-width: 180px;
+      margin-bottom: 3px;
+    }
+  }
+}
+@media all and (max-width: 450px) {
+  td.actions {
+    width: auto !important;
+
+    a {
+      width: 35px;
+
+      span {
+        display: none;
+      }
     }
   }
 }
