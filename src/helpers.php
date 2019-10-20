@@ -40,9 +40,40 @@ if (! function_exists('phpb_asset')) {
     }
 }
 
+if (! function_exists('phpb_config')) {
+    /**
+     * Return the configuration with the given key (as dot-separated multidimensional array selector).
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    function phpb_config($key)
+    {
+        global $phpb_config;
+
+        // if no dot notation is used, return first dimension value or empty string
+        if (strpos($key, '.') === false) {
+            return $phpb_config[$key] ?? '';
+        }
+
+        // if dot notation is used, traverse config string
+        $segments = explode('.', $key);
+        $subArray = $phpb_config;
+        foreach ($segments as $segment) {
+            if (isset($subArray[$segment])) {
+                $subArray = &$subArray[$segment];
+            } else {
+                return '';
+            }
+        }
+
+        return $subArray;
+    }
+}
+
 if (! function_exists('phpb_trans')) {
     /**
-     * Return the translation of the given dot-separated multidimensional array key.
+     * Return the translation of the given key (as dot-separated multidimensional array selector).
      *
      * @param  string  $key
      * @return string

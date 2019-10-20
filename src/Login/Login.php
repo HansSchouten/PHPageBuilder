@@ -15,11 +15,17 @@ class Login implements LoginContract
     public function handleRequest($route, $action)
     {
         if ($route === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
-            if ($_POST['username'] === '' && $_POST['password'] === '') {
-                echo '';
+            if ($_POST['username'] === phpb_config('login.username') && $_POST['password'] === phpb_config('login.password')) {
+                $_SESSION['phpb_logged_in'] = true;
+                header("Location: /");
             } else {
                 header("Location: /?alert=invalid_credentials");
             }
+        }
+
+        if ($route === 'logout') {
+            unset($_SESSION['phpb_logged_in']);
+            header("Location: /");
         }
 
         if (! isset($_SESSION['phpb_logged_in'])) {

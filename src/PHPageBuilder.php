@@ -16,11 +16,6 @@ use PHPageBuilder\Router\DatabasePageRouter;
 class PHPageBuilder
 {
     /**
-     * @var array $config
-     */
-    protected $config;
-
-    /**
      * @var LoginContract $login
      */
     protected $login;
@@ -56,19 +51,19 @@ class PHPageBuilder
     {
         session_start();
 
-        $this->config = $config;
+        $this->setConfig($config);
 
         if (isset($themeSlug)) {
-            $this->theme = new Theme($this, $config['themes'], $themeSlug);
+            $this->theme = new Theme($this, phpb_config('themes'), $themeSlug);
         }
 
         // init the default login, if enabled
-        if ($config['login']['use_login']) {
+        if (phpb_config('login.use_login')) {
             $this->login = new Login;
         }
 
         // init the default website manager, if enabled
-        if ($config['website_manager']['use_website_manager']) {
+        if (phpb_config('website_manager.use_website_manager')) {
             $this->websiteManager = new WebsiteManager;
         }
 
@@ -80,12 +75,23 @@ class PHPageBuilder
         $this->loadTranslations($language);
 
         // create database connection and boot eloquent models on classes extending Eloquent\Model
-        if ($config['storage']['use_database']) {
+        if (phpb_config('storage.use_database')) {
             $capsule = new Capsule;
-            $capsule->addConnection($config['storage']['database']);
+            $capsule->addConnection(phpb_config('storage.database'));
             $capsule->setAsGlobal();
             $capsule->bootEloquent();
         }
+    }
+
+    /**
+     * Set the PHPageBuilder configuration to the given array.
+     *
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        global $phpb_config;
+        $phpb_config = $config;
     }
 
     /**
@@ -210,10 +216,10 @@ class PHPageBuilder
         $route = isset($_GET['route']) ? $_GET['route'] : null;
         $action = isset($_GET['action']) ? $_GET['action'] : null;
 
-        if ($this->config['login']['use_login']) {
+        if (phpb_config('login.use_login')) {
             $this->login->handleRequest($route, $action);
         }
-        if ($this->config['website_manager']['use_website_manager']) {
+        if (phpb_config('website_manager.use_website_manager')) {
             $this->websiteManager->handleRequest($route, $action);
         }
         $this->pageBuilder->handleRequest($route, $action);
