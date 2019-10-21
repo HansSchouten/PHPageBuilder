@@ -68,7 +68,7 @@ class PHPageBuilder
         }
 
         // init the default page builder and page router
-        $this->pageBuilder = new PageBuilder;
+        $this->pageBuilder = new PageBuilder($this);
         $this->router = new DatabasePageRouter;
 
         // load translations of the configured language

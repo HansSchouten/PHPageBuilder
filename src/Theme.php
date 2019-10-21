@@ -60,6 +60,16 @@ class Theme implements ThemeContract
     }
 
     /**
+     * Return all blocks of this theme.
+     *
+     * @return array        array of ThemeBlock instances
+     */
+    public function getThemeBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
      * Return the absolute folder path of the theme passed to this Theme instance.
      *
      * @return string
@@ -67,14 +77,6 @@ class Theme implements ThemeContract
     public function getFolder()
     {
         return $this->config['folder'] . '/' . $this->themeSlug;
-    }
-
-    /**
-     * Return all blocks of the current theme.
-     */
-    public function getThemeBlocks()
-    {
-        return $this->blocks;
     }
 
     /**
@@ -95,7 +97,7 @@ class Theme implements ThemeContract
         $block = $this->blocks[$blockSlug];
 
         ob_start();
-        require_once $block->getFolder() . '/view.php';
+        require $block->getFolder() . '/view.php';
         $body = ob_get_contents();
         ob_end_clean();
 
