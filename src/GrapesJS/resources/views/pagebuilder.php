@@ -35,10 +35,7 @@ let blockManager = editor.BlockManager;
 <?php
 foreach ($blocks as $block):
 ?>
-blockManager.add(<?= json_encode($block['id']) ?>, {
-    label: <?= json_encode($block['label']) ?>,
-    content: <?= json_encode($block['content']) ?>,
-});
+blockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($block->getBlockArray()) ?>);
 <?php
 endforeach;
 ?>

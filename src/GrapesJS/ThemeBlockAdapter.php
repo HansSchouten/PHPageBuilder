@@ -29,16 +29,33 @@ class ThemeBlockAdapter
     }
 
     /**
-     * Return an array representation of the configured ThemeBlock to be added to GrapesJS.
+     * Return the unique identifier of the theme block.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->block->getId();
+    }
+
+    /**
+     * Return an array representation of the theme block, for adding as a block in GrapesJS.
      *
      * @return array
      */
-    public function getArray()
+    public function getBlockArray()
     {
-        return [
-            'id' => $this->block->getId(),
+        $data = [
             'label' => $this->block->get('title'),
             'content' => $this->block->getRenderedContent(),
         ];
+
+        if ($this->block->get('icon')) {
+            $data['attributes'] = [
+                'class' => $this->block->get('icon')
+            ];
+        }
+
+        return $data;
     }
 }

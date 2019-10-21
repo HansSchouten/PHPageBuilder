@@ -62,7 +62,7 @@ class ThemeBlock
     {
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
-            return $this->config[$key] ?? '';
+            return $this->config[$key] ?? null;
         }
 
         // if dot notation is used, traverse config string
@@ -72,7 +72,7 @@ class ThemeBlock
             if (isset($subArray[$segment])) {
                 $subArray = &$subArray[$segment];
             } else {
-                return '';
+                return null;
             }
         }
 
