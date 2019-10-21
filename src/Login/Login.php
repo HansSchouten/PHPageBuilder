@@ -40,6 +40,6 @@ class Login implements LoginContract
     public function renderLoginForm()
     {
         $page = 'login-form';
-        require_once 'resources/views/layout.php';
+        require __DIR__ . '/resources/views/layout.php';
     }
 }

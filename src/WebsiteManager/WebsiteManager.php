@@ -30,7 +30,7 @@ class WebsiteManager implements WebsiteManagerContract
         $pages = $pageRepository->getAll();
 
         $page = 'overview';
-        require_once 'resources/views/layout.php';
+        require __DIR__ . '/resources/views/layout.php';
     }
 
     /**
@@ -39,7 +39,7 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderPageSettings()
     {
         $page = 'page-settings';
-        require_once 'resources/views/layout.php';
+        require __DIR__ . '/resources/views/layout.php';
     }
 
     /**
@@ -48,6 +48,6 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderMenuSettings()
     {
         $page = 'menu-settings';
-        require_once 'resources/views/layout.php';
+        require __DIR__ . '/resources/views/layout.php';
     }
 }

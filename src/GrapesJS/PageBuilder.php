@@ -16,6 +16,7 @@ class PageBuilder implements PageBuilderContract
     {
         if ($route === 'pagebuilder') {
             $this->renderPageBuilder();
+            exit();
         }
     }
 
@@ -26,6 +27,6 @@ class PageBuilder implements PageBuilderContract
     {
         // pass this PageBuilder instance
         $builder = $this;
-        require_once 'resources/views/pagebuilder.php';
+        require __DIR__ . '/resources/views/layout.php';
     }
 }
