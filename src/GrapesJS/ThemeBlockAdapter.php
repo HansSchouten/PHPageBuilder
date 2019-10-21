@@ -39,6 +39,19 @@ class ThemeBlockAdapter
     }
 
     /**
+     * Return the visible title of this block.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        if ($this->block->get('title')) {
+            return $this->block->get('title');
+        }
+        return str_replace('-', ' ', ucfirst($this->getId()));
+    }
+
+    /**
      * Return an array representation of the theme block, for adding as a block in GrapesJS.
      *
      * @return array
@@ -46,7 +59,7 @@ class ThemeBlockAdapter
     public function getBlockArray()
     {
         $data = [
-            'label' => $this->block->get('title'),
+            'label' => $this->getTitle(),
             'content' => $this->block->getRenderedContent(),
         ];
 

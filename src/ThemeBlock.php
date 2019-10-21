@@ -29,7 +29,11 @@ class ThemeBlock
     {
         $this->theme = $theme;
         $this->blockSlug = $blockSlug;
-        $this->config = include $this->getFolder() . '/config.php';
+
+        $this->config = [];
+        if (file_exists($this->getFolder() . '/config.php')) {
+            $this->config = include $this->getFolder() . '/config.php';
+        }
     }
 
     /**

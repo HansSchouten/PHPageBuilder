@@ -1,5 +1,6 @@
 
 <div id="gjs">
+
 </div>
 
 <script type="text/javascript">
@@ -17,8 +18,47 @@ let editor = grapesjs.init({
     traitManager: {
         textNoElement: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>'
     },
+    panels: {
+        defaults: [
+            {
+                id: 'views',
+                buttons: [
+                    {
+                        id: 'open-blocks',
+                        className: 'fa fa-th-large',
+                        command: 'open-blocks',
+                        togglable: 0,
+                        attributes: {title: 'Open Blocks'},
+                        active: true,
+                    },
+                    {
+                        id: 'open-layers',
+                        className: 'fa fa-bars',
+                        command: 'open-layers',
+                        togglable: 0,
+                        attributes: {title: 'Open Layer Manager'}
+                    },
+                    {
+                        id: 'open-tm',
+                        className: 'fa fa-cog',
+                        command: 'open-tm',
+                        togglable: 0,
+                        attributes: {title: 'Settings'}
+                    },
+                    {
+                        id: 'open-sm',
+                        className: 'fa fa-paint-brush',
+                        command: 'open-sm',
+                        togglable: 0,
+                        attributes: {title: 'Open Style Manager'}
+                    }
+                ]
+            }
+        ]
+    },
     fromElement: true,
     canvas: {
+        /*
         styles: [
             'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
         ],
@@ -27,11 +67,11 @@ let editor = grapesjs.init({
             'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js',
             'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
         ],
+        */
     }
 });
 
 let blockManager = editor.BlockManager;
-
 <?php
 foreach ($blocks as $block):
 ?>

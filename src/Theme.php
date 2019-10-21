@@ -90,7 +90,7 @@ class Theme implements ThemeContract
             return;
         }
 
-        // pass the PageBuilder instance, this theme and the given block
+        // init variables that should be accessible in the view
         /* @var ThemeBlock $block */
         $builder = $this->pageBuilder;
         $theme = $this;
@@ -112,7 +112,7 @@ class Theme implements ThemeContract
      */
     protected function renderBodyInLayout($body)
     {
-        // pass the PageBuilder instance, this theme and the given block
+        // init variables that should be accessible in the view
         $builder = $this->pageBuilder;
         $theme = $this;
         $page = new Page;

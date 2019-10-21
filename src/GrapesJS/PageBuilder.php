@@ -41,6 +41,9 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPageBuilder()
     {
+        // init variables that should be accessible in the view
+        $pageBuilder = $this;
+
         // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
         $blocks = [];
         foreach ($this->context->getTheme()->getThemeBlocks() as $themeBlock) {
