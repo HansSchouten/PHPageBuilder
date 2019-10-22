@@ -11,6 +11,7 @@ return [
      */
     'project' => [
         'public_folder' => '',
+        'pagebuilder_url' => '/admin/',
     ],
 
     /*

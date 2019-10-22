@@ -105,3 +105,24 @@ if (! function_exists('phpb_trans')) {
         return '';
     }
 }
+
+if (! function_exists('phpb_redirect')) {
+    /**
+     * Redirect to the given page builder route.
+     * The given URL will be prefixed with pagebuilder_url from config.
+     *
+     * @param  string  $route
+     * @return string
+     */
+    function phpb_redirect($route = '')
+    {
+        $prefix = phpb_config('project.pagebuilder_url');
+        if (empty($prefix)) {
+            $prefix = '/';
+        }
+
+        header('Location: ' . $prefix . $route);
+        exit();
+    }
+}
+
