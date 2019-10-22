@@ -5,13 +5,13 @@ namespace PHPageBuilder\GrapesJS;
 use PHPageBuilder\ThemeBlock;
 
 /**
- * Class ThemeBlockAdapter
+ * Class PageBuilderBlockAdapter
  *
- * Class for adapting a ThemeBlock into a JSON object understood by GrapesJS.
+ * Class for adapting a ThemeBlock into a JSON object understood by the GrapesJS page builder.
  *
  * @package PHPageBuilder\GrapesJS
  */
-class ThemeBlockAdapter
+class PageBuilderBlockAdapter
 {
     /**
      * @var ThemeBlock $block
@@ -19,7 +19,7 @@ class ThemeBlockAdapter
     protected $block;
 
     /**
-     * ThemeBlockAdapter constructor.
+     * PageBuilderBlockAdapter constructor.
      *
      * @param ThemeBlock $block
      */

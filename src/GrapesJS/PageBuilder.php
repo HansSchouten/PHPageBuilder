@@ -36,13 +36,14 @@ class PageBuilder implements PageBuilderContract
             $pageId = isset($_GET['page']) ? $_GET['page'] : null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
+
             $this->renderPageBuilder($page);
             exit();
         }
     }
 
     /**
-     * Render the PageBuilder.
+     * Render the PageBuilder for the given page.
      *
      * @param PageContract $page
      */
@@ -50,11 +51,12 @@ class PageBuilder implements PageBuilderContract
     {
         // init variables that should be accessible in the view
         $pageBuilder = $this;
+        $pageRenderer = new PageRenderer($page);
 
         // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
         $blocks = [];
         foreach ($this->context->getTheme()->getThemeBlocks() as $themeBlock) {
-            $blocks[] = new ThemeBlockAdapter($themeBlock);
+            $blocks[] = new PageBuilderBlockAdapter($themeBlock);
         }
 
         require __DIR__ . '/resources/views/layout.php';

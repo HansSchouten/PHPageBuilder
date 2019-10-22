@@ -1,6 +1,6 @@
 
 <div id="gjs">
-
+<?= $pageRenderer->render(); ?>
 </div>
 
 <script type="text/javascript">
