@@ -3,6 +3,8 @@
 namespace PHPageBuilder\GrapesJS;
 
 use PHPageBuilder\Contracts\PageBuilderContract;
+use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\PageRepository;
 use PHPageBuilder\PHPageBuilder;
 
 class PageBuilder implements PageBuilderContract
@@ -31,15 +33,20 @@ class PageBuilder implements PageBuilderContract
     public function handleRequest($route, $action)
     {
         if ($route === 'pagebuilder') {
-            $this->renderPageBuilder();
+            $pageId = isset($_GET['page']) ? $_GET['page'] : null;
+            $pageRepository = new PageRepository;
+            $page = $pageRepository->findWithId($pageId);
+            $this->renderPageBuilder($page);
             exit();
         }
     }
 
     /**
      * Render the PageBuilder.
+     *
+     * @param PageContract $page
      */
-    public function renderPageBuilder()
+    public function renderPageBuilder(PageContract $page)
     {
         // init variables that should be accessible in the view
         $pageBuilder = $this;

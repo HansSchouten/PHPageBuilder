@@ -23,6 +23,8 @@ interface PageBuilderContract
 
     /**
      * Render the PageBuilder.
+     *
+     * @param PageContract $page
      */
-    public function renderPageBuilder();
+    public function renderPageBuilder(PageContract $page);
 }

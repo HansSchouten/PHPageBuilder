@@ -21,6 +21,9 @@ endif;
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -79,6 +82,11 @@ endif;
             <div id="menus" class="tab-pane">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.menus') ?></h4>
+
+            </div>
+            <div id="settings" class="tab-pane">
+
+                <h4 class="mb-3"><?= phpb_trans('website-manager.settings') ?></h4>
 
             </div>
         </div>

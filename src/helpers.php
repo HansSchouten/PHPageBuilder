@@ -109,7 +109,7 @@ if (! function_exists('phpb_trans')) {
 if (! function_exists('phpb_redirect')) {
     /**
      * Redirect to the given page builder route.
-     * The given URL will be prefixed with pagebuilder_url from config.
+     * The given route will be prefixed with pagebuilder_url from config.
      *
      * @param  string  $route
      * @return string
