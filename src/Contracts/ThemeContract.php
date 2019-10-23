@@ -10,4 +10,11 @@ interface ThemeContract
      * @return array        array of ThemeBlock instances
      */
     public function getThemeBlocks();
+
+    /**
+     * Return the folder of this theme.
+     *
+     * @return mixed
+     */
+    public function getFolder();
 }

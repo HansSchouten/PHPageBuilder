@@ -51,7 +51,7 @@ class PageBuilder implements PageBuilderContract
     {
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $pageRenderer = new PageRenderer($page);
+        $pageRenderer = new PageRenderer($this->context, $page);
 
         // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
         $blocks = [];

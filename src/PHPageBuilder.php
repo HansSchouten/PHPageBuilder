@@ -4,6 +4,7 @@ namespace PHPageBuilder;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use PHPageBuilder\Contracts\LoginContract;
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
@@ -228,10 +229,12 @@ class PHPageBuilder
 
     /**
      * Render the PageBuilder.
+     *
+     * @param PageContract $page
      */
-    public function renderPageBuilder()
+    public function renderPageBuilder(PageContract $page)
     {
-        $this->pageBuilder->renderPageBuilder();
+        $this->pageBuilder->renderPageBuilder($page);
     }
 
     /**
