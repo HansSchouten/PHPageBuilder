@@ -79,4 +79,8 @@ Note: You might have to change the path of your `$installationFolder` and to you
 
 ## Customization
 
-PHPagebuilder is build to be very easy to customize to your needs. It comes with an example config file in wich you can adapt the pagebuilder to your needs.
+PHPagebuilder is build with customization in mind. It comes with an extensive example config file in wich you can easily adapt the pagebuilder to your needs.
+
+PHPagebuilder consist of four modules (Login, Website Manager, Pagebuilder, Routing) each of which you can disable or replace with your own implementation. To add your own implementation, implement the corresponding Contract and replace the default class by your own class in the config file.
+
+Instead of relying on the `PHPageBuilder` class to handle all requests, you can also integrate PHPagebuilder into your project by directly using any of the modules. For example, instantiating `PHPageBuilder\GrapesJS\PageBuilder` allows you to render the pagebuilder for any page you provide.
