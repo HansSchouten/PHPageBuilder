@@ -75,10 +75,11 @@ if (! function_exists('phpb_trans')) {
     /**
      * Return the translation of the given key (as dot-separated multidimensional array selector).
      *
-     * @param  string  $key
+     * @param $key
+     * @param bool $encode      encode special characters
      * @return string
      */
-    function phpb_trans($key)
+    function phpb_trans($key, $encode = true)
     {
         global $phpb_translations;
 
@@ -98,8 +99,11 @@ if (! function_exists('phpb_trans')) {
             }
         }
 
-        // if the remaining sub array is a string, return this value
+        // if the remaining sub array is a string, return this translation
         if (is_string($subArray)) {
+            if ($encode) {
+                return e($subArray);
+            }
             return $subArray;
         }
         return '';

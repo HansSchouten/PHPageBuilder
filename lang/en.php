@@ -23,9 +23,11 @@ return [
         'settings' => 'Settings',
         'remove' => 'Remove',
         'add-new-page' => 'Add new page',
+        'edit-page' => 'Edit page',
         'back' => 'Back',
         'save-changes' => 'Save changes',
         'theme' => 'Theme',
+        'visible-in-page-overview' => 'visible in page overview',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Select an element to modify the style.',

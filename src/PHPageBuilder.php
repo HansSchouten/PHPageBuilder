@@ -64,7 +64,8 @@ class PHPageBuilder
 
         // init the default page builder, theme and page router
         $this->pageBuilder = new PageBuilder($this);
-        $this->theme = new Theme;
+        $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+
         $this->router = new DatabasePageRouter;
 
         // load translations of the configured language

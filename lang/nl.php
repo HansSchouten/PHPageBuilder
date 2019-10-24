@@ -23,9 +23,11 @@ return [
         'settings' => 'Instellingen',
         'remove' => 'Verwijder',
         'add-new-page' => 'Pagina toevoegen',
+        'edit-page' => 'Edit page',
         'back' => 'Terug',
         'save-changes' => 'Wijzigingen opslaan',
         'theme' => 'Thema',
+        'visible-in-page-overview' => 'zichtbaar in pagina overzicht',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',

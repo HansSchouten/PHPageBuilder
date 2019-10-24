@@ -4,6 +4,7 @@ namespace PHPageBuilder\WebsiteManager;
 
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\PageRepository;
+use PHPageBuilder\Theme;
 
 class WebsiteManager implements WebsiteManagerContract
 {
@@ -52,7 +53,7 @@ class WebsiteManager implements WebsiteManagerContract
         $pages = $pageRepository->getAll();
 
         $page = 'overview';
-        require __DIR__ . '/resources/views/layout.php';
+        require __DIR__ . '/resources/layouts/master.php';
     }
 
     /**
@@ -62,8 +63,10 @@ class WebsiteManager implements WebsiteManagerContract
      */
     public function renderPageSettings(string $action)
     {
+        $theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+
         $page = 'page-settings';
-        require __DIR__ . '/resources/views/layout.php';
+        require __DIR__ . '/resources/layouts/master.php';
     }
 
     /**
@@ -72,6 +75,6 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderMenuSettings()
     {
         $page = 'menu-settings';
-        require __DIR__ . '/resources/views/layout.php';
+        require __DIR__ . '/resources/layouts/master.php';
     }
 }

@@ -11,18 +11,18 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
     <div class="col-12">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link <?= $pagesTabActive ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
+                <a class="nav-link <?= e($pagesTabActive) ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= $menusTabActive ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
+                <a class="nav-link <?= e($menusTabActive) ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= $settingsTabActive ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
+                <a class="nav-link <?= e($settingsTabActive) ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div id="pages" class="tab-pane active">
+            <div id="pages" class="tab-pane <?= e($pagesTabActive) ?>">
 
                 <h4><?= phpb_trans('website-manager.pages') ?></h4>
 
@@ -76,12 +76,12 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                 </a>
 
             </div>
-            <div id="menus" class="tab-pane">
+            <div id="menus" class="tab-pane <?= e($menusTabActive) ?>">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.menus') ?></h4>
 
             </div>
-            <div id="settings" class="tab-pane">
+            <div id="settings" class="tab-pane <?= e($settingsTabActive) ?>">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.settings') ?></h4>
 

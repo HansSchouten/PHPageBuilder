@@ -7,11 +7,13 @@
     <div class="col-12">
 
         <div class="manager-panel">
-            <form method="post" action="?route=page_settings&action=<?= $action ?>">
+            <form method="post" action="?route=page_settings&action=<?= e($action) ?>">
                 <h4>
                     <?php
                     if ($action === 'create'):
                         echo phpb_trans('website-manager.add-new-page');
+                    else:
+                        echo phpb_trans('website-manager.edit-page');
                     endif;
                     ?>
                 </h4>
@@ -20,7 +22,7 @@
                     <div class="form-group">
                         <label for="name">
                             <?= phpb_trans('website-manager.name') ?>
-                            <span class="text-muted">(Zichtbaar in pagina overzicht)</span>
+                            <span class="text-muted">(<?= phpb_trans('website-manager.visible-in-page-overview') ?>)</span>
                         </label>
                         <input type="text" class="form-control" id="name">
                     </div>
@@ -38,7 +40,13 @@
                     <div class="form-group">
                         <label for="layout"><?= phpb_trans('website-manager.layout') ?></label>
                         <select class="form-control" id="layout">
-
+                            <?php
+                            foreach ($theme->getThemeLayouts() as $layout):
+                            ?>
+                            <option value="<?= e($layout->getId()) ?>"><?= e($layout->get('title')) ?></option>
+                            <?php
+                            endforeach;
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -52,6 +60,8 @@
                     <?php
                     if ($action === 'create'):
                         echo phpb_trans('website-manager.add-new-page');
+                    else:
+                        echo phpb_trans('website-manager.save-changes');
                     endif;
                     ?>
                 </button>
