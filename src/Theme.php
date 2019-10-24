@@ -8,11 +8,6 @@ use PHPageBuilder\Contracts\ThemeContract;
 class Theme implements ThemeContract
 {
     /**
-     * @var PHPageBuilder $pageBuilder
-     */
-    protected $pageBuilder;
-
-    /**
      * @var array $config
      */
     protected $config;
@@ -28,19 +23,23 @@ class Theme implements ThemeContract
     protected $blocks;
 
     /**
+     * @var array $layouts
+     */
+    protected $layouts;
+
+    /**
      * Theme constructor.
      *
-     * @param PHPageBuilder $pageBuilder
      * @param array $config         themes configuration
      * @param string $themeSlug
      */
-    public function __construct(PHPageBuilder $pageBuilder, array $config, string $themeSlug)
+    public function __construct(array $config, string $themeSlug)
     {
-        $this->pageBuilder = $pageBuilder;
         $this->config = $config;
         $this->themeSlug = $themeSlug;
 
         $this->loadThemeBlocks();
+        $this->loadThemeLayouts();
     }
 
     /**
@@ -60,6 +59,22 @@ class Theme implements ThemeContract
     }
 
     /**
+     * Load all layouts of the current theme.
+     */
+    protected function loadThemeLayouts()
+    {
+        $this->layouts = [];
+        $layoutsDirectory = new DirectoryIterator($this->getFolder() . '/layouts');
+        foreach ($layoutsDirectory as $entry) {
+            if ($entry->isDir() && ! $entry->isDot()) {
+                $layoutSlug = $entry->getFilename();
+                $layout = new ThemeLayout($this, $layoutSlug);
+                $this->layouts[$layoutSlug] = $layout;
+            }
+        }
+    }
+
+    /**
      * Return all blocks of this theme.
      *
      * @return array        array of ThemeBlock instances
@@ -70,6 +85,16 @@ class Theme implements ThemeContract
     }
 
     /**
+     * Return all layouts of this theme.
+     *
+     * @return array        array of ThemeLayout instances
+     */
+    public function getThemeLayouts()
+    {
+        return $this->layouts;
+    }
+
+    /**
      * Return the absolute folder path of the theme passed to this Theme instance.
      *
      * @return string
@@ -77,46 +102,5 @@ class Theme implements ThemeContract
     public function getFolder()
     {
         return $this->config['folder'] . '/' . $this->themeSlug;
-    }
-
-    /**
-     * Render the block identified with the given block slug.
-     *
-     * @param string $blockSlug
-     */
-    public function renderBlock(string $blockSlug)
-    {
-        if (! isset($this->blocks[$blockSlug])) {
-            return;
-        }
-
-        // init variables that should be accessible in the view
-        /* @var ThemeBlock $block */
-        $builder = $this->pageBuilder;
-        $theme = $this;
-        $block = $this->blocks[$blockSlug];
-
-        ob_start();
-        require $block->getFolder() . '/view.php';
-        $body = ob_get_contents();
-        ob_end_clean();
-
-        // render the body inside the defined layout
-        $this->renderBodyInLayout($body);
-    }
-
-    /**
-     * Render the given page body inside the master layout.
-     *
-     * @param $body
-     */
-    protected function renderBodyInLayout($body)
-    {
-        // init variables that should be accessible in the view
-        $builder = $this->pageBuilder;
-        $theme = $this;
-        $page = new Page;
-
-        require_once $this->getFolder() . '/layout.php';
     }
 }

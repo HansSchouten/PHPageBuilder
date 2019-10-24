@@ -19,8 +19,10 @@ interface WebsiteManagerContract
 
     /**
      * Render the website manager page settings (add/edit page form).
+     *
+     * @param string $action
      */
-    public function renderPageSettings();
+    public function renderPageSettings(string $action);
 
     /**
      * Render the website manager menu settings (add/edit menu form).

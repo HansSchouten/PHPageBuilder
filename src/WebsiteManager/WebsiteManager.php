@@ -19,6 +19,28 @@ class WebsiteManager implements WebsiteManagerContract
             $this->renderOverview();
             exit();
         }
+
+        if ($route === 'page_settings') {
+            if ($action === 'create') {
+                $this->renderPageSettings($action);
+                exit();
+            }
+
+            if (isset($_GET['page'])) {
+                $pageId = $_GET['page'];
+                $pageRepository = new PageRepository;
+                $page = $pageRepository->findWithId($pageId);
+                if (! $page) {
+                    return;
+                }
+
+                if ($action === 'edit') {
+
+                } else if ($action === 'destroy') {
+
+                }
+            }
+        }
     }
 
     /**
@@ -35,8 +57,10 @@ class WebsiteManager implements WebsiteManagerContract
 
     /**
      * Render the website manager page settings (add/edit page form).
+     *
+     * @param string $action
      */
-    public function renderPageSettings()
+    public function renderPageSettings(string $action)
     {
         $page = 'page-settings';
         require __DIR__ . '/resources/views/layout.php';

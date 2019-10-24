@@ -55,7 +55,7 @@ class PHPageBuilder
         $this->setConfig($config);
 
         if (isset($themeSlug)) {
-            $this->theme = new Theme($this, phpb_config('themes'), $themeSlug);
+            $this->theme = new Theme(phpb_config('themes'), $themeSlug);
         }
 
         // init the default login, if enabled
@@ -235,25 +235,5 @@ class PHPageBuilder
     public function renderPageBuilder(PageContract $page)
     {
         $this->pageBuilder->renderPageBuilder($page);
-    }
-
-    /**
-     * Render the page of the given URI.
-     *
-     * @param string $URI
-     */
-    public function renderPage(string $URI)
-    {
-        $page = $this->router->resolve($URI);
-    }
-
-    /**
-     * Render the block identified with the given block slug.
-     *
-     * @param string $blockSlug
-     */
-    public function renderBlock(string $blockSlug)
-    {
-        $this->theme->renderBlock($blockSlug);
     }
 }

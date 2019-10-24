@@ -14,6 +14,16 @@
 
 <div class="container">
     <?php
+    if (phpb_config('login.use_login')):
+        ?>
+        <a href="?route=logout" class="btn btn-light btn-sm mt-1 float-right">
+            <i class="fas fa-sign-out-alt"></i> <?= phpb_trans('website-manager.logout') ?>
+        </a>
+    <?php
+    endif;
+    ?>
+
+    <?php
     require __DIR__ . '/' . $page . '.php';
     ?>
 

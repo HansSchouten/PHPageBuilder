@@ -9,23 +9,31 @@ a {
   outline: 0;
 }
 
+.main-spacing {
+  margin: 30px 0;
+}
+
 
 /*    TAB PANE    */
 
-.tab-content {
+.tab-content,
+.manager-panel {
   padding: 20px;
   background: #fff;
   border: 1px solid #dee2e6;
   border-top: none;
 
   .table {
-    margin-top: 30px;
+    margin: 10px 0 0 0;
     min-width: 400px;
 
     td.actions {
       width: min-content;
     }
   }
+}
+.manager-panel {
+  border: 1px solid #dee2e6;
 }
 
 
@@ -53,5 +61,12 @@ a {
         display: none;
       }
     }
+  }
+}
+
+/*    FORMS    */
+form {
+  .text-muted {
+    font-size: 80%;
   }
 }

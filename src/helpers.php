@@ -106,6 +106,25 @@ if (! function_exists('phpb_trans')) {
     }
 }
 
+if (! function_exists('phpb_route')) {
+    /**
+     * Give the URL of a given page builder route.
+     * The given route will be prefixed with pagebuilder_url from config.
+     *
+     * @param  string  $route
+     * @return string
+     */
+    function phpb_route($route = '')
+    {
+        $prefix = phpb_config('project.pagebuilder_url');
+        if (empty($prefix)) {
+            $prefix = '/';
+        }
+
+        return $prefix . $route;
+    }
+}
+
 if (! function_exists('phpb_redirect')) {
     /**
      * Redirect to the given page builder route.
@@ -116,12 +135,7 @@ if (! function_exists('phpb_redirect')) {
      */
     function phpb_redirect($route = '')
     {
-        $prefix = phpb_config('project.pagebuilder_url');
-        if (empty($prefix)) {
-            $prefix = '/';
-        }
-
-        header('Location: ' . $prefix . $route);
+        header('Location: ' . phpb_route($route));
         exit();
     }
 }
