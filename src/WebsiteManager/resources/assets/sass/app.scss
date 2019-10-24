@@ -69,4 +69,9 @@ form {
   .text-muted {
     font-size: 80%;
   }
+
+  .required label:after {
+    color: red;
+    content: " *";
+  }
 }

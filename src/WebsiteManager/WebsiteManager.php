@@ -2,6 +2,7 @@
 
 namespace PHPageBuilder\WebsiteManager;
 
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\PageRepository;
 use PHPageBuilder\Theme;
@@ -17,31 +18,58 @@ class WebsiteManager implements WebsiteManagerContract
     public function handleRequest($route, $action)
     {
         if (is_null($route)) {
-            $this->renderOverview();
-            exit();
+            $this->handleOverview();
         }
 
         if ($route === 'page_settings') {
             if ($action === 'create') {
-                $this->renderPageSettings($action);
-                exit();
+                $this->handleCreate();
             }
 
-            if (isset($_GET['page'])) {
-                $pageId = $_GET['page'];
-                $pageRepository = new PageRepository;
-                $page = $pageRepository->findWithId($pageId);
-                if (! $page) {
-                    return;
-                }
+            $pageId = isset($_GET['page']) ? $_GET['page'] : null;
+            $pageRepository = new PageRepository;
+            $page = $pageRepository->findWithId($pageId);
+            if (is_null($page)) {
+                phpb_redirect('');
+            }
 
-                if ($action === 'edit') {
-
-                } else if ($action === 'destroy') {
-
-                }
+            if ($action === 'edit') {
+                $this->handleEdit($page);
+            } else if ($action === 'destroy') {
+                $this->handleDestroy($page);
             }
         }
+    }
+
+    public function handleOverview()
+    {
+        $this->renderOverview();
+        exit();
+    }
+
+    public function handleCreate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $pageRepository = new PageRepository;
+            $page = $pageRepository->create($_POST);
+            if ($page) {
+                phpb_redirect('');
+            }
+        }
+
+        $this->renderPageSettings('create');
+        exit();
+    }
+
+    public function handleEdit(PageContract $page)
+    {
+    }
+
+    public function handleDestroy(PageContract $page)
+    {
+        $pageRepository = new PageRepository;
+        $pageRepository->destroy($page);
+        phpb_redirect('');
     }
 
     /**

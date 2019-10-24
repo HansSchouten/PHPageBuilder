@@ -19,27 +19,27 @@
                 </h4>
 
                 <div class="main-spacing">
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="name">
                             <?= phpb_trans('website-manager.name') ?>
                             <span class="text-muted">(<?= phpb_trans('website-manager.visible-in-page-overview') ?>)</span>
                         </label>
-                        <input type="text" class="form-control" id="name">
+                        <input type="text" class="form-control" id="name" name="name" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                        <input type="text" class="form-control" id="page-title">
+                        <input type="text" class="form-control" id="page-title" name="title" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                        <input type="text" class="form-control" id="route">
+                        <input type="text" class="form-control" id="route" name="route" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="layout"><?= phpb_trans('website-manager.layout') ?></label>
-                        <select class="form-control" id="layout">
+                        <select class="form-control" id="layout" name="layout" required>
                             <?php
                             foreach ($theme->getThemeLayouts() as $layout):
                             ?>
