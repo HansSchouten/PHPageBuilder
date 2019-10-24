@@ -13,9 +13,11 @@ interface PageRepositoryContract
     public function create(array $data);
 
     /**
-     * Return an array of all pages.
+     * Update the given page with the given updated data.
      *
-     * @return array
+     * @param $page
+     * @param array $data
+     * @return bool|object|null
      */
-    public function getAll();
+    public function update($page, array $data);
 }

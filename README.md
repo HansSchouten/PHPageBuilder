@@ -13,7 +13,7 @@ PHPagebuilder comes in handy for the following use cases:
 #### I am experienced
 - You want to build a custom website for a client within a few hours.
 - Your clients get lost in feature abundant admin panels like Drupal.
-- You hate to write or use messy Wordpress plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
+- You hate to rely on messy (WordPress) plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
 - You would like to have advanced functionality (search functionality, views that display data of remote sources, etc.) easily manageable by your clients.
 
 If you find yourself in any of the above, there are two starting points:
@@ -32,7 +32,7 @@ A basic website manager is included with a [Bootstrap](https://getbootstrap.com/
 
 You don't like the website manager? No worries, it is only included for people who want to use PHPagebuilder directly out of the box.
 
-By setting `use_website_manager` to `false` in your config, you won't see the website manager ever again. You can render the pagebuilder yourself by using the `PHPageBuilder\GrapesJS\PageBuilder` class. You can also leave `use_website_manager` to `true`, implement the WebsiteManagerContract and add your own class to your config file.
+By setting `use_website_manager` to `false` in your config, you won't see the website manager ever again. You can render the pagebuilder yourself by using the `PHPageBuilder\Modules\GrapesJS\PageBuilder` class. You can also leave `use_website_manager` to `true`, implement the WebsiteManagerContract and add your own class to your config file.
 
 ## Installation
 
@@ -84,4 +84,4 @@ PHPagebuilder is build with customization in mind. It comes with an extensive ex
 
 PHPagebuilder consist of four modules (Login, Website Manager, Pagebuilder, Routing) each of which you can disable or replace with your own implementation. To replace a module with your own implementation, implement the corresponding Contract and replace the default class by your own class in the config file.
 
-Instead of relying on the PHPageBuilder class to handle all requests, you can also integrate the page builder into your project by calling methods on its modules. For example, instantiating `PHPageBuilder\GrapesJS\PageBuilder` allows you to directly render the pagebuilder for any page you provide.
+Instead of relying on the PHPageBuilder class to handle all requests, you can also integrate the page builder into your project by calling methods on its modules. For example, instantiating `PHPageBuilder\Modules\GrapesJS\PageBuilder` allows you to directly render the pagebuilder for any page you provide.

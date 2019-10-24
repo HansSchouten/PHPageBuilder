@@ -57,12 +57,22 @@ class WebsiteManager implements WebsiteManagerContract
             }
         }
 
-        $this->renderPageSettings('create');
+        $this->renderPageSettings();
         exit();
     }
 
     public function handleEdit(PageContract $page)
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $pageRepository = new PageRepository;
+            $success = $pageRepository->update($page, $_POST);
+            if ($success) {
+                phpb_redirect('');
+            }
+        }
+
+        $this->renderPageSettings($page);
+        exit();
     }
 
     public function handleDestroy(PageContract $page)
@@ -80,20 +90,21 @@ class WebsiteManager implements WebsiteManagerContract
         $pageRepository = new PageRepository;
         $pages = $pageRepository->getAll();
 
-        $page = 'overview';
+        $viewFile = 'overview';
         require __DIR__ . '/resources/layouts/master.php';
     }
 
     /**
      * Render the website manager page settings (add/edit page form).
      *
-     * @param string $action
+     * @param PageContract $page
      */
-    public function renderPageSettings(string $action)
+    public function renderPageSettings(PageContract $page = null)
     {
+        $action = isset($page) ? 'edit' : 'create';
         $theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
 
-        $page = 'page-settings';
+        $viewFile = 'page-settings';
         require __DIR__ . '/resources/layouts/master.php';
     }
 
@@ -102,7 +113,7 @@ class WebsiteManager implements WebsiteManagerContract
      */
     public function renderMenuSettings()
     {
-        $page = 'menu-settings';
+        $viewFile = 'menu-settings';
         require __DIR__ . '/resources/layouts/master.php';
     }
 }

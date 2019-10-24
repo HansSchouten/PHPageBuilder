@@ -1,3 +1,9 @@
+<?php
+$pageUrlParam = '';
+if (isset($page)) {
+    $pageUrlParam = '&page=' . e($page->id);
+}
+?>
 
 <div class="py-5 text-center">
     <h2><?= phpb_trans('website-manager.title') ?></h2>
@@ -7,7 +13,7 @@
     <div class="col-12">
 
         <div class="manager-panel">
-            <form method="post" action="?route=page_settings&action=<?= e($action) ?>">
+            <form method="post" action="?route=page_settings&action=<?= e($action) ?><?= $pageUrlParam ?>">
                 <h4>
                     <?php
                     if ($action === 'create'):
@@ -24,27 +30,30 @@
                             <?= phpb_trans('website-manager.name') ?>
                             <span class="text-muted">(<?= phpb_trans('website-manager.visible-in-page-overview') ?>)</span>
                         </label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <input type="text" class="form-control" id="name" name="name" value="<?= phpb_field_value('name', $page) ?>" required>
                     </div>
 
                     <div class="form-group required">
                         <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                        <input type="text" class="form-control" id="page-title" name="title" required>
+                        <input type="text" class="form-control" id="page-title" name="title" value="<?= phpb_field_value('title', $page) ?>" required>
                     </div>
 
                     <div class="form-group required">
                         <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                        <input type="text" class="form-control" id="route" name="route" required>
+                        <input type="text" class="form-control" id="route" name="route" value="<?= phpb_field_value('route', $page) ?>" required>
                     </div>
 
                     <div class="form-group required">
                         <label for="layout"><?= phpb_trans('website-manager.layout') ?></label>
                         <select class="form-control" id="layout" name="layout" required>
                             <?php
+                            $value = phpb_field_value('layout', $page);
                             foreach ($theme->getThemeLayouts() as $layout):
-                            ?>
-                            <option value="<?= e($layout->getId()) ?>"><?= e($layout->get('title')) ?></option>
-                            <?php
+                                if ($layout->getId() === $value):
+                                    echo '<option value="' . e($layout->getId()) . '" selected>' . e($layout->get('title')) . '</option>';
+                                else:
+                                    echo '<option value="' . e($layout->getId()) . '">' . e($layout->get('title')) . '</option>';
+                                endif;
                             endforeach;
                             ?>
                         </select>

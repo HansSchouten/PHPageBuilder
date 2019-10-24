@@ -21,7 +21,8 @@ class DB
         $this->pdo = new PDO(
             $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'] . ';charset=' . $config['charset'],
             $config['username'],
-            $config['password']
+            $config['password'],
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
     }
 

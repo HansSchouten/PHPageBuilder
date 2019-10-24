@@ -24,7 +24,7 @@
     ?>
 
     <?php
-    require __DIR__ . '/../views/' . $page . '.php';
+    require __DIR__ . '/../views/' . $viewFile . '.php';
     ?>
 
     <footer class="my-5 pt-5 text-muted text-center text-small">

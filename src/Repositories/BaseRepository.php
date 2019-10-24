@@ -4,7 +4,7 @@ namespace PHPageBuilder\Repositories;
 
 use PHPageBuilder\Core\DB;
 
-class Repository
+class BaseRepository
 {
     /**
      * @var DB $db
@@ -56,6 +56,32 @@ class Repository
     }
 
     /**
+     * Update the record with the given id with the given updated data.
+     *
+     * @param $instance
+     * @param array $data
+     * @return bool
+     */
+    public function update($instance, array $data)
+    {
+        $set = '';
+        foreach ($data as $column => $value) {
+            if ($set !== '') {
+                $set .= ', ';
+            }
+            $set .= $column . '=?';
+        }
+
+        $values = array_values($data);
+        $values[] = $instance->id;
+
+        return $this->db->query(
+            "UPDATE {$this->table} SET {$set} WHERE id=?",
+            $values
+        );
+    }
+
+    /**
      * Destroy the given instance in the database.
      *
      * @param $id
@@ -64,7 +90,7 @@ class Repository
     public function destroy($id)
     {
         return $this->db->query(
-            "DELETE FROM {$this->table} WHERE `id` = ?",
+            "DELETE FROM {$this->table} WHERE id=?",
             [$id]
         );
     }

@@ -144,6 +144,26 @@ if (! function_exists('phpb_redirect')) {
     }
 }
 
+if (! function_exists('phpb_field_value')) {
+    /**
+     * Return the posted value or the attribute value of the given instance.
+     *
+     * @param $attribute
+     * @param object $instance
+     * @return string
+     */
+    function phpb_field_value($attribute, $instance = null)
+    {
+        if (isset($_POST[$attribute])) {
+            return e($_POST[$attribute]);
+        }
+        if (isset($instance)) {
+            return $instance->$attribute;
+        }
+        return '';
+    }
+}
+
 if (! function_exists('phpb_autoload')) {
     /**
      * Autoload classes from the PHPageBuilder package.

@@ -2,20 +2,21 @@
 
 namespace PHPageBuilder\Repositories;
 
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\PageRepositoryContract;
 use PHPageBuilder\Page;
 
-class PageRepository extends Repository implements PageRepositoryContract
+class PageRepository extends BaseRepository implements PageRepositoryContract
 {
     /**
-     * The database table of this repository.
+     * The pages database table.
      *
      * @var string
      */
     protected $table = 'pages';
 
     /**
-     * The class that represents each record of this repository's table.
+     * The class that represents each page.
      *
      * @var string
      */
@@ -45,6 +46,30 @@ class PageRepository extends Repository implements PageRepositoryContract
         }
 
         return parent::create([
+            'name' => $data['name'],
+            'title' => $data['title'],
+            'route' => $data['route'],
+            'layout' => $data['layout'],
+        ]);
+    }
+
+    /**
+     * Update the given page with the given updated data.
+     *
+     * @param $page
+     * @param array $data
+     * @return bool|object|null
+     */
+    public function update($page, array $data)
+    {
+        $fields = ['name', 'title', 'route', 'layout'];
+        foreach ($fields as $field) {
+            if (! isset($data[$field]) || ! is_string($data[$field])) {
+                return false;
+            }
+        }
+
+        return parent::update($page, [
             'name' => $data['name'],
             'title' => $data['title'],
             'route' => $data['route'],

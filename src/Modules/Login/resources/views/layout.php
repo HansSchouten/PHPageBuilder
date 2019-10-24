@@ -14,7 +14,7 @@
 
 <div class="container">
     <?php
-    require  __DIR__ . '/' . $page . '.php';
+    require  __DIR__ . '/' . $viewFile . '.php';
     ?>
 
     <footer class="my-5 pt-5 text-muted text-center text-small">
