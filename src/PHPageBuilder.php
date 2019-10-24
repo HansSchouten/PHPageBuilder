@@ -8,11 +8,11 @@ use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Core\DB;
 use PHPageBuilder\Login\Login;
 use PHPageBuilder\WebsiteManager\WebsiteManager;
 use PHPageBuilder\GrapesJS\PageBuilder;
 use PHPageBuilder\Router\DatabasePageRouter;
-use PDO;
 
 class PHPageBuilder
 {

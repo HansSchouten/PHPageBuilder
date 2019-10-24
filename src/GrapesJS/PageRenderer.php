@@ -30,6 +30,16 @@ class PageRenderer
     }
 
     /**
+     * Return the absolute path to the layout view of this page.
+     *
+     * @return string
+     */
+    public function getPageLayoutPath()
+    {
+        return $this->context->getTheme()->getFolder() . '/layouts/' . basename($this->page->layout) . '/view.php';
+    }
+
+    /**
      * Return the page passed to this PageRenderer instance.
      */
     public function render()
@@ -56,15 +66,5 @@ class PageRenderer
     public function renderBody()
     {
         return '';
-    }
-
-    /**
-     * Return the absolute path to the layout view of this page.
-     *
-     * @return string
-     */
-    public function getPageLayoutPath()
-    {
-        return $this->context->getTheme()->getFolder() . '/layouts/' . e($this->page->layout) . '/view.php';
     }
 }

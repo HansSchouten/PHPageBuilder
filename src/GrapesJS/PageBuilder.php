@@ -4,7 +4,7 @@ namespace PHPageBuilder\GrapesJS;
 
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
-use PHPageBuilder\PageRepository;
+use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\PHPageBuilder;
 
 class PageBuilder implements PageBuilderContract
