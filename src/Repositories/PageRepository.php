@@ -44,7 +44,7 @@ class PageRepository extends Repository implements PageRepositoryContract
             }
         }
 
-        return Page::create([
+        return parent::create([
             'name' => $data['name'],
             'title' => $data['title'],
             'route' => $data['route'],

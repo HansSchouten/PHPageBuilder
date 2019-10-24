@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPageBuilder\Router;
+namespace PHPageBuilder\Modules\Router;
 
 use PHPageBuilder\Contracts\RouterContract;
 

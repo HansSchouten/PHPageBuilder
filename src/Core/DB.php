@@ -26,6 +26,16 @@ class DB
     }
 
     /**
+     * Return the id of the last inserted record.
+     *
+     * @return string
+     */
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
+    }
+
+    /**
      * Return all records of the given table and return instances of the given class.
      *
      * @param string $table

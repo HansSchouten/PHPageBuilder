@@ -9,10 +9,10 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Core\DB;
-use PHPageBuilder\Login\Login;
-use PHPageBuilder\WebsiteManager\WebsiteManager;
-use PHPageBuilder\GrapesJS\PageBuilder;
-use PHPageBuilder\Router\DatabasePageRouter;
+use PHPageBuilder\Modules\Login\Login;
+use PHPageBuilder\Modules\WebsiteManager\WebsiteManager;
+use PHPageBuilder\Modules\GrapesJS\PageBuilder;
+use PHPageBuilder\Modules\Router\DatabasePageRouter;
 
 class PHPageBuilder
 {

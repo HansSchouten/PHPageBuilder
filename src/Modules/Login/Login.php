@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPageBuilder\Login;
+namespace PHPageBuilder\Modules\Login;
 
 use PHPageBuilder\Contracts\LoginContract;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPageBuilder\WebsiteManager;
+namespace PHPageBuilder\Modules\WebsiteManager;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
@@ -68,11 +68,7 @@ class WebsiteManager implements WebsiteManagerContract
     public function handleDestroy(PageContract $page)
     {
         $pageRepository = new PageRepository;
-        if ($pageRepository->destroy($page->id)) {
-            echo 'success :)';
-        }
-        echo 'not succeeded :(';
-        exit();
+        $pageRepository->destroy($page->id);
         phpb_redirect('');
     }
 

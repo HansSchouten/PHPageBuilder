@@ -35,6 +35,27 @@ class Repository
     }
 
     /**
+     * Create a new instance using the given data.
+     *
+     * @param array $data
+     * @return object|null
+     */
+    public function create(array $data)
+    {
+        $columns = implode(', ', array_keys($data));
+        $questionMarks = implode(', ', array_fill(0, sizeof($data), '?'));
+        $this->db->query(
+            "INSERT INTO {$this->table} ({$columns}) VALUES ({$questionMarks})",
+            array_values($data)
+        );
+        $id = $this->db->lastInsertId();
+        if ($id) {
+            return $this->findWithId($id);
+        }
+        return null;
+    }
+
+    /**
      * Destroy the given instance in the database.
      *
      * @param $id
@@ -43,7 +64,7 @@ class Repository
     public function destroy($id)
     {
         return $this->db->query(
-            "DELETE * FROM {$this->table} WHERE `id` = ?",
+            "DELETE FROM {$this->table} WHERE `id` = ?",
             [$id]
         );
     }
