@@ -2,7 +2,6 @@
 
 namespace PHPageBuilder;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use PHPageBuilder\Contracts\LoginContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
@@ -13,6 +12,7 @@ use PHPageBuilder\Login\Login;
 use PHPageBuilder\WebsiteManager\WebsiteManager;
 use PHPageBuilder\GrapesJS\PageBuilder;
 use PHPageBuilder\Router\DatabasePageRouter;
+use PDO;
 
 class PHPageBuilder
 {
@@ -71,12 +71,9 @@ class PHPageBuilder
         // load translations of the configured language
         $this->loadTranslations(phpb_config('project.language'));
 
-        // create database connection and boot eloquent models on classes extending Eloquent\Model
+        // create database connection, if enabled
         if (phpb_config('storage.use_database')) {
-            $capsule = new Capsule;
-            $capsule->addConnection(phpb_config('storage.database'));
-            $capsule->setAsGlobal();
-            $capsule->bootEloquent();
+            $this->setDatabaseConnection(phpb_config('storage.database'));
         }
     }
 
@@ -89,6 +86,17 @@ class PHPageBuilder
     {
         global $phpb_config;
         $phpb_config = $config;
+    }
+
+    /**
+     * Set the PHPageBuilder database connection using the given array.
+     *
+     * @param array $config
+     */
+    public function setDatabaseConnection(array $config)
+    {
+        global $phpb_db;
+        $phpb_db = new DB($config);
     }
 
     /**

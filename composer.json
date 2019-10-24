@@ -14,8 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "illuminate/database": "^6.3"
+        "php": ">=7.0"
     },
     "autoload": {
         "psr-4": {

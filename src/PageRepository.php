@@ -9,6 +9,27 @@ use Exception;
 class PageRepository implements PageRepositoryContract
 {
     /**
+     * @var DB $db
+     */
+    protected $db;
+
+    /**
+     * The pages table.
+     *
+     * @var string
+     */
+    protected $table = 'pages';
+
+    /**
+     * PageRepository constructor.
+     */
+    public function __construct()
+    {
+        global $phpb_db;
+        $this->db = $phpb_db;
+    }
+
+    /**
      * Create a new page.
      *
      * @param array $data
@@ -49,7 +70,14 @@ class PageRepository implements PageRepositoryContract
      */
     public function getAll()
     {
-        return Page::all();
+        $result = [];
+        foreach ($this->db->all($this->table) as $record) {
+            $page = new Page;
+            foreach($record as $k => $v)
+                $page->$k = $v;
+            $result[] = $page;
+        }
+        return $result;
     }
 
     /**
@@ -60,6 +88,10 @@ class PageRepository implements PageRepositoryContract
      */
     public function findWithId($id)
     {
-        return Page::find($id);
+        $record = $this->db->findWithId($this->table, $id);
+        $page = new Page;
+        foreach($record as $k => $v)
+            $page->$k = $v;
+        return $page;
     }
 }
