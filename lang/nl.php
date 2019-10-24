@@ -24,6 +24,8 @@ return [
         'remove' => 'Verwijder',
         'add-new-page' => 'Pagina toevoegen',
         'back' => 'Terug',
+        'save-changes' => 'Wijzigingen opslaan',
+        'theme' => 'Thema',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',

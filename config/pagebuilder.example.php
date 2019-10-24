@@ -12,6 +12,7 @@ return [
     'project' => [
         'public_folder' => '',
         'pagebuilder_url' => '/admin/',
+        'language' => 'en',
     ],
 
     /*
@@ -89,6 +90,7 @@ return [
      */
     'themes' => [
         'folder' => '',
+        'active_theme' => '',
     ],
 
     /*

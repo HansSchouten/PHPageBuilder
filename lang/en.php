@@ -24,6 +24,8 @@ return [
         'remove' => 'Remove',
         'add-new-page' => 'Add new page',
         'back' => 'Back',
+        'save-changes' => 'Save changes',
+        'theme' => 'Theme',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Select an element to modify the style.',

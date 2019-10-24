@@ -7,7 +7,7 @@
     <div class="col-12">
 
         <div class="manager-panel">
-            <form action="?route=page_settings&action=<?= $action ?>">
+            <form method="post" action="?route=page_settings&action=<?= $action ?>">
                 <h4>
                     <?php
                     if ($action === 'create'):

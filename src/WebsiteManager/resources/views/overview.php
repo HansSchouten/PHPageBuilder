@@ -1,4 +1,8 @@
-
+<?php
+$pagesTabActive = ! isset($_GET['tab']) || $_GET['tab'] === 'pages' ? 'active' : '';
+$menusTabActive = isset($_GET['tab']) && $_GET['tab'] === 'menus' ? 'active' : '';
+$settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'active' : '';
+?>
 <div class="py-5 text-center">
     <h2><?= phpb_trans('website-manager.title') ?></h2>
 </div>
@@ -7,13 +11,13 @@
     <div class="col-12">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
+                <a class="nav-link <?= $pagesTabActive ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
+                <a class="nav-link <?= $menusTabActive ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
+                <a class="nav-link <?= $settingsTabActive ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
             </li>
         </ul>
 
@@ -80,6 +84,10 @@
             <div id="settings" class="tab-pane">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.settings') ?></h4>
+
+                <?php
+                require __DIR__ . '/settings.php';
+                ?>
 
             </div>
         </div>

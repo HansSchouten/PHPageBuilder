@@ -45,18 +45,12 @@ class PHPageBuilder
      * PHPageBuilder constructor.
      *
      * @param array $config         configuration in the format defined in config/pagebuilder.example.php
-     * @param string|null $themeSlug
-     * @param string $language
      */
-    public function __construct(array $config, string $themeSlug = null, string $language = 'en')
+    public function __construct(array $config)
     {
         session_start();
 
         $this->setConfig($config);
-
-        if (isset($themeSlug)) {
-            $this->theme = new Theme(phpb_config('themes'), $themeSlug);
-        }
 
         // init the default login, if enabled
         if (phpb_config('login.use_login')) {
@@ -68,12 +62,13 @@ class PHPageBuilder
             $this->websiteManager = new WebsiteManager;
         }
 
-        // init the default page builder and page router
+        // init the default page builder, theme and page router
         $this->pageBuilder = new PageBuilder($this);
+        $this->theme = new Theme;
         $this->router = new DatabasePageRouter;
 
         // load translations of the configured language
-        $this->loadTranslations($language);
+        $this->loadTranslations(phpb_config('project.language'));
 
         // create database connection and boot eloquent models on classes extending Eloquent\Model
         if (phpb_config('storage.use_database')) {

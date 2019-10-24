@@ -29,14 +29,11 @@ class Theme implements ThemeContract
 
     /**
      * Theme constructor.
-     *
-     * @param array $config         themes configuration
-     * @param string $themeSlug
      */
-    public function __construct(array $config, string $themeSlug)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->themeSlug = $themeSlug;
+        $this->config = phpb_config('themes');
+        $this->themeSlug = phpb_config('themes.active_theme');
 
         $this->loadThemeBlocks();
         $this->loadThemeLayouts();
