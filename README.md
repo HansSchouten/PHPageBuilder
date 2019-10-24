@@ -1,17 +1,23 @@
+
 # PHPagebuilder
 PHPagebuilder is a drag and drop pagebuilder to manage pages in any PHP project.
 
 ## How does it help me?
-PHPagebuilder comes in handy for the following use cases.
-- You want to build a website for a friend or a client within a few hours.
-- You or your clients get lost in feature abundant admin panels like Drupal.
-- You have coding experience, but hate to add all these messy Wordpress plugins for features you can write in no-time yourself.
+PHPagebuilder comes in handy for the following use cases:
 
-**Just download any (free) HTML5 template, cut it into blocks and attach PHPagebuilder.**
+#### I have little or no web coding experience
+- You just want to create a basic website that you can easily manage from any device.
+- You get lost installing, configuring, updating or simply using feature abundant CMS systems like Wordpress, Drupal.
 
-Do you already have a great project, or want to keep using your favorite framework?
+#### I know what I am doing
+- You want to build a custom website for a client within a few hours.
+- Your clients get lost in feature abundant admin panels like Drupal.
+- You hate to use all these messy Wordpress plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
+- You would like to have advanced functionality (search functionality, views that display data of remote sources, etc.) easily manageable by your clients.
 
-Add PHPagebuilder to your project and integrate it by manually calling or overriding a number of PHPagebuilder's components.
+If you find yourself in any of the above, there are basically two options:
+1. Just download any (free) HTML5 template, cut it into blocks and [attach PHPagebuilder](#installation).
+2. You have a great project, or want to keep using your favorite framework. Add PHPagebuilder to your project and integrate it by manually calling or overriding a number of PHPagebuilder's components.
 
 ## Features
 
@@ -20,8 +26,12 @@ PHPagebuilder features a page builder built on [GrapesJS](https://grapesjs.com/)
 ![PageBuilder](https://user-images.githubusercontent.com/5946444/67138504-723fea00-f244-11e9-84ca-f211d7ed294b.png)
 
 ### Website Manager
-A basic website manager is included with a [Bootstrap](https://getbootstrap.com/) UI. This website manager offers functionality to add or remove pages and to edit page settings like page title or URL. Clicking the edit button will open the page builder.
+A basic website manager is included with a [Bootstrap](https://getbootstrap.com/) UI. This website manager offers basic functionality to add or remove pages and to edit page settings like page title or URL. Clicking the edit button will open the page builder.
 ![Website Manager](https://user-images.githubusercontent.com/5946444/67484882-4029f000-f669-11e9-9a1f-8a0e1c53e308.jpg)
+
+You don't like the website manager? No worries, it is only included for people who want to use PHPagebuilder directly out of the box.
+
+By setting `use_website_manager` to `false` in your config, you won't see the website manager ever again. You can render the pagebuilder yourself by using the `PHPageBuilder\GrapesJS\PageBuilder` class. You can also leave `use_website_manager` to `true`, implement the WebsiteManagerContract and add your own class to your config file.
 
 ## Installation
 
