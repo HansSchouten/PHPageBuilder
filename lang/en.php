@@ -28,6 +28,9 @@ return [
         'save-changes' => 'Save changes',
         'theme' => 'Theme',
         'visible-in-page-overview' => 'visible in page overview',
+        'page-created' => 'Page successfully created',
+        'page-updated' => 'Page successfully updated',
+        'page-deleted' => 'Page removed',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Select an element to modify the style.',

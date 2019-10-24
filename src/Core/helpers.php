@@ -40,6 +40,48 @@ if (! function_exists('phpb_asset')) {
     }
 }
 
+if (! function_exists('phpb_flash')) {
+    /**
+     * Return the flash data with the given key (as dot-separated multidimensional array selector) or false if not set.
+     *
+     * @param $key
+     * @param bool $encode
+     * @return bool|mixed
+     */
+    function phpb_flash($key, $encode = true)
+    {
+        global $phpb_flash;
+
+        // if no dot notation is used, return first dimension value or empty string
+        if (strpos($key, '.') === false) {
+            if ($encode) {
+                return e($phpb_flash[$key]) ?? false;
+            }
+            return $phpb_flash[$key] ?? false;
+        }
+
+        // if dot notation is used, traverse config string
+        $segments = explode('.', $key);
+        $subArray = $phpb_flash;
+        foreach ($segments as $segment) {
+            if (isset($subArray[$segment])) {
+                $subArray = &$subArray[$segment];
+            } else {
+                return false;
+            }
+        }
+
+        // if the remaining sub array is a string, return this piece of flash data
+        if (is_string($subArray)) {
+            if ($encode) {
+                return e($subArray);
+            }
+            return $subArray;
+        }
+        return false;
+    }
+}
+
 if (! function_exists('phpb_config')) {
     /**
      * Return the configuration with the given key (as dot-separated multidimensional array selector).
@@ -85,6 +127,9 @@ if (! function_exists('phpb_trans')) {
 
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
+            if ($encode) {
+                return e($phpb_translations[$key]) ?? '';
+            }
             return $phpb_translations[$key] ?? '';
         }
 
@@ -135,10 +180,14 @@ if (! function_exists('phpb_redirect')) {
      * The given route will be prefixed with pagebuilder_url from config.
      *
      * @param string $route
-     * @return string
+     * @param array $flashData
      */
-    function phpb_redirect($route = '')
+    function phpb_redirect($route = '', $flashData = [])
     {
+        if (! empty($flashData)) {
+            $_SESSION["phpb_flash"] = $flashData;
+        }
+
         header('Location: ' . phpb_route($route));
         exit();
     }
@@ -158,7 +207,7 @@ if (! function_exists('phpb_field_value')) {
             return e($_POST[$attribute]);
         }
         if (isset($instance)) {
-            return $instance->$attribute;
+            return e($instance->$attribute);
         }
         return '';
     }

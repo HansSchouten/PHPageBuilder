@@ -27,6 +27,16 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                 <h4><?= phpb_trans('website-manager.pages') ?></h4>
 
                 <div class="main-spacing">
+                    <?php
+                    if (phpb_flash('message')):
+                    ?>
+                    <div class="alert alert-<?= phpb_flash('message-type') ?>">
+                        <?= phpb_flash('message') ?>
+                    </div>
+                    <?php
+                    endif;
+                    ?>
+
                     <div class="table-responsive">
                         <table class="table">
                             <thead>

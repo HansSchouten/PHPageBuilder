@@ -57,7 +57,7 @@ $builder->handleRequest();
 Note: You might have to change the paths to `autoload.php` and to your `config.php` depending on the folder structure of your project.
 
 ### Without Composer
-You are not using Composer? No worries, this project is written in plain PHP without any dependencies, so it can be included in any PHP project!
+Are you not using Composer? No worries, this project is written in plain PHP without any dependencies, so it can be easily included in any PHP project!
 
 Just download the latest release into a separate folder inside your project (we named the folder: `phpagebuilder`).
 

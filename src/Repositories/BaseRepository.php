@@ -40,14 +40,16 @@ class BaseRepository
      * @param array $data
      * @return object|null
      */
-    public function create(array $data)
+    protected function create(array $data)
     {
         $columns = implode(', ', array_keys($data));
         $questionMarks = implode(', ', array_fill(0, sizeof($data), '?'));
+
         $this->db->query(
             "INSERT INTO {$this->table} ({$columns}) VALUES ({$questionMarks})",
             array_values($data)
         );
+
         $id = $this->db->lastInsertId();
         if ($id) {
             return $this->findWithId($id);
@@ -62,7 +64,7 @@ class BaseRepository
      * @param array $data
      * @return bool
      */
-    public function update($instance, array $data)
+    protected function update($instance, array $data)
     {
         $set = '';
         foreach ($data as $column => $value) {

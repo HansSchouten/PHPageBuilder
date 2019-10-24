@@ -50,6 +50,13 @@ class PHPageBuilder
     {
         session_start();
 
+        // if flash session data is set, set global session flash data and remove data
+        if (isset($_SESSION['phpb_flash'])) {
+            global $phpb_flash;
+            $phpb_flash = $_SESSION['phpb_flash'];
+            unset($_SESSION['phpb_flash']);
+        }
+
         $this->setConfig($config);
 
         // init the default login, if enabled

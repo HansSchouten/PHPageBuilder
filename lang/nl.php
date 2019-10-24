@@ -28,6 +28,9 @@ return [
         'save-changes' => 'Wijzigingen opslaan',
         'theme' => 'Thema',
         'visible-in-page-overview' => 'zichtbaar in pagina overzicht',
+        'page-created' => 'Nieuwe pagina aangemaakt',
+        'page-updated' => 'Pagina wijziging opgeslagen',
+        'page-deleted' => 'Pagina verwijderd',
     ],
     'pagebuilder' => [
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',
