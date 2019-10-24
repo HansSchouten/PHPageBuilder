@@ -163,10 +163,10 @@ if (! function_exists('phpb_autoload')) {
         }
         $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-        // remove leading PHPageBuilder/ from class path
+        // remove leading PHPageBuilder/ from the class path
         $fileName = str_replace('PHPageBuilder/', '', $fileName);
 
-        // include class files from starting from src/ directory
+        // include class files starting in the src directory
         require __DIR__ . '/../' . $fileName;
     }
 }

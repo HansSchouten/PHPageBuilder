@@ -5,19 +5,20 @@ PHPagebuilder is a drag and drop pagebuilder to manage pages in any PHP project.
 ## How does it help me?
 PHPagebuilder comes in handy for the following use cases:
 
-#### I have little or no web coding experience
+#### I have little or no web development experience
 - You just want to create a basic website that you can easily manage from any device.
 - You get lost installing, configuring, updating or simply using feature abundant CMS systems like Wordpress, Drupal.
+- You don't like the page editors in CMS systems you've tried.
 
-#### I know what I am doing
+#### I am experienced
 - You want to build a custom website for a client within a few hours.
 - Your clients get lost in feature abundant admin panels like Drupal.
-- You hate to use all these messy Wordpress plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
+- You hate to write or use messy Wordpress plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
 - You would like to have advanced functionality (search functionality, views that display data of remote sources, etc.) easily manageable by your clients.
 
-If you find yourself in any of the above, there are basically two options:
-1. Just download any (free) HTML5 template, cut it into blocks and [attach PHPagebuilder](#installation).
-2. You have a great project, or want to keep using your favorite framework. Add PHPagebuilder to your project and integrate it by manually calling or overriding a number of PHPagebuilder's components.
+If you find yourself in any of the above, there are two starting points:
+1. Create or download any HTML5 template ([Bootstrap](https://themes.getbootstrap.com/), [ThemeForest](https://themeforest.net/popular_item/by_category?category=site-templates), [Colorlib](https://colorlib.com/wp/templates/), etc), cut it into blocks and [attach PHPagebuilder](#installation).
+2. You have a great project, or want to keep using your favorite framework? Add PHPagebuilder to your project and integrate it by manually calling or overriding a number of PHPagebuilder's components. See the [customization section](#customization) for more information.
 
 ## Features
 
@@ -81,6 +82,6 @@ Note: You might have to change the path of your `$installationFolder` and to you
 
 PHPagebuilder is build with customization in mind. It comes with an extensive example config file in wich you can easily adapt the pagebuilder to your needs.
 
-PHPagebuilder consist of four modules (Login, Website Manager, Pagebuilder, Routing) each of which you can disable or replace with your own implementation. To add your own implementation, implement the corresponding Contract and replace the default class by your own class in the config file.
+PHPagebuilder consist of four modules (Login, Website Manager, Pagebuilder, Routing) each of which you can disable or replace with your own implementation. To add replace a module with your own implementation, implement the corresponding Contract and replace the default class by your own class in the config file.
 
-Instead of relying on the `PHPageBuilder` class to handle all requests, you can also integrate PHPagebuilder into your project by directly using any of the modules. For example, instantiating `PHPageBuilder\GrapesJS\PageBuilder` allows you to render the pagebuilder for any page you provide.
+Instead of relying on the PHPageBuilder class to handle all requests, you can also integrate the page builder into your project by calling methods on its modules. For example, instantiating `PHPageBuilder\GrapesJS\PageBuilder` allows you to directly render the pagebuilder for any page you provide.
