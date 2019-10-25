@@ -44,7 +44,7 @@ class PHPageBuilder
     /**
      * PHPageBuilder constructor.
      *
-     * @param array $config         configuration in the format defined in config/pagebuilder.example.php
+     * @param array $config         configuration in the format defined in config/config.example.php
      */
     public function __construct(array $config)
     {

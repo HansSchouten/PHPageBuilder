@@ -14,19 +14,6 @@ if (! function_exists('e')) {
     }
 }
 
-if (! function_exists('phpb_alert')) {
-    /**
-     * Return whether an alert message with the given key is set.
-     *
-     * @param string $key
-     * @return bool
-     */
-    function phpb_alert($key)
-    {
-        return (isset($_GET['alert']) && $_GET['alert'] === $key);
-    }
-}
-
 if (! function_exists('phpb_asset')) {
     /**
      * Return the public path of a PHPageBuilder asset.

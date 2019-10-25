@@ -4,6 +4,16 @@ namespace PHPageBuilder\Core;
 
 use PDO;
 
+/**
+ * Class DB
+ *
+ * A basic shell around PDO.
+ *
+ * Note: be aware to NEVER pass user input in the $table parameter, or this would result in SQL Injections.
+ * $table should be a property configured in your repository classes.
+ *
+ * @package PHPageBuilder\Core
+ */
 class DB
 {
     /**
@@ -64,7 +74,7 @@ class DB
     }
 
     /**
-     * Perform a custom select query with sensitive data passed as $parameters, with an array of $class instances as result.
+     * Perform a custom select query with user input data passed as $parameters.
      *
      * @param string $query
      * @param array $parameters
@@ -78,7 +88,7 @@ class DB
     }
 
     /**
-     * Perform a custom query with sensitive data passed as $parameters.
+     * Perform a custom query with user input data passed as $parameters.
      *
      * @param string $query
      * @param array $parameters

@@ -6,7 +6,7 @@ return [
         'username' => 'Username',
         'password' => 'Password',
         'login-button' => 'Login',
-        'invalid-credentials' => 'Invalid username or password!',
+        'invalid-credentials' => 'Invalid username or password',
     ],
     'website-manager' => [
         'title' => 'Website Manager',

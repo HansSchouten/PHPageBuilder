@@ -4,6 +4,13 @@ namespace PHPageBuilder\Repositories;
 
 use PHPageBuilder\Core\DB;
 
+/**
+ * Class BaseRepository
+ *
+ * The base repository passing CRUD calls to DB and initialising class instances for returned records.
+ *
+ * @package PHPageBuilder\Repositories
+ */
 class BaseRepository
 {
     /**
@@ -13,6 +20,7 @@ class BaseRepository
 
     /**
      * The database table of this repository.
+     * Note: do not replace this value with user input.
      *
      * @var string
      */

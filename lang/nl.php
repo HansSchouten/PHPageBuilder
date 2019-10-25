@@ -6,7 +6,7 @@ return [
         'username' => 'Gebruikersnaam',
         'password' => 'Wachtwoord',
         'login-button' => 'Inloggen',
-        'invalid-credentials' => 'Ongeldige logingegevens!',
+        'invalid-credentials' => 'Ingevulde logingegevens zijn onjuist',
     ],
     'website-manager' => [
         'title' => 'Websitebeheer',

@@ -6,11 +6,11 @@
     <div class="col-12">
         <form class="login-form mt-3" method="post" action="?route=login">
             <?php
-            if (phpb_alert('invalid_credentials')):
-            ?>
-            <div class="alert alert-danger" role="alert">
-                <?= phpb_trans('login.invalid-credentials') ?>
-            </div>
+            if (phpb_flash('message')):
+                ?>
+                <div class="alert alert-<?= phpb_flash('message-type') ?>">
+                    <?= phpb_flash('message') ?>
+                </div>
             <?php
             endif;
             ?>
