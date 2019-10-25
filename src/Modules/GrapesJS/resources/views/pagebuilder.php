@@ -73,6 +73,13 @@ const canvas = editor.Canvas;
 
 editor.on('block:drag:stop', droppedComponent => {
     updateComponentAccess(droppedComponent);
+    droppedComponent.set({
+        removable: true,
+        draggable: true,
+        copyable: true,
+        selectable: true,
+        hoverable: true,
+    })
 });
 
 const updateComponentAccess = (component) => {

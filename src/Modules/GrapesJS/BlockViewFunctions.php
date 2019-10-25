@@ -45,6 +45,12 @@ class BlockViewFunctions
 
         $attributes = '';
 
+        if (isset($settings['fixed'])) {
+            foreach ($settings['fixed'] as $attribute => $value) {
+                $attributes .= ' ' . $attribute . '="' . e($value) . '"';
+            }
+        }
+
         // construct html element
         $html = "<{$tag} $attributes>";
         if (! in_array($tag, self::EMPTY_ELEMENTS)) {
@@ -68,6 +74,12 @@ class BlockViewFunctions
     protected function editElement($tag, $settings)
     {
         $attributes = 'gjs-editable';
+
+        if (isset($settings['fixed'])) {
+            foreach ($settings['fixed'] as $attribute => $value) {
+                $attributes .= ' ' . $attribute . '="' . e($value) . '"';
+            }
+        }
 
         // construct html element
         $html = "<{$tag} $attributes>";
