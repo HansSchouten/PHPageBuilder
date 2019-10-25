@@ -8,6 +8,7 @@ PHPagebuilder can be used as a ultra lightweight CMS to set up new projects, or 
 ## Table of Contents
 - [How does it help me?](#how-does-it-help-me)
 - [Features](#features)
+- [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Customization](#customization)
 
