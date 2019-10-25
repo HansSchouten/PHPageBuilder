@@ -86,12 +86,13 @@ class ThemeBlock
     /**
      * Render this ThemeBlock instance and return the content.
      *
+     * @param $blockViewFunctions
      * @return string
      */
-    public function getRenderedContent()
+    public function getRenderedContent($blockViewFunctions)
     {
         // init variables that should be accessible in the view
-        $block = $this;
+        $block = $blockViewFunctions;
 
         ob_start();
         require $this->getFolder() . '/view.php';

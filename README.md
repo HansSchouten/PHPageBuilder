@@ -3,7 +3,7 @@
 # PHPagebuilder
 > PHPagebuilder is a drag and drop pagebuilder to manage pages in any PHP project.
 
-PHPagebuilder can be used as a ultra lightweight CMS to set up new projects, or can be integrated into existing projects or your favorite frameworks (such as [this version](https://github.com/HansSchouten/Laravel-Pagebuilder) for Laravel). The server-side code does not depend on any other libraries and is blazing fast. It includes an optional website manager with a [Bootstrap UI](https://getbootstrap.com) and integrates the most popular open source drag and drop pagebuilder: [GrapesJS](https://grapesjs.com/). This package is made with customization in mind, allowing you to configure, disable or replace any of its modules.
+PHPagebuilder can be used as an ultra lightweight CMS to set up new projects, or can be integrated into existing projects or your favorite frameworks (such as [this version](https://github.com/HansSchouten/Laravel-Pagebuilder) for Laravel). The server-side code does not depend on any other libraries and is blazing fast. It includes an optional website manager with a [Bootstrap UI](https://getbootstrap.com) and integrates the most popular open source drag and drop pagebuilder: [GrapesJS](https://grapesjs.com/). This package is made with customization in mind, allowing you to configure, disable or replace any of its modules.
 
 ## Table of Contents
 - [How does it help me?](#how-does-it-help-me)
@@ -96,8 +96,6 @@ If you use PHPagebuilder out of the box, it requires a database for storing your
 PHPagebuilder is build with customization in mind. It comes with an extensive example config file in wich you can easily adapt the pagebuilder to your needs.
 
 PHPagebuilder consists of four modules (Login, Website Manager, Pagebuilder, Routing) each of which you can disable or replace with your own implementation. To replace a module with your own implementation, implement the corresponding Contract and replace the default class by your own class in the config file.
-
-Instead of relying on the PHPageBuilder class to handle all requests, you can also integrate the page builder into your project by calling methods on its modules. For example, instantiating `PHPageBuilder\Modules\GrapesJS\PageBuilder` allows you to directly render the pagebuilder for any page you provide.
 
 ### Customize the Website Manager
 #### Disable the module

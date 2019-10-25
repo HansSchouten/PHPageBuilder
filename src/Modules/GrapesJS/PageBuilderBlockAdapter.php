@@ -60,7 +60,7 @@ class PageBuilderBlockAdapter
     {
         $data = [
             'label' => $this->getTitle(),
-            'content' => $this->block->getRenderedContent(),
+            'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
         ];
 
         if ($this->block->get('icon')) {

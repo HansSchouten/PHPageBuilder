@@ -64,12 +64,41 @@ let editor = grapesjs.init({
         ],
         scripts: [
             'https://code.jquery.com/jquery-3.3.1.slim.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js',
-            'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
-        ],
+        ]
         */
     }
 });
+
+const canvas = editor.Canvas;
+
+editor.on('block:drag:stop', droppedComponent => {
+    updateComponentAccess(droppedComponent);
+});
+
+const updateComponentAccess = (component) => {
+    component.set({
+        removable: false,
+        draggable: false,
+        droppable: false,
+        badgable: false,
+        stylable: false,
+        highlightable: false,
+        copyable: false,
+        resizable: false,
+        editable: false,
+        layerable: false,
+        selectable: false,
+        hoverable: false
+    });
+    if ('gjs-editable' in component.attributes.attributes) {
+        component.set({
+            hoverable: true,
+            selectable: true,
+            editable: true,
+        })
+    }
+    component.get('components').each(c => updateComponentAccess(c));
+};
 
 let blockManager = editor.BlockManager;
 <?php
