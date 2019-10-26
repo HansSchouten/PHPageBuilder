@@ -73,7 +73,7 @@ class BlockViewFunctions
      */
     protected function editElement($tag, $settings)
     {
-        $attributes = 'gjs-editable';
+        $attributes = 'phpb-editable';
 
         if (isset($settings['fixed'])) {
             foreach ($settings['fixed'] as $attribute => $value) {

@@ -65,7 +65,7 @@ class BlockAdapter
     }
 
     /**
-     * Return an array representation of the theme block, for adding as a block in GrapesJS.
+     * Return an array representation of the theme block, for adding as a block to GrapesJS.
      *
      * @return array
      */
@@ -75,17 +75,15 @@ class BlockAdapter
             'label' => $this->getTitle(),
             'category' => $this->getCategory(),
             'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
+            // html based blocks are stored in database and hence all whitelisted tags (headings, p, ..) can be edited
+            'whitelist_on_tag' => $this->block->isHtmlBlock(),
         ];
 
         $iconClass = 'fa fa-edit';
         if ($this->block->get('icon')) {
             $iconClass = $this->block->get('icon');
         }
-        $data['attributes'] = [
-            'class' => $iconClass
-        ];
-
-        $data['attributes']['title'] = ':)';
+        $data['attributes'] = ['class' => $iconClass];
 
         return $data;
     }
