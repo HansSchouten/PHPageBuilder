@@ -1,6 +1,16 @@
 window.onload = function() {
     let draggedBlock;
 
+    /**
+     * On selecting a component, only show the copy/drag/remove toolbar if the component is draggable or removable.
+     */
+    window.editor.on('component:selected', function(component) {
+        document.querySelector('.gjs-toolbar').classList.add('d-none');
+        if (component.attributes.draggable || component.attributes.removable) {
+            document.querySelector('.gjs-toolbar').classList.remove('d-none');
+        }
+    });
+
     window.editor.on('block:drag:start', function(block) {
         draggedBlock = block;
     });
@@ -66,7 +76,6 @@ window.onload = function() {
                 hoverable: true,
                 selectable: true,
                 editable: true,
-                layerable: false,
             })
         }
     }
@@ -77,7 +86,6 @@ window.onload = function() {
                 hoverable: true,
                 selectable: true,
                 editable: true,
-                layerable: false,
             })
         }
     }

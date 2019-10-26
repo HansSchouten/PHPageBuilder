@@ -53,20 +53,6 @@ window.editor = grapesjs.init({
     }
 });
 
-editor.DomComponents.addType('invisible-element', {
-    isComponent: function(el) {
-        let invisibleElements = [
-            'TITLE', 'META', 'LINK', 'SCRIPT'
-        ];
-        return invisibleElements.includes(el.tagName);
-    },
-    model: {
-        defaults: {
-            layerable: false
-        }
-    }
-});
-
 editor.DomComponents.getWrapper().set('name', '<?= phpb_trans('pagebuilder.page') ?>');
 
 editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
