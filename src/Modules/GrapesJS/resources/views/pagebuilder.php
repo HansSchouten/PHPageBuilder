@@ -25,7 +25,7 @@ window.editor = grapesjs.init({
                         className: 'fa fa-th-large',
                         command: 'open-blocks',
                         togglable: 0,
-                        attributes: {title: 'Open Blocks'},
+                        attributes: {title: '<?= phpb_trans('pagebuilder.view-blocks') ?>'},
                         active: true,
                     },
                     {
@@ -33,14 +33,14 @@ window.editor = grapesjs.init({
                         className: 'fa fa-cog',
                         command: 'open-tm',
                         togglable: 0,
-                        attributes: {title: 'Settings'}
+                        attributes: {title: '<?= phpb_trans('pagebuilder.view-settings') ?>'},
                     },
                     {
                         id: 'open-sm',
                         className: 'fa fa-paint-brush',
                         command: 'open-sm',
                         togglable: 0,
-                        attributes: {title: 'Open Style Manager'}
+                        attributes: {title: '<?= phpb_trans('pagebuilder.view-style-manager') ?>'},
                     }
                 ]
             },
