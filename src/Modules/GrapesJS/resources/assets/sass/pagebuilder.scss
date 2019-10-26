@@ -177,12 +177,3 @@ html, body, #gjs {
 .gjs-field input, .gjs-field select, .gjs-field textarea {
   padding: 3px;
 }
-
-.gjs-comp-selected {
-  outline: 2px solid #3b97e3 !important;
-  outline-offset: 1px !important;
-}
-.gjs-hovered {
-  outline: 1px solid #3b97e3 !important;
-  outline-offset: 1px !important;
-}

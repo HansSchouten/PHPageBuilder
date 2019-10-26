@@ -47,6 +47,9 @@ window.editor = grapesjs.init({
         ]
     },
     canvas: {
+        styles: [
+            '<?= phpb_asset('pagebuilder/page-injection.css') ?>',
+        ],
         scripts: [
             '<?= phpb_asset('pagebuilder/page-injection.js') ?>',
         ]
