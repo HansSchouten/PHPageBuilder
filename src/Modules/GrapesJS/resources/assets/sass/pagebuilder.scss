@@ -44,7 +44,7 @@ html, body, #gjs {
 }
 .gjs-pn-views {
   .gjs-pn-btn {
-    width: 25%;
+    width: 33%;
     margin-right: 0;
     padding: 16px 15px 16px 15px;
     -webkit-border-radius: 0;
@@ -167,6 +167,9 @@ html, body, #gjs {
 .gjs-layer-name {
   padding-top: 2px;
   padding-bottom: 13px;
+}
+.gjs-layer-count {
+  display: none;
 }
 .gjs-layer-vis {
   padding-top: 11px

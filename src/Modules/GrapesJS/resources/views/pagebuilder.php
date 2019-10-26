@@ -29,13 +29,6 @@ window.editor = grapesjs.init({
                         active: true,
                     },
                     {
-                        id: 'open-layers',
-                        className: 'fa fa-bars',
-                        command: 'open-layers',
-                        togglable: 0,
-                        attributes: {title: 'Open Layer Manager'}
-                    },
-                    {
                         id: 'open-tm',
                         className: 'fa fa-cog',
                         command: 'open-tm',
@@ -57,9 +50,26 @@ window.editor = grapesjs.init({
         scripts: [
             '<?= phpb_asset('pagebuilder/page-injection.js') ?>',
         ]
-    },
-    components: <?= json_encode($pageRenderer->render()); ?>
+    }
 });
+
+editor.DomComponents.addType('invisible-element', {
+    isComponent: function(el) {
+        let invisibleElements = [
+            'TITLE', 'META', 'LINK', 'SCRIPT'
+        ];
+        return invisibleElements.includes(el.tagName);
+    },
+    model: {
+        defaults: {
+            layerable: false
+        }
+    }
+});
+
+editor.DomComponents.getWrapper().set('name', '<?= phpb_trans('pagebuilder.page') ?>');
+
+editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
 
 <?php
 foreach ($blocks as $block):

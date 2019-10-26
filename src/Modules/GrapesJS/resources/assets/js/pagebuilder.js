@@ -17,9 +17,10 @@ window.onload = function() {
             removable: true,
             draggable: true,
             copyable: true,
+            layerable: true,
             selectable: true,
             hoverable: true,
-        })
+        });
     });
 
     /**
@@ -65,6 +66,7 @@ window.onload = function() {
                 hoverable: true,
                 selectable: true,
                 editable: true,
+                layerable: false,
             })
         }
     }
@@ -75,6 +77,7 @@ window.onload = function() {
                 hoverable: true,
                 selectable: true,
                 editable: true,
+                layerable: false,
             })
         }
     }

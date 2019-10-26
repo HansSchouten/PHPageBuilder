@@ -102,4 +102,4 @@ PHPagebuilder consists of four modules (Login, Website Manager, Pagebuilder, Rou
 Do you already have admin login functionality in your project? Then you can disable the website manager module by setting  `use_website_manager` to `false` in your config. Next, you use or implement the page create/edit/remove functionality in your project and then directly launch the pagebuilder. You can render the pagebuilder from your project by using the `PHPageBuilder\Modules\GrapesJS\PageBuilder` class.
 
 #### Replace the module
-If you want use the CMS routing functionality of PHPagebuilder, but you want to have a different website manager, you can replace the website manager for your own implementation. Make sure leave `use_website_manager` to `true` in your config, implement the WebsiteManagerContract and add your own class to your config file.
+If you want to use the CMS routing functionality of PHPagebuilder, but you want to have a different website manager, you can replace the website manager for your own implementation. Make sure leave `use_website_manager` to `true` in your config, implement the WebsiteManagerContract and add your own class to your config file.
