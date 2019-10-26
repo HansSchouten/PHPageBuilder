@@ -57,6 +57,26 @@ class ThemeBlock
     }
 
     /**
+     * Return whether this block is a block containing/allowing PHP code.
+     *
+     * @return bool
+     */
+    public function isPhpBlock()
+    {
+        return file_exists($this->getFolder() . '/view.php');
+    }
+
+    /**
+     * Return whether this block is a plain html block that does not contain/allow PHP code.
+     *
+     * @return bool
+     */
+    public function isHtmlBlock()
+    {
+        return (! $this->isPhpBlock());
+    }
+
+    /**
      * Return configuration with the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
@@ -94,10 +114,14 @@ class ThemeBlock
         // init variables that should be accessible in the view
         $block = $blockViewFunctions;
 
-        ob_start();
-        require $this->getFolder() . '/view.php';
-        $content = ob_get_contents();
-        ob_end_clean();
+        if ($this->isPhpBlock()) {
+            ob_start();
+            require $this->getFolder() . '/view.php';
+            $content = ob_get_contents();
+            ob_end_clean();
+        } else {
+            $content = file_get_contents($this->getFolder() . '/view.html');
+        }
 
         return $content;
     }
