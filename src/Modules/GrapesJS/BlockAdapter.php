@@ -5,7 +5,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\ThemeBlock;
 
 /**
- * Class PageBuilderBlockAdapter
+ * Class BlockAdapter
  *
  * Class for adapting a ThemeBlock into a JSON object understood by the GrapesJS page builder.
  *
@@ -19,7 +19,7 @@ class BlockAdapter
     protected $block;
 
     /**
-     * PageBuilderBlockAdapter constructor.
+     * BlockAdapter constructor.
      *
      * @param ThemeBlock $block
      */
@@ -52,14 +52,28 @@ class BlockAdapter
     }
 
     /**
+     * Return the category this block belongs to.
+     *
+     * @return string|null
+     */
+    public function getCategory()
+    {
+        if ($this->block->get('category')) {
+            return $this->block->get('category');
+        }
+        return null;
+    }
+
+    /**
      * Return an array representation of the theme block, for adding as a block in GrapesJS.
      *
      * @return array
      */
-    public function getBlockArray()
+    public function getBlockManagerArray()
     {
         $data = [
             'label' => $this->getTitle(),
+            'category' => $this->getCategory(),
             'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
         ];
 
@@ -70,6 +84,8 @@ class BlockAdapter
         $data['attributes'] = [
             'class' => $iconClass
         ];
+
+        $data['attributes']['title'] = ':)';
 
         return $data;
     }

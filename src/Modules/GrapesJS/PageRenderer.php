@@ -36,11 +36,11 @@ class PageRenderer
      */
     public function getPageLayoutPath()
     {
-        return $this->theme->getFolder() . '/layouts/' . basename($this->page->layout) . '/view.php';
+        return $this->theme->getFolder() . '/layouts/' . basename($this->page->getLayout()) . '/view.php';
     }
 
     /**
-     * Return the page passed to this PageRenderer instance.
+     * Return the rendered version of the page which will be loaded in the page builder.
      */
     public function render()
     {
@@ -65,6 +65,7 @@ class PageRenderer
      */
     public function renderBody()
     {
+        // @todo parse $this->page->data and render each block
         return '';
     }
 }

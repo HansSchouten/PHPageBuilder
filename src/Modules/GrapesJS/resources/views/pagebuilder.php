@@ -61,11 +61,10 @@ window.editor = grapesjs.init({
     components: <?= json_encode($pageRenderer->render()); ?>
 });
 
-let blockManager = editor.BlockManager;
 <?php
 foreach ($blocks as $block):
 ?>
-blockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($block->getBlockArray()) ?>);
+editor.BlockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($block->getBlockManagerArray()) ?>);
 <?php
 endforeach;
 ?>

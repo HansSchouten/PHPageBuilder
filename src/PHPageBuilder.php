@@ -70,7 +70,7 @@ class PHPageBuilder
         }
 
         // init the default page builder, theme and page router
-        $this->pageBuilder = new PageBuilder($this);
+        $this->pageBuilder = new PageBuilder;
         $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
 
         $this->router = new DatabasePageRouter;
@@ -166,6 +166,9 @@ class PHPageBuilder
     public function setTheme(ThemeContract $theme)
     {
         $this->theme = $theme;
+        if (isset($this->pageBuilder)) {
+            $this->pageBuilder->setTheme($theme);
+        }
     }
 
 

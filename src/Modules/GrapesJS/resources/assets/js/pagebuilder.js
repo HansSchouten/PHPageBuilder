@@ -1,6 +1,9 @@
 window.onload = function() {
 
     window.editor.on('block:drag:stop', droppedComponent => {
+        if (! droppedComponent) {
+            return;
+        }
         updateComponentAccess(droppedComponent);
         droppedComponent.set({
             removable: true,

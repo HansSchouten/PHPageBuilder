@@ -111,17 +111,17 @@ class ThemeBlock
      */
     public function getRenderedContent($blockViewFunctions)
     {
+        if ($this->isHtmlBlock()) {
+            return file_get_contents($this->getFolder() . '/view.html');
+        }
+
         // init variables that should be accessible in the view
         $block = $blockViewFunctions;
 
-        if ($this->isPhpBlock()) {
-            ob_start();
-            require $this->getFolder() . '/view.php';
-            $content = ob_get_contents();
-            ob_end_clean();
-        } else {
-            $content = file_get_contents($this->getFolder() . '/view.html');
-        }
+        ob_start();
+        require $this->getFolder() . '/view.php';
+        $content = ob_get_contents();
+        ob_end_clean();
 
         return $content;
     }

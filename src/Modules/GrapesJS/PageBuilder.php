@@ -4,13 +4,14 @@ namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Theme;
 
 class PageBuilder implements PageBuilderContract
 {
     /**
-     * @var Theme $theme
+     * @var ThemeContract $theme
      */
     protected $theme;
 
@@ -25,9 +26,9 @@ class PageBuilder implements PageBuilderContract
     /**
      * Set the theme used while rendering pages in the page builder.
      *
-     * @param Theme $theme
+     * @param ThemeContract $theme
      */
-    public function setTheme(Theme $theme)
+    public function setTheme(ThemeContract $theme)
     {
         $this->theme = $theme;
     }
@@ -45,8 +46,12 @@ class PageBuilder implements PageBuilderContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
 
-            $this->renderPageBuilder($page);
-            exit();
+            if ($page instanceof PageContract) {
+                $this->renderPageBuilder($page);
+                exit();
+            }
+
+            die('Page not found');
         }
     }
 
