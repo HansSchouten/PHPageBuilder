@@ -5,23 +5,31 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Repositories\PageRepository;
-use PHPageBuilder\PHPageBuilder;
+use PHPageBuilder\Theme;
 
 class PageBuilder implements PageBuilderContract
 {
     /**
-     * @var PHPageBuilder $context;
+     * @var Theme $theme
      */
-    protected $context;
+    protected $theme;
 
     /**
      * PageBuilder constructor.
-     *
-     * @param PHPageBuilder $context
      */
-    public function __construct(PHPageBuilder $context)
+    public function __construct()
     {
-        $this->context = $context;
+        $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+    }
+
+    /**
+     * Set the theme used while rendering pages in the page builder.
+     *
+     * @param Theme $theme
+     */
+    public function setTheme(Theme $theme)
+    {
+        $this->theme = $theme;
     }
 
     /**
@@ -51,12 +59,12 @@ class PageBuilder implements PageBuilderContract
     {
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $pageRenderer = new PageRenderer($this->context, $page);
+        $pageRenderer = new PageRenderer($this->theme, $page);
 
         // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
         $blocks = [];
-        foreach ($this->context->getTheme()->getThemeBlocks() as $themeBlock) {
-            $blocks[] = new PageBuilderBlockAdapter($themeBlock);
+        foreach ($this->theme->getThemeBlocks() as $themeBlock) {
+            $blocks[] = new BlockAdapter($themeBlock);
         }
 
         require __DIR__ . '/resources/views/layout.php';

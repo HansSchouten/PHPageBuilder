@@ -1,11 +1,8 @@
 
-<div id="gjs">
-<?= $pageRenderer->render(); ?>
-</div>
+<div id="gjs"></div>
 
 <script type="text/javascript">
-
-let editor = grapesjs.init({
+window.editor = grapesjs.init({
     container : '#gjs',
     noticeOnUnload: false,
     storageManager: {
@@ -53,59 +50,16 @@ let editor = grapesjs.init({
                         attributes: {title: 'Open Style Manager'}
                     }
                 ]
-            }
+            },
         ]
     },
-    fromElement: true,
     canvas: {
-        /*
-        styles: [
-            'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-        ],
         scripts: [
-            'https://code.jquery.com/jquery-3.3.1.slim.min.js',
+            '<?= phpb_asset('pagebuilder/page-injection.js') ?>',
         ]
-        */
-    }
+    },
+    components: <?= json_encode($pageRenderer->render()); ?>
 });
-
-const canvas = editor.Canvas;
-
-editor.on('block:drag:stop', droppedComponent => {
-    updateComponentAccess(droppedComponent);
-    droppedComponent.set({
-        removable: true,
-        draggable: true,
-        copyable: true,
-        selectable: true,
-        hoverable: true,
-    })
-});
-
-const updateComponentAccess = (component) => {
-    component.set({
-        removable: false,
-        draggable: false,
-        droppable: false,
-        badgable: false,
-        stylable: false,
-        highlightable: false,
-        copyable: false,
-        resizable: false,
-        editable: false,
-        layerable: false,
-        selectable: false,
-        hoverable: false
-    });
-    if ('gjs-editable' in component.attributes.attributes) {
-        component.set({
-            hoverable: true,
-            selectable: true,
-            editable: true,
-        })
-    }
-    component.get('components').each(c => updateComponentAccess(c));
-};
 
 let blockManager = editor.BlockManager;
 <?php
@@ -115,5 +69,4 @@ blockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($block->ge
 <?php
 endforeach;
 ?>
-
 </script>

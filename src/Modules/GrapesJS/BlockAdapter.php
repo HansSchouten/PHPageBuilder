@@ -11,7 +11,7 @@ use PHPageBuilder\ThemeBlock;
  *
  * @package PHPageBuilder\GrapesJS
  */
-class PageBuilderBlockAdapter
+class BlockAdapter
 {
     /**
      * @var ThemeBlock $block
@@ -63,11 +63,13 @@ class PageBuilderBlockAdapter
             'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
         ];
 
+        $iconClass = 'fa fa-edit';
         if ($this->block->get('icon')) {
-            $data['attributes'] = [
-                'class' => $this->block->get('icon')
-            ];
+            $iconClass = $this->block->get('icon');
         }
+        $data['attributes'] = [
+            'class' => $iconClass
+        ];
 
         return $data;
     }

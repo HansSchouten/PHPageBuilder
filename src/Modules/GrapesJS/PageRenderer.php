@@ -3,14 +3,14 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
-use PHPageBuilder\PHPageBuilder;
+use PHPageBuilder\Theme;
 
 class PageRenderer
 {
     /**
-     * @var PHPageBuilder $context
+     * @var Theme $theme
      */
-    protected $context;
+    protected $theme;
 
     /**
      * @var PageContract $page
@@ -20,12 +20,12 @@ class PageRenderer
     /**
      * PageRenderer constructor.
      *
-     * @param PHPageBuilder $context
+     * @param Theme $theme
      * @param PageContract $page
      */
-    public function __construct(PHPageBuilder $context, PageContract $page)
+    public function __construct(Theme $theme, PageContract $page)
     {
-        $this->context = $context;
+        $this->theme = $theme;
         $this->page = $page;
     }
 
@@ -36,7 +36,7 @@ class PageRenderer
      */
     public function getPageLayoutPath()
     {
-        return $this->context->getTheme()->getFolder() . '/layouts/' . basename($this->page->layout) . '/view.php';
+        return $this->theme->getFolder() . '/layouts/' . basename($this->page->layout) . '/view.php';
     }
 
     /**
