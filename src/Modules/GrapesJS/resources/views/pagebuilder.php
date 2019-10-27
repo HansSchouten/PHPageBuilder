@@ -68,3 +68,10 @@ editor.BlockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($bl
 endforeach;
 ?>
 </script>
+
+<div id="sidebar-bottom-buttons">
+    <button id="save-page" class="btn">
+        <i class="fa fa-floppy-o"></i>
+        <?= phpb_trans('pagebuilder.save-page') ?>
+    </button>
+</div>

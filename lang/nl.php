@@ -37,6 +37,7 @@ return [
         'trait-no-element-selected' => 'Selecteer een element om de eigenschappen aan te passen.',
         'view-blocks' => 'Blokken',
         'view-settings' => 'Instellingen',
-        'view-style-manager' => 'Opmaak'
+        'view-style-manager' => 'Opmaak',
+        'save-page' => 'Opslaan',
     ],
 ];

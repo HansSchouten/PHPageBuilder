@@ -1,4 +1,8 @@
 $sidebar-width: 300px;
+$sidebar-bottom-buttons-height: 40px;
+
+
+/*  GENERAL  */
 
 html, body, #gjs {
   height: 100% !important;
@@ -8,6 +12,13 @@ html, body, #gjs {
 .gjs-editor {
   font-size: 0.9rem;
 }
+
+.gjs-cv-canvas {
+  height: 100%;
+  top: 0;
+  width: calc(100% - #{$sidebar-width});
+}
+
 .gjs-pn-panel {
   padding: 0;
 
@@ -42,6 +53,10 @@ html, body, #gjs {
   -moz-box-shadow: none;
   box-shadow: none;
 }
+
+
+/*   SIDEBAR   */
+
 .gjs-pn-views {
   .gjs-pn-btn {
     width: 33%;
@@ -88,6 +103,7 @@ html, body, #gjs {
   border-right: 2px solid rgb(223, 224, 225);
   padding-top: 64px;
   background: rgb(225, 232, 235);
+  height: calc(100% - #{$sidebar-bottom-buttons-height});
 
   > div > div {
     background: #fff;
@@ -99,26 +115,9 @@ html, body, #gjs {
 .gjs-pn-devices-c {
   left: $sidebar-width;
 }
-.gjs-cv-canvas {
-  height: 100%;
-  top: 0;
-  width: calc(100% - #{$sidebar-width});
-}
 
-.gjs-trt-trait {
-  display: block;
-}
-.gjs-trt-trait .gjs-label,
-.gjs-trt-trait .gjs-field {
-  width: 100%;
-}
-.gjs-trt-trait select {
-  color: #fff;
-}
-.gjs-field-checkbox {
-  height: 17px !important;
-  width: 17px !important;
-}
+
+/*   BLOCKS PANEL VIEW   */
 
 .gjs-block {
   border: none;
@@ -144,6 +143,10 @@ html, body, #gjs {
 .gjs-block-category.gjs-open {
   border-bottom: 2px solid rgba(0, 0, 0, 0.10) !important;
 }
+
+
+/*   LAYERS PANEL VIEW   */
+
 .gjs-layer .gjs-layer-title {
   background: #fff !important;
 }
@@ -153,7 +156,6 @@ html, body, #gjs {
 .gjs-layer.gjs-hovered .gjs-layer-title {
   background-color: #16b8ec70 !important
 }
-
 .gjs-category-title,
 .gjs-sm-sector .gjs-sm-title,
 .gjs-clm-tags .gjs-sm-title,
@@ -174,6 +176,57 @@ html, body, #gjs {
 .gjs-layer-vis {
   padding-top: 11px
 }
+
+
+/*   SIDEBAR FIELDS   */
+
 .gjs-field input, .gjs-field select, .gjs-field textarea {
   padding: 3px;
+}
+
+.gjs-trt-trait {
+  display: block;
+}
+.gjs-trt-trait .gjs-label,
+.gjs-trt-trait .gjs-field {
+  width: 100%;
+}
+.gjs-trt-trait select {
+  color: #fff;
+}
+.gjs-field-checkbox {
+  height: 17px !important;
+  width: 17px !important;
+}
+
+
+/*   SIDEBAR BOTTOM BUTTONS   */
+
+#sidebar-bottom-buttons {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: $sidebar-bottom-buttons-height;
+  width: $sidebar-width;
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #fff;
+  border-top: 1px solid #dbdbdb;
+  border-right: 2px solid #dfe0e1;
+
+  button {
+    float: right;
+    height: 100%;
+    border-left: 1px solid #dfe0e1;
+    border-radius: 0;
+    color: #888;
+
+    &:hover {
+      background: #16b8ec;
+      color: #fff;
+    }
+  }
 }

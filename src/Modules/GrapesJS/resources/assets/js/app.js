@@ -1,1 +1,2 @@
-import './pagebuilder';
+import './sidebar';
+import './edit-access';

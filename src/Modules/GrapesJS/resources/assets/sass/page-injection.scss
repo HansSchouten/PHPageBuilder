@@ -2,3 +2,7 @@
   outline: 2px solid #3b97e3 !important;
   outline-offset: 1px !important;
 }
+div[data-gjs-type].gjs-comp-selected {
+  outline: 2px solid #3b97e3 !important;
+  outline-offset: -2px !important;
+}
