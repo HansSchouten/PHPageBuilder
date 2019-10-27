@@ -90,6 +90,7 @@ return [
      */
     'themes' => [
         'folder' => '',
+        'folder_url' => '/themes',
         'active_theme' => '',
     ],
 

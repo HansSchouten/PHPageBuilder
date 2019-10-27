@@ -11,7 +11,6 @@
     <script src="https://unpkg.com/grapesjs"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"></script>
-    <script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
 </head>
 
 <body>
@@ -20,5 +19,6 @@
 require __DIR__ . '/pagebuilder.php';
 ?>
 
+<script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
 </body>
 </html>

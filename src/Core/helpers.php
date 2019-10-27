@@ -27,6 +27,20 @@ if (! function_exists('phpb_asset')) {
     }
 }
 
+if (! function_exists('phpb_theme_asset')) {
+    /**
+     * Return the public path of an asset of the current theme.
+     *
+     * @param string $path
+     * @return string
+     */
+    function phpb_theme_asset($path)
+    {
+        $themeFolder = phpb_config('themes.folder_url') . '/' . phpb_config('themes.active_theme');
+        return $themeFolder . '/assets/' . $path;
+    }
+}
+
 if (! function_exists('phpb_flash')) {
     /**
      * Return the flash data with the given key (as dot-separated multidimensional array selector) or false if not set.

@@ -1,5 +1,21 @@
-window.onload = function() {
+(function() {
     let draggedBlock;
+    let loaded = false;
+
+    /**
+     * On mounting the components of the page layout, make them all non-editable except the wrapper component that contains everything.
+     */
+    window.editor.on('component:mount', function(component) {
+        if (loaded) return;
+
+        // the wrapper is always the last component, so set loaded to true
+        if (component.attributes.type === 'wrapper') {
+            loaded = true;
+            return;
+        }
+
+        restrictEditAccess(false, component);
+    });
 
     /**
      * On selecting a component, only show the copy/drag/remove toolbar if the component is draggable or removable.
@@ -31,6 +47,9 @@ window.onload = function() {
             selectable: true,
             hoverable: true,
         });
+
+        // mark the dropped block as a phpagebuilder block
+        droppedComponent.addAttributes({ 'phpb-block': true });
     });
 
     /**
@@ -68,7 +87,8 @@ window.onload = function() {
         let htmlTag = component.get('tagName');
         let editableTags = [
             'h1','h2','h3','h4','h5','h6','h7',
-            'p','a','img','button','small','b','strong','i'
+            'p','a','img','button','small','b','strong','i','em',
+            'ul','li','th','td'
         ];
 
         if (editableTags.includes(htmlTag)) {
@@ -90,4 +110,4 @@ window.onload = function() {
         }
     }
 
-};
+})();
