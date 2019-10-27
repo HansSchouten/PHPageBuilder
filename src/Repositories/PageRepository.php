@@ -76,4 +76,18 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             'layout' => $data['layout'],
         ]);
     }
+
+    /**
+     * Update the given page with the given updated page data
+     *
+     * @param $page
+     * @param array $data
+     * @return bool|object|null
+     */
+    public function updatePageData($page, array $data)
+    {
+        return parent::update($page, [
+            'data' => json_encode($data),
+        ]);
+    }
 }

@@ -40,6 +40,7 @@ return [
         'view-settings' => 'Settings',
         'view-style-manager' => 'Style Manager',
         'save-page' => 'Save',
+        'go-back' => 'Back',
         'page' => 'Page',
         'page-content' => 'Page contents',
     ]

@@ -46,12 +46,23 @@ class PageBuilder implements PageBuilderContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
 
-            if ($page instanceof PageContract) {
-                $this->renderPageBuilder($page);
-                exit();
+            if (! ($page instanceof PageContract)) {
+                die('Page not found');
             }
 
-            die('Page not found');
+            if ($action === 'edit') {
+                $this->renderPageBuilder($page);
+            } else if ($action === 'store') {
+                if (isset($_POST)) {
+                    if (isset($_POST['data']) && is_array($_POST['data'])) {
+                        $this->updatePage($page, $_POST['data']);
+                    } else {
+                        $this->updatePage($page, []);
+                    }
+                }
+            }
+
+            exit();
         }
     }
 
@@ -73,5 +84,18 @@ class PageBuilder implements PageBuilderContract
         }
 
         require __DIR__ . '/resources/views/layout.php';
+    }
+
+    /**
+     * Update the given page with the given data (an array of html blocks)
+     *
+     * @param PageContract $page
+     * @param $data
+     * @return bool|object|null
+     */
+    public function updatePage(PageContract $page, $data)
+    {
+        $pageRepository = new PageRepository;
+        return $pageRepository->updatePageData($page, $data);
     }
 }

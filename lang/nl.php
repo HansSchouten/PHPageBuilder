@@ -40,6 +40,7 @@ return [
         'view-settings' => 'Instellingen',
         'view-style-manager' => 'Opmaak',
         'save-page' => 'Opslaan',
+        'go-back' => 'Terug',
         'page' => 'Pagina',
         'page-content' => 'Pagina inhoud',
     ],

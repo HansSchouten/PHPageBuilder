@@ -1,22 +1,36 @@
 $(document).ready(function() {
 
-    $("#save-page").click(function() {
+    $("#save-page").click(function(e) {
+        e.preventDefault();
         let editor = window.editor;
 
-        let pageHtml = $($.parseHTML(editor.getHtml()));
+        // get the page content container (so skip all layout) and prepare data for being stored
+        let container = editor.getWrapper().find("[phpb-content-container]")[0];
+        let data = prepareData(container);
 
-        let components = editor.getComponents();
-        components.forEach(function(component) {
-            console.log(component.attributes.tagName);
+        $.ajax({
+            type: "POST",
+            url: $(this).data('url'),
+            data: {
+                data: data
+            },
+            success: function() {
+                console.log('Changes saved!');
+            },
+            error: function() {
+            }
         });
-
-        //prepareData(page);
     });
 
-    function prepareData(page) {
-        page.find('[phpb-block]').each(function() {
-            console.log($(this));
+    function prepareData(container) {
+        let data = [];
+
+        let blocks = container.get('components');
+        blocks.forEach(function(component) {
+            data.push(component.toHTML());
         });
+
+        return data;
     }
 
 });

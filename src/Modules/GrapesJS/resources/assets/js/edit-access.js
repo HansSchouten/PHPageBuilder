@@ -8,10 +8,17 @@
     window.editor.on('load', function(editor) {
         denyAccessToLayoutElements(editor.getWrapper());
 
-        let container = editor.DomComponents.getWrapper().find("[phpb-content-container]")[0];
+        let container = editor.getWrapper().find("[phpb-content-container]")[0];
+
+        // restrict edit access on child components of the content container
+        restrictEditAccess(true, container);
+
+        // modify edit access of the content container
         container.set({
             droppable: true,
             hoverable: true,
+            removable: false,
+            copyable: false,
         });
         container.set('custom-name', window.translations['page-content']);
     });
@@ -63,9 +70,6 @@
             selectable: true,
             hoverable: true,
         });
-
-        // mark the dropped block as a phpagebuilder block
-        droppedComponent.addAttributes({ 'phpb-block': true });
     });
 
     /**

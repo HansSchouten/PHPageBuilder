@@ -4,7 +4,7 @@
 # PHPagebuilder
 > PHPagebuilder is a drag and drop pagebuilder to manage pages in any PHP project.
 
-PHPagebuilder can be used as an ultra lightweight CMS to set up new projects, or can be integrated into existing projects or your favorite frameworks (such as [this version](https://github.com/HansSchouten/Laravel-Pagebuilder) for Laravel). The server-side code does not depend on any other libraries and is blazing fast. It includes an optional website manager with a [Bootstrap UI](https://getbootstrap.com) and integrates the most popular open source drag and drop pagebuilder: [GrapesJS](https://grapesjs.com/). This package is made with customization in mind, allowing you to configure, disable or replace any of its modules.
+PHPagebuilder can be used as an ultra lightweight CMS to quickly spin up new websites, or can be integrated into existing projects or your favorite frameworks (such as [this version](https://github.com/HansSchouten/Laravel-Pagebuilder) for Laravel). The server-side code does not depend on any other libraries and is blazing fast. It includes an optional website manager with a [Bootstrap UI](https://getbootstrap.com) and integrates the most popular open source drag and drop pagebuilder: [GrapesJS](https://grapesjs.com/). This package is made with customization in mind, allowing you to configure, disable or replace any of its modules.
 
 ## Table of Contents
 - [How does it help me?](#how-does-it-help-me)
@@ -14,15 +14,15 @@ PHPagebuilder can be used as an ultra lightweight CMS to set up new projects, or
 - [Customization](#customization)
 
 ## How does it help me?
-Whether you are a novice or an experienced web developer, PHPagebuilder can make your life easier if you find yourself in any of the points below:
+Whether you are a novice or an experienced web developer, PHPagebuilder can make your life easier if you find yourself in any of the following:
 
 - You just want to create a basic website that you can easily manage from any device.
 - You get lost installing, configuring, updating or simply using feature abundant CMS systems like Wordpress, Drupal.
-- You don't like the limited page editors in CMS systems you've tried.
+- You don't like the limited page editors in CMSs you've tried.
 - You want to build a custom website for a client within a few hours.
 - Your clients get lost in feature abundant admin panels like Drupal.
-- You hate to rely on messy (WordPress) plugins for features you can write in no-time yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
-- You would like to have advanced functionality (search functionality, views that display data of remote sources, etc.) easily manageable by your clients.
+- You hate to rely on messy plugins for features you can write in no-time in plain PHP yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
+- You would like to have advanced functionality (search functionality, views displaying data of remote sources, etc.) easily manageable by your clients.
 
 ## Quick Start
 If you want to quickly start a project with drag and drop page management functionality, you follow these steps:

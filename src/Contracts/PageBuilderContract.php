@@ -18,4 +18,13 @@ interface PageBuilderContract
      * @param PageContract $page
      */
     public function renderPageBuilder(PageContract $page);
+
+    /**
+     * Update the given page with the given data (an array of html blocks)
+     *
+     * @param PageContract $page
+     * @param $data
+     * @return bool|object|null
+     */
+    public function updatePage(PageContract $page, $data);
 }

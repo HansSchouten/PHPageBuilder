@@ -65,7 +65,15 @@ class PageRenderer
      */
     public function renderBody()
     {
-        // @todo parse $this->page->data and render each block
-        return '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
+        $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;">';
+
+        $blocks = json_decode($this->page->data);
+        foreach ($blocks as $blockHtml) {
+            $html .= $blockHtml;
+        }
+
+        $html .= '</div>';
+
+        return $html;
     }
 }

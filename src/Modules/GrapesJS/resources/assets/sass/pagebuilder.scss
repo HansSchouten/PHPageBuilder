@@ -217,7 +217,8 @@ html, body, #gjs {
   border-top: 1px solid #dbdbdb;
   border-right: 2px solid #dfe0e1;
 
-  button {
+  button,
+  a {
     float: right;
     height: 100%;
     border-left: 1px solid #dfe0e1;
@@ -228,5 +229,9 @@ html, body, #gjs {
       background: #16b8ec;
       color: #fff;
     }
+  }
+
+  a#go-back:hover {
+    background: #dc3545;
   }
 }

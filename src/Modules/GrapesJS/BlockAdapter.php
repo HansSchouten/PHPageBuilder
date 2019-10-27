@@ -79,7 +79,7 @@ class BlockAdapter
             'whitelist_on_tag' => $this->block->isHtmlBlock(),
         ];
 
-        $iconClass = 'fa fa-edit';
+        $iconClass = 'fa fa-bars';
         if ($this->block->get('icon')) {
             $iconClass = $this->block->get('icon');
         }

@@ -71,8 +71,13 @@ endforeach;
 </script>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn">
+    <button id="save-page" class="btn" data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
         <i class="fa fa-floppy-o"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>
     </button>
+
+    <a id="go-back" href="<?= phpb_route('') ?>" class="btn">
+        <i class="fa fa-arrow-circle-o-left"></i>
+        <?= phpb_trans('pagebuilder.go-back') ?>
+    </a>
 </div>
