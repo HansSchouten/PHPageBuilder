@@ -8,7 +8,7 @@ interface RouterContract
      * Return the page corresponding to the given route.
      *
      * @param $route
-     * @return mixed
+     * @return PageContract|null
      */
     public function resolve($route);
 }

@@ -40,15 +40,32 @@ class PageRenderer
     }
 
     /**
-     * Return the rendered version of the page which will be loaded in the page builder.
+     * Return the rendered version of the page for being displayed in the page builder.
+     *
+     * @return string
      */
-    public function render()
+    public function renderForPageBuilder()
+    {
+        return $this->render(true);
+    }
+
+    /**
+     * Return the rendered version of the page.
+     *
+     * @param bool $forPageBuilder
+     * @return string
+     */
+    public function render($forPageBuilder = false)
     {
         $layoutFile = $this->getPageLayoutPath();
 
         // init variables that should be accessible in the view
         $renderer = $this;
-        $body = $this->renderBody();
+        if ($forPageBuilder) {
+            $body = $this->renderPageBuilderBody();
+        } else {
+            $body = $this->renderBody();
+        }
 
         ob_start();
         require $layoutFile;
@@ -59,11 +76,30 @@ class PageRenderer
     }
 
     /**
-     * Return the page body (containing all blocks) which is put into the selected layout.
+     * Return the page body for display on the website.
+     * The body contains all blocks which is put into the selected layout.
      *
      * @return string
      */
     public function renderBody()
+    {
+        $html = '';
+
+        $blocks = json_decode($this->page->data);
+        foreach ($blocks as $blockHtml) {
+            $html .= $blockHtml;
+        }
+
+        return $html;
+    }
+
+    /**
+     * Return the page body for display inside the page builder.
+     * The body contains all blocks which is put into the selected layout.
+     *
+     * @return string
+     */
+    public function renderPageBuilderBody()
     {
         $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;">';
 

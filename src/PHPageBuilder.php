@@ -9,6 +9,7 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Core\DB;
+use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Modules\Login\Login;
 use PHPageBuilder\Modules\WebsiteManager\WebsiteManager;
 use PHPageBuilder\Modules\GrapesJS\PageBuilder;
@@ -231,13 +232,26 @@ class PHPageBuilder
         $route = isset($_GET['route']) ? $_GET['route'] : null;
         $action = isset($_GET['action']) ? $_GET['action'] : null;
 
-        if (phpb_config('login.use_login')) {
-            $this->login->handleRequest($route, $action);
+        // if we are at the backend, handle login, website manager, page builder requests
+        if (strpos($_SERVER['REQUEST_URI'], phpb_config('project.pagebuilder_url')) === 0) {
+            if (phpb_config('login.use_login')) {
+                $this->login->handleRequest($route, $action);
+            }
+            if (phpb_config('website_manager.use_website_manager')) {
+                $this->websiteManager->handleRequest($route, $action);
+            }
+            $this->pageBuilder->handleRequest($route, $action);
         }
-        if (phpb_config('website_manager.use_website_manager')) {
-            $this->websiteManager->handleRequest($route, $action);
+
+        // if we are not at the backend, let the page router resolve the current URL
+        $page = $this->router->resolve($_SERVER['REQUEST_URI']);
+        if ($page instanceof PageContract) {
+            $renderer = new PageRenderer($this->theme, $page);
+            echo $renderer->render();
+            exit();
         }
-        $this->pageBuilder->handleRequest($route, $action);
+
+        die('Page not found');
     }
 
 

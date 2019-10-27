@@ -127,6 +127,21 @@ class BaseRepository
     }
 
     /**
+     * Return the instances for which the given condition holds.
+     *
+     * @param string $field         do NOT pass user input here
+     * @param string $value
+     * @return array
+     */
+    public function findWhere($field, $value)
+    {
+        return $this->createInstances($this->db->select(
+            "SELECT * FROM {$this->table} WHERE {$field} = ?",
+            [$value]
+        ));
+    }
+
+    /**
      * Create an instance using the first record.
      *
      * @param array $records

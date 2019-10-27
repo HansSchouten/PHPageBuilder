@@ -59,7 +59,7 @@ window.editor = grapesjs.init({
 });
 
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
-editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
+editor.setComponents(<?= json_encode($pageRenderer->renderForPageBuilder()) ?>);
 
 <?php
 foreach ($blocks as $block):

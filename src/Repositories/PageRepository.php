@@ -2,7 +2,6 @@
 
 namespace PHPageBuilder\Repositories;
 
-use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\PageRepositoryContract;
 use PHPageBuilder\Page;
 
