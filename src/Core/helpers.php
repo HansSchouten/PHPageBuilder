@@ -119,18 +119,14 @@ if (! function_exists('phpb_trans')) {
      * Return the translation of the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
-     * @param bool $encode      encode special characters
      * @return string
      */
-    function phpb_trans($key, $encode = true)
+    function phpb_trans($key)
     {
         global $phpb_translations;
 
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
-            if ($encode) {
-                return e($phpb_translations[$key]) ?? '';
-            }
             return $phpb_translations[$key] ?? '';
         }
 
@@ -147,9 +143,6 @@ if (! function_exists('phpb_trans')) {
 
         // if the remaining sub array is a string, return this translation
         if (is_string($subArray)) {
-            if ($encode) {
-                return e($subArray);
-            }
             return $subArray;
         }
         return '';

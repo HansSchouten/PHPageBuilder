@@ -2,6 +2,8 @@
 <div id="gjs"></div>
 
 <script type="text/javascript">
+window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
+
 window.editor = grapesjs.init({
     container : '#gjs',
     noticeOnUnload: false,
@@ -57,7 +59,6 @@ window.editor = grapesjs.init({
 });
 
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
-
 editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
 
 <?php

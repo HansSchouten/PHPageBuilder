@@ -41,5 +41,6 @@ return [
         'view-style-manager' => 'Opmaak',
         'save-page' => 'Opslaan',
         'page' => 'Pagina',
+        'page-content' => 'Pagina inhoud',
     ],
 ];

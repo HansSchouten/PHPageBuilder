@@ -41,5 +41,6 @@ return [
         'view-style-manager' => 'Style Manager',
         'save-page' => 'Save',
         'page' => 'Page',
+        'page-content' => 'Page contents',
     ]
 ];

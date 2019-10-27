@@ -66,6 +66,6 @@ class PageRenderer
     public function renderBody()
     {
         // @todo parse $this->page->data and render each block
-        return '';
+        return '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
     }
 }
