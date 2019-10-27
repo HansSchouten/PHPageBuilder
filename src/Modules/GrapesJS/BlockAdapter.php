@@ -61,7 +61,7 @@ class BlockAdapter
         if ($this->block->get('category')) {
             return $this->block->get('category');
         }
-        return null;
+        return phpb_trans('pagebuilder.default-category');
     }
 
     /**
