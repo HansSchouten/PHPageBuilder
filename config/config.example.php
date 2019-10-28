@@ -10,7 +10,7 @@ return [
      |
      */
     'project' => [
-        'public_folder' => '',
+        'public_folder' => __DIR__ . '/public',
         'pagebuilder_url' => '/admin',
         'language' => 'en',
     ],
@@ -89,7 +89,7 @@ return [
      |
      */
     'themes' => [
-        'folder' => '',
+        'folder' => __DIR__ . '/themes',
         'folder_url' => '/themes',
         'active_theme' => '',
     ],
