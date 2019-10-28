@@ -60,6 +60,11 @@ class PHPageBuilder
 
         $this->setConfig($config);
 
+        // create database connection, if enabled
+        if (phpb_config('storage.use_database')) {
+            $this->setDatabaseConnection(phpb_config('storage.database'));
+        }
+
         // init the default login, if enabled
         if (phpb_config('login.use_login')) {
             $this->login = new Login;
@@ -78,11 +83,6 @@ class PHPageBuilder
 
         // load translations of the configured language
         $this->loadTranslations(phpb_config('project.language'));
-
-        // create database connection, if enabled
-        if (phpb_config('storage.use_database')) {
-            $this->setDatabaseConnection(phpb_config('storage.database'));
-        }
     }
 
     /**
