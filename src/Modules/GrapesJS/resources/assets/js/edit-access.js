@@ -21,6 +21,18 @@
             copyable: false,
         });
         container.set('custom-name', window.translations['page-content']);
+
+        // the direct children of the content container are the added blocks, so add edit access to these components
+        container.get('components').each(function(block) {
+            block.set({
+                removable: true,
+                draggable: true,
+                copyable: true,
+                layerable: true,
+                selectable: true,
+                hoverable: true,
+            });
+        });
     });
 
     /**
@@ -36,8 +48,6 @@
         // apply restrictions to child components
         component.get('components').each(component => denyAccessToLayoutElements(component));
     }
-
-
 
 
     /**

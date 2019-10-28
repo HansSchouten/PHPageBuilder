@@ -8,8 +8,10 @@ window.editor = grapesjs.init({
     container : '#gjs',
     noticeOnUnload: false,
     storageManager: {
+        type: 'remote',
         autoload: false,
-        autosave: false
+        autosave: false,
+        urlStore: '<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>',
     },
     styleManager: {
         textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'

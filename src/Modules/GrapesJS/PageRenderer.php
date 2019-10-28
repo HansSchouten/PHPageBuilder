@@ -62,7 +62,7 @@ class PageRenderer
         // init variables that should be accessible in the view
         $renderer = $this;
         if ($forPageBuilder) {
-            $body = $this->renderPageBuilderBody();
+            $body = $this->renderBodyForPageBuilder();
         } else {
             $body = $this->renderBody();
         }
@@ -85,9 +85,12 @@ class PageRenderer
     {
         $html = '';
 
-        $blocks = json_decode($this->page->data);
-        foreach ($blocks as $blockHtml) {
-            $html .= $blockHtml;
+        $data = json_decode($this->page->data);
+        if (isset($data->html)) {
+            $html .= $data->html;
+        }
+        if (isset($data->css)) {
+            $html .= '<style>' . $data->css . '</style>';
         }
 
         return $html;
@@ -99,13 +102,16 @@ class PageRenderer
      *
      * @return string
      */
-    public function renderPageBuilderBody()
+    public function renderBodyForPageBuilder()
     {
         $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;">';
 
-        $blocks = json_decode($this->page->data);
-        foreach ($blocks as $blockHtml) {
-            $html .= $blockHtml;
+        $data = json_decode($this->page->data);
+        if (isset($data->html)) {
+            $html .= $data->html;
+        }
+        if (isset($data->css)) {
+            $html .= '<style>' . $data->css . '</style>';
         }
 
         $html .= '</div>';

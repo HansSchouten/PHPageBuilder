@@ -6,13 +6,18 @@ $(document).ready(function() {
 
         // get the page content container (so skip all layout) and prepare data for being stored
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
-        let data = prepareData(container);
+        let html = prepareHtml(container);
+
+        let css = editor.getCss();
 
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
             data: {
-                data: data
+                data: {
+                    css: css,
+                    html: html
+                }
             },
             success: function() {
                 console.log('Changes saved!');
@@ -22,15 +27,18 @@ $(document).ready(function() {
         });
     });
 
-    function prepareData(container) {
-        let data = [];
+    function prepareHtml(container) {
+        let html = '';
 
         let blocks = container.get('components');
         blocks.forEach(function(component) {
-            data.push(component.toHTML());
+            console.log(component);
+            console.log(component.toHTML());
+
+            html += component.toHTML();
         });
 
-        return data;
+        return html;
     }
 
 });
