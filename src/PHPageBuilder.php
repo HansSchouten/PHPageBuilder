@@ -250,7 +250,40 @@ class PHPageBuilder
             exit();
         }
 
+        // return assets
+        $this->handleAssetRequest();
+
         die('Page not found');
+    }
+
+    /**
+     * Handle asset requests.
+     */
+    public function handleAssetRequest()
+    {
+        $asset = isset($_GET['asset']) ? $_GET['asset'] : null;
+        if ($asset && is_string($asset)) {
+            $distPath = realpath(__DIR__ . '/../dist/');
+            $requestedFile = realpath($distPath . '/' . $asset);
+            if (! $requestedFile) die('Asset not found');
+
+            // prevent path traversal by ensuring the requested file is inside the dist folder
+            if (strpos($requestedFile, $distPath) !== 0) die('Asset not found');
+
+            // only allow specific extensions
+            $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
+            if (! in_array($ext, ['js', 'css'])) die('Asset not found');
+
+            header('Content-Type: text/' . $ext);
+            header('Content-Disposition: inline; filename="' . basename($requestedFile) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Content-Length: ' . filesize($requestedFile));
+
+            ob_clean(); flush();
+            readfile($requestedFile);
+            exit();
+        }
     }
 
 

@@ -23,7 +23,7 @@ if (! function_exists('phpb_asset')) {
      */
     function phpb_asset($path)
     {
-        return '/packages/phpagebuilder/dist/' . $path;
+        return '/?asset=' . $path;
     }
 }
 

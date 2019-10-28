@@ -9,7 +9,6 @@ PHPagebuilder can be used as an ultra lightweight CMS to quickly spin up new web
 ## Table of Contents
 - [How does it help me?](#how-does-it-help-me)
 - [Features](#features)
-- [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Customization](#customization)
 
@@ -23,13 +22,6 @@ Whether you are a novice or an experienced web developer, PHPagebuilder can make
 - Your clients get lost in feature abundant admin panels like Drupal.
 - You hate to rely on messy plugins for features you can write in no-time in plain PHP yourself, but still want to have some admin functionality to allow other people to manage the websites you create.
 - You would like to have advanced functionality (search functionality, views displaying data of remote sources, etc.) easily manageable by your clients.
-
-## Quick Start
-If you want to quickly start a project with drag and drop page management functionality, you follow these steps:
-
-- Create or download any HTML5 template ([Bootstrap](https://themes.getbootstrap.com/), [ThemeForest](https://themeforest.net/popular_item/by_category?category=site-templates), [Colorlib](https://colorlib.com/wp/templates/), etc)
-- Cut your template into blocks
-- [Attach PHPagebuilder](#installation)
 
 ## Features
 
@@ -45,9 +37,15 @@ You don't want to use the website manager? No worries, it is included for people
 
 ## Installation
 
-### Adding the code
+To install PHPagebuilder you either follow the quick start path, for quickly spinning up a new website, or you integrate it in your own framework or favorite project structure.
 
-#### With Composer
+### Quick start
+
+If you want to quickly start a new project with drag and drop page management functionality, you can download the [boilerplate](https://github.com/HansSchouten/PHPagebuilder-boilerplate) project structure and follow the steps over there.
+
+### Integrate into existing project or framework
+
+#### Add code with Composer
 If you are using Composer for managing PHP dependencies, you can simply run:
 ```
 composer require hansschouten/phpagebuilder
@@ -63,12 +61,10 @@ $builder = new PHPageBuilder\PHPageBuilder($config);
 $builder->handleRequest();
 ```
 
-`config.php` should contain a copy of `config/config.example.php`, filled with your settings.
+`config.php` should contain a copy of `config/config.example.php`, filled with your settings. 
 
-Note: You might have to change the paths to `autoload.php` and to your `config.php` depending on the folder structure of your project.
-
-#### Without Composer
-Are you not using Composer? No worries, this project is written in plain PHP without any dependencies, so it can be easily included in any PHP project!
+#### Add code without Composer
+Are you not using Composer? No worries, this project is written in plain PHP without any dependencies, so it can be directly included in any PHP project!
 
 Just download the latest release into a separate folder inside your project (we named the folder: `phpagebuilder`).
 
@@ -86,8 +82,6 @@ $builder->handleRequest();
 ```
 
 `config.php` should contain a copy of `config/config.example.php`, filled with your settings.
-
-Note: You might have to change the path of your `$installationFolder` and to your `config.php` depending on the folder structure of your project.
 
 ### Configure a database
 If you use PHPagebuilder out of the box, it requires a database for storing your pages. Just create a database and run the queries from `config/create-tables.sql`. Next, add the database credentials to your config file.
