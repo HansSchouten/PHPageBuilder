@@ -43,5 +43,7 @@ return [
         'go-back' => 'Terug',
         'page' => 'Pagina',
         'page-content' => 'Pagina inhoud',
+        'toastr-changes-saved' => 'Wijzigingen opgeslagen',
+        'toastr-saving-failed' => 'Fout tijdens opslaan van wijzigingen',
     ],
 ];

@@ -231,6 +231,15 @@ html, body, #gjs {
     }
   }
 
+  button.waiting {
+    background: #16b8ec;
+    color: #fff !important;
+
+    i.fa {
+      display: none;
+    }
+  }
+
   a#go-back:hover {
     background: #dc3545;
   }

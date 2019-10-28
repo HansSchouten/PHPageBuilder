@@ -43,5 +43,7 @@ return [
         'go-back' => 'Back',
         'page' => 'Page',
         'page-content' => 'Page contents',
+        'toastr-changes-saved' => 'Changes saved',
+        'toastr-saving-failed' => 'Error while saving changes',
     ]
 ];
