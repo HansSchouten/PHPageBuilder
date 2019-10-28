@@ -17,7 +17,14 @@ window.editor = grapesjs.init({
         textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
     },
     traitManager: {
-        textNoElement: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>'
+        textNoElement: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
+        labelContainer: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
+        labelPlhText: '',
+        labelPlhHref: 'https://website.com',
+        optionsTarget: [
+            { value: '', name: '<?= phpb_trans('pagebuilder.trait-this-window') ?>' },
+            { value: '_blank', name: '<?= phpb_trans('pagebuilder.trait-new-window') ?>' }
+        ]
     },
     panels: {
         defaults: [

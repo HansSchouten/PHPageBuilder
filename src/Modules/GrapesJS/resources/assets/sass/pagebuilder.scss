@@ -179,9 +179,29 @@ html, body, #gjs {
 
 
 /*   SIDEBAR FIELDS   */
+.gjs-three-bg {
+  background-color: #16b8ec;
+}
+.gjs-clm-tags {
+  #gjs-clm-close,
+  #gjs-clm-checkbox {
+    color: #fff;
+  }
+}
+.gjs-field {
+  background-color: rgb(227, 227, 227);
+  border-radius: 0;
+  padding: 2px;
 
-.gjs-field input, .gjs-field select, .gjs-field textarea {
-  padding: 3px;
+  input,
+  select,
+  textarea {
+    padding: 3px;
+  }
+
+  .gjs-d-s-arrow {
+    border-top: 4px solid rgb(100, 100, 100);
+  }
 }
 
 .gjs-trt-trait {
@@ -190,9 +210,6 @@ html, body, #gjs {
 .gjs-trt-trait .gjs-label,
 .gjs-trt-trait .gjs-field {
   width: 100%;
-}
-.gjs-trt-trait select {
-  color: #fff;
 }
 .gjs-field-checkbox {
   height: 17px !important;
