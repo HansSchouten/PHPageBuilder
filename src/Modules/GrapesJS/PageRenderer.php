@@ -104,18 +104,32 @@ class PageRenderer
      */
     public function renderBodyForPageBuilder()
     {
-        $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;">';
-
-        $data = json_decode($this->page->data);
-        if (isset($data->html)) {
-            $html .= $data->html;
-        }
-        if (isset($data->css)) {
-            $html .= '<style>' . $data->css . '</style>';
-        }
-
-        $html .= '</div>';
+        $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
 
         return $html;
+    }
+
+    /**
+     * Return this page's components in the format passed to GrapesJS.
+     */
+    public function getPageComponents()
+    {
+        $data = json_decode($this->page->data);
+        if (isset($data->components)) {
+            return $data->components;
+        }
+        return '[]';
+    }
+
+    /**
+     * Return this page's style in the format passed to GrapesJS.
+     */
+    public function getPageStyleComponents()
+    {
+        $data = json_decode($this->page->data);
+        if (isset($data->style)) {
+            return $data->style;
+        }
+        return '[]';
     }
 }

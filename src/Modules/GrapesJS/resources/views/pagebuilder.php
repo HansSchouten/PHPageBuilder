@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
+window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
 
 window.editor = grapesjs.init({
     container : '#gjs',
@@ -67,8 +68,14 @@ window.editor = grapesjs.init({
     }
 });
 
+// set custom name for the wrapper component containing all page components
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
+
+// set the non-editable page layout components and the phpb-content-container in which all editable components will be loaded
 editor.setComponents(<?= json_encode($pageRenderer->renderForPageBuilder()) ?>);
+
+// load the earlier saved page css components
+editor.setStyle(<?= $pageRenderer->getPageStyleComponents() ?>);
 
 <?php
 foreach ($blocks as $block):

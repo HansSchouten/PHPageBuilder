@@ -6,16 +6,21 @@ $(document).ready(function() {
 
         // get the page content container (so skip all layout blocks) and prepare data for being stored
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
-        let html = prepareHtml(container);
+        let html = getHtml(container);
+        let components = getComponents(container);
+
         let css = editor.getCss();
+        let style = editor.getStyle();
 
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
             data: {
                 data: {
+                    html: html,
                     css: css,
-                    html: html
+                    components: JSON.stringify(components),
+                    style: JSON.stringify(style),
                 }
             },
             success: function() {
@@ -33,20 +38,32 @@ $(document).ready(function() {
      * Extract the html from all blocks inside the given container element.
      *
      * @param container
-     * @returns {string}
      */
-    function prepareHtml(container) {
+    function getHtml(container) {
         let html = '';
 
         let blocks = container.get('components');
         blocks.forEach(function(component) {
-            console.log(component);
-            console.log(component.toHTML());
-
             html += component.toHTML();
         });
 
         return html;
+    }
+
+    /**
+     * Extract the json representation of the components inside the given container.
+     *
+     * @param container
+     */
+    function getComponents(container) {
+        let components = [];
+
+        let blocks = container.get('components');
+        blocks.forEach(function(component) {
+            components.push(component.toJSON());
+        });
+
+        return components;
     }
 
     /**

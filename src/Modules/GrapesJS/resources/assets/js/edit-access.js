@@ -22,17 +22,8 @@
         });
         container.set('custom-name', window.translations['page-content']);
 
-        // the direct children of the content container are the added blocks, so add edit access to these components
-        container.get('components').each(function(block) {
-            block.set({
-                removable: true,
-                draggable: true,
-                copyable: true,
-                layerable: true,
-                selectable: true,
-                hoverable: true,
-            });
-        });
+        // add all previously stored page components inside the content container
+        container.components(window.pageComponents);
     });
 
     /**
