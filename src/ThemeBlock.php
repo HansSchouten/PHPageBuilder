@@ -47,6 +47,19 @@ class ThemeBlock
     }
 
     /**
+     * Return the view file of this theme block.
+     *
+     * @return string
+     */
+    public function getViewFile()
+    {
+        if ($this->isPhpBlock()) {
+            return $this->getFolder() . '/view.php';
+        }
+        return $this->getFolder() . '/view.html';
+    }
+
+    /**
      * Return the unique identifier of this block.
      *
      * @return string

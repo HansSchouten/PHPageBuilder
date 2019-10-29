@@ -4,6 +4,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Theme;
+use PHPageBuilder\ThemeBlock;
 
 class PageRenderer
 {
@@ -73,6 +74,19 @@ class PageRenderer
         ob_end_clean();
 
         return $pageBuilderPageContent;
+    }
+
+    public function block($slug)
+    {
+        $output = '';
+        $block = new ThemeBlock($this->theme, $slug);
+
+        ob_start();
+        require $block->getViewFile();
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        return $output;
     }
 
     /**
