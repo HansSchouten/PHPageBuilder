@@ -76,6 +76,12 @@ class PageRenderer
         return $pageBuilderPageContent;
     }
 
+    /**
+     * Include a rendered theme block with the given slug.
+     *
+     * @param $slug
+     * @return false|string
+     */
     public function block($slug)
     {
         $output = '';
