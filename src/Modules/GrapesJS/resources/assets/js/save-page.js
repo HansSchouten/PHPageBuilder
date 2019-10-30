@@ -44,7 +44,13 @@ $(document).ready(function() {
 
         let blocks = container.get('components');
         blocks.forEach(function(component) {
-            html += component.toHTML();
+
+            if (component.attributes.isHtmlBlock) {
+                html += component.toHTML();
+            } else {
+                html += '[block="' + component.attributes.blockId + '"]';
+            }
+
         });
 
         return html;

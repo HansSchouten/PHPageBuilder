@@ -75,8 +75,13 @@ class BlockAdapter
             'label' => $this->getTitle(),
             'category' => $this->getCategory(),
             'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
-            // html based blocks are stored in database and hence all whitelisted tags (headings, p, ..) can be edited
-            'whitelist_on_tag' => $this->block->isHtmlBlock(),
+            // attributes carried over to the first component of this block
+            'componentAttributes' => [
+                'blockId' => $this->block->getId(),
+                // html based blocks are directly stored in database and hence all whitelisted tags (headings, p, ..) can be edited
+                'whitelistOnTag' => $this->block->isHtmlBlock(),
+                'isHtmlBlock' => $this->block->isHtmlBlock()
+            ],
         ];
 
         $iconClass = 'fa fa-bars';

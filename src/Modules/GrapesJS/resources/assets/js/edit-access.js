@@ -59,7 +59,9 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
-        let whitelistOnHtmlTag = draggedBlock.attributes.whitelist_on_tag;
+        applyBlockAttributes(draggedBlock, droppedComponent);
+
+        let whitelistOnHtmlTag = droppedComponent.attributes.whitelistOnTag;
         restrictEditAccess(whitelistOnHtmlTag, droppedComponent);
 
         // the droppedComponent itself should always be removable/draggable/copyable
@@ -115,6 +117,21 @@
                 selectable: true,
                 editable: true,
             })
+        }
+    }
+
+    /**
+     * Apply the attributes assigned (by BlockAdapter) to the given block to the given component.
+     *
+     * @param block
+     * @param component
+     */
+    function applyBlockAttributes(block, component) {
+        let componentAttributes = block.attributes.componentAttributes;
+        for (var attribute in componentAttributes) {
+            if (componentAttributes.hasOwnProperty(attribute)) {
+                component.attributes[attribute] = componentAttributes[attribute];
+            }
         }
     }
 
