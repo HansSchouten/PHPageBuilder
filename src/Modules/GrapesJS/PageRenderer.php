@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Theme;
 use PHPageBuilder\ThemeBlock;
+use Exception;
 
 class PageRenderer
 {
@@ -44,6 +45,7 @@ class PageRenderer
      * Return the rendered version of the page for being displayed in the page builder.
      *
      * @return string
+     * @throws Exception
      */
     public function renderForPageBuilder()
     {
@@ -55,6 +57,7 @@ class PageRenderer
      *
      * @param bool $forPageBuilder
      * @return string
+     * @throws Exception
      */
     public function render($forPageBuilder = false)
     {
@@ -77,15 +80,17 @@ class PageRenderer
     }
 
     /**
-     * Include a rendered theme block with the given slug.
+     * Include a rendered theme block with the given id.
+     * Note: this method is called from php blocks or layout files to include other blocks.
      *
-     * @param $slug
+     * @param $id
      * @return false|string
      */
-    public function block($slug)
+    public function block($id)
     {
         $output = '';
-        $block = new ThemeBlock($this->theme, $slug);
+        $renderer = $this;
+        $block = new ThemeBlock($this->theme, $id);
 
         ob_start();
         require $block->getViewFile();
@@ -100,11 +105,12 @@ class PageRenderer
      * The body contains all blocks which is put into the selected layout.
      *
      * @return string
+     * @throws Exception
      */
     public function renderBody()
     {
         $html = '';
-        $shortcodeParser = new ShortcodeParser;
+        $shortcodeParser = new ShortcodeParser($this);
 
         $data = json_decode($this->page->data);
         if (isset($data->html)) {

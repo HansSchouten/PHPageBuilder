@@ -48,7 +48,7 @@ $(document).ready(function() {
             if (component.attributes.isHtmlBlock) {
                 html += component.toHTML();
             } else {
-                html += '[block="' + component.attributes.blockId + '"]';
+                html += '[block id="' + component.attributes.blockId + '"]';
             }
 
         });
