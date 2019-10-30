@@ -104,10 +104,11 @@ class PageRenderer
     public function renderBody()
     {
         $html = '';
+        $shortcodeParser = new ShortcodeParser;
 
         $data = json_decode($this->page->data);
         if (isset($data->html)) {
-            $html .= $data->html;
+            $html .= $shortcodeParser->doShortcodes($data->html);
         }
         if (isset($data->css)) {
             $html .= '<style>' . $data->css . '</style>';
