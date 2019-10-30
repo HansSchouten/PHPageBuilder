@@ -242,16 +242,16 @@ class PHPageBuilder
             $this->pageBuilder->handleRequest($route, $action);
         }
 
-        // if we are not at the backend, let the page router resolve the current URL
+        // return assets
+        $this->handleAssetRequest();
+
+        // let the page router resolve the current URL
         $page = $this->router->resolve($_SERVER['REQUEST_URI']);
         if ($page instanceof PageContract) {
             $renderer = new PageRenderer($this->theme, $page);
             echo $renderer->render();
             exit();
         }
-
-        // return assets
-        $this->handleAssetRequest();
 
         die('Page not found');
     }

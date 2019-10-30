@@ -64,7 +64,7 @@ class ShortcodeParser
             }
         }
 
-        // recursive call to render shortcodes of the newly loaded blocks
+        // recursive call to render shortcodes inside the newly loaded blocks
         return $this->doBlockShortcodes($html, $maxDepth - 1);
     }
 
@@ -94,14 +94,14 @@ class ShortcodeParser
                 list($attribute, $remainingString) = explode('=', $matchAttributeString, 2);
                 $attribute = trim($attribute);
 
-                // if first char is " and at least two "" exist, get attribute value between ""
+                // if first char is " and at least two " exist, get attribute value between ""
                 if (strpos($remainingString, '"') === 0 && strpos($remainingString, '"', 1) !== false) {
-                    list($empty, $value, $remainingString) = explode('"', $matchAttributeString, 3);
+                    list($empty, $value, $remainingString) = explode('"', $remainingString, 3);
                     $attributes[$attribute] = $value;
                 } else {
-                    // attribute value was not between ", get value until next whitespace or until end of $remainingString
+                    // attribute value was not between "", get value until next whitespace or until end of $remainingString
                     if (strpos($remainingString, ' ') !== false) {
-                        list($value, $remainingString) = explode(' ', $matchAttributeString, 2);
+                        list($value, $remainingString) = explode(' ', $remainingString, 2);
                         $attributes[$attribute] = $value;
                     } else {
                         $attributes[$attribute] = $remainingString;
