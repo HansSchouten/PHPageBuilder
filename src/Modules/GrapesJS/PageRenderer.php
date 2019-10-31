@@ -20,15 +20,22 @@ class PageRenderer
     protected $page;
 
     /**
+     * @var bool $forPageBuilder
+     */
+    protected $forPageBuilder;
+
+    /**
      * PageRenderer constructor.
      *
      * @param Theme $theme
      * @param PageContract $page
+     * @param bool $forPageBuilder
      */
-    public function __construct(Theme $theme, PageContract $page)
+    public function __construct(Theme $theme, PageContract $page, $forPageBuilder = false)
     {
         $this->theme = $theme;
         $this->page = $page;
+        $this->forPageBuilder = $forPageBuilder;
     }
 
     /**
@@ -39,17 +46,6 @@ class PageRenderer
     public function getPageLayoutPath()
     {
         return $this->theme->getFolder() . '/layouts/' . basename($this->page->getLayout()) . '/view.php';
-    }
-
-    /**
-     * Return the rendered version of the page for being displayed in the page builder.
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function renderForPageBuilder()
-    {
-        return $this->render(true);
     }
 
     /**
@@ -65,8 +61,8 @@ class PageRenderer
 
         // init variables that should be accessible in the view
         $renderer = $this;
-        if ($forPageBuilder) {
-            $body = $this->renderBodyForPageBuilder();
+        if ($this->forPageBuilder) {
+            $body = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
         } else {
             $body = $this->renderBody();
         }
@@ -97,7 +93,41 @@ class PageRenderer
         $output = ob_get_contents();
         ob_end_clean();
 
+        if ($this->forPageBuilder) {
+            $output = '<dynamic-block id="' . e($id) . '">'
+                . $output
+                . '</dynamic-block>';
+        }
+
         return $output;
+    }
+
+    /**
+     * Render the given theme block with blockViewFunctions to be used as a block in GrapesJS.
+     *
+     * @param ThemeBlock $themeBlock
+     * @param $blockViewFunctions
+     * @return string
+     * @throws Exception
+     */
+    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, $blockViewFunctions)
+    {
+        if ($themeBlock->isHtmlBlock()) {
+            $html = file_get_contents($themeBlock->getFolder() . '/view.html');
+        } else {
+            // init variables that should be accessible in the view
+            $block = $blockViewFunctions;
+
+            ob_start();
+            require $themeBlock->getFolder() . '/view.php';
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        $shortcodeParser = new ShortcodeParser($this);
+        $html = $shortcodeParser->doShortcodes($html);
+
+        return $html;
     }
 
     /**
@@ -119,19 +149,6 @@ class PageRenderer
         if (isset($data->css)) {
             $html .= '<style>' . $data->css . '</style>';
         }
-
-        return $html;
-    }
-
-    /**
-     * Return the page body for display inside the page builder.
-     * The body contains all blocks which is put into the selected layout.
-     *
-     * @return string
-     */
-    public function renderBodyForPageBuilder()
-    {
-        $html = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
 
         return $html;
     }

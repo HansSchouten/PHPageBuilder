@@ -14,6 +14,11 @@ use PHPageBuilder\ThemeBlock;
 class BlockAdapter
 {
     /**
+     * @var PageRenderer $pageRenderer
+     */
+    protected $pageRenderer;
+
+    /**
      * @var ThemeBlock $block
      */
     protected $block;
@@ -21,10 +26,12 @@ class BlockAdapter
     /**
      * BlockAdapter constructor.
      *
+     * @param PageRenderer $pageRenderer
      * @param ThemeBlock $block
      */
-    public function __construct(ThemeBlock $block)
+    public function __construct(PageRenderer $pageRenderer, ThemeBlock $block)
     {
+        $this->pageRenderer = $pageRenderer;
         $this->block = $block;
     }
 
@@ -74,7 +81,7 @@ class BlockAdapter
         $data = [
             'label' => $this->getTitle(),
             'category' => $this->getCategory(),
-            'content' => $this->block->getRenderedContent(new BlockViewFunctions([], true)),
+            'content' => $this->pageRenderer->getGrapesJSBlockHtml($this->block, new BlockViewFunctions([], true)),
             // attributes carried over to the first component of this block
             'componentAttributes' => [
                 'blockId' => $this->block->getId(),

@@ -115,27 +115,4 @@ class ThemeBlock
 
         return $subArray;
     }
-
-    /**
-     * Render this ThemeBlock instance and return the content.
-     *
-     * @param $blockViewFunctions
-     * @return string
-     */
-    public function getRenderedContent($blockViewFunctions)
-    {
-        if ($this->isHtmlBlock()) {
-            return file_get_contents($this->getFolder() . '/view.html');
-        }
-
-        // init variables that should be accessible in the view
-        $block = $blockViewFunctions;
-
-        ob_start();
-        require $this->getFolder() . '/view.php';
-        $content = ob_get_contents();
-        ob_end_clean();
-
-        return $content;
-    }
 }
