@@ -45,10 +45,12 @@ $(document).ready(function() {
         let blocks = container.get('components');
         blocks.forEach(function(component) {
 
-            if (component.attributes['is-html']) {
-                html += component.toHTML();
+            if (component.attributes.attributes['is-html']) {
+                let subHtml = '';
+                component.get('components').each(component => subHtml += component.toHTML());
+                html += subHtml;
             } else {
-                html += '[block id="' + component.attributes.blockId + '"]';
+                html += '[block id="' + component.attributes.attributes['id'] + '"]';
             }
 
         });
@@ -67,7 +69,7 @@ $(document).ready(function() {
         let blocks = container.get('components');
         blocks.forEach(function(component) {
 
-            if (component.attributes['is-html']) {
+            if (component.attributes.attributes['is-html']) {
                 components.push(component.toJSON());
             } else {
                 components.push(component.toJSON());
