@@ -43,6 +43,7 @@ return [
         'view-settings' => 'Settings',
         'view-style-manager' => 'Style Manager',
         'save-page' => 'Save',
+        'view-page' => 'View',
         'go-back' => 'Back',
         'page' => 'Page',
         'page-content' => 'Page contents',

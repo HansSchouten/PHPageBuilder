@@ -94,6 +94,11 @@ endforeach;
         <?= phpb_trans('pagebuilder.save-page') ?>
     </button>
 
+    <a id="view-page" href="<?= e($page->route) ?>" target="_blank" class="btn">
+        <i class="fa fa-external-link"></i>
+        <?= phpb_trans('pagebuilder.view-page') ?>
+    </a>
+
     <a id="go-back" href="<?= phpb_route('') ?>" class="btn">
         <i class="fa fa-arrow-circle-o-left"></i>
         <?= phpb_trans('pagebuilder.go-back') ?>

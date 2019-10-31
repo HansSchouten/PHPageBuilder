@@ -43,6 +43,7 @@ return [
         'view-settings' => 'Instellingen',
         'view-style-manager' => 'Opmaak',
         'save-page' => 'Opslaan',
+        'view-page' => 'Bekijk',
         'go-back' => 'Terug',
         'page' => 'Pagina',
         'page-content' => 'Pagina inhoud',
