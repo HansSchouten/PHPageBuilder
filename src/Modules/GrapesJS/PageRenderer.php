@@ -86,20 +86,20 @@ class PageRenderer
     {
         $output = '';
         $renderer = $this;
-        $block = new ThemeBlock($this->theme, $id);
+        $themeBlock = new ThemeBlock($this->theme, $id);
 
         ob_start();
-        require $block->getViewFile();
-        $output = ob_get_contents();
+        require $themeBlock->getViewFile();
+        $html = ob_get_contents();
         ob_end_clean();
 
         if ($this->forPageBuilder) {
-            $output = '<dynamic-block id="' . e($id) . '">'
-                . $output
-                . '</dynamic-block>';
+            $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '" style="display:block">'
+                . $html
+                . '</phpb-block>';
         }
 
-        return $output;
+        return $html;
     }
 
     /**
@@ -126,6 +126,10 @@ class PageRenderer
 
         $shortcodeParser = new ShortcodeParser($this);
         $html = $shortcodeParser->doShortcodes($html);
+
+        $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '" style="display:block">'
+            . $html
+            . '</phpb-block>';
 
         return $html;
     }

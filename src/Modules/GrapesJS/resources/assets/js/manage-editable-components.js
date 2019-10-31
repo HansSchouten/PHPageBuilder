@@ -1,5 +1,4 @@
 (function() {
-    let draggedBlock;
 
     /**
      * After loading the initial content of the page builder, restrict access to all layout components.
@@ -21,9 +20,6 @@
 
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
-
-        // replace dynamic blocks with the latest html code passed in this request
-        // @todo
     });
 
     /**
@@ -51,16 +47,12 @@
         }
     });
 
-    window.editor.on('block:drag:start', function(block) {
-        draggedBlock = block;
-    });
-
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
         if (! droppedComponent) return;
 
-        applyBlockAttributes(draggedBlock, droppedComponent);
-        restrictEditAccess(droppedComponent);
+        let allowEditWhitelistedTags = droppedComponent.attributes.attributes['is-html'];
+        restrictEditAccess(droppedComponent, allowEditWhitelistedTags);
 
         // the droppedComponent itself should always be removable/draggable/copyable
         droppedComponent.set({
@@ -77,18 +69,22 @@
      * Function for only allowing edit access on whitelisted components.
      *
      * @param component
+     * @param allowEditWhitelistedTags
      */
-    function restrictEditAccess(component) {
+    function restrictEditAccess(component, allowEditWhitelistedTags = false) {
         disableAllEditFunctionality(component);
 
+        let isDynamicBlock = component.attributes.attributes['is-html'] === 'false';
+        allowEditWhitelistedTags = allowEditWhitelistedTags && ! isDynamicBlock;
+
         // whether edit access should be allowed based on the html tag
-        if (component.attributes.whitelistOnTag) {
+        if (allowEditWhitelistedTags) {
             allowEditBasedOnTag(component);
         }
         allowEditBasedOnClass(component);
 
         // apply edit restrictions to child components
-        component.get('components').each(component => restrictEditAccess(component));
+        component.get('components').each(component => restrictEditAccess(component, allowEditWhitelistedTags));
     }
 
     function allowEditBasedOnTag(component) {
@@ -115,21 +111,6 @@
                 selectable: true,
                 editable: true,
             })
-        }
-    }
-
-    /**
-     * Apply the attributes assigned (by BlockAdapter) to the given block to the given component.
-     *
-     * @param block
-     * @param component
-     */
-    function applyBlockAttributes(block, component) {
-        let componentAttributes = block.attributes.componentAttributes;
-        for (var attribute in componentAttributes) {
-            if (componentAttributes.hasOwnProperty(attribute)) {
-                component.attributes[attribute] = componentAttributes[attribute];
-            }
         }
     }
 

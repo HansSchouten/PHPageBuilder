@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\ThemeBlock;
+use Exception;
 
 /**
  * Class BlockAdapter
@@ -75,6 +76,7 @@ class BlockAdapter
      * Return an array representation of the theme block, for adding as a block to GrapesJS.
      *
      * @return array
+     * @throws Exception
      */
     public function getBlockManagerArray()
     {
@@ -84,6 +86,7 @@ class BlockAdapter
             'content' => $this->pageRenderer->getGrapesJSBlockHtml($this->block, new BlockViewFunctions([], true)),
             // attributes carried over to the first component of this block
             'componentAttributes' => [
+                // @todo this will be moved to phpb-block attributes
                 'blockId' => $this->block->getId(),
                 // html based blocks are directly stored in database and hence all whitelisted tags (headings, p, ..) can be edited
                 'whitelistOnTag' => $this->block->isHtmlBlock(),

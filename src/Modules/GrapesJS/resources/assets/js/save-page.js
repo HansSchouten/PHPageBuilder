@@ -12,6 +12,8 @@ $(document).ready(function() {
         let css = editor.getCss();
         let style = editor.getStyle();
 
+        return;
+
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
@@ -66,7 +68,14 @@ $(document).ready(function() {
 
         let blocks = container.get('components');
         blocks.forEach(function(component) {
-            components.push(component.toJSON());
+
+            if (component.attributes.isHtmlBlock) {
+                components.push(component.toJSON());
+            } else {
+                console.log(JSON.stringify(component.toJSON()));
+                components.push(component.toJSON());
+            }
+
         });
 
         return components;
