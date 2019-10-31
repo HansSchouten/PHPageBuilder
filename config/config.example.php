@@ -91,7 +91,7 @@ return [
     'themes' => [
         'folder' => __DIR__ . '/themes',
         'folder_url' => '/themes',
-        'active_theme' => '',
+        'active_theme' => 'default',
     ],
 
     /*

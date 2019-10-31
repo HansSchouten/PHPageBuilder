@@ -1,6 +1,24 @@
 $(document).ready(function() {
 
+    /**
+     * Save page on clicking save button.
+     */
     $("#save-page").click(function() {
+        savePage();
+    });
+
+    /**
+     * Save page on Ctrl + S
+     */
+    $(document).bind("keydown", function(e){
+        if(e.ctrlKey && e.which === 83) {
+            savePage();
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    function savePage() {
         let editor = window.editor;
         toggleWaiting();
 
@@ -14,7 +32,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: $(this).data('url'),
+            url: $("#save-page").data('url'),
             data: {
                 data: {
                     html: html,
@@ -32,7 +50,7 @@ $(document).ready(function() {
                 window.toastr.error(window.translations['toastr-saving-failed']);
             }
         });
-    });
+    }
 
     /**
      * Extract the html from all blocks inside the given container element.

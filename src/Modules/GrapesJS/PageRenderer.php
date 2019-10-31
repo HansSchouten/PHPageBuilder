@@ -94,7 +94,7 @@ class PageRenderer
         ob_end_clean();
 
         if ($this->forPageBuilder) {
-            $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '" style="display:block">'
+            $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
         }
@@ -127,7 +127,7 @@ class PageRenderer
         $shortcodeParser = new ShortcodeParser($this);
         $html = $shortcodeParser->doShortcodes($html);
 
-        $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '" style="display:block">'
+        $html = '<phpb-block id="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
             . $html
             . '</phpb-block>';
 

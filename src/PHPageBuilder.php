@@ -280,7 +280,6 @@ class PHPageBuilder
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Content-Length: ' . filesize($requestedFile));
 
-            ob_clean(); flush();
             readfile($requestedFile);
             exit();
         }
