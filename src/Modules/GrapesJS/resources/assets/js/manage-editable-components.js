@@ -10,9 +10,6 @@
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
 
-        // restrict edit access on child components of the content container
-        restrictEditAccess(true, container);
-
         // modify edit access of the content container
         container.set({
             droppable: true,
@@ -24,6 +21,9 @@
 
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
+
+        // replace dynamic blocks with the latest html code passed in this request
+        // @todo
     });
 
     /**
@@ -60,9 +60,7 @@
         if (! droppedComponent) return;
 
         applyBlockAttributes(draggedBlock, droppedComponent);
-
-        let whitelistOnHtmlTag = droppedComponent.attributes.whitelistOnTag;
-        restrictEditAccess(whitelistOnHtmlTag, droppedComponent);
+        restrictEditAccess(droppedComponent);
 
         // the droppedComponent itself should always be removable/draggable/copyable
         droppedComponent.set({
@@ -78,19 +76,19 @@
     /**
      * Function for only allowing edit access on whitelisted components.
      *
-     * @param whitelistOnHtmlTag        whether edit access should be allowed based on the html tag
      * @param component
      */
-    function restrictEditAccess(whitelistOnHtmlTag, component) {
+    function restrictEditAccess(component) {
         disableAllEditFunctionality(component);
 
-        if (whitelistOnHtmlTag) {
+        // whether edit access should be allowed based on the html tag
+        if (component.attributes.whitelistOnTag) {
             allowEditBasedOnTag(component);
         }
         allowEditBasedOnClass(component);
 
         // apply edit restrictions to child components
-        component.get('components').each(component => restrictEditAccess(whitelistOnHtmlTag, component));
+        component.get('components').each(component => restrictEditAccess(component));
     }
 
     function allowEditBasedOnTag(component) {

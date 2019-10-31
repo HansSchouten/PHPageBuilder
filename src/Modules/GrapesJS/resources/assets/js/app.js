@@ -1,3 +1,3 @@
 import './sidebar';
 import './save-page';
-import './edit-access';
+import './manage-editable-components';
