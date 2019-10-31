@@ -12,8 +12,6 @@ $(document).ready(function() {
         let css = editor.getCss();
         let style = editor.getStyle();
 
-        return;
-
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
@@ -47,7 +45,7 @@ $(document).ready(function() {
         let blocks = container.get('components');
         blocks.forEach(function(component) {
 
-            if (component.attributes.isHtmlBlock) {
+            if (component.attributes['is-html']) {
                 html += component.toHTML();
             } else {
                 html += '[block id="' + component.attributes.blockId + '"]';
@@ -69,10 +67,9 @@ $(document).ready(function() {
         let blocks = container.get('components');
         blocks.forEach(function(component) {
 
-            if (component.attributes.isHtmlBlock) {
+            if (component.attributes['is-html']) {
                 components.push(component.toJSON());
             } else {
-                console.log(JSON.stringify(component.toJSON()));
                 components.push(component.toJSON());
             }
 
