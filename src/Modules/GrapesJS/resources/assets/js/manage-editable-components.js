@@ -51,6 +51,18 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
+        // droppedComponent is a gjs-block element needed to carry information to the components of the dragged block
+        // replace the droppedComponent with its children while giving its children the attributes of droppedComponent
+        let siblings = droppedComponent.parent().get('components');
+        let droppedComponentIndex = 0;
+        for (var i = 0; i < siblings.length; i++) {
+            if (siblings.models[i].cid === droppedComponent.cid) {
+                droppedComponentIndex = i;
+            }
+        }
+        //siblings.models[droppedComponentIndex] = {};
+        droppedComponent.parent().components(siblings);
+
         let allowEditWhitelistedTags = droppedComponent.attributes.attributes['is-html'];
         restrictEditAccess(droppedComponent, allowEditWhitelistedTags);
 
