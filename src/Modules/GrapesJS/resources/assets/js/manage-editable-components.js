@@ -51,31 +51,58 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
-        // droppedComponent is a gjs-block element needed to carry information to the components of the dragged block
+        applyBlockAttributesToComponents(droppedComponent);
+    });
+
+    function applyBlockAttributesToComponents(component) {
+        console.log(component);
+        return;
+
+
+        // component is a <phpb-block> element needed to carry information to the components of the dragged block
         // replace the droppedComponent with its children while giving its children the attributes of droppedComponent
-        let siblings = droppedComponent.parent().get('components');
-        let droppedComponentIndex = 0;
-        for (var i = 0; i < siblings.length; i++) {
-            if (siblings.models[i].cid === droppedComponent.cid) {
-                droppedComponentIndex = i;
+        let container = component.parent();
+        let clone = component.clone();
+        component.remove();
+        let blockRootComponents = clone.components();
+        blockRootComponents.each(function(blockRootComponent) {
+            container.append(blockRootComponent);
+        });
+
+        blockRootComponents.each(function(blockRootComponent) {
+            applyBlockAttributes(clone, blockRootComponent);
+
+            let allowEditWhitelistedTags = blockRootComponent.attributes.attributes['is-html'];
+            restrictEditAccess(blockRootComponent, allowEditWhitelistedTags);
+
+            // the droppedComponent itself should always be removable/draggable/copyable
+            blockRootComponent.set({
+                removable: true,
+                draggable: true,
+                copyable: true,
+                layerable: true,
+                selectable: true,
+                hoverable: true,
+            });
+
+            // recursive call to replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
+        });
+    }
+
+    /**
+     * Apply the attributes of the given component to the given target component.
+     *
+     * @param phpbComponent
+     * @param component
+     */
+    function applyBlockAttributes(phpbComponent, component) {
+        let componentAttributes = phpbComponent.attributes.attributes;
+        for (var attribute in componentAttributes) {
+            if (componentAttributes.hasOwnProperty(attribute)) {
+                component.attributes[attribute] = componentAttributes[attribute];
             }
         }
-        //siblings.models[droppedComponentIndex] = {};
-        droppedComponent.parent().components(siblings);
-
-        let allowEditWhitelistedTags = droppedComponent.attributes.attributes['is-html'];
-        restrictEditAccess(droppedComponent, allowEditWhitelistedTags);
-
-        // the droppedComponent itself should always be removable/draggable/copyable
-        droppedComponent.set({
-            removable: true,
-            draggable: true,
-            copyable: true,
-            layerable: true,
-            selectable: true,
-            hoverable: true,
-        });
-    });
+    }
 
     /**
      * Function for only allowing edit access on whitelisted components.
