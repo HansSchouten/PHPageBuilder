@@ -57,41 +57,27 @@
             let container = component.parent();
             let clone = component.clone();
 
-            let blockRootComponents = [];
-            let newContainerChilds = [];
             // Since component is a <phpb-block>, the parent of component needs to get an updated array of children
-            // in which <phpb-block> is replaced by its child(ren). The direct children of the <phpb-block> component
-            // will be the new block root components.
+            // in which <phpb-block> is replaced by its child.
+            let blockRootComponent;
             container.components().each(function(blockSibling) {
                 if (blockSibling.cid === component.cid) {
-                    if (component.attributes.attributes['is-html'] === 'true' || clone.components().length === 1) {
-                        clone.components().each(function(originalComponentChild) {
-                            let blockRootComponent = originalComponentChild.clone();
-                            newContainerChilds.push(blockRootComponent);
-                            blockRootComponents.push(blockRootComponent);
-                        });
+                    if (component.components().length === 1) {
+                        blockRootComponent = component.components().models[0].clone();
+                        component.replaceWith(blockRootComponent);
                     } else {
-                        // a non-html block should be (re)moved & copied in one piece, so we need to add a container div
-                        //let dynamicBlockContainer =
-                        clone.components().each(function(originalComponentChild) {
-                            let blockRootComponent = originalComponentChild.clone();
-                            newContainerChilds.push(blockRootComponent);
-                            blockRootComponents.push(blockRootComponent);
+                        blockRootComponent = component.replaceWith({tagName: 'div'});
+                        clone.components().each(function(componentChild) {
+                            blockRootComponent.append(componentChild.clone());
                         });
                     }
-                } else {
-                    newContainerChilds.push(blockSibling);
                 }
             });
-            container.components(newContainerChilds);
-            component.remove();
 
-            blockRootComponents.forEach(function(blockRootComponent) {
-                applyBlockAttributes(clone, blockRootComponent);
+            applyBlockAttributes(clone, blockRootComponent);
 
-                // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
-                applyBlockAttributesToComponents(blockRootComponent);
-            });
+            // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
+            applyBlockAttributesToComponents(blockRootComponent);
         } else {
             component.components().each(function(childComponent) {
                 // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
@@ -130,18 +116,19 @@
                 hoverable: true,
             });
         } else if (component.attributes['block-slug'] !== undefined) {
-            component.set({
+            let permissions = {
                 removable: true,
                 draggable: true,
                 copyable: true,
                 layerable: true,
                 selectable: true,
                 hoverable: true,
-            });
-
+            };
             if (component.attributes['is-html'] === 'true') {
+                permissions.editable = true;
                 allowEditWhitelistedTags = true;
             }
+            component.set(permissions);
         } else {
             if (allowEditWhitelistedTags) {
                 allowEditBasedOnTag(component);
