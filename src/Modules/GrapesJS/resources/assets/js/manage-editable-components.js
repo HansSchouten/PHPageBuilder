@@ -50,18 +50,22 @@
         restrictEditAccess(parent);
     });
 
+    /**
+     * Apply the block attributes which are stored in <phpb-block> elements to the top-level html element of the block.
+     * If the block starts with multiple html elements at top-level, add a div element wrapping the block's top-level elements.
+     *
+     * @param component
+     */
     function applyBlockAttributesToComponents(component) {
         if (component.attributes.tagName === 'phpb-block') {
-            // Component is a <phpb-block> element needed to carry information to the components of the parent block,
-            // replace the <phpb-block> component with its children while giving its children the attributes of the <phpb-block> component.
             let container = component.parent();
             let clone = component.clone();
 
-            // Since component is a <phpb-block>, the parent of component needs to get an updated array of children
-            // in which <phpb-block> is replaced by its child.
+            // Since component is a <phpb-block>, one of the childs of the componen't parent needs to be replaced.
+            //
             let blockRootComponent;
-            container.components().each(function(blockSibling) {
-                if (blockSibling.cid === component.cid) {
+            container.components().each(function(componentSibling) {
+                if (componentSibling.cid === component.cid) {
                     if (component.components().length === 1) {
                         blockRootComponent = component.components().models[0].clone();
                         component.replaceWith(blockRootComponent);
