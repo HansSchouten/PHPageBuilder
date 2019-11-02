@@ -52,41 +52,52 @@
 
     function applyBlockAttributesToComponents(component) {
         if (component.attributes.tagName === 'phpb-block') {
-            // component is a <phpb-block> element needed to carry information to the components of the parent block,
-            // replace the <phpb-block> component with its children while giving its children the attributes of the <phpb-block> component
+            // Component is a <phpb-block> element needed to carry information to the components of the parent block,
+            // replace the <phpb-block> component with its children while giving its children the attributes of the <phpb-block> component.
             let container = component.parent();
             let clone = component.clone();
 
             let blockRootComponents = [];
-            let newContainerChildComponents = [];
+            let newContainerChilds = [];
+            // Since component is a <phpb-block>, the parent of component needs to get an updated array of children
+            // in which <phpb-block> is replaced by its child(ren). The direct children of the <phpb-block> component
+            // will be the new block root components.
             container.components().each(function(blockSibling) {
                 if (blockSibling.cid === component.cid) {
-                    clone.components().each(function(oldChild) {
-                        let blockRootComponent = oldChild.clone();
-                        newContainerChildComponents.push(blockRootComponent);
-                        blockRootComponents.push(blockRootComponent);
-                    });
+                    if (component.attributes.attributes['is-html'] === 'true' || clone.components().length === 1) {
+                        clone.components().each(function(originalComponentChild) {
+                            let blockRootComponent = originalComponentChild.clone();
+                            newContainerChilds.push(blockRootComponent);
+                            blockRootComponents.push(blockRootComponent);
+                        });
+                    } else {
+                        // a non-html block should be (re)moved & copied in one piece, so we need to add a container div
+                        //let dynamicBlockContainer =
+                        clone.components().each(function(originalComponentChild) {
+                            let blockRootComponent = originalComponentChild.clone();
+                            newContainerChilds.push(blockRootComponent);
+                            blockRootComponents.push(blockRootComponent);
+                        });
+                    }
                 } else {
-                    newContainerChildComponents.push(blockSibling);
+                    newContainerChilds.push(blockSibling);
                 }
             });
-            container.components(newContainerChildComponents);
+            container.components(newContainerChilds);
             component.remove();
 
             blockRootComponents.forEach(function(blockRootComponent) {
                 applyBlockAttributes(clone, blockRootComponent);
 
-                // recursive call to find and replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
+                // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
                 applyBlockAttributesToComponents(blockRootComponent);
             });
-
-            return;
+        } else {
+            component.components().each(function(childComponent) {
+                // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
+                applyBlockAttributesToComponents(childComponent);
+            });
         }
-
-        component.components().each(function(childComponent) {
-            // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
-            applyBlockAttributesToComponents(childComponent);
-        });
     }
 
     /**
