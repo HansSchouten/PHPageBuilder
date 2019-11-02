@@ -55,37 +55,41 @@
     });
 
     function applyBlockAttributesToComponents(component) {
-        console.log(component);
-        return;
-
-
-        // component is a <phpb-block> element needed to carry information to the components of the dragged block
-        // replace the droppedComponent with its children while giving its children the attributes of droppedComponent
-        let container = component.parent();
-        let clone = component.clone();
-        component.remove();
-        let blockRootComponents = clone.components();
-        blockRootComponents.each(function(blockRootComponent) {
-            container.append(blockRootComponent);
-        });
-
-        blockRootComponents.each(function(blockRootComponent) {
-            applyBlockAttributes(clone, blockRootComponent);
-
-            let allowEditWhitelistedTags = blockRootComponent.attributes.attributes['is-html'];
-            restrictEditAccess(blockRootComponent, allowEditWhitelistedTags);
-
-            // the droppedComponent itself should always be removable/draggable/copyable
-            blockRootComponent.set({
-                removable: true,
-                draggable: true,
-                copyable: true,
-                layerable: true,
-                selectable: true,
-                hoverable: true,
+        if (component.attributes.tagName === 'phpb-block') {
+            // component is a <phpb-block> element needed to carry information to the components of the dragged block
+            // replace the droppedComponent with its children while giving its children the attributes of droppedComponent
+            let container = component.parent();
+            let clone = component.clone();
+            component.remove();
+            let blockRootComponents = clone.components();
+            blockRootComponents.each(function(blockRootComponent) {
+                container.append(blockRootComponent);
             });
 
-            // recursive call to replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
+            blockRootComponents.each(function(blockRootComponent) {
+                applyBlockAttributes(clone, blockRootComponent);
+
+                let allowEditWhitelistedTags = clone.attributes.attributes['is-html'];
+                restrictEditAccess(blockRootComponent, allowEditWhitelistedTags);
+
+                // the droppedComponent itself should always be removable/draggable/copyable
+                blockRootComponent.set({
+                    removable: true,
+                    draggable: true,
+                    copyable: true,
+                    layerable: true,
+                    selectable: true,
+                    hoverable: true,
+                });
+
+                // recursive call to replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
+                applyBlockAttributesToComponents(blockRootComponent);
+            });
+        }
+
+        component.components().each(function(childComponent) {
+            // recursive call to replace <phpb-block> elements of nested blocks (loaded via shortcodes)
+            applyBlockAttributesToComponents(childComponent);
         });
     }
 
