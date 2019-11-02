@@ -8,15 +8,8 @@
         denyAccessToLayoutElements(editor.getWrapper());
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
-
-        // modify edit access of the content container
-        container.set({
-            droppable: true,
-            hoverable: true,
-            removable: false,
-            copyable: false,
-        });
         container.set('custom-name', window.translations['page-content']);
+        restrictEditAccess(container);
 
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
@@ -51,44 +44,47 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
-        applyBlockAttributesToComponents(droppedComponent);
+        let parent = droppedComponent.parent();
+
+        applyBlockAttributesToComponents(droppedComponent, true);
+        restrictEditAccess(parent);
     });
 
     function applyBlockAttributesToComponents(component) {
         if (component.attributes.tagName === 'phpb-block') {
-            // component is a <phpb-block> element needed to carry information to the components of the dragged block
-            // replace the droppedComponent with its children while giving its children the attributes of droppedComponent
+            // component is a <phpb-block> element needed to carry information to the components of the parent block,
+            // replace the <phpb-block> component with its children while giving its children the attributes of the <phpb-block> component
             let container = component.parent();
             let clone = component.clone();
-            component.remove();
-            let blockRootComponents = clone.components();
-            blockRootComponents.each(function(blockRootComponent) {
-                container.append(blockRootComponent);
-            });
 
-            blockRootComponents.each(function(blockRootComponent) {
+            let blockRootComponents = [];
+            let newContainerChildComponents = [];
+            container.components().each(function(blockSibling) {
+                if (blockSibling.cid === component.cid) {
+                    clone.components().each(function(oldChild) {
+                        let blockRootComponent = oldChild.clone();
+                        newContainerChildComponents.push(blockRootComponent);
+                        blockRootComponents.push(blockRootComponent);
+                    });
+                } else {
+                    newContainerChildComponents.push(blockSibling);
+                }
+            });
+            container.components(newContainerChildComponents);
+            component.remove();
+
+            blockRootComponents.forEach(function(blockRootComponent) {
                 applyBlockAttributes(clone, blockRootComponent);
 
-                let allowEditWhitelistedTags = clone.attributes.attributes['is-html'];
-                restrictEditAccess(blockRootComponent, allowEditWhitelistedTags);
-
-                // the droppedComponent itself should always be removable/draggable/copyable
-                blockRootComponent.set({
-                    removable: true,
-                    draggable: true,
-                    copyable: true,
-                    layerable: true,
-                    selectable: true,
-                    hoverable: true,
-                });
-
-                // recursive call to replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
+                // recursive call to find and replace <phpb-block> elements of the nested blocks (loaded via shortcodes)
                 applyBlockAttributesToComponents(blockRootComponent);
             });
+
+            return;
         }
 
         component.components().each(function(childComponent) {
-            // recursive call to replace <phpb-block> elements of nested blocks (loaded via shortcodes)
+            // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(childComponent);
         });
     }
@@ -117,14 +113,30 @@
     function restrictEditAccess(component, allowEditWhitelistedTags = false) {
         disableAllEditFunctionality(component);
 
-        let isDynamicBlock = component.attributes.attributes['is-html'] === 'false';
-        allowEditWhitelistedTags = allowEditWhitelistedTags && ! isDynamicBlock;
+        if (component.attributes.attributes['phpb-content-container'] !== undefined) {
+            component.set({
+                droppable: true,
+                hoverable: true,
+            });
+        } else if (component.attributes['block-slug'] !== undefined) {
+            component.set({
+                removable: true,
+                draggable: true,
+                copyable: true,
+                layerable: true,
+                selectable: true,
+                hoverable: true,
+            });
 
-        // whether edit access should be allowed based on the html tag
-        if (allowEditWhitelistedTags) {
-            allowEditBasedOnTag(component);
+            if (component.attributes['is-html'] === 'true') {
+                allowEditWhitelistedTags = true;
+            }
+        } else {
+            if (allowEditWhitelistedTags) {
+                allowEditBasedOnTag(component);
+            }
+            allowEditBasedOnClass(component);
         }
-        allowEditBasedOnClass(component);
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, allowEditWhitelistedTags));

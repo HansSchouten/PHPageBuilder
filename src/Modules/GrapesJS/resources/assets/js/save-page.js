@@ -60,15 +60,19 @@ $(document).ready(function() {
     function getHtml(container) {
         let html = '';
 
-        let blocks = container.get('components');
-        blocks.forEach(function(component) {
+        let components = container.get('components');
+        components.forEach(function(component) {
 
-            if (component.attributes.attributes['is-html']) {
+            if (component.attributes['block-slug'] !== undefined) {
+                console.log(1);
+            }
+
+            if (component.attributes['is-html']) {
                 let subHtml = '';
                 component.get('components').each(component => subHtml += component.toHTML());
                 html += subHtml;
             } else {
-                html += '[block id="' + component.attributes.attributes['id'] + '"]';
+                html += '[block id="' + component.attributes['block-slug'] + '"]';
             }
 
         });
@@ -87,7 +91,7 @@ $(document).ready(function() {
         let blocks = container.get('components');
         blocks.forEach(function(component) {
 
-            if (component.attributes.attributes['is-html']) {
+            if (component.attributes['is-html']) {
                 components.push(component.toJSON());
             } else {
                 components.push(component.toJSON());
