@@ -83,7 +83,7 @@ class PageRenderer
      * @param $id
      * @return false|string
      */
-    public function block($slug, $id)
+    public function block($slug, $id = null)
     {
         $output = '';
         $renderer = $this;
@@ -95,7 +95,8 @@ class PageRenderer
         ob_end_clean();
 
         if ($this->forPageBuilder) {
-            $html = '<phpb-block block-slug="' . $themeBlock->getSlug() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
+            $id = $id ?? $slug;
+            $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
         }
@@ -128,7 +129,8 @@ class PageRenderer
         $shortcodeParser = new ShortcodeParser($this);
         $html = $shortcodeParser->doShortcodes($html);
 
-        $html = '<phpb-block block-slug="' . $themeBlock->getSlug() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
+        $id = $slug = $themeBlock->getSlug();
+        $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
             . $html
             . '</phpb-block>';
 
