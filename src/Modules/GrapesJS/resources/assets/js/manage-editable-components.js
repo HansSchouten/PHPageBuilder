@@ -117,11 +117,13 @@
         disableAllEditFunctionality(component);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
+            // we are in the content container of the current page, this component can receive other components
             component.set({
                 droppable: true,
                 hoverable: true,
             });
         } else if (component.attributes['block-slug'] !== undefined) {
+            // by default a block has the following permissions
             let permissions = {
                 removable: true,
                 draggable: true,
@@ -130,10 +132,11 @@
                 hoverable: true,
             };
             if (component.attributes['is-html'] === 'false') {
+                // we are inside a dynamic block, the first layer of child blocks are directly inside a dynamic block
                 directlyInsideDynamicBlock = true;
             } else {
                 if (directlyInsideDynamicBlock) {
-                    // inside a html block directly inside a dynamic block, these html blocks are not removable/copyable/draggable
+                    // we are inside a html block directly inside a dynamic block, these html blocks are not removable/copyable/draggable
                     permissions.removable = false;
                     permissions.copyable = false;
                     permissions.draggable = false;
@@ -144,6 +147,7 @@
             }
             component.set(permissions);
         } else {
+            // the current component is not a block, so set editable access based on tags or html class attribute
             if (allowEditWhitelistedTags) {
                 allowEditBasedOnTag(component);
             }
@@ -154,10 +158,15 @@
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));
     }
 
+    /**
+     * Set the given component's editability based on which tag the component represents.
+     *
+     * @param component
+     */
     function allowEditBasedOnTag(component) {
         let htmlTag = component.get('tagName');
         let editableTags = [
-            //'div','span',
+            'div','span',
             'h1','h2','h3','h4','h5','h6','h7',
             'p','a','img','button','small','b','strong','i','em',
             'ul','li','th','td'
@@ -172,6 +181,11 @@
         }
     }
 
+    /**
+     * Set the given component's editability based on its html class attribute.
+     *
+     * @param component
+     */
     function allowEditBasedOnClass(component) {
         if ('phpb-editable' in component.attributes.attributes) {
             component.set({
@@ -182,6 +196,11 @@
         }
     }
 
+    /**
+     * Disable all edit functionality on the given component.
+     *
+     * @param component
+     */
     function disableAllEditFunctionality(component) {
         component.set({
             removable: false,
