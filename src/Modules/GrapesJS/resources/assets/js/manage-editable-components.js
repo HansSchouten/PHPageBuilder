@@ -110,9 +110,10 @@
      * Function for only allowing edit access on whitelisted components.
      *
      * @param component
+     * @param directlyInsideDynamicBlock
      * @param allowEditWhitelistedTags
      */
-    function restrictEditAccess(component, allowEditWhitelistedTags = false) {
+    function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditWhitelistedTags = false) {
         disableAllEditFunctionality(component);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
@@ -125,11 +126,19 @@
                 removable: true,
                 draggable: true,
                 copyable: true,
-                layerable: true,
                 selectable: true,
                 hoverable: true,
             };
-            if (component.attributes['is-html'] === 'true') {
+            if (component.attributes['is-html'] === 'false') {
+                directlyInsideDynamicBlock = true;
+            } else {
+                if (directlyInsideDynamicBlock) {
+                    // inside a html block directly inside a dynamic block, these html blocks are not removable/copyable/draggable
+                    permissions.removable = false;
+                    permissions.copyable = false;
+                    permissions.draggable = false;
+                    directlyInsideDynamicBlock = false;
+                }
                 permissions.editable = true;
                 allowEditWhitelistedTags = true;
             }
@@ -142,7 +151,7 @@
         }
 
         // apply edit restrictions to child components
-        component.get('components').each(component => restrictEditAccess(component, allowEditWhitelistedTags));
+        component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));
     }
 
     function allowEditBasedOnTag(component) {
