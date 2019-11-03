@@ -47,11 +47,11 @@ class ThemeLayout
     }
 
     /**
-     * Return the unique identifier of this layout.
+     * Return the slug identifying this type of layout.
      *
      * @return string
      */
-    public function getId()
+    public function getSlug()
     {
         return $this->layoutSlug;
     }

@@ -79,14 +79,15 @@ class PageRenderer
      * Include a rendered theme block with the given id.
      * Note: this method is called from php blocks or layout files to include other blocks.
      *
+     * @param $slug
      * @param $id
      * @return false|string
      */
-    public function block($id)
+    public function block($slug, $id)
     {
         $output = '';
         $renderer = $this;
-        $themeBlock = new ThemeBlock($this->theme, $id);
+        $themeBlock = new ThemeBlock($this->theme, $slug);
 
         ob_start();
         require $themeBlock->getViewFile();
@@ -94,7 +95,7 @@ class PageRenderer
         ob_end_clean();
 
         if ($this->forPageBuilder) {
-            $html = '<phpb-block block-slug="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
+            $html = '<phpb-block block-slug="' . $themeBlock->getSlug() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
         }
@@ -127,7 +128,7 @@ class PageRenderer
         $shortcodeParser = new ShortcodeParser($this);
         $html = $shortcodeParser->doShortcodes($html);
 
-        $html = '<phpb-block block-slug="' . $themeBlock->getId() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
+        $html = '<phpb-block block-slug="' . $themeBlock->getSlug() . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
             . $html
             . '</phpb-block>';
 

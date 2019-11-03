@@ -49,10 +49,10 @@ if (isset($page)) {
                             <?php
                             $value = phpb_field_value('layout', $page);
                             foreach ($theme->getThemeLayouts() as $layout):
-                                if ($layout->getId() === $value):
-                                    echo '<option value="' . e($layout->getId()) . '" selected>' . e($layout->get('title')) . '</option>';
+                                if ($layout->getSlug() === $value):
+                                    echo '<option value="' . e($layout->getSlug()) . '" selected>' . e($layout->get('title')) . '</option>';
                                 else:
-                                    echo '<option value="' . e($layout->getId()) . '">' . e($layout->get('title')) . '</option>';
+                                    echo '<option value="' . e($layout->getSlug()) . '">' . e($layout->get('title')) . '</option>';
                                 endif;
                             endforeach;
                             ?>

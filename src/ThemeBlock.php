@@ -60,11 +60,11 @@ class ThemeBlock
     }
 
     /**
-     * Return the unique identifier of this block.
+     * Return the slug identifying this type of block.
      *
      * @return string
      */
-    public function getId()
+    public function getSlug()
     {
         return $this->blockSlug;
     }

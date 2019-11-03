@@ -81,7 +81,7 @@ editor.setStyle(<?= $pageRenderer->getPageStyleComponents() ?>);
 <?php
 foreach ($blocks as $block):
 ?>
-editor.BlockManager.add(<?= json_encode($block->getId()) ?>, <?= json_encode($block->getBlockManagerArray()) ?>);
+editor.BlockManager.add(<?= json_encode($block->getSlug()) ?>, <?= json_encode($block->getBlockManagerArray()) ?>);
 <?php
 endforeach;
 ?>

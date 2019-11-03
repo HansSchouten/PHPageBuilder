@@ -37,13 +37,13 @@ class BlockAdapter
     }
 
     /**
-     * Return the unique identifier of the theme block.
+     * Return the slug identifying this type of theme block.
      *
      * @return string
      */
-    public function getId()
+    public function getSlug()
     {
-        return $this->block->getId();
+        return $this->block->getSlug();
     }
 
     /**
@@ -56,7 +56,7 @@ class BlockAdapter
         if ($this->block->get('title')) {
             return $this->block->get('title');
         }
-        return str_replace('-', ' ', ucfirst($this->getId()));
+        return str_replace('-', ' ', ucfirst($this->getSlug()));
     }
 
     /**

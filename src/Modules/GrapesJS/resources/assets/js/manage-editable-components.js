@@ -61,8 +61,8 @@
             let container = component.parent();
             let clone = component.clone();
 
-            // Since component is a <phpb-block>, one of the childs of the componen't parent needs to be replaced.
-            //
+            // Since component is a <phpb-block> that should be removed and replaced by its children,
+            // the component's parent child that has the same id as component needs to be replaced.
             let blockRootComponent;
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
@@ -70,6 +70,7 @@
                         blockRootComponent = component.components().models[0].clone();
                         component.replaceWith(blockRootComponent);
                     } else {
+                        // if the phpb-block has multiple direct children, add a wrapper first
                         blockRootComponent = component.replaceWith({tagName: 'div'});
                         clone.components().each(function(componentChild) {
                             blockRootComponent.append(componentChild.clone());

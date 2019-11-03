@@ -72,7 +72,7 @@ $(document).ready(function() {
                 component.get('components').each(component => subHtml += component.toHTML());
                 html += subHtml;
             } else {
-                html += '[block id="' + component.attributes['block-slug'] + '"]';
+                html += '[block slug="' + component.attributes['block-slug'] + '"]';
             }
 
         });

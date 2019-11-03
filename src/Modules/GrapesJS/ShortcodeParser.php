@@ -54,13 +54,16 @@ class ShortcodeParser
         }
 
         foreach ($matches as $match) {
-            if (isset($match['attributes']['id'])) {
-                $blockHtml = $this->pageRenderer->block($match['attributes']['id']);
-                // replace shortcode match with the $blockHtml (this replaces only the first match)
-                $pos = strpos($html, $match['shortcode']);
-                if ($pos !== false) {
-                    $html = substr_replace($html, $blockHtml, $pos, strlen($match['shortcode']));
-                }
+            if (! isset($match['attributes']['slug'])) {
+                continue;
+            }
+            $slug = $match['attributes']['slug'];
+            $id = $match['attributes']['id'] ?? $slug;
+            $blockHtml = $this->pageRenderer->block($slug, $id);
+            // replace shortcode match with the $blockHtml (this replaces only the first match)
+            $pos = strpos($html, $match['shortcode']);
+            if ($pos !== false) {
+                $html = substr_replace($html, $blockHtml, $pos, strlen($match['shortcode']));
             }
         }
 
