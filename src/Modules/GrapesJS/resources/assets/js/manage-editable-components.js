@@ -46,7 +46,7 @@
 
         let parent = droppedComponent.parent();
 
-        applyBlockAttributesToComponents(droppedComponent, true);
+        applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
     });
 
@@ -78,6 +78,7 @@
                     }
                 }
             });
+            component.remove();
 
             applyBlockAttributes(clone, blockRootComponent);
 
@@ -142,17 +143,16 @@
                     permissions.draggable = false;
                     directlyInsideDynamicBlock = false;
                 }
-                permissions.editable = true;
                 allowEditWhitelistedTags = true;
             }
             component.set(permissions);
-        } else {
-            // the current component is not a block, so set editable access based on tags or html class attribute
-            if (allowEditWhitelistedTags) {
-                allowEditBasedOnTag(component);
-            }
-            allowEditBasedOnClass(component);
         }
+
+        // set editable access based on tags or html class attribute
+        if (allowEditWhitelistedTags) {
+            allowEditBasedOnTag(component);
+        }
+        allowEditBasedOnClass(component);
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));

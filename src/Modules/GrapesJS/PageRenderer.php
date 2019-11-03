@@ -20,6 +20,11 @@ class PageRenderer
     protected $page;
 
     /**
+     * @var array $pageData
+     */
+    protected $pageData;
+
+    /**
      * @var bool $forPageBuilder
      */
     protected $forPageBuilder;
@@ -35,6 +40,7 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
+        $this->pageData = json_decode($page->data);
         $this->forPageBuilder = $forPageBuilder;
     }
 
@@ -80,14 +86,23 @@ class PageRenderer
      * Note: this method is called from php blocks or layout files to include other blocks.
      *
      * @param $slug
-     * @param $id
+     * @param null $id
+     * @param null $context
      * @return false|string
      */
-    public function block($slug, $id = null)
+    public function block($slug, $id = null, $context = null)
     {
         $output = '';
         $renderer = $this;
         $themeBlock = new ThemeBlock($this->theme, $slug);
+
+        // if the block is a html block and for the given id in the given context is html data stored, then return that data
+        if ($themeBlock->isHtmlBlock() && ! is_null($context) && isset($this->pageData->blocks)) {
+            $blockData = json_decode($this->pageData->blocks);
+            if (isset($blockData->$context) && isset($blockData->$context->$id)) {
+                return $blockData->$context->$id;
+            }
+        }
 
         ob_start();
         require $themeBlock->getViewFile();
@@ -149,7 +164,7 @@ class PageRenderer
         $html = '';
         $shortcodeParser = new ShortcodeParser($this);
 
-        $data = json_decode($this->page->data);
+        $data = $this->pageData;
         if (isset($data->html)) {
             $html .= $shortcodeParser->doShortcodes($data->html);
         }
@@ -165,7 +180,7 @@ class PageRenderer
      */
     public function getPageComponents()
     {
-        $data = json_decode($this->page->data);
+        $data = $this->pageData;
         if (isset($data->components)) {
             return $data->components;
         }
@@ -177,7 +192,7 @@ class PageRenderer
      */
     public function getPageStyleComponents()
     {
-        $data = json_decode($this->page->data);
+        $data = $this->pageData;
         if (isset($data->style)) {
             return $data->style;
         }

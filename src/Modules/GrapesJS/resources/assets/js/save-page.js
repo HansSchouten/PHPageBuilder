@@ -26,9 +26,10 @@ $(document).ready(function() {
         let container = editor.getWrapper().find("[phpb-content-container]")[0].clone();
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
-        let html = getHtml(container);
-        let components = getComponents(container);
+        let components = [];
+        container.get('components').forEach(component => components.push(component.toJSON()));
 
+        let html = getHtml(container);
         let css = editor.getCss();
         let style = editor.getStyle();
 
@@ -53,6 +54,22 @@ $(document).ready(function() {
                 window.toastr.error(window.translations['toastr-saving-failed']);
             }
         });
+    }
+
+    /**
+     * Return the html representation of the contents of the given container.
+     *
+     * @param container
+     */
+    function getHtml(container) {
+        let html = '';
+        container.get('components').forEach(component => html += component.toHTML());
+        let htmlDom = $("<container>" + html + "</container>");
+        // replace phpb-block elements with shortcode
+        htmlDom.find('phpb-block').each(function() {
+            $(this).replaceWith('[block slug="' + $(this).attr('slug') + '" id="' + $(this).attr('id') + '"]');
+        });
+        return htmlDom.html();
     }
 
     /**
@@ -99,10 +116,10 @@ $(document).ready(function() {
                 let instanceId = generateId();
                 component.replaceWith({
                     tagName: 'phpb-block',
-                    'block-slug': component.attributes['block-slug'],
-                    'block-id': component.attributes['block-id'],
-                    'is-html': 'false',
-                    'data-id': instanceId
+                    attributes: {
+                        slug: component.attributes['block-slug'],
+                        id: instanceId
+                    }
                 });
                 data.blocks[instanceId] = data.current_block;
                 data.current_block = {};
@@ -121,56 +138,6 @@ $(document).ready(function() {
     function generateId() {
         return 'ID' + (Date.now().toString(36)
             + Math.random().toString(36).substr(2, 5) + counter++).toUpperCase();
-    }
-
-    /**
-     * Extract the html from all blocks inside the given container element.
-     *
-     * @param container
-     */
-    function getHtml(container) {
-        let html = '';
-
-        let components = container.get('components');
-        components.forEach(function(component) {
-
-            if (component.attributes['block-slug'] !== undefined) {
-                console.log(1);
-            }
-
-            if (component.attributes['is-html']) {
-                let subHtml = '';
-                component.get('components').each(component => subHtml += component.toHTML());
-                html += subHtml;
-            } else {
-                html += '[block slug="' + component.attributes['block-slug'] + '"]';
-            }
-
-        });
-
-        return html;
-    }
-
-    /**
-     * Extract the json representation of the components inside the given container.
-     *
-     * @param container
-     */
-    function getComponents(container) {
-        let components = [];
-
-        let blocks = container.get('components');
-        blocks.forEach(function(component) {
-
-            if (component.attributes['is-html']) {
-                components.push(component.toJSON());
-            } else {
-                components.push(component.toJSON());
-            }
-
-        });
-
-        return components;
     }
 
     /**

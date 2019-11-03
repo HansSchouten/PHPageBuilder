@@ -38,10 +38,11 @@ class ShortcodeParser
      *
      * @param $html
      * @param int $maxDepth     maximum depth of blocks loaded inside blocks
+     * @param null $context
      * @return string
      * @throws Exception
      */
-    protected function doBlockShortcodes($html, $maxDepth = 15)
+    protected function doBlockShortcodes($html, $maxDepth = 15, $context = null)
     {
         if ($maxDepth === 0) {
             throw new Exception("Maximum doBlockShortcodes depth has been reached, "
@@ -59,7 +60,11 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->block($slug, $id);
+            $blockHtml = $this->pageRenderer->block($slug, $id, $context);
+
+            // recursive call to render shortcodes inside the newly loaded block
+            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
+
             // replace shortcode match with the $blockHtml (this replaces only the first match)
             $pos = strpos($html, $match['shortcode']);
             if ($pos !== false) {
@@ -67,8 +72,7 @@ class ShortcodeParser
             }
         }
 
-        // recursive call to render shortcodes inside the newly loaded blocks
-        return $this->doBlockShortcodes($html, $maxDepth - 1);
+        return $html;
     }
 
     /**
