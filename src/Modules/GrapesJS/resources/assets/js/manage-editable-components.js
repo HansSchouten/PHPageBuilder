@@ -9,11 +9,34 @@
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
-        restrictEditAccess(container);
 
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
+
+        replacePlaceholdersForRenderedBlocks(container);
+        applyBlockAttributesToComponents(container);
+
+        restrictEditAccess(container);
     });
+
+    /**
+     * Replace phpb-blocks elements with the server-side rendered version of each dynamic block.
+     *
+     * @param component
+     */
+    function replacePlaceholdersForRenderedBlocks(component) {
+        let newComponent = component;
+
+        if (component.get('tagName') === 'phpb-block') {
+            let id = component.attributes.attributes.id;
+            if (window.dynamicBlocks[id] !== undefined) {
+                newComponent = component.replaceWith(window.dynamicBlocks[id]);
+            }
+        }
+
+        // replace placeholders inside child components
+        newComponent.get('components').each(childComponent => replacePlaceholdersForRenderedBlocks(childComponent));
+    }
 
     /**
      * Function for denying edit access to this component and all children that belong to the layout.

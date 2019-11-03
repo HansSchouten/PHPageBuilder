@@ -4,6 +4,7 @@
 <script type="text/javascript">
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
+window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
 
 window.editor = grapesjs.init({
     container : '#gjs',

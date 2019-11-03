@@ -20,6 +20,11 @@ class PageRenderer
     protected $page;
 
     /**
+     * @var ShortcodeParser $shortcodeParser
+     */
+    protected $shortcodeParser;
+
+    /**
      * @var array $pageData
      */
     protected $pageData;
@@ -40,6 +45,7 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
+        $this->shortcodeParser = new ShortcodeParser($this);
         $this->pageData = json_decode($page->data);
         $this->forPageBuilder = $forPageBuilder;
     }
@@ -92,22 +98,24 @@ class PageRenderer
      */
     public function block($slug, $id = null, $context = null)
     {
-        $output = '';
-        $renderer = $this;
+        $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
 
         // if the block is a html block and for the given id in the given context is html data stored, then return that data
         if ($themeBlock->isHtmlBlock() && ! is_null($context) && isset($this->pageData->blocks)) {
             $blockData = json_decode($this->pageData->blocks);
             if (isset($blockData->$context) && isset($blockData->$context->$id)) {
-                return $blockData->$context->$id;
+                $html = $blockData->$context->$id;
             }
         }
 
-        ob_start();
-        require $themeBlock->getViewFile();
-        $html = ob_get_contents();
-        ob_end_clean();
+        if (empty($html)) {
+            $renderer = $this;
+            ob_start();
+            require $themeBlock->getViewFile();
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
 
         if ($this->forPageBuilder) {
             $id = $id ?? $slug;
@@ -141,8 +149,7 @@ class PageRenderer
             ob_end_clean();
         }
 
-        $shortcodeParser = new ShortcodeParser($this);
-        $html = $shortcodeParser->doShortcodes($html);
+        $html = $this->shortcodeParser->doShortcodes($html);
 
         $id = $slug = $themeBlock->getSlug();
         $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
@@ -162,17 +169,25 @@ class PageRenderer
     public function renderBody()
     {
         $html = '';
-        $shortcodeParser = new ShortcodeParser($this);
 
         $data = $this->pageData;
         if (isset($data->html)) {
-            $html .= $shortcodeParser->doShortcodes($data->html);
+            $html .= $this->shortcodeParser->doShortcodes($data->html);
         }
         if (isset($data->css)) {
             $html .= '<style>' . $data->css . '</style>';
         }
 
         return $html;
+    }
+
+    /**
+     * Return this page's dynamic blocks to be loaded into the page edited inside GrapesJS.
+     */
+    public function getDynamicBlocks()
+    {
+        $this->renderBody();
+        return json_encode($this->shortcodeParser->getRenderedBlocks());
     }
 
     /**

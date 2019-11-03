@@ -12,6 +12,11 @@ class ShortcodeParser
     protected $pageRenderer;
 
     /**
+     * @var array $renderedBlocks
+     */
+    protected $renderedBlocks;
+
+    /**
      * ShortcodeParser constructor.
      *
      * @param PageRenderer $pageRenderer
@@ -19,6 +24,17 @@ class ShortcodeParser
     public function __construct(PageRenderer $pageRenderer)
     {
         $this->pageRenderer = $pageRenderer;
+        $this->renderedBlocks = [];
+    }
+
+    /**
+     * Return the array of all blocks rendered while parsing shortcodes.
+     *
+     * @return array
+     */
+    public function getRenderedBlocks()
+    {
+        return $this->renderedBlocks;
     }
 
     /**
@@ -64,6 +80,7 @@ class ShortcodeParser
 
             // recursive call to render shortcodes inside the newly loaded block
             $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
+            $this->renderedBlocks[$id] = $blockHtml;
 
             // replace shortcode match with the $blockHtml (this replaces only the first match)
             $pos = strpos($html, $match['shortcode']);
