@@ -74,7 +74,7 @@ class PageRenderer
         // init variables that should be accessible in the view
         $renderer = $this;
         if ($this->forPageBuilder) {
-            $body = '<div phpb-content-container="true" style="min-height: 100px; width: 100%;"></div>';
+            $body = '<div phpb-content-container="true"></div>';
         } else {
             $body = $this->renderBody();
         }

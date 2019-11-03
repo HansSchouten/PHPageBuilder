@@ -24,6 +24,7 @@ $(document).ready(function() {
 
         // get the page content container (so skip all layout blocks) and prepare data for being stored
         let container = editor.getWrapper().find("[phpb-content-container]")[0].clone();
+
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
         let components = [];

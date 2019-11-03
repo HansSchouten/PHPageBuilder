@@ -9,6 +9,7 @@ window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
 window.editor = grapesjs.init({
     container : '#gjs',
     noticeOnUnload: false,
+    avoidInlineStyle: false,
     storageManager: {
         type: 'remote',
         autoload: false,
