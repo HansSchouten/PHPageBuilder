@@ -63,14 +63,11 @@ class PageRenderer
     /**
      * Return the rendered version of the page.
      *
-     * @param bool $forPageBuilder
      * @return string
      * @throws Exception
      */
-    public function render($forPageBuilder = false)
+    public function render()
     {
-        $layoutFile = $this->getPageLayoutPath();
-
         // init variables that should be accessible in the view
         $renderer = $this;
         if ($this->forPageBuilder) {
@@ -80,7 +77,7 @@ class PageRenderer
         }
 
         ob_start();
-        require $layoutFile;
+        require $this->getPageLayoutPath();
         $pageBuilderPageContent = ob_get_contents();
         ob_end_clean();
 
@@ -88,12 +85,12 @@ class PageRenderer
     }
 
     /**
-     * Include a rendered theme block with the given id.
-     * Note: this method is called from php blocks or layout files to include other blocks.
+     * Include a rendered theme block with the given slug, data instance id and data context.
+     * Note: this method is called from php blocks, layout files or via shortcodes.
      *
      * @param $slug
-     * @param null $id
-     * @param null $context
+     * @param null $id              the id with which data for this block is stored
+     * @param null $context         data of the parent block
      * @return false|string
      */
     public function block($slug, $id = null, $context = null)
@@ -183,15 +180,22 @@ class PageRenderer
 
     /**
      * Return this page's dynamic blocks to be loaded into the page edited inside GrapesJS.
+     *
+     * @return string
+     * @throws Exception
      */
     public function getDynamicBlocks()
     {
+        // trigger renderBody to ensure the shortcode parser has rendered versions of all dynamic blocks
         $this->renderBody();
+        // return the rendered html for each dynamic block
         return json_encode($this->shortcodeParser->getRenderedBlocks());
     }
 
     /**
      * Return this page's components in the format passed to GrapesJS.
+     *
+     * @return string
      */
     public function getPageComponents()
     {
@@ -204,6 +208,8 @@ class PageRenderer
 
     /**
      * Return this page's style in the format passed to GrapesJS.
+     *
+     * @return string
      */
     public function getPageStyleComponents()
     {

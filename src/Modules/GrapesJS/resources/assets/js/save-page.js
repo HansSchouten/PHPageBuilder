@@ -24,15 +24,14 @@ $(document).ready(function() {
 
         // get the page content container (so skip all layout blocks) and prepare data for being stored
         let container = editor.getWrapper().find("[phpb-content-container]")[0].clone();
-
+        // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
-
-        let components = [];
-        container.get('components').forEach(component => components.push(component.toJSON()));
 
         let html = getHtml(container);
         let css = editor.getCss();
         let style = editor.getStyle();
+        let components = [];
+        container.get('components').forEach(component => components.push(component.toJSON()));
 
         $.ajax({
             type: "POST",

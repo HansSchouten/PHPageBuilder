@@ -28,16 +28,6 @@ class ShortcodeParser
     }
 
     /**
-     * Return the array of all blocks rendered while parsing shortcodes.
-     *
-     * @return array
-     */
-    public function getRenderedBlocks()
-    {
-        return $this->renderedBlocks;
-    }
-
-    /**
      * Perform the tasks for all shortcodes in the given html string.
      *
      * @param $html
@@ -143,6 +133,16 @@ class ShortcodeParser
         }
 
         return $matches;
+    }
+
+    /**
+     * Return the array of all blocks rendered while parsing shortcodes.
+     *
+     * @return array
+     */
+    public function getRenderedBlocks()
+    {
+        return $this->renderedBlocks;
     }
 
 }
