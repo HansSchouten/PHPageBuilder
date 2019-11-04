@@ -43,14 +43,14 @@ window.editor = grapesjs.init({
                         active: true,
                     },
                     {
-                        id: 'open-tm',
+                        id: 'open-settings',
                         className: 'fa fa-cog',
                         command: 'open-tm',
                         togglable: 0,
                         attributes: {title: '<?= phpb_trans('pagebuilder.view-settings') ?>'},
                     },
                     {
-                        id: 'open-sm',
+                        id: 'open-style',
                         className: 'fa fa-paint-brush',
                         command: 'open-sm',
                         togglable: 0,
