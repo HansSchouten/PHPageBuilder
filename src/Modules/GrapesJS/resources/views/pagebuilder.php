@@ -1,6 +1,9 @@
 
 <div id="gjs"></div>
 
+<script type="text/javascript" src="https://cdn.ckeditor.com/4.13.0/full-all/ckeditor.js"></script>
+<script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.9.min.js') ?>"></script>
+<script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
 <script type="text/javascript">
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
@@ -87,7 +90,27 @@ window.editor = grapesjs.init({
             'https://code.jquery.com/jquery-3.4.1.slim.min.js',
             '<?= phpb_asset('pagebuilder/page-injection.js') ?>',
         ]
-    }
+    },
+    plugins: ['grapesjs-touch', 'gjs-plugin-ckeditor'],
+    pluginsOpts: {
+        'gjs-plugin-ckeditor': {
+            position: 'left',
+            options: {
+                startupFocus: true,
+                extraAllowedContent: '*(*);*{*}', // Allows any class and any inline style
+                allowedContent: true, // Disable auto-formatting, class removing, etc.
+                enterMode: CKEDITOR.ENTER_BR,
+                extraPlugins: 'sharedspace,justify,colorbutton,panelbutton,font',
+                toolbar: [
+                    { name: 'styles', items: ['Font', 'FontSize' ] },
+                    ['Bold', 'Italic', 'Underline', 'Strike'],
+                    {name: 'paragraph', items : [ 'NumberedList', 'BulletedList']},
+                    {name: 'links', items: ['Link', 'Unlink']},
+                    {name: 'colors', items: [ 'TextColor', 'BGColor' ]},
+                ],
+            }
+        }
+    },
 });
 
 // set custom name for the wrapper component containing all page components
