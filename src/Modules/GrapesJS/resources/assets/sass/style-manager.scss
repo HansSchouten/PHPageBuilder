@@ -33,8 +33,29 @@
     border: 1px solid rgba(26, 109, 136, 0.13);
   }
 
+  .gjs-sm-layers {
+    .gjs-sm-btn {
+      background: rgb(255, 255, 255);
+      color: #000;
+      text-shadow: none;
+    }
+
+    .gjs-field select {
+      color: #000;
+      background: #0087b33d;
+    }
+  }
+
   .gjs-sm-properties {
     .gjs-sm-field input {
+      color: #000;
+    }
+  }
+
+  .gjs-sm-stack #gjs-sm-add {
+    color: #333;
+
+    &:hover {
       color: #000;
     }
   }
