@@ -1,7 +1,5 @@
 (function() {
 
-    $(".gjs-cv-canvas").prepend($("#phpb-loading"));
-
     /**
      * After loading the initial content of the page builder, restrict access to all layout components.
      * Only blocks and components inside the element with phpb-content-container attribute are editable.

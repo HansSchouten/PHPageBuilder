@@ -18,7 +18,7 @@ html, body, #gjs {
   height: 100%;
   width: 100%;
   background-color: #fff;
-  z-index: 1;
+  z-index: 10000;
   transition: opacity 0.3s, visibility 0.3s;
 
   &.loaded {
@@ -58,6 +58,7 @@ html, body, #gjs {
 
   .gjs-pn-buttons {
     border-right: 2px solid rgb(223, 224, 225);
+    justify-content: center;
   }
 }
 .gjs-pn-commands,
@@ -92,6 +93,8 @@ html, body, #gjs {
 /*   SIDEBAR   */
 
 .gjs-pn-views {
+  top: 40px;
+
   .gjs-pn-btn {
     width: 33%;
     margin-right: 0;
@@ -105,14 +108,14 @@ html, body, #gjs {
 
     &.gjs-pn-active {
       padding: 15px;
-      background-color: #16b8ec;
+      background-color: #f2f2f2;
       border-bottom-left-radius: unset;
       border-bottom-right-radius: unset;
       -webkit-box-shadow: none;
       -moz-box-shadow: none;
       box-shadow: none;
-      color: #fff;
-      border-bottom: 3px solid #0087b3;
+      color: #16b8ec;
+      border-bottom: 3px solid #16b8ec;
     }
   }
 }
@@ -135,7 +138,7 @@ html, body, #gjs {
 }
 .gjs-pn-views-container {
   border-right: 2px solid rgb(223, 224, 225);
-  padding-top: 64px;
+  padding-top: 104px;
   background: rgb(225, 232, 235);
   height: calc(100% - #{$sidebar-bottom-buttons-height});
 
@@ -148,6 +151,35 @@ html, body, #gjs {
 .gjs-cv-canvas,
 .gjs-pn-devices-c {
   left: $sidebar-width;
+}
+
+
+/*   SIDEBAR HEADER   */
+
+#sidebar-header {
+  position: absolute;
+  box-shadow: none;
+  width: 300px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background: #16b8ec;
+  height: 40px;
+  z-index: 1000;
+  border-right: 2px solid #dfe0e1;
+}
+#toggle-sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  color: #fff;
+  background: #16b8ec;
+  border-radius: 0;
+  transition-duration: unset;
 }
 
 

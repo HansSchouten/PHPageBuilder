@@ -151,6 +151,12 @@ require __DIR__ . '/settings-manager.php';
 require __DIR__ . '/style-manager.php';
 ?>
 
+<button id="toggle-sidebar" class="btn">
+    <i class="fa fa-bars"></i>
+</button>
+<div id="sidebar-header">
+</div>
+
 <div id="sidebar-bottom-buttons">
     <button id="save-page" class="btn"
             data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
