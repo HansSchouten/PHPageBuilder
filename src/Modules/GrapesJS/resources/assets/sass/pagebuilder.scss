@@ -1,5 +1,5 @@
 $sidebar-width: 300px;
-$sidebar-bottom-buttons-height: 42px;
+$sidebar-bottom-buttons-height: 40px;
 
 
 /*  GENERAL  */
@@ -268,17 +268,25 @@ html, body, #gjs {
   border-top: 1px solid #dbdbdb;
   border-right: 2px solid #dfe0e1;
 
+  a {
+    padding-top: 7px;
+  }
   button,
   a {
     float: right;
     height: 100%;
+    width: 33%;
     border-left: 1px solid #dfe0e1;
     border-radius: 0;
     color: #888;
+    font-size: 15px;
 
     &:hover {
       background: #16b8ec;
       color: #fff;
+    }
+    &:last-child {
+      border-left: none;
     }
   }
 
