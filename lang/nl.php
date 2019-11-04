@@ -56,6 +56,13 @@ return [
             'state-hover' => 'Muis over element',
             'state-active' => 'Muisklik op element',
             'state-nth' => 'Even/oneven elementen',
-        ]
+        ],
+        'style-manager' => [
+            'sectors' => [
+                'position' => 'Positie',
+                'background' => 'Achtergrond',
+                'advanced' => 'Geavanceerd',
+            ]
+        ],
     ],
 ];

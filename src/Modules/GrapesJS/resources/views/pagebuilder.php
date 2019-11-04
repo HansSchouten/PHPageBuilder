@@ -18,6 +18,15 @@ window.editor = grapesjs.init({
     },
     styleManager: {
         textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>',
+        sectors: [{
+            name: '<?= phpb_trans('pagebuilder.style-manager.sectors.position') ?>',
+            open: false,
+            buildProps: ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin']
+        },{
+            name: '<?= phpb_trans('pagebuilder.style-manager.sectors.background') ?>',
+            open: false,
+            buildProps: ['background-color', 'background']
+        }]
     },
     selectorManager: {
         label: '<?= phpb_trans('pagebuilder.selector-manager.label') ?>',

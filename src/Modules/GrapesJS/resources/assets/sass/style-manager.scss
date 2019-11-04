@@ -1,3 +1,41 @@
-.gjs-clm-tags #gjs-clm-new {
-  color: #000;
+.gjs-clm-tags {
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  #gjs-clm-status-c,
+  #gjs-clm-sel-help {
+    display: none;
+  }
+  #gjs-clm-new {
+    color: #000;
+  }
+  #gjs-clm-add-tag {
+    background-color: rgb(22, 184, 236);
+    border: none;
+    box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2) inset;
+    color: #fff;
+
+    &:hover {
+      background-color: #0087b3;
+    }
+  }
+}
+
+.gjs-sm-sectors {
+  .gjs-four-color,
+  .gjs-color-warn {
+    color: #000;
+  }
+
+  .gjs-sm-field.gjs-sm-composite {
+    background-color: rgba(195, 226, 236, 0.14);
+    border: 1px solid rgba(26, 109, 136, 0.13);
+  }
+
+  .gjs-sm-properties {
+    .gjs-sm-field input {
+      color: #000;
+    }
+  }
 }

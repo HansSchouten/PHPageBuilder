@@ -56,6 +56,13 @@ return [
             'state-hover' => 'Element hover',
             'state-active' => 'Element click',
             'state-nth' => 'Even/odd element',
-        ]
+        ],
+        'style-manager' => [
+            'sectors' => [
+                'position' => 'Position',
+                'background' => 'Background',
+                'advanced' => 'Advanced',
+            ]
+        ],
     ]
 ];
