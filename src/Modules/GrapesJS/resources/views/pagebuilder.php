@@ -1,16 +1,32 @@
+<div id="phpb-loading">
+    <div class="circle">
+        <div class="loader">
+            <div class="loader">
+                <div class="loader">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="gjs"></div>
 
-<script type="text/javascript" src="https://cdn.ckeditor.com/4.13.0/full-all/ckeditor.js"></script>
+<script type="text/javascript" src="https://cdn.ckeditor.com/4.11.4/full-all/ckeditor.js"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.9.min.js') ?>"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
 <script type="text/javascript">
+CKEDITOR.dtd.$editable.a = 1;
+CKEDITOR.dtd.$editable.em = 1;
+CKEDITOR.dtd.$editable.button = 1;
+CKEDITOR.dtd.$editable.strong = 1;
+
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
 window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
 
 window.editor = grapesjs.init({
-    container : '#gjs',
+    container: '#gjs',
     noticeOnUnload: false,
     avoidInlineStyle: false,
     storageManager: {
@@ -25,7 +41,7 @@ window.editor = grapesjs.init({
             name: '<?= phpb_trans('pagebuilder.style-manager.sectors.position') ?>',
             open: true,
             buildProps: ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin']
-        },{
+        }, {
             name: '<?= phpb_trans('pagebuilder.style-manager.sectors.background') ?>',
             open: false,
             buildProps: ['background-color', 'background']
@@ -36,9 +52,9 @@ window.editor = grapesjs.init({
         statesLabel: '<?= phpb_trans('pagebuilder.selector-manager.states-label') ?>',
         selectedLabel: '<?= phpb_trans('pagebuilder.selector-manager.selected-label') ?>',
         states: [
-            { name: 'hover', label: '<?= phpb_trans('pagebuilder.selector-manager.state-hover') ?>' },
-            { name: 'active', label: '<?= phpb_trans('pagebuilder.selector-manager.state-active') ?>' },
-            { name: 'nth-of-type(2n)', label: '<?= phpb_trans('pagebuilder.selector-manager.state-nth') ?>' }
+            {name: 'hover', label: '<?= phpb_trans('pagebuilder.selector-manager.state-hover') ?>'},
+            {name: 'active', label: '<?= phpb_trans('pagebuilder.selector-manager.state-active') ?>'},
+            {name: 'nth-of-type(2n)', label: '<?= phpb_trans('pagebuilder.selector-manager.state-nth') ?>'}
         ],
     },
     traitManager: {
@@ -47,8 +63,8 @@ window.editor = grapesjs.init({
         labelPlhText: '',
         labelPlhHref: 'https://website.com',
         optionsTarget: [
-            { value: '', name: '<?= phpb_trans('pagebuilder.trait-this-window') ?>' },
-            { value: '_blank', name: '<?= phpb_trans('pagebuilder.trait-new-window') ?>' }
+            {value: '', name: '<?= phpb_trans('pagebuilder.trait-this-window') ?>'},
+            {value: '_blank', name: '<?= phpb_trans('pagebuilder.trait-new-window') ?>'}
         ]
     },
     panels: {
@@ -100,13 +116,12 @@ window.editor = grapesjs.init({
                 extraAllowedContent: '*(*);*{*}', // Allows any class and any inline style
                 allowedContent: true, // Disable auto-formatting, class removing, etc.
                 enterMode: CKEDITOR.ENTER_BR,
-                extraPlugins: 'sharedspace,justify,colorbutton,panelbutton,font',
+                extraPlugins: 'sharedspace, justify, colorbutton, panelbutton, font',
                 toolbar: [
-                    { name: 'styles', items: ['Font', 'FontSize' ] },
+                    {name: 'styles', items: ['Font', 'FontSize']},
                     ['Bold', 'Italic', 'Underline', 'Strike'],
-                    {name: 'paragraph', items : [ 'NumberedList', 'BulletedList']},
                     {name: 'links', items: ['Link', 'Unlink']},
-                    {name: 'colors', items: [ 'TextColor', 'BGColor' ]},
+                    {name: 'colors', items: ['TextColor', 'BGColor']},
                 ],
             }
         }
@@ -137,7 +152,8 @@ require __DIR__ . '/style-manager.php';
 ?>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn" data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
+    <button id="save-page" class="btn"
+            data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="fa fa-floppy-o"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>
