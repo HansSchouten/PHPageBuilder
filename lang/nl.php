@@ -49,5 +49,13 @@ return [
         'page-content' => 'Pagina inhoud',
         'toastr-changes-saved' => 'Wijzigingen opgeslagen',
         'toastr-saving-failed' => 'Fout tijdens opslaan van wijzigingen',
+        'selector-manager' => [
+            'label' => 'CSS klasses',
+            'states-label' => 'Opmaak voor',
+            'selected-label' => 'Geselecteerd',
+            'state-hover' => 'Muis over element',
+            'state-active' => 'Muisklik op element',
+            'state-nth' => 'Even/oneven elementen',
+        ]
     ],
 ];

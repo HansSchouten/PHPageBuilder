@@ -17,7 +17,17 @@ window.editor = grapesjs.init({
         urlStore: '<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>',
     },
     styleManager: {
-        textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
+        textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>',
+    },
+    selectorManager: {
+        label: '<?= phpb_trans('pagebuilder.selector-manager.label') ?>',
+        statesLabel: '<?= phpb_trans('pagebuilder.selector-manager.states-label') ?>',
+        selectedLabel: '<?= phpb_trans('pagebuilder.selector-manager.selected-label') ?>',
+        states: [
+            { name: 'hover', label: '<?= phpb_trans('pagebuilder.selector-manager.state-hover') ?>' },
+            { name: 'active', label: '<?= phpb_trans('pagebuilder.selector-manager.state-active') ?>' },
+            { name: 'nth-of-type(2n)', label: '<?= phpb_trans('pagebuilder.selector-manager.state-nth') ?>' }
+        ],
     },
     traitManager: {
         textNoElement: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
@@ -88,6 +98,11 @@ editor.BlockManager.add(<?= json_encode($block->getSlug()) ?>, <?= json_encode($
 endforeach;
 ?>
 </script>
+
+<?php
+require __DIR__ . '/settings-manager.php';
+require __DIR__ . '/style-manager.php';
+?>
 
 <div id="sidebar-bottom-buttons">
     <button id="save-page" class="btn" data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">

@@ -49,5 +49,13 @@ return [
         'page-content' => 'Page contents',
         'toastr-changes-saved' => 'Changes saved',
         'toastr-saving-failed' => 'Error while saving changes',
+        'selector-manager' => [
+            'label' => 'CSS classes',
+            'states-label' => 'Layout for',
+            'selected-label' => 'Selected',
+            'state-hover' => 'Element hover',
+            'state-active' => 'Element click',
+            'state-nth' => 'Even/odd element',
+        ]
     ]
 ];

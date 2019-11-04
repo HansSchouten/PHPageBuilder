@@ -154,6 +154,7 @@
                 copyable: true,
                 selectable: true,
                 hoverable: true,
+                stylable: true,
             };
             if (component.attributes['is-html'] === 'false') {
                 // we are inside a dynamic block, the first layer of child blocks are directly inside a dynamic block
@@ -200,6 +201,7 @@
                 hoverable: true,
                 selectable: true,
                 editable: true,
+                stylable: true,
             })
         }
     }
@@ -215,6 +217,7 @@
                 hoverable: true,
                 selectable: true,
                 editable: true,
+                stylable: true,
             })
         }
     }
