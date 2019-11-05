@@ -194,7 +194,7 @@
     function allowEditBasedOnTag(component) {
         let htmlTag = component.get('tagName');
         let editableTags = [
-            'div','span',
+            //'div','span',   // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
             'p','a','img','button','small','b','strong','i','em',
             'ul','li','th','td'

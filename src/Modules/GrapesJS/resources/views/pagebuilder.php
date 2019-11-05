@@ -17,6 +17,7 @@
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
 <script type="text/javascript">
 CKEDITOR.dtd.$editable.a = 1;
+CKEDITOR.dtd.$editable.b = 1;
 CKEDITOR.dtd.$editable.em = 1;
 CKEDITOR.dtd.$editable.button = 1;
 CKEDITOR.dtd.$editable.strong = 1;
@@ -28,7 +29,7 @@ window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
 window.editor = grapesjs.init({
     container: '#gjs',
     noticeOnUnload: false,
-    avoidInlineStyle: false,
+    avoidInlineStyle: true,
     storageManager: {
         type: 'remote',
         autoload: false,
