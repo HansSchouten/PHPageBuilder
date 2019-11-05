@@ -300,9 +300,6 @@ html, body, #gjs {
   border-top: 1px solid #dbdbdb;
   border-right: 2px solid #dfe0e1;
 
-  a {
-    padding-top: 7px;
-  }
   button,
   a {
     float: right;
@@ -312,6 +309,7 @@ html, body, #gjs {
     border-radius: 0;
     color: #888;
     font-size: 15px;
+    padding: 8px 0;
 
     &:hover {
       background: #16b8ec;

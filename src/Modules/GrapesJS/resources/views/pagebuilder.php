@@ -158,8 +158,7 @@ require __DIR__ . '/style-manager.php';
 </div>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn"
-            data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
+    <button id="save-page" class="btn" data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="fa fa-floppy-o"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>
