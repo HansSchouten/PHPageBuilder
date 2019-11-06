@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use Exception;
+use PHPageBuilder\Repositories\PageRepository;
 
 class ShortcodeParser
 {
@@ -17,6 +18,11 @@ class ShortcodeParser
     protected $renderedBlocks;
 
     /**
+     * @var array $pages;
+     */
+    protected $pages = [];
+
+    /**
      * ShortcodeParser constructor.
      *
      * @param PageRenderer $pageRenderer
@@ -25,6 +31,11 @@ class ShortcodeParser
     {
         $this->pageRenderer = $pageRenderer;
         $this->renderedBlocks = [];
+
+        $pageRepository = new PageRepository;
+        foreach ($pageRepository->getAll() as $page) {
+            $pages[$page->id] = $page->getUrl();
+        }
     }
 
     /**
@@ -36,7 +47,9 @@ class ShortcodeParser
      */
     public function doShortcodes($html)
     {
-        return $this->doBlockShortcodes($html);
+        $html = $this->doBlockShortcodes($html);
+        $html = $this->doPageShortcodes($html);
+        return $html;
     }
 
     /**
@@ -77,6 +90,36 @@ class ShortcodeParser
             if ($pos !== false) {
                 $html = substr_replace($html, $blockHtml, $pos, strlen($match['shortcode']));
             }
+        }
+
+        return $html;
+    }
+
+    /**
+     * Replace all page shortcodes for the corresponding absolute page url.
+     *
+     * @param $html
+     * @return mixed
+     */
+    protected function doPageShortcodes($html)
+    {
+        $matches = $this->findMatches('page', $html);
+
+        if (empty($matches)) {
+            return $html;
+        }
+
+        foreach ($matches as $match) {
+            if (! isset($match['attributes']['id'])) {
+                continue;
+            }
+            $pageId = $match['attributes']['id'];
+
+            $url = '';
+            if (isset($this->pages[$pageId])) {
+                $url = $this->pages[$pageId];
+            }
+            $html = str_replace($match['shortcode'], $url, $html);
         }
 
         return $html;

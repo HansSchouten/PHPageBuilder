@@ -168,6 +168,21 @@ if (! function_exists('phpb_route')) {
     }
 }
 
+if (! function_exists('phpb_url')) {
+    /**
+     * Give the full URL of a given public path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function phpb_url($path = '')
+    {
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+        $base =  $protocol . "://" . $_SERVER['SERVER_NAME'];
+        return $base . $path;
+    }
+}
+
 if (! function_exists('phpb_redirect')) {
     /**
      * Redirect to the given page builder route.

@@ -15,4 +15,12 @@ class Page implements PageContract
     {
         return $this->layout;
     }
+
+    /**
+     * Return the URL of this page.
+     */
+    public function getUrl()
+    {
+        return phpb_url($this->route);
+    }
 }
