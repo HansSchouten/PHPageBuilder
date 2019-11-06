@@ -25,6 +25,10 @@ CKEDITOR.dtd.$editable.strong = 1;
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
 window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
+window.pages = [
+    ['Home', 1],
+    ['Contact', 2],
+];
 
 window.editor = grapesjs.init({
     container: '#gjs',
