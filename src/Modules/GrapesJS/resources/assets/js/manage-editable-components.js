@@ -17,10 +17,6 @@
         applyBlockAttributesToComponents(container);
 
         restrictEditAccess(container);
-
-        setTimeout(function() {
-            $("#phpb-loading").addClass('loaded');
-        }, 500);
     });
 
     /**
