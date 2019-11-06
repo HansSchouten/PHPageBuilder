@@ -98,4 +98,24 @@ class PageBuilder implements PageBuilderContract
         $pageRepository = new PageRepository;
         return $pageRepository->updatePageData($page, $data);
     }
+
+    /**
+     * Return the list of all pages, used in CKEditor link editor.
+     *
+     * @return array
+     */
+    public function getPages()
+    {
+        $pages = [];
+
+        $pageRepository = new PageRepository;
+        foreach ($pageRepository->getAll() as $page) {
+            $pages[] = [
+                $page->name,
+                $page->id
+            ];
+        }
+
+        return $pages;
+    }
 }
