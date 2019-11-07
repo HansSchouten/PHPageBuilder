@@ -33,6 +33,7 @@ return [
         'page-deleted' => 'Pagina verwijderd',
     ],
     'pagebuilder' => [
+        'loading-text' => 'Bewerkmodus laden..',
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',
         'trait-no-element-selected' => 'Selecteer een element om de eigenschappen aan te passen.',
         'trait-settings' => 'Instellingen',

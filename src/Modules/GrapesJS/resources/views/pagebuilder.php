@@ -7,6 +7,9 @@
                 </div>
             </div>
         </div>
+        <div class="text">
+            <?= phpb_trans('pagebuilder.loading-text') ?>
+        </div>
     </div>
 </div>
 

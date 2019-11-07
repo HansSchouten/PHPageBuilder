@@ -33,6 +33,7 @@ return [
         'page-deleted' => 'Page removed',
     ],
     'pagebuilder' => [
+        'loading-text' => 'Loading pagebuilder..',
         'style-no-element-selected' => 'Select an element to modify the style.',
         'trait-no-element-selected' => 'Select an element to modify any attributes.',
         'trait-settings' => 'Settings',

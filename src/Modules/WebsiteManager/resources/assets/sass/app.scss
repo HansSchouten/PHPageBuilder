@@ -1,6 +1,10 @@
 
 /*    GENERAL    */
 
+.bg-light {
+  background-color: #f9fcff !important;
+}
+
 .container {
   max-width: 1140px;
 }
@@ -13,6 +17,14 @@ a {
   margin: 30px 0;
 }
 
+.btn-light.clear {
+  background: none;
+  border: none;
+}
+.btn-light.clear:hover {
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
 
 /*    TAB PANE    */
 

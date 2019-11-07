@@ -7,6 +7,7 @@ $sidebar-bottom-buttons-height: 40px;
 html, body, #gjs {
   height: 100% !important;
   margin: 0;
+  overflow: hidden;
 }
 
 .gjs-editor {
@@ -33,6 +34,15 @@ html, body, #gjs {
     transform: translate(-50%,-50%);
     width: 150px;
     height: 150px;
+
+    .text {
+      font-size: 16px;
+      margin: 0 -30px;
+      margin-top: 10px;
+      text-align: center;
+      color: #0297c8;
+      font-weight: lighter;
+    }
   }
   .loader {
     width: calc(100% - 0px);

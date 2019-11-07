@@ -8,13 +8,6 @@ $(document).ready(function() {
         $("#gjs").toggleClass('sidebar-collapsed');
     });
 
-    window.editor.on('load', function(editor) {
-        // if not on mobile, move loading to the canvas until iframe has been loaded
-        if ($(window).width() > 1000) {
-            $(".gjs-cv-canvas").prepend($("#phpb-loading"));
-        }
-    });
-
     window.editor.on('run:open-sm', function(editor) {
         $("#gjs-sm-advanced .gjs-sm-properties").append($(".gjs-clm-tags"));
     });
