@@ -40,8 +40,7 @@ html, body, #gjs {
       margin: 0 -30px;
       margin-top: 10px;
       text-align: center;
-      color: #0297c8;
-      font-weight: lighter;
+      color: #0d7699;
     }
   }
   .loader {
@@ -241,6 +240,7 @@ html, body, #gjs {
   border-bottom: 2px solid rgba(0, 0, 0, 0.10) !important;
   letter-spacing: 0;
   font-size: 16px;
+  font-weight: normal;
 }
 .gjs-layer-name {
   padding-top: 2px;
@@ -314,7 +314,7 @@ html, body, #gjs {
   a {
     float: right;
     height: 100%;
-    width: 33%;
+    width: 33.33%;
     border-left: 1px solid #dfe0e1;
     border-radius: 0;
     color: #888;

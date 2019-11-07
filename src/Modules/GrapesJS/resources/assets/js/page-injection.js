@@ -11,4 +11,8 @@ $(document).ready(function() {
     /* post message to iframe parent that page has been loaded */
     window.parent.postMessage("page-loaded", '*');
 
+    $(document).on('touchstart', function(e) {
+        window.parent.postMessage("touch-start", '*');
+    });
+
 });

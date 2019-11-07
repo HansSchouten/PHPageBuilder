@@ -29,5 +29,7 @@ function onMessage(event) {
         setTimeout(function() {
             $("#phpb-loading").addClass('loaded');
         }, 500);
+    } else if(event.data === 'touch-start') {
+        window.touchStart();
     }
 }

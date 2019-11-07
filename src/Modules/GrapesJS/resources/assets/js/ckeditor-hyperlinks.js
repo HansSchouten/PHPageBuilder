@@ -7,7 +7,6 @@ $(document).ready(function() {
             let infoTab = dialogDefinition.getContents('info');
 
             dialogDefinition.onLoad = function() {
-                let firstTabContent = $("[id*='cke_dialog_contents_']").first();
                 let dialog = CKEDITOR.dialog.getCurrent();
                 dialog.getContentElement('info', 'linkType').getElement().hide();
                 dialog.getContentElement('info', 'protocol').getElement().hide();
