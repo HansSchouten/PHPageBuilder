@@ -6,69 +6,88 @@ $(document).ready(function() {
         if (dialogName === 'link') {
             let infoTab = dialogDefinition.getContents('info');
 
-            // modify link type items
-            let linkType = infoTab.get('linkType');
-            linkType.items = [
-                ["Pagina", "page"],
-                ["URL", "url"],
-                ["E-mail", "email"],
-                ["Phone", "tel"],
-            ];
-
-            // change link type selector based on selected link type
-            linkType.default = 'page';
-            linkType.setup = function(data) {
-                if (data.type === undefined) {
-                    this.setValue('page');
-                } else if (data.type === 'url' && data.url.url.startsWith('[page id=')) {
-                    this.setValue('page');
-                } else {
-                    this.setValue(data.type);
-                }
-            };
-
-            // store default link type onChange
-            linkType['defaultOnChange'] = linkType.onChange;
-
-            // define custom link type onChange
-            linkType.onChange = function(obj) {
+            dialogDefinition.onLoad = function() {
+                let firstTabContent = $("[id*='cke_dialog_contents_']").first();
                 let dialog = CKEDITOR.dialog.getCurrent();
-
-                if (obj.data.value === 'page') {
-                    dialog.getContentElement('info', 'page-selector').getElement().show();
-                } else {
-                    dialog.getContentElement('info', 'page-selector').getElement().hide();
-                }
-
-                // call default onChange
-                $(this).trigger('defaultOnChange');
+                dialog.getContentElement('info', 'linkType').getElement().hide();
+                dialog.getContentElement('info', 'protocol').getElement().hide();
+                dialog.getContentElement('info', 'url').getElement().hide();
             };
 
             infoTab.add({
                 type: 'select',
-                id: 'page-selector',
-                label: 'Pagina',
+                id: 'linktype-selector',
+                label: 'Linktype',
                 'default': '',
-                style: 'width:100%',
+                items: [
+                    [window.translations['page'], "page"],
+                    ["URL", "url"]
+                ],
+                onChange: function(obj) {
+                    let dialog = CKEDITOR.dialog.getCurrent();
+                    if (obj.data.value === 'page') {
+                        dialog.getContentElement('info', 'page-selector').getElement().show();
+                        dialog.getContentElement('info', 'url-field').getElement().hide();
+                    } else {
+                        dialog.getContentElement('info', 'page-selector').getElement().hide();
+                        dialog.getContentElement('info', 'url-field').getElement().show();
+                        dialog.getContentElement('info', 'url-field').setValue('');
+                    }
+                },
+                setup: function(data) {
+                    if (data.type === undefined) {
+                        this.setValue('page');
+                    } else if (data.type === 'url' && data.url.url.startsWith('[page id=')) {
+                        this.setValue('page');
+                    } else {
+                        this.setValue(data.type);
+                    }
+                }
+            });
+
+            infoTab.add({
+                type: 'select',
+                id: 'page-selector',
+                label: window.translations['page'],
+                'default': '',
                 items: window.pages,
                 onChange: function() {
                     let dialog = CKEDITOR.dialog.getCurrent();
                     let page = '[page id=' + this.getValue() + ']';
                     dialog.setValueOf('info', 'url', page);
-                    dialog.setValueOf('info', 'protocol', ! page ? 'https://' : '');
+                    dialog.setValueOf('info', 'protocol', '');
                 },
                 setup: function(dialog) {
                     this.allowOnChange = false;
-                    this.setValue(dialog.url ? dialog.url.url : '');
+                    let pageId = '';
+                    if (dialog.url) {
+                        pageId = dialog.url.url.substr(9, dialog.url.url.length - 10);
+                    }
+                    this.setValue(pageId);
                     this.allowOnChange = true;
                 }
             });
 
-            /*
-            dialogDefinition.onLoad = function() {
-                let selector = this.getContentElement('info', 'page-selector');
-                selector.reset();
-            };*/
+            infoTab.add({
+                type: 'text',
+                id: 'url-field',
+                label: 'URL',
+                'default': '',
+                onChange: function() {
+                    let dialog = CKEDITOR.dialog.getCurrent();
+                    let url = this.getValue();
+                    dialog.setValueOf('info', 'url', url);
+                },
+                setup: function(dialog) {
+                    this.allowOnChange = false;
+                    let url = '';
+                    if (dialog.url) {
+                        url = dialog.url.url;
+                    }
+                    this.setValue(url);
+                    this.allowOnChange = true;
+                }
+            });
         }
     });
 

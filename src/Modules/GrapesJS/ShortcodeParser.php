@@ -34,7 +34,7 @@ class ShortcodeParser
 
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll() as $page) {
-            $pages[$page->id] = $page->getUrl();
+            $this->pages[$page->id] = $page->getUrl();
         }
     }
 
