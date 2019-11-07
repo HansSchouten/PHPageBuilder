@@ -14,6 +14,17 @@ html, body, #gjs {
   font-size: 0.9rem;
 }
 
+.toast {
+  opacity: 1 !important;
+  border: none;
+  right: 15px;
+  box-shadow: none;
+
+  &.toast-success {
+    background: #2dc837;
+  }
+}
+
 #phpb-loading {
   position: absolute;
   height: 100%;
@@ -161,6 +172,45 @@ html, body, #gjs {
 .gjs-pn-devices-c {
   left: $sidebar-width;
 }
+.gjs-pn-panel {
+  #gjs-sm-caret {
+    padding-right: 0 !important;
+  }
+  .fa-caret-down {
+    margin-right: 5px !important;
+  }
+  .fa-caret-right {
+    margin-right: 8px !important;
+  }
+}
+
+
+/*   SIDEBAR FIELDS   */
+
+.gjs-three-bg {
+  background-color: #16b8ec;
+}
+.gjs-clm-tags {
+  #gjs-clm-close,
+  #gjs-clm-checkbox {
+    color: #fff;
+  }
+}
+.gjs-field {
+  background-color: rgb(227, 227, 227);
+  border-radius: 0;
+  padding: 2px;
+
+  input,
+  select,
+  textarea {
+    padding: 3px;
+  }
+
+  .gjs-d-s-arrow {
+    border-top: 4px solid rgb(100, 100, 100);
+  }
+}
 
 
 /*   SIDEBAR HEADER   */
@@ -216,7 +266,10 @@ html, body, #gjs {
   margin-bottom: 10px;
 }
 .gjs-block-category.gjs-open {
-  border-bottom: 2px solid rgba(0, 0, 0, 0.10) !important;
+  border-bottom: none !important;
+}
+.gjs-blocks-cs {
+  border-bottom: none !important;
 }
 
 
@@ -254,34 +307,20 @@ html, body, #gjs {
 }
 
 
-/*   SIDEBAR FIELDS   */
-.gjs-three-bg {
-  background-color: #16b8ec;
-}
-.gjs-clm-tags {
-  #gjs-clm-close,
-  #gjs-clm-checkbox {
-    color: #fff;
-  }
-}
-.gjs-field {
-  background-color: rgb(227, 227, 227);
-  border-radius: 0;
-  padding: 2px;
+/*   LAYERS PANEL VIEW   */
 
-  input,
-  select,
-  textarea {
-    padding: 3px;
-  }
-
-  .gjs-d-s-arrow {
-    border-top: 4px solid rgb(100, 100, 100);
-  }
+.gjs-sm-sector.gjs-sm-open {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+
+
+/*   TRAITS PANEL VIEW   */
 
 .gjs-trt-trait {
   display: block;
+}
+.gjs-trt-header {
+  font-weight: normal;
 }
 .gjs-trt-trait .gjs-label,
 .gjs-trt-trait .gjs-field {
@@ -290,6 +329,15 @@ html, body, #gjs {
 .gjs-field-checkbox {
   height: 17px !important;
   width: 17px !important;
+}
+.gjs-traits-label {
+  font-weight: normal;
+  font-size: 16px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+.gjs-sm-sector #gjs-sm-caret,
+.gjs-clm-tags #gjs-sm-caret {
+  font-size: initial;
 }
 
 
