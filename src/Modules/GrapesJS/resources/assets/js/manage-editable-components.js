@@ -70,7 +70,7 @@
         let parent = droppedComponent.parent();
 
         applyBlockAttributesToComponents(droppedComponent);
-        restrictEditAccess(parent);
+        //restrictEditAccess(parent);
     });
 
     /**
@@ -82,7 +82,11 @@
     function applyBlockAttributesToComponents(component) {
         if (component.attributes.tagName === 'phpb-block') {
             let container = component.parent();
-            let clone = component.clone();
+            let clone = cloneComponent(component);
+            return;
+
+            console.log(component.toHTML());
+            console.log(clone.toHTML());
 
             // Since component is a <phpb-block> that should be removed and replaced by its children,
             // the component's parent child that has the same id as component needs to be replaced.
@@ -112,6 +116,25 @@
                 // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
                 applyBlockAttributesToComponents(childComponent);
             });
+        }
+    }
+
+    /**
+     * Clone the given component (while maintaining all attributes, like IDs).
+     *
+     * @param component
+     */
+    function cloneComponent(component) {
+        let clone = component.clone();
+        deepCopyAttributes(component, clone);
+        return clone;
+    }
+    function deepCopyAttributes(component, clone) {
+        for (let index = 0; index < component.components().length; index++) {
+            let child = component.components().models[index];
+            let cloneChild = clone.components().models[index];
+            applyBlockAttributes(child, cloneChild);
+            deepCopyAttributes(child, cloneChild);
         }
     }
 
