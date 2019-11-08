@@ -190,6 +190,7 @@
                 hoverable: true,
                 stylable: true,
             };
+            addUniqueClass(component);
             if (component.attributes['is-html'] === 'false') {
                 // we are inside a dynamic block, the first layer of child blocks are directly inside a dynamic block
                 directlyInsideDynamicBlock = true;
@@ -231,12 +232,7 @@
         ];
 
         if (editableTags.includes(htmlTag)) {
-            component.set({
-                hoverable: true,
-                selectable: true,
-                editable: true,
-                stylable: true,
-            });
+            makeComponentEditable(component);
         }
     }
 
@@ -247,13 +243,32 @@
      */
     function allowEditBasedOnClass(component) {
         if ('phpb-editable' in component.attributes.attributes) {
-            component.set({
-                hoverable: true,
-                selectable: true,
-                editable: true,
-                stylable: true,
-            })
+            makeComponentEditable(component);
         }
+    }
+
+    /**
+     * Make the given component editable.
+     *
+     * @param component
+     */
+    function makeComponentEditable(component) {
+        component.set({
+            hoverable: true,
+            selectable: true,
+            editable: true,
+            stylable: true,
+        });
+        addUniqueClass(component);
+    }
+
+    /**
+     * Add a unique class to this component to ensure style only applies to this component instance.
+     *
+     * @param component
+     */
+    function addUniqueClass(component) {
+        component.addClass(generateId());
     }
 
     /**
@@ -276,6 +291,17 @@
             selectable: false,
             hoverable: false
         });
+    }
+
+    /**
+     * Generate a unique id string.
+     *
+     * Based on: https://gist.github.com/gordonbrander/2230317
+     */
+    let counter = 0;
+    function generateId() {
+        return 'ID' + (Date.now().toString(36)
+            + Math.random().toString(36).substr(2, 5) + counter++).toUpperCase();
     }
 
 })();
