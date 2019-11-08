@@ -7,6 +7,7 @@ use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Theme;
+use Exception;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -84,6 +85,18 @@ class PageBuilder implements PageBuilderContract
         }
 
         require __DIR__ . '/resources/views/layout.php';
+    }
+
+    /**
+     * Render the given page.
+     *
+     * @param PageContract $page
+     * @throws Exception
+     */
+    public function renderPage(PageContract $page)
+    {
+        $renderer = new PageRenderer($this->theme, $page);
+        echo $renderer->render();
     }
 
     /**

@@ -222,6 +222,24 @@ if (! function_exists('phpb_field_value')) {
     }
 }
 
+if (! function_exists('phpb_instance')) {
+    /**
+     * Return an instance of the given class as defined in config.
+     *
+     * @param string $name          the name of the config main section in which the class path is defined
+     * @param array $params
+     * @return object|null
+     */
+    function phpb_instance(string $name, $params = [])
+    {
+        if (phpb_config($name . '.class')) {
+            $className = phpb_config($name . '.class');
+            return new $className;
+        }
+        return null;
+    }
+}
+
 if (! function_exists('phpb_autoload')) {
     /**
      * Autoload classes from the PHPageBuilder package.

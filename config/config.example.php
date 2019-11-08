@@ -48,7 +48,7 @@ return [
      */
     'login' => [
         'use_login' => true,
-        'login_class' => PHPageBuilder\Modules\Login\Login::class,
+        'class' => PHPageBuilder\Modules\Login\Login::class,
         'username' => 'admin',
         'password' => 'changethispassword'
     ],
@@ -63,7 +63,7 @@ return [
      */
     'website_manager' => [
         'use_website_manager' => true,
-        'website_manager_class' => PHPageBuilder\Modules\WebsiteManager\WebsiteManager::class,
+        'class' => PHPageBuilder\Modules\WebsiteManager\WebsiteManager::class,
     ],
 
     /*
@@ -75,7 +75,19 @@ return [
      |
      */
     'pagebuilder' => [
-        'pagebuilder_class' => PHPageBuilder\Modules\GrapesJS\PageBuilder::class,
+        'class' => PHPageBuilder\Modules\GrapesJS\PageBuilder::class,
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Page settings
+     |--------------------------------------------------------------------------
+     |
+     | By default a Page class is provided with knowledge about its layout and URL.
+     |
+     */
+    'page' => [
+        'class' => PHPageBuilder\Page::class,
     ],
 
     /*
@@ -102,7 +114,7 @@ return [
      | Settings for resolving pages based on the current URI.
      |
      */
-    'routing' => [
-        'router_class' => PHPageBuilder\Modules\Router\DatabasePageRouter::class
+    'router' => [
+        'class' => PHPageBuilder\Modules\Router\DatabasePageRouter::class
     ],
 ];

@@ -3,7 +3,6 @@
 namespace PHPageBuilder\Repositories;
 
 use PHPageBuilder\Contracts\PageRepositoryContract;
-use PHPageBuilder\Page;
 
 class PageRepository extends BaseRepository implements PageRepositoryContract
 {
@@ -19,7 +18,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      *
      * @var string
      */
-    protected $class = Page::class;
+    protected $class;
 
     /**
      * PageRepository constructor.
@@ -27,6 +26,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
     public function __construct()
     {
         parent::__construct();
+        $this->class = phpb_instance('page');
     }
 
     /**

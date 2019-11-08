@@ -7,7 +7,7 @@ use PHPageBuilder\Core\DB;
 /**
  * Class BaseRepository
  *
- * The base repository passing CRUD calls to DB and initialising class instances for returned records.
+ * The base repository passes CRUD calls to DB and initialises class instances for records returned from DB.
  *
  * @package PHPageBuilder\Repositories
  */

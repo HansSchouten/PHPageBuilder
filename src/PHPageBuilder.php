@@ -9,11 +9,6 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Core\DB;
-use PHPageBuilder\Modules\GrapesJS\PageRenderer;
-use PHPageBuilder\Modules\Login\Login;
-use PHPageBuilder\Modules\WebsiteManager\WebsiteManager;
-use PHPageBuilder\Modules\GrapesJS\PageBuilder;
-use PHPageBuilder\Modules\Router\DatabasePageRouter;
 
 class PHPageBuilder
 {
@@ -67,22 +62,34 @@ class PHPageBuilder
 
         // init the default login, if enabled
         if (phpb_config('login.use_login')) {
-            $this->login = new Login;
+            $this->login = phpb_instance('login');
         }
 
         // init the default website manager, if enabled
         if (phpb_config('website_manager.use_website_manager')) {
-            $this->websiteManager = new WebsiteManager;
+            $this->websiteManager = phpb_instance('website_manager');
         }
 
-        // init the default page builder, theme and page router
-        $this->pageBuilder = new PageBuilder;
+        // init the default page builder, active theme and page router
+        $this->pageBuilder = phpb_instance('pagebuilder');
         $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
-        $this->router = new DatabasePageRouter;
+        $this->router = phpb_instance('router');
 
         // load translations of the configured language
         $this->loadTranslations(phpb_config('project.language'));
     }
+
+    /**
+     * Load translations of the given language into a global variable.
+     *
+     * @param $language
+     */
+    public function loadTranslations($language)
+    {
+        global $phpb_translations;
+        $phpb_translations = require __DIR__ . '/../lang/' . $language . '.php';
+    }
+
 
     /**
      * Set the PHPageBuilder configuration to the given array.
@@ -105,18 +112,6 @@ class PHPageBuilder
         global $phpb_db;
         $phpb_db = new DB($config);
     }
-
-    /**
-     * Load translations of the given language into a global variable.
-     *
-     * @param $language
-     */
-    public function loadTranslations($language)
-    {
-        global $phpb_translations;
-        $phpb_translations = require __DIR__ . '/../lang/' . $language . '.php';
-    }
-
 
     /**
      * Set a custom login.
@@ -231,7 +226,7 @@ class PHPageBuilder
         $route = isset($_GET['route']) ? $_GET['route'] : null;
         $action = isset($_GET['action']) ? $_GET['action'] : null;
 
-        // if we are at the backend, handle login, website manager, page builder requests
+        // if we are at the backend, handle login, website manager and page builder requests
         if (strpos($_SERVER['REQUEST_URI'], phpb_config('project.pagebuilder_url')) === 0) {
             if (phpb_config('login.use_login')) {
                 $this->login->handleRequest($route, $action);
@@ -248,8 +243,7 @@ class PHPageBuilder
         // let the page router resolve the current URL
         $page = $this->router->resolve($_SERVER['REQUEST_URI']);
         if ($page instanceof PageContract) {
-            $renderer = new PageRenderer($this->theme, $page);
-            echo $renderer->render();
+            $this->pageBuilder->renderPage($page);
             exit();
         }
 

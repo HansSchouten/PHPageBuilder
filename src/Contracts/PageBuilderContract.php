@@ -13,11 +13,18 @@ interface PageBuilderContract
     public function handleRequest($route, $action);
 
     /**
-     * Render the PageBuilder.
+     * Render the given page inside the PageBuilder.
      *
      * @param PageContract $page
      */
     public function renderPageBuilder(PageContract $page);
+
+    /**
+     * Render the given page.
+     *
+     * @param PageContract $page
+     */
+    public function renderPage(PageContract $page);
 
     /**
      * Update the given page with the given data (an array of html blocks)
