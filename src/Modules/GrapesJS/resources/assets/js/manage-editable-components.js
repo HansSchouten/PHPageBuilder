@@ -103,7 +103,7 @@
             });
             component.remove();
 
-            copyAttributes(clone, blockRootComponent);
+            copyAttributes(clone, blockRootComponent, true, false);
             // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(blockRootComponent);
         } else {
@@ -133,7 +133,7 @@
      */
     function deepCopyAttributes(component, clone) {
         // apply all attributes from component to clone
-        copyAttributes(component, clone, true);
+        copyAttributes(component, clone, false, true);
         // apply attributes from component's children to clone's children
         for (let index = 0; index < component.components().length; index++) {
             let componentChild = component.components().models[index];
@@ -147,16 +147,19 @@
      *
      * @param component
      * @param targetComponent
-     * @param copyHtmlElementAttributes        whether the html element attributes should be copied
+     * @param copyGrapesAttributes              whether all GrapesJS component attributes (like permissions) should be copied
+     * @param copyHtmlElementAttributes         whether the html element attributes should be copied
      */
-    function copyAttributes(component, targetComponent, copyHtmlElementAttributes = false) {
+    function copyAttributes(component, targetComponent, copyGrapesAttributes, copyHtmlElementAttributes) {
         let componentAttributes = component.attributes.attributes;
         for (var attribute in componentAttributes) {
             if (componentAttributes.hasOwnProperty(attribute)) {
                 if (copyHtmlElementAttributes) {
                     targetComponent.attributes.attributes[attribute] = componentAttributes[attribute];
                 }
-                targetComponent.attributes[attribute] = componentAttributes[attribute];
+                if (copyGrapesAttributes) {
+                    targetComponent.attributes[attribute] = componentAttributes[attribute];
+                }
             }
         }
     }

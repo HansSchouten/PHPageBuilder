@@ -29,7 +29,7 @@ $(document).ready(function() {
         // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
-        let html = getHtml(container);
+        let html = window.html_beautify(getHtml(container));
         let css = editor.getCss();
         let style = editor.getStyle();
         let components = [];
@@ -111,7 +111,7 @@ $(document).ready(function() {
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block[component.attributes['block-id']] = component.toHTML();
+                data.current_block[component.attributes['block-id']] = window.html_beautify(component.toHTML());
             } else if (component.attributes['is-html'] === 'false') {
                 // if the current component is a dynamic block, replace this component with a placeholder with a unique id
                 // and store data.current_block data inside data.blocks with the generated id
