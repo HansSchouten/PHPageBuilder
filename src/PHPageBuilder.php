@@ -223,8 +223,8 @@ class PHPageBuilder
      */
     public function handleRequest()
     {
-        $route = isset($_GET['route']) ? $_GET['route'] : null;
-        $action = isset($_GET['action']) ? $_GET['action'] : null;
+        $route = $_GET['route'] ?? null;
+        $action = $_GET['action'] ?? null;
 
         // if we are at the backend, handle login, website manager and page builder requests
         if (strpos($_SERVER['REQUEST_URI'], phpb_config('project.pagebuilder_url')) === 0) {
@@ -255,7 +255,7 @@ class PHPageBuilder
      */
     public function handleAssetRequest()
     {
-        $asset = isset($_GET['asset']) ? $_GET['asset'] : null;
+        $asset = $_GET['asset'] ?? null;
         if ($asset && is_string($asset)) {
             $distPath = realpath(__DIR__ . '/../dist/');
             $requestedFile = realpath($distPath . '/' . $asset);

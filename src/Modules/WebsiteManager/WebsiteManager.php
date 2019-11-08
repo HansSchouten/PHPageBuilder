@@ -18,15 +18,17 @@ class WebsiteManager implements WebsiteManagerContract
     public function handleRequest($route, $action)
     {
         if (is_null($route)) {
-            $this->handleOverview();
+            $this->renderOverview();
+            exit();
         }
 
         if ($route === 'page_settings') {
             if ($action === 'create') {
                 $this->handleCreate();
+                exit();
             }
 
-            $pageId = isset($_GET['page']) ? $_GET['page'] : null;
+            $pageId = $_GET['page'] ?? null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
             if (is_null($page)) {
@@ -35,18 +37,16 @@ class WebsiteManager implements WebsiteManagerContract
 
             if ($action === 'edit') {
                 $this->handleEdit($page);
+                exit();
             } else if ($action === 'destroy') {
                 $this->handleDestroy($page);
             }
         }
     }
 
-    public function handleOverview()
-    {
-        $this->renderOverview();
-        exit();
-    }
-
+    /**
+     * Handle requests for creating a new page.
+     */
     public function handleCreate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -61,9 +61,13 @@ class WebsiteManager implements WebsiteManagerContract
         }
 
         $this->renderPageSettings();
-        exit();
     }
 
+    /**
+     * Handle requests for editing the given page.
+     *
+     * @param PageContract $page
+     */
     public function handleEdit(PageContract $page)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -78,9 +82,13 @@ class WebsiteManager implements WebsiteManagerContract
         }
 
         $this->renderPageSettings($page);
-        exit();
     }
 
+    /**
+     * Handle requests to destroy the given page.
+     *
+     * @param PageContract $page
+     */
     public function handleDestroy(PageContract $page)
     {
         $pageRepository = new PageRepository;

@@ -28,7 +28,7 @@ class Login implements LoginContract
 
         if ($route === 'logout') {
             unset($_SESSION['phpb_logged_in']);
-            phpb_redirect();
+            phpb_redirect('');
         }
 
         if (! isset($_SESSION['phpb_logged_in'])) {

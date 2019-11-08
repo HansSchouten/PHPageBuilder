@@ -43,7 +43,7 @@ class PageBuilder implements PageBuilderContract
     public function handleRequest($route, $action)
     {
         if ($route === 'pagebuilder') {
-            $pageId = isset($_GET['page']) ? $_GET['page'] : null;
+            $pageId = $_GET['page'] ?? null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
 

@@ -7,10 +7,10 @@
         <form class="login-form mt-3" method="post" action="?route=login">
             <?php
             if (phpb_flash('message')):
-                ?>
-                <div class="alert alert-<?= phpb_flash('message-type') ?>">
-                    <?= phpb_flash('message') ?>
-                </div>
+            ?>
+            <div class="alert alert-<?= phpb_flash('message-type') ?>">
+                <?= phpb_flash('message') ?>
+            </div>
             <?php
             endif;
             ?>
