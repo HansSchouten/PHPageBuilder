@@ -39,7 +39,12 @@ You don't want to use the website manager? No worries, it is included for people
 
 To install PHPagebuilder you either follow the quick start path, for quickly spinning up a new website, or you integrate it in your own framework or favorite project structure.
 
-### Quick start
+### Requirements
+
+- PHP version >= 7
+- A cool project
+
+### Quick start :rocket:
 
 If you want to quickly start a new project with drag and drop page management functionality, you can download the [boilerplate](https://github.com/HansSchouten/PHPagebuilder-boilerplate) project structure and follow the steps over there.
 
