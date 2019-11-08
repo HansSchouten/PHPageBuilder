@@ -81,6 +81,9 @@ class PageRenderer
         $pageBuilderPageContent = ob_get_contents();
         ob_end_clean();
 
+        // parse any shortcodes present in the page layout
+        $pageBuilderPageContent = $this->shortcodeParser->doShortcodes($pageBuilderPageContent);
+
         return $pageBuilderPageContent;
     }
 

@@ -63,12 +63,15 @@
         }
     });
 
+    /**
+     * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
+     * from the server and restrict edit access to editable components.
+     */
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
         if (! droppedComponent) return;
 
         let parent = droppedComponent.parent();
-
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
     });
@@ -268,7 +271,10 @@
      * @param component
      */
     function addUniqueClass(component) {
-        component.addClass(generateId());
+        if (component.attributes['style-identifier'] === undefined) {
+            component.attributes['style-identifier'] = generateId();
+        }
+        component.addClass(component.attributes['style-identifier']);
     }
 
     /**

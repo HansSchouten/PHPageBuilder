@@ -1,5 +1,5 @@
 <script type="text/javascript">
-/*
+
 editor.DomComponents.addType('text', {
     model: {
         defaults: {
@@ -17,5 +17,5 @@ editor.DomComponents.addType('default', {
         },
     },
 });
-*/
+
 </script>
