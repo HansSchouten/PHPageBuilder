@@ -70,7 +70,7 @@
         let parent = droppedComponent.parent();
 
         applyBlockAttributesToComponents(droppedComponent);
-        //restrictEditAccess(parent);
+        restrictEditAccess(parent);
     });
 
     /**
@@ -83,10 +83,6 @@
         if (component.attributes.tagName === 'phpb-block') {
             let container = component.parent();
             let clone = cloneComponent(component);
-            return;
-
-            console.log(component.toHTML());
-            console.log(clone.toHTML());
 
             // Since component is a <phpb-block> that should be removed and replaced by its children,
             // the component's parent child that has the same id as component needs to be replaced.
@@ -94,21 +90,20 @@
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
                     if (component.components().length === 1) {
-                        blockRootComponent = component.components().models[0].clone();
+                        blockRootComponent = cloneComponent(component.components().models[0]);
                         component.replaceWith(blockRootComponent);
                     } else {
                         // if the phpb-block has multiple direct children, add a wrapper first
                         blockRootComponent = component.replaceWith({tagName: 'div'});
                         clone.components().each(function(componentChild) {
-                            blockRootComponent.append(componentChild.clone());
+                            blockRootComponent.append(cloneComponent(componentChild));
                         });
                     }
                 }
             });
             component.remove();
 
-            applyBlockAttributes(clone, blockRootComponent);
-
+            copyAttributes(clone, blockRootComponent);
             // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(blockRootComponent);
         } else {
@@ -120,35 +115,48 @@
     }
 
     /**
-     * Clone the given component (while maintaining all attributes, like IDs).
+     * Clone the given component (while preserving all attributes, like IDs).
      *
      * @param component
      */
-    function cloneComponent(component) {
+    window.cloneComponent = function(component) {
         let clone = component.clone();
         deepCopyAttributes(component, clone);
         return clone;
-    }
+    };
+
+    /**
+     * Apply the attributes of the given component and its children to each corresponding component of the given clone.
+     *
+     * @param component
+     * @param clone
+     */
     function deepCopyAttributes(component, clone) {
+        // apply all attributes from component to clone
+        copyAttributes(component, clone, true);
+        // apply attributes from component's children to clone's children
         for (let index = 0; index < component.components().length; index++) {
-            let child = component.components().models[index];
+            let componentChild = component.components().models[index];
             let cloneChild = clone.components().models[index];
-            applyBlockAttributes(child, cloneChild);
-            deepCopyAttributes(child, cloneChild);
+            deepCopyAttributes(componentChild, cloneChild);
         }
     }
 
     /**
      * Apply the attributes of the given component to the given target component.
      *
-     * @param phpbComponent
      * @param component
+     * @param targetComponent
+     * @param copyHtmlElementAttributes        whether the html element attributes should be copied
      */
-    function applyBlockAttributes(phpbComponent, component) {
-        let componentAttributes = phpbComponent.attributes.attributes;
+    function copyAttributes(component, targetComponent, copyHtmlElementAttributes = false) {
+        let componentAttributes = component.attributes.attributes;
         for (var attribute in componentAttributes) {
             if (componentAttributes.hasOwnProperty(attribute)) {
-                component.attributes[attribute] = componentAttributes[attribute];
+                if (copyHtmlElementAttributes) {
+                    targetComponent.attributes.attributes[attribute] = componentAttributes[attribute];
+                }
+                targetComponent.attributes[attribute] = componentAttributes[attribute];
             }
         }
     }

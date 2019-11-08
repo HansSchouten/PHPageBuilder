@@ -22,8 +22,10 @@ $(document).ready(function() {
         let editor = window.editor;
         toggleWaiting();
 
-        // get the page content container (so skip all layout blocks) and prepare data for being stored
-        let container = editor.getWrapper().find("[phpb-content-container]")[0].clone();
+        // get the page content container (so skip all layout blocks) and prepare data for being stored,
+        // clone the container since we will be replacing components with placeholders without updating the page builder
+        let container = window.cloneComponent(editor.getWrapper().find("[phpb-content-container]")[0]);
+
         // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
