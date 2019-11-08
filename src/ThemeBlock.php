@@ -93,7 +93,7 @@ class ThemeBlock
      * Return configuration with the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
-     * @return mixed|string
+     * @return mixed
      */
     public function get($key)
     {

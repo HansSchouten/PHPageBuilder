@@ -94,4 +94,36 @@ class BlockAdapter
 
         return $data;
     }
+
+    /**
+     * Return the array of settings of the theme block, for populating the settings tab in the GrapesJS sidebar.
+     *
+     * @return array
+     */
+    public function getBlockSettingsArray()
+    {
+        $settings = $this->block->get('settings');
+        if ($this->block->isHtmlBlock() || ! is_array($settings)) {
+            return [];
+        }
+
+        $traits = [];
+        $attributes = [];
+        foreach ($settings as $setting) {
+            if (! isset($setting['label'])) {
+                continue;
+            }
+
+            $traits[] = [
+                'type' => $setting['type'] ?? 'text',
+                'name' => $setting['label']
+            ];
+        }
+
+        return [
+            'slug' => $this->block->getSlug(),
+            'traits' => $traits,
+            'attributes' => $attributes
+        ];
+    }
 }
