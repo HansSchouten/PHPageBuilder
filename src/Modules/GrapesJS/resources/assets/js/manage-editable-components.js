@@ -109,12 +109,30 @@
             copyAttributes(clone, blockRootComponent, true, false);
             // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(blockRootComponent);
+            // add all settings of this component type to the settings panel in the sidebar
+            addSettings(blockRootComponent);
         } else {
             component.components().each(function(childComponent) {
                 // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
                 applyBlockAttributesToComponents(childComponent);
             });
         }
+    }
+
+    /**
+     * Add all settings from the block's config file to the given component, to allow them being changed in
+     * the settings side panel.
+     *
+     * @param component
+     */
+    function addSettings(component) {
+        if (window.blockSettings[component.attributes['block-slug']] === undefined) {
+            return;
+        }
+        let settings = window.blockSettings[component.attributes['block-slug']];
+        settings.forEach(function(setting) {
+            component.addTrait(setting);
+        });
     }
 
     /**

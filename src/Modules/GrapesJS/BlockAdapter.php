@@ -102,28 +102,24 @@ class BlockAdapter
      */
     public function getBlockSettingsArray()
     {
-        $settings = $this->block->get('settings');
-        if ($this->block->isHtmlBlock() || ! is_array($settings)) {
+        $configSettings = $this->block->get('settings');
+        if ($this->block->isHtmlBlock() || ! is_array($configSettings)) {
             return [];
         }
 
-        $traits = [];
-        $attributes = [];
-        foreach ($settings as $setting) {
+        $settings = [];
+        foreach ($configSettings as $setting) {
             if (! isset($setting['label'])) {
                 continue;
             }
 
-            $traits[] = [
+            $settings[] = [
                 'type' => $setting['type'] ?? 'text',
-                'name' => $setting['label']
+                'name' => $setting['label'],
+                'value' => $setting['value'] ?? ''
             ];
         }
 
-        return [
-            'slug' => $this->block->getSlug(),
-            'traits' => $traits,
-            'attributes' => $attributes
-        ];
+        return $settings;
     }
 }
