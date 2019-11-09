@@ -131,9 +131,22 @@
         }
         let settings = window.blockSettings[component.attributes['block-slug']];
         settings.forEach(function(setting) {
-            component.addTrait(setting);
+            let trait = component.addTrait(setting);
+            if (setting['value'] !== undefined) {
+                trait.setTargetValue(setting['value']);
+            }
         });
     }
+
+    /**
+     * On updating an attribute (block setting from the settings side panel), refresh dynamic block via Ajax.
+     */
+    window.editor.on('component:update', function(component) {
+        if (component.changed['attributes'] === undefined) {
+            return;
+        }
+        // todo: refresh component contents with updated version requested via ajax call
+    });
 
     /**
      * Clone the given component (while preserving all attributes, like IDs).

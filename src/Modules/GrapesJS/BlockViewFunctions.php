@@ -2,11 +2,18 @@
 
 namespace PHPageBuilder\Modules\GrapesJS;
 
+use PHPageBuilder\ThemeBlock;
+
 class BlockViewFunctions
 {
     const EMPTY_ELEMENTS = [
         'area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param', 'command', 'keygen', 'source'
     ];
+
+    /**
+     * @var ThemeBlock $block
+     */
+    protected $block;
 
     /**
      * @var array $data
@@ -21,13 +28,29 @@ class BlockViewFunctions
     /**
      * BlockViewFunctions constructor.
      *
+     * @param ThemeBlock $block
      * @param $data
      * @param bool $editMode
      */
-    public function __construct($data, $editMode = false)
+    public function __construct(ThemeBlock $block, $data = [], $editMode = false)
     {
-        $this->data = $data;
+        $this->block = $block;
+        $this->data = is_array($data) ? $data : [];
         $this->editMode = $editMode;
+    }
+
+    /**
+     * Return the given setting stored for this block instance.
+     *
+     * @param $setting
+     * @param bool $allowHtml
+     * @return string
+     */
+    public function setting($setting, $allowHtml = false)
+    {
+        $value = $this->block->get('settings.' . $setting . '.value');
+
+        return $allowHtml ? $value : e($value);
     }
 
     /**

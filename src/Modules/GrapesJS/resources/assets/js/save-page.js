@@ -99,7 +99,7 @@ $(document).ready(function() {
             }
         }
 
-        // depth first recursive call for replacing nested blocks (this happens before the higher level blocks are handled)
+        // depth first recursive call for replacing nested blocks (the deepest blocks are handled first)
         component.get('components').forEach(function(childComponent) {
             let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newInDynamicBlock, newInHtmlBlockInDynamicBlock);
             // update data object with child data
@@ -113,6 +113,12 @@ $(document).ready(function() {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
                 data.current_block[component.attributes['block-id']] = window.html_beautify(component.toHTML());
             } else if (component.attributes['is-html'] === 'false') {
+                // store the attributes set to this block using traits in the settings side panel
+                let attributes = {};
+                component.get('traits').each(function(trait) {
+                    attributes[trait.get('name')] = trait.getTargetValue();
+                });
+                data.current_block['attributes'] = attributes;
                 // if the current component is a dynamic block, replace this component with a placeholder with a unique id
                 // and store data.current_block data inside data.blocks with the generated id
                 let instanceId = generateId();

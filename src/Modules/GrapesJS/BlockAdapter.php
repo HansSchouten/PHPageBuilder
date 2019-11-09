@@ -83,7 +83,7 @@ class BlockAdapter
         $data = [
             'label' => $this->getTitle(),
             'category' => $this->getCategory(),
-            'content' => $this->pageRenderer->getGrapesJSBlockHtml($this->block, new BlockViewFunctions([], true))
+            'content' => $this->pageRenderer->getGrapesJSBlockHtml($this->block)
         ];
 
         $iconClass = 'fa fa-bars';
@@ -108,14 +108,15 @@ class BlockAdapter
         }
 
         $settings = [];
-        foreach ($configSettings as $setting) {
+        foreach ($configSettings as $name => $setting) {
             if (! isset($setting['label'])) {
                 continue;
             }
 
             $settings[] = [
                 'type' => $setting['type'] ?? 'text',
-                'name' => $setting['label'],
+                'name' => $name,
+                'label' => $setting['label'],
                 'value' => $setting['value'] ?? ''
             ];
         }

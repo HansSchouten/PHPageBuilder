@@ -101,7 +101,8 @@ class PageRenderer
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
 
-        // if the block is a html block and for the given id in the given context is html data stored, then return that data
+        // if the block is a html block and for the given id in the given context is html data stored for this block,
+        // then return that html data
         if ($themeBlock->isHtmlBlock() && ! is_null($context) && isset($this->pageData->blocks)) {
             $blockData = json_decode($this->pageData->blocks);
             if (isset($blockData->$context) && isset($blockData->$context->$id)) {
@@ -110,7 +111,10 @@ class PageRenderer
         }
 
         if (empty($html)) {
+            // init variables that should be accessible in the view
+            $block = new BlockViewFunctions($themeBlock, $context, $this->forPageBuilder);
             $renderer = $this;
+
             ob_start();
             require $themeBlock->getViewFile();
             $html = ob_get_contents();
@@ -131,17 +135,16 @@ class PageRenderer
      * Render the given theme block with blockViewFunctions to be used as a block in GrapesJS.
      *
      * @param ThemeBlock $themeBlock
-     * @param $blockViewFunctions
      * @return string
      * @throws Exception
      */
-    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, $blockViewFunctions)
+    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock)
     {
         if ($themeBlock->isHtmlBlock()) {
             $html = file_get_contents($themeBlock->getFolder() . '/view.html');
         } else {
             // init variables that should be accessible in the view
-            $block = $blockViewFunctions;
+            $block = new BlockViewFunctions($themeBlock, [], true);
 
             ob_start();
             require $themeBlock->getFolder() . '/view.php';
