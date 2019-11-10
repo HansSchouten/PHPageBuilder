@@ -70,6 +70,7 @@ class PageRenderer
     {
         // init variables that should be accessible in the view
         $renderer = $this;
+        $page = $this->page;
         if ($this->forPageBuilder) {
             $body = '<div phpb-content-container="true"></div>';
         } else {
@@ -104,7 +105,7 @@ class PageRenderer
 
         // if the block is a html block and for the given id in the given context is html data stored for this block,
         // then return that html data
-        if ($themeBlock->isHtmlBlock() && ! is_null($contextId) && isset($this->pageData->blocks)) {
+        if ($themeBlock->isHtmlBlock() && ! is_null($contextId)) {
             if (isset($blockData->$contextId) && isset($blockData->$contextId->$id)) {
                 $html = $blockData->$contextId->$id;
             }

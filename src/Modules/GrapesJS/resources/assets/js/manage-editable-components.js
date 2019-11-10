@@ -134,7 +134,6 @@
         if (window.dynamicBlocks[component.attributes.attributes.id] !== undefined) {
             settingValues = window.dynamicBlocks[component.attributes.attributes.id]['settings'];
         }
-        console.log(settingValues);
         settings.forEach(function(setting) {
             let trait = component.addTrait(setting);
             if (setting['value'] !== undefined) {
