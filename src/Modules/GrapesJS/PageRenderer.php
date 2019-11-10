@@ -93,26 +93,32 @@ class PageRenderer
      *
      * @param $slug
      * @param null $id              the id with which data for this block is stored
-     * @param null $context         data of the parent block
+     * @param null $contextId       id of the parent block
      * @return false|string
      */
-    public function block($slug, $id = null, $context = null)
+    public function block($slug, $id = null, $contextId = null)
     {
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
+        $blockData = json_decode($this->pageData->blocks);
 
         // if the block is a html block and for the given id in the given context is html data stored for this block,
         // then return that html data
-        if ($themeBlock->isHtmlBlock() && ! is_null($context) && isset($this->pageData->blocks)) {
-            $blockData = json_decode($this->pageData->blocks);
-            if (isset($blockData->$context) && isset($blockData->$context->$id)) {
-                $html = $blockData->$context->$id;
+        if ($themeBlock->isHtmlBlock() && ! is_null($contextId) && isset($this->pageData->blocks)) {
+            if (isset($blockData->$contextId) && isset($blockData->$contextId->$id)) {
+                $html = $blockData->$contextId->$id;
             }
         }
 
         if (empty($html)) {
+            // get data of this block
+            $data = [];
+            if (isset($blockData->$id)) {
+                // store data as array instead of stdClass
+                $data = json_decode(json_encode($blockData->$id), true);
+            }
             // init variables that should be accessible in the view
-            $block = new BlockViewFunctions($themeBlock, $context, $this->forPageBuilder);
+            $block = new BlockViewFunctions($themeBlock, $data, $this->forPageBuilder);
             $renderer = $this;
 
             ob_start();

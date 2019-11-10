@@ -30,7 +30,7 @@
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
             if (window.dynamicBlocks[id] !== undefined) {
-                newComponent = component.replaceWith(window.dynamicBlocks[id]);
+                newComponent = component.replaceWith(window.dynamicBlocks[id]['html']);
             }
         }
 
@@ -130,6 +130,11 @@
             return;
         }
         let settings = window.blockSettings[component.attributes['block-slug']];
+        let settingValues = [];
+        if (window.dynamicBlocks[component.attributes.attributes.id] !== undefined) {
+            settingValues = window.dynamicBlocks[component.attributes.attributes.id]['settings'];
+        }
+        console.log(settingValues);
         settings.forEach(function(setting) {
             let trait = component.addTrait(setting);
             if (setting['value'] !== undefined) {

@@ -83,7 +83,10 @@ class ShortcodeParser
 
             // recursive call to render shortcodes inside the newly loaded block
             $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
-            $this->renderedBlocks[$id] = $blockHtml;
+            $this->renderedBlocks[$id] = [
+                'html' => $blockHtml,
+                'settings' => $context
+            ];
 
             // replace shortcode match with the $blockHtml (this replaces only the first match)
             $pos = strpos($html, $match['shortcode']);
