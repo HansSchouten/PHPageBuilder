@@ -46,7 +46,7 @@ class PageRenderer
         $this->theme = $theme;
         $this->page = $page;
         $this->shortcodeParser = new ShortcodeParser($this);
-        $this->pageData = json_decode($page->data);
+        $this->pageData = $page->getData();
         $this->forPageBuilder = $forPageBuilder;
     }
 
@@ -79,13 +79,36 @@ class PageRenderer
 
         ob_start();
         require $this->getPageLayoutPath();
-        $pageBuilderPageContent = ob_get_contents();
+        $pageHtml = ob_get_contents();
         ob_end_clean();
 
         // parse any shortcodes present in the page layout
-        $pageBuilderPageContent = $this->shortcodeParser->doShortcodes($pageBuilderPageContent);
+        $pageHtml = $this->shortcodeParser->doShortcodes($pageHtml);
 
-        return $pageBuilderPageContent;
+        return $pageHtml;
+    }
+
+    /**
+     * Return the page body for display on the website.
+     * The body contains all blocks which are put into the selected layout.
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function renderBody()
+    {
+        $html = '';
+
+        $data = $this->pageData;
+        if (isset($data->html)) {
+            $html .= $this->shortcodeParser->doShortcodes($data->html);
+        }
+        // include any style changes made via the pagebuilder
+        if (isset($data->css)) {
+            $html .= '<style>' . $data->css . '</style>';
+        }
+
+        return $html;
     }
 
     /**
@@ -170,28 +193,6 @@ class PageRenderer
     }
 
     /**
-     * Return the page body for display on the website.
-     * The body contains all blocks which is put into the selected layout.
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function renderBody()
-    {
-        $html = '';
-
-        $data = $this->pageData;
-        if (isset($data->html)) {
-            $html .= $this->shortcodeParser->doShortcodes($data->html);
-        }
-        if (isset($data->css)) {
-            $html .= '<style>' . $data->css . '</style>';
-        }
-
-        return $html;
-    }
-
-    /**
      * Return this page's dynamic blocks to be loaded into the page edited inside GrapesJS.
      *
      * @return string
@@ -202,34 +203,6 @@ class PageRenderer
         // trigger renderBody to ensure the shortcode parser has rendered versions of all dynamic blocks
         $this->renderBody();
         // return the rendered html for each dynamic block
-        return json_encode($this->shortcodeParser->getRenderedBlocks());
-    }
-
-    /**
-     * Return this page's components in the format passed to GrapesJS.
-     *
-     * @return string
-     */
-    public function getPageComponents()
-    {
-        $data = $this->pageData;
-        if (isset($data->components)) {
-            return $data->components;
-        }
-        return '[]';
-    }
-
-    /**
-     * Return this page's style in the format passed to GrapesJS.
-     *
-     * @return string
-     */
-    public function getPageStyleComponents()
-    {
-        $data = $this->pageData;
-        if (isset($data->style)) {
-            return $data->style;
-        }
-        return '[]';
+        return $this->shortcodeParser->getRenderedBlocks();
     }
 }

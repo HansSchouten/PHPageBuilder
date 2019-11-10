@@ -23,4 +23,12 @@ class Page implements PageContract
     {
         return phpb_url($this->route);
     }
+
+    /**
+     * Return the data stored for this page.
+     */
+    public function getData()
+    {
+        return json_decode($this->data);
+    }
 }

@@ -27,8 +27,8 @@ CKEDITOR.dtd.$editable.strong = 1;
 CKEDITOR.dtd.$editable.small = 1;
 
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
-window.pageComponents = <?= $pageRenderer->getPageComponents() ?>;
-window.dynamicBlocks = <?= $pageRenderer->getDynamicBlocks() ?>;
+window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
+window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 
 window.editor = grapesjs.init({
@@ -141,7 +141,7 @@ editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilde
 editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
 
 // load the earlier saved page css components
-editor.setStyle(<?= $pageRenderer->getPageStyleComponents() ?>);
+editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>);
 
 <?php
 foreach ($blocks as $block):

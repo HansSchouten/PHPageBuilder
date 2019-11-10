@@ -131,4 +131,34 @@ class PageBuilder implements PageBuilderContract
 
         return $pages;
     }
+
+    /**
+     * Return this page's components in the format passed to GrapesJS.
+     *
+     * @param PageContract $page
+     * @return array
+     */
+    public function getPageComponents(PageContract $page)
+    {
+        $data = $page->getData();
+        if (isset($data->components)) {
+            return json_decode($data->components);
+        }
+        return [];
+    }
+
+    /**
+     * Return this page's style in the format passed to GrapesJS.
+     *
+     * @param PageContract $page
+     * @return array
+     */
+    public function getPageStyleComponents(PageContract $page)
+    {
+        $data = $page->getData();
+        if (isset($data->style)) {
+            return json_decode($data->style);
+        }
+        return [];
+    }
 }

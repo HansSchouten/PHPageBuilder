@@ -10,4 +10,14 @@ interface PageContract
      * @return string
      */
     public function getLayout();
+
+    /**
+     * Return the URL of this page.
+     */
+    public function getUrl();
+
+    /**
+     * Return the data stored for this page.
+     */
+    public function getData();
 }
