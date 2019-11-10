@@ -131,13 +131,16 @@
         }
         let settings = window.blockSettings[component.attributes['block-slug']];
         let settingValues = [];
-        if (window.dynamicBlocks[component.attributes.attributes.id] !== undefined) {
-            settingValues = window.dynamicBlocks[component.attributes.attributes.id]['settings'];
+        let blockId = component.attributes['block-id'];
+        if (window.dynamicBlocks[blockId].settings.attributes !== undefined) {
+            settingValues = window.dynamicBlocks[blockId].settings.attributes;
         }
         settings.forEach(function(setting) {
             let trait = component.addTrait(setting);
-            if (setting['value'] !== undefined) {
-                trait.setTargetValue(setting['value']);
+            if (settingValues[setting['name']] !== undefined) {
+                trait.setTargetValue(settingValues[setting['name']]);
+            } else if (setting['default-value'] !== undefined) {
+                trait.setTargetValue(setting['default-value']);
             }
         });
     }

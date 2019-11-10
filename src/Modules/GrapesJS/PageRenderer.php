@@ -20,14 +20,14 @@ class PageRenderer
     protected $page;
 
     /**
-     * @var ShortcodeParser $shortcodeParser
-     */
-    protected $shortcodeParser;
-
-    /**
      * @var array $pageData
      */
     protected $pageData;
+
+    /**
+     * @var ShortcodeParser $shortcodeParser
+     */
+    protected $shortcodeParser;
 
     /**
      * @var bool $forPageBuilder
@@ -45,8 +45,8 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
-        $this->shortcodeParser = new ShortcodeParser($this);
         $this->pageData = $page->getData();
+        $this->shortcodeParser = new ShortcodeParser($this);
         $this->forPageBuilder = $forPageBuilder;
     }
 
@@ -58,6 +58,16 @@ class PageRenderer
     public function getPageLayoutPath()
     {
         return $this->theme->getFolder() . '/layouts/' . basename($this->page->getLayout()) . '/view.php';
+    }
+
+    /**
+     * Return an array with for each block of this page the stored html & settings data.
+     *
+     * @return array
+     */
+    public function getPageBlocksData()
+    {
+        return json_decode($this->pageData->blocks, true);
     }
 
     /**

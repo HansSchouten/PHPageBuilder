@@ -18,7 +18,12 @@ class ShortcodeParser
     protected $renderedBlocks;
 
     /**
-     * @var array $pages;
+     * @var array $blocksData
+     */
+    protected $blocksData = [];
+
+    /**
+     * @var array $pages
      */
     protected $pages = [];
 
@@ -30,8 +35,12 @@ class ShortcodeParser
     public function __construct(PageRenderer $pageRenderer)
     {
         $this->pageRenderer = $pageRenderer;
-        $this->renderedBlocks = [];
 
+        // set properties for parsing block shortcodes
+        $this->renderedBlocks = [];
+        $this->blocksData = $pageRenderer->getPageBlocksData();
+
+        // set properties for parsing page shortcodes
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll() as $page) {
             $this->pages[$page->id] = $page->getUrl();
@@ -85,7 +94,7 @@ class ShortcodeParser
             $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $parentBlockId);
             $this->renderedBlocks[$id] = [
                 'html' => $blockHtml,
-                'settings' => []
+                'settings' => $this->blocksData[$id] ?? []
             ];
 
             // replace shortcode match with the $blockHtml (this replaces only the first match)

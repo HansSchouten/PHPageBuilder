@@ -117,7 +117,7 @@ class BlockAdapter
                 'type' => $setting['type'] ?? 'text',
                 'name' => $name,
                 'label' => $setting['label'],
-                'value' => $setting['value'] ?? ''
+                'default-value' => $setting['value'] ?? ''
             ];
         }
 
