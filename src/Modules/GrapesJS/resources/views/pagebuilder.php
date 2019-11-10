@@ -30,6 +30,7 @@ window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
+window.renderBlockUrl = '<?= phpb_route('?route=pagebuilder&action=renderBlock&page=' . $page->id) ?>';
 
 window.editor = grapesjs.init({
     container: '#gjs',

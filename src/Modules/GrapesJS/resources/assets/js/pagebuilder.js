@@ -28,6 +28,7 @@ function onMessage(event) {
     if (event.data === 'page-loaded') {
         setTimeout(function() {
             $("#phpb-loading").addClass('loaded');
+            window.isLoaded = true;
         }, 500);
     } else if(event.data === 'touch-start') {
         window.touchStart();

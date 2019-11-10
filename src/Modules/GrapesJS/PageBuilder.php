@@ -51,16 +51,23 @@ class PageBuilder implements PageBuilderContract
                 die('Page not found');
             }
 
-            if ($action === 'edit') {
-                $this->renderPageBuilder($page);
-            } else if ($action === 'store') {
-                if (isset($_POST)) {
-                    if (isset($_POST['data']) && is_array($_POST['data'])) {
-                        $this->updatePage($page, $_POST['data']);
-                    } else {
-                        $this->updatePage($page, []);
+            switch ($action) {
+                case 'edit':
+                    $this->renderPageBuilder($page);
+                    break;
+                case 'store':
+                    if (isset($_POST)) {
+                        if (isset($_POST['data']) && is_array($_POST['data'])) {
+                            $this->updatePage($page, $_POST['data']);
+                        } else {
+                            $this->updatePage($page, []);
+                        }
                     }
-                }
+                    break;
+                case 'renderBlock':
+                    if (isset($_POST['data']) && is_array($_POST['data'])) {
+
+                    }
             }
 
             exit();

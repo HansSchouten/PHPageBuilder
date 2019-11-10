@@ -129,12 +129,14 @@
         if (window.blockSettings[component.attributes['block-slug']] === undefined) {
             return;
         }
-        let settings = window.blockSettings[component.attributes['block-slug']];
+        // get the values stored for each setting
         let settingValues = [];
         let blockId = component.attributes['block-id'];
-        if (window.dynamicBlocks[blockId].settings.attributes !== undefined) {
+        if (window.dynamicBlocks[blockId] !== undefined && window.dynamicBlocks[blockId].settings.attributes !== undefined) {
             settingValues = window.dynamicBlocks[blockId].settings.attributes;
         }
+        // for each setting add a trait to the settings sidebar panel with the earlier stored or default value
+        let settings = window.blockSettings[component.attributes['block-slug']];
         settings.forEach(function(setting) {
             let trait = component.addTrait(setting);
             if (settingValues[setting['name']] !== undefined) {
@@ -149,10 +151,31 @@
      * On updating an attribute (block setting from the settings side panel), refresh dynamic block via Ajax.
      */
     window.editor.on('component:update', function(component) {
-        if (component.changed['attributes'] === undefined) {
+        if (window.isLoaded !== true || component.attributes['is-updating'] || component.changed['attributes'] === undefined) {
             return;
         }
-        // todo: refresh component contents with updated version requested via ajax call
+
+        component.attributes['is-updating'] = true;
+        $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
+
+        // refresh component contents with updated version requested via ajax call
+        $.ajax({
+            type: "POST",
+            url: window.renderBlockUrl,
+            data: {
+                data: {
+                    settings: []
+                }
+            },
+            success: function() {
+                $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
+                component.attributes['is-updating'] = false;
+            },
+            error: function () {
+                $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
+                component.attributes['is-updating'] = false;
+            }
+        });
     });
 
     /**
