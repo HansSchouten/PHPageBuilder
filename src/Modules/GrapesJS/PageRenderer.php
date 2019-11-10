@@ -116,34 +116,30 @@ class PageRenderer
      * Note: this method is called from php blocks, layout files or via shortcodes.
      *
      * @param $slug
-     * @param null $id              the id with which data for this block is stored
-     * @param null $contextId       id of the parent block
+     * @param null $id                  the id with which data for this block is stored
+     * @param null $parentBlockId
      * @return false|string
      */
-    public function block($slug, $id = null, $contextId = null)
+    public function block($slug, $id = null, $parentBlockId = null)
     {
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
-        $blockData = json_decode($this->pageData->blocks);
+        $blockData = json_decode($this->pageData->blocks, true);
 
         // if the block is a html block and for the given id in the given context is html data stored for this block,
         // then return that html data
-        if ($themeBlock->isHtmlBlock() && ! is_null($contextId)) {
-            if (isset($blockData->$contextId) && isset($blockData->$contextId->$id)) {
-                $html = $blockData->$contextId->$id;
+        if ($themeBlock->isHtmlBlock() && ! is_null($parentBlockId)) {
+            if (isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
+                $html = $blockData[$parentBlockId][$id];
             }
         }
 
         if (empty($html)) {
-            // get data of this block
-            $data = [];
-            if (isset($blockData->$id)) {
-                // store data as array instead of stdClass
-                $data = json_decode(json_encode($blockData->$id), true);
-            }
+            $data = $blockData[$id] ?? [];
             // init variables that should be accessible in the view
-            $block = new BlockViewFunctions($themeBlock, $data, $this->forPageBuilder);
             $renderer = $this;
+            $page = $this->page;
+            $block = new BlockViewFunctions($themeBlock, $data, $this->forPageBuilder);
 
             ob_start();
             require $themeBlock->getViewFile();
@@ -195,14 +191,14 @@ class PageRenderer
     /**
      * Return this page's dynamic blocks to be loaded into the page edited inside GrapesJS.
      *
-     * @return string
+     * @return array
      * @throws Exception
      */
     public function getDynamicBlocks()
     {
         // trigger renderBody to ensure the shortcode parser has rendered versions of all dynamic blocks
         $this->renderBody();
-        // return the rendered html for each dynamic block
+        // return the rendered html and settings for each dynamic block
         return $this->shortcodeParser->getRenderedBlocks();
     }
 }

@@ -2,8 +2,8 @@
 
 namespace PHPageBuilder\Modules\GrapesJS;
 
-use Exception;
 use PHPageBuilder\Repositories\PageRepository;
+use Exception;
 
 class ShortcodeParser
 {
@@ -56,12 +56,12 @@ class ShortcodeParser
      * Render all dynamic blocks defined with shortcodes in the given html string.
      *
      * @param $html
-     * @param int $maxDepth     maximum depth of blocks loaded inside blocks
-     * @param null $context
+     * @param int $maxDepth                     maximum depth of blocks loaded inside blocks
+     * @param string|null $parentBlockId
      * @return string
      * @throws Exception
      */
-    protected function doBlockShortcodes($html, $maxDepth = 15, $context = null)
+    protected function doBlockShortcodes($html, $maxDepth = 15, $parentBlockId = null)
     {
         if ($maxDepth === 0) {
             throw new Exception("Maximum doBlockShortcodes depth has been reached, "
@@ -79,13 +79,13 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->block($slug, $id, $context);
+            $blockHtml = $this->pageRenderer->block($slug, $id, $parentBlockId);
 
             // recursive call to render shortcodes inside the newly loaded block
-            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
+            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $parentBlockId);
             $this->renderedBlocks[$id] = [
                 'html' => $blockHtml,
-                'settings' => $context
+                'settings' => []
             ];
 
             // replace shortcode match with the $blockHtml (this replaces only the first match)
