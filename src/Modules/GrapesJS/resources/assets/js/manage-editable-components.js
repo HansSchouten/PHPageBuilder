@@ -158,14 +158,18 @@
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
+        let settings = {};
+        component.get('traits').each(function(trait) {
+            settings[trait.get('name')] = trait.getTargetValue();
+        });
+
         // refresh component contents with updated version requested via ajax call
         $.ajax({
             type: "POST",
             url: window.renderBlockUrl,
             data: {
-                data: {
-                    settings: []
-                }
+                block: component.attributes['block-slug'],
+                settings: settings
             },
             success: function() {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');

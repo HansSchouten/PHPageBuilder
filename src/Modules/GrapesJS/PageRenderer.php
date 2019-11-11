@@ -168,7 +168,7 @@ class PageRenderer
     }
 
     /**
-     * Render the given theme block with blockViewFunctions to be used as a block in GrapesJS.
+     * Render the given theme block to be used as a block in GrapesJS.
      *
      * @param ThemeBlock $themeBlock
      * @return string
@@ -177,13 +177,14 @@ class PageRenderer
     public function getGrapesJSBlockHtml(ThemeBlock $themeBlock)
     {
         if ($themeBlock->isHtmlBlock()) {
-            $html = file_get_contents($themeBlock->getFolder() . '/view.html');
+            $html = file_get_contents($themeBlock->getViewFile());
         } else {
             // init variables that should be accessible in the view
+            $renderer = $this;
             $block = new BlockViewFunctions($themeBlock, [], true);
 
             ob_start();
-            require $themeBlock->getFolder() . '/view.php';
+            require $themeBlock->getViewFile();
             $html = ob_get_contents();
             ob_end_clean();
         }

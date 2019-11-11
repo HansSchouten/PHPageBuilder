@@ -8,6 +8,7 @@ use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Theme;
 use Exception;
+use PHPageBuilder\ThemeBlock;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -39,6 +40,7 @@ class PageBuilder implements PageBuilderContract
      *
      * @param $route
      * @param $action
+     * @throws Exception
      */
     public function handleRequest($route, $action)
     {
@@ -65,8 +67,8 @@ class PageBuilder implements PageBuilderContract
                     }
                     break;
                 case 'renderBlock':
-                    if (isset($_POST['data']) && is_array($_POST['data'])) {
-
+                    if (isset($_POST['settings']) && isset($_POST['block'])) {
+                        $this->renderPageBuilderBlock($page, $_POST['block'], $_POST['settings']);
                     }
             }
 
@@ -104,6 +106,22 @@ class PageBuilder implements PageBuilderContract
     {
         $renderer = new PageRenderer($this->theme, $page);
         echo $renderer->render();
+    }
+
+    /**
+     * Render in context of the given page, the given block with the passed settings, for updating the pagebuilder.
+     *
+     * @param PageContract $page
+     * @param $blockSlug
+     * @param array $settings
+     * @throws Exception
+     */
+    public function renderPageBuilderBlock(PageContract $page, $blockSlug, $settings = [])
+    {
+        $settings = is_array($settings) ? $settings : [];
+        $block = new ThemeBlock($this->theme, $blockSlug);
+        $renderer = new PageRenderer($this->theme, $page);
+        echo $renderer->getGrapesJSBlockHtml($block);
     }
 
     /**
