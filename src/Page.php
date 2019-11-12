@@ -29,6 +29,6 @@ class Page implements PageContract
      */
     public function getData()
     {
-        return json_decode($this->data);
+        return json_decode($this->data, true);
     }
 }

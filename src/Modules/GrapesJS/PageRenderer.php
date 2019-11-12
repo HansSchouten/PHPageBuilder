@@ -67,7 +67,7 @@ class PageRenderer
      */
     public function getPageBlocksData()
     {
-        return json_decode($this->pageData->blocks, true);
+        return json_decode($this->pageData['blocks'], true);
     }
 
     /**
@@ -110,12 +110,12 @@ class PageRenderer
         $html = '';
 
         $data = $this->pageData;
-        if (isset($data->html)) {
-            $html .= $this->shortcodeParser->doShortcodes($data->html);
+        if (isset($data['html'])) {
+            $html .= $this->shortcodeParser->doShortcodes($data['html']);
         }
-        // include any style changes made via the pagebuilder
-        if (isset($data->css)) {
-            $html .= '<style>' . $data->css . '</style>';
+        // include any style changes made via the page builder
+        if (isset($data['css'])) {
+            $html .= '<style>' . $data['css'] . '</style>';
         }
 
         return $html;
@@ -134,17 +134,18 @@ class PageRenderer
     {
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
-        $blockData = json_decode($this->pageData->blocks, true);
+        $blockData = json_decode($this->pageData['blocks'], true);
 
-        // if the block is a html block and for the given id in the given context is html data stored for this block,
-        // then return that html data
-        if ($themeBlock->isHtmlBlock() && ! is_null($parentBlockId)) {
-            if (isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
-                $html = $blockData[$parentBlockId][$id];
+        if ($themeBlock->isHtmlBlock()) {
+            // if for this block id in the parent block's context is html data stored, use that html for this block
+            if (! is_null($parentBlockId)) {
+                if (isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
+                    $html = $blockData[$parentBlockId][$id];
+                }
+            } else {
+                $html = file_get_contents($themeBlock->getViewFile());
             }
-        }
-
-        if (empty($html)) {
+        } else {
             $data = $blockData[$id] ?? [];
             // init variables that should be accessible in the view
             $renderer = $this;
@@ -176,27 +177,8 @@ class PageRenderer
      */
     public function getGrapesJSBlockHtml(ThemeBlock $themeBlock)
     {
-        if ($themeBlock->isHtmlBlock()) {
-            $html = file_get_contents($themeBlock->getViewFile());
-        } else {
-            // init variables that should be accessible in the view
-            $renderer = $this;
-            $block = new BlockViewFunctions($themeBlock, [], true);
-
-            ob_start();
-            require $themeBlock->getViewFile();
-            $html = ob_get_contents();
-            ob_end_clean();
-        }
-
-        $html = $this->shortcodeParser->doShortcodes($html);
-
-        $id = $slug = $themeBlock->getSlug();
-        $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
-            . $html
-            . '</phpb-block>';
-
-        return $html;
+        $blockShortcode = '[block slug="' . e($themeBlock->getSlug()) . '"]';
+        return $this->shortcodeParser->doShortcodes($blockShortcode);
     }
 
     /**

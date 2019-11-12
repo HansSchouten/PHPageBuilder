@@ -166,8 +166,8 @@ class PageBuilder implements PageBuilderContract
     public function getPageComponents(PageContract $page)
     {
         $data = $page->getData();
-        if (isset($data->components)) {
-            return json_decode($data->components);
+        if (isset($data['components'])) {
+            return json_decode($data['components']);
         }
         return [];
     }
@@ -181,8 +181,8 @@ class PageBuilder implements PageBuilderContract
     public function getPageStyleComponents(PageContract $page)
     {
         $data = $page->getData();
-        if (isset($data->style)) {
-            return json_decode($data->style);
+        if (isset($data['style'])) {
+            return json_decode($data['style']);
         }
         return [];
     }
