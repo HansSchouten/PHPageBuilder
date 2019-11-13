@@ -58,12 +58,9 @@ class PageBuilder implements PageBuilderContract
                     $this->renderPageBuilder($page);
                     break;
                 case 'store':
-                    if (isset($_POST)) {
-                        if (isset($_POST['data']) && is_array($_POST['data'])) {
-                            $this->updatePage($page, $_POST['data']);
-                        } else {
-                            $this->updatePage($page, []);
-                        }
+                    if (isset($_POST) && isset($_POST['data'])) {
+                        $data = json_decode($_POST['data'], true);
+                        $this->updatePage($page, $data);
                     }
                     break;
                 case 'renderBlock':
@@ -120,8 +117,8 @@ class PageBuilder implements PageBuilderContract
     {
         $settings = is_array($settings) ? $settings : [];
         $block = new ThemeBlock($this->theme, $blockSlug);
-        $renderer = new PageRenderer($this->theme, $page);
-        echo $renderer->getGrapesJSBlockHtml($block);
+        $renderer = new PageRenderer($this->theme, $page, true);
+        echo $renderer->getGrapesJSBlockHtml($block, $settings);
     }
 
     /**
@@ -167,7 +164,7 @@ class PageBuilder implements PageBuilderContract
     {
         $data = $page->getData();
         if (isset($data['components'])) {
-            return json_decode($data['components']);
+            return $data['components'];
         }
         return [];
     }
@@ -182,7 +179,7 @@ class PageBuilder implements PageBuilderContract
     {
         $data = $page->getData();
         if (isset($data['style'])) {
-            return json_decode($data['style']);
+            return $data['style'];
         }
         return [];
     }

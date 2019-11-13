@@ -19,33 +19,17 @@ $(document).ready(function() {
     });
 
     function savePage() {
-        let editor = window.editor;
         toggleWaiting();
 
-        // get the page content container (so skip all layout blocks) and prepare data for being stored,
-        // clone the container since we will be replacing components with placeholders without updating the page builder
-        let container = window.cloneComponent(editor.getWrapper().find("[phpb-content-container]")[0]);
-
-        // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
-        let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
-
-        let html = window.html_beautify(getHtml(container));
-        let css = editor.getCss();
-        let style = editor.getStyle();
-        let components = [];
-        container.get('components').forEach(component => components.push(component.toJSON()));
+        // get the page content container (so skip all layout blocks) and prepare data for being stored
+        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
+        let data = getDataInStorageFormat(container);
 
         $.ajax({
             type: "POST",
             url: $("#save-page").data('url'),
             data: {
-                data: {
-                    html: html,
-                    css: css,
-                    components: JSON.stringify(components),
-                    blocks: JSON.stringify(blocksData),
-                    style: JSON.stringify(style),
-                }
+                data: JSON.stringify(data)
             },
             success: function() {
                 toggleWaiting();
@@ -57,6 +41,27 @@ $(document).ready(function() {
             }
         });
     }
+
+    window.getDataInStorageFormat = function(container) {
+        // clone the container since we will be replacing components with placeholders without updating the page builder
+        container = window.cloneComponent(container);
+        // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
+        let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
+
+        let html = window.html_beautify(getHtml(container));
+        let css = window.editor.getCss();
+        let style = window.editor.getStyle();
+        let components = [];
+        container.get('components').forEach(component => components.push(component.toJSON()));
+
+        return {
+            html: html,
+            css: css,
+            components: components,
+            blocks: blocksData,
+            style: style,
+        }
+    };
 
     /**
      * Return the html representation of the contents of the given container.

@@ -25,6 +25,11 @@ class PageRenderer
     protected $pageData;
 
     /**
+     * @var array $pageBlocksData
+     */
+    protected $pageBlocksData;
+
+    /**
      * @var ShortcodeParser $shortcodeParser
      */
     protected $shortcodeParser;
@@ -46,6 +51,7 @@ class PageRenderer
         $this->theme = $theme;
         $this->page = $page;
         $this->pageData = $page->getData();
+        $this->pageBlocksData = $this->getPageBlocksData();
         $this->shortcodeParser = new ShortcodeParser($this);
         $this->forPageBuilder = $forPageBuilder;
     }
@@ -67,7 +73,7 @@ class PageRenderer
      */
     public function getPageBlocksData()
     {
-        return json_decode($this->pageData['blocks'], true);
+        return $this->pageData['blocks'];
     }
 
     /**
@@ -134,7 +140,7 @@ class PageRenderer
     {
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
-        $blockData = json_decode($this->pageData['blocks'], true);
+        $blockData = $this->pageBlocksData;
 
         if ($themeBlock->isHtmlBlock()) {
             // if for this block id in the parent block's context is html data stored, use that html for this block
@@ -172,11 +178,15 @@ class PageRenderer
      * Render the given theme block to be used as a block in GrapesJS.
      *
      * @param ThemeBlock $themeBlock
+     * @param array $settings
      * @return string
      * @throws Exception
      */
-    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock)
+    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, array $settings = [])
     {
+        if (! empty($settings)) {
+            $this->pageBlocksData[$themeBlock->getSlug()] = $settings;
+        }
         $blockShortcode = '[block slug="' . e($themeBlock->getSlug()) . '"]';
         return $this->shortcodeParser->doShortcodes($blockShortcode);
     }

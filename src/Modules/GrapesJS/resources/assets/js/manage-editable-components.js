@@ -136,6 +136,7 @@
             settingValues = window.dynamicBlocks[blockId].settings.attributes;
         }
         // for each setting add a trait to the settings sidebar panel with the earlier stored or default value
+        component.attributes['is-updating'] = true;
         let settings = window.blockSettings[component.attributes['block-slug']];
         settings.forEach(function(setting) {
             let trait = component.addTrait(setting);
@@ -145,6 +146,7 @@
                 trait.setTargetValue(setting['default-value']);
             }
         });
+        component.attributes['is-updating'] = false;
     }
 
     /**
@@ -155,12 +157,18 @@
             return;
         }
 
+        console.log(component.changed['attributes']);
+
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
-        let settings = {};
+        let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
+        let data = window.getDataInStorageFormat(container);
+        console.log(data);
+
+        let attributes = {};
         component.get('traits').each(function(trait) {
-            settings[trait.get('name')] = trait.getTargetValue();
+            attributes[trait.get('name')] = trait.getTargetValue();
         });
 
         // refresh component contents with updated version requested via ajax call
@@ -169,11 +177,14 @@
             url: window.renderBlockUrl,
             data: {
                 block: component.attributes['block-slug'],
-                settings: settings
+                settings: {
+                    attributes: attributes
+                }
             },
-            success: function() {
+            success: function(data) {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
                 component.attributes['is-updating'] = false;
+                component.replaceWith(data);
             },
             error: function () {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
