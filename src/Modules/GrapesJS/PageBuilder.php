@@ -64,8 +64,13 @@ class PageBuilder implements PageBuilderContract
                     }
                     break;
                 case 'renderBlock':
-                    if (isset($_POST['settings']) && isset($_POST['block'])) {
-                        $this->renderPageBuilderBlock($page, $_POST['block'], $_POST['settings']);
+                    if (isset($_POST['blockSlug']) && isset($_POST['blockId']) && isset($_POST['blocksData'])) {
+                        $this->renderPageBuilderBlock(
+                            $page,
+                            $_POST['blockSlug'],
+                            $_POST['blockId'],
+                            json_decode($_POST['blocksData'], true)
+                        );
                     }
             }
 
@@ -109,16 +114,18 @@ class PageBuilder implements PageBuilderContract
      * Render in context of the given page, the given block with the passed settings, for updating the pagebuilder.
      *
      * @param PageContract $page
+     * @param $blockId
      * @param $blockSlug
-     * @param array $settings
+     * @param array $blocksData
      * @throws Exception
      */
-    public function renderPageBuilderBlock(PageContract $page, $blockSlug, $settings = [])
+    public function renderPageBuilderBlock(PageContract $page, $blockSlug, $blockId, $blocksData = [])
     {
-        $settings = is_array($settings) ? $settings : [];
+        $blocksData = is_array($blocksData) ? $blocksData : [];
         $block = new ThemeBlock($this->theme, $blockSlug);
+        $block->id = $blockId;
         $renderer = new PageRenderer($this->theme, $page, true);
-        echo $renderer->getGrapesJSBlockHtml($block, $settings);
+        echo $renderer->getGrapesJSBlockHtml($block, $blocksData);
     }
 
     /**

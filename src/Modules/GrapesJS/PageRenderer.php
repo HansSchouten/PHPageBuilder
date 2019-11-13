@@ -178,17 +178,24 @@ class PageRenderer
      * Render the given theme block to be used as a block in GrapesJS.
      *
      * @param ThemeBlock $themeBlock
-     * @param array $settings
+     * @param array $blocksData
      * @return string
      * @throws Exception
      */
-    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, array $settings = [])
+    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, array $blocksData = [])
     {
-        if (! empty($settings)) {
-            $this->pageBlocksData[$themeBlock->getSlug()] = $settings;
+        $existingData = $this->pageBlocksData;
+
+        if (! empty($blocksData)) {
+            dd($themeBlock->get('id'));
+            $this->pageBlocksData = $blocksData;
         }
+        //$id = $themeBlock->get('id') ?? $themeBlock->getSlug();
         $blockShortcode = '[block slug="' . e($themeBlock->getSlug()) . '"]';
-        return $this->shortcodeParser->doShortcodes($blockShortcode);
+        $html = $this->shortcodeParser->doShortcodes($blockShortcode);
+
+        $this->pageBlocksData = $existingData;
+        return $html;
     }
 
     /**

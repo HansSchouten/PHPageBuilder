@@ -164,22 +164,17 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getDataInStorageFormat(container);
-        console.log(data);
 
-        let attributes = {};
-        component.get('traits').each(function(trait) {
-            attributes[trait.get('name')] = trait.getTargetValue();
-        });
+        console.log(component.attributes['block-id']);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
             type: "POST",
             url: window.renderBlockUrl,
             data: {
-                block: component.attributes['block-slug'],
-                settings: {
-                    attributes: attributes
-                }
+                blockSlug: component.attributes['block-slug'],
+                blockId: component.attributes['block-id'],
+                blocksData: JSON.stringify(data.blocks)
             },
             success: function(data) {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
