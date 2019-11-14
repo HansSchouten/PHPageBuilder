@@ -172,8 +172,13 @@
             },
             success: function(data) {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
-                component.attributes['is-updating'] = false;
                 component.replaceWith(data);
+
+                replacePlaceholdersForRenderedBlocks(container);
+                applyBlockAttributesToComponents(container);
+                restrictEditAccess(container);
+
+                component.attributes['is-updating'] = false;
             },
             error: function () {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
