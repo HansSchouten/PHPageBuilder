@@ -91,7 +91,7 @@ class ShortcodeParser
             $blockHtml = $this->pageRenderer->block($slug, $id, $parentBlockId);
 
             // recursive call to render shortcodes inside the newly loaded block
-            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $parentBlockId);
+            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
             $this->renderedBlocks[$id] = [
                 'html' => $blockHtml,
                 'settings' => $this->blocksData[$id] ?? []
