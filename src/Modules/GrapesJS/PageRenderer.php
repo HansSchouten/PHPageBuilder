@@ -144,10 +144,8 @@ class PageRenderer
 
         if ($themeBlock->isHtmlBlock()) {
             // if for this block id in the parent block's context is html data stored, use that html for this block
-            if (! is_null($parentBlockId)) {
-                if (isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
-                    $html = $blockData[$parentBlockId][$id];
-                }
+            if (! is_null($parentBlockId) && isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
+                $html = $blockData[$parentBlockId][$id];
             } else {
                 $html = file_get_contents($themeBlock->getViewFile());
             }
