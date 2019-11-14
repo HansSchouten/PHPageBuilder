@@ -171,16 +171,25 @@
                 data: JSON.stringify(data)
             },
             success: function(data) {
-                $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
                 component.replaceWith(data);
 
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
                 restrictEditAccess(container);
 
-                component.attributes['is-updating'] = false;
+                // get the new component
+                let newComponent;
+                let blockId = $(data).attr('block-id');
+                container.components().each(function(containerChild) {
+                    if (containerChild.attributes['block-id'] === blockId) {
+                        newComponent = containerChild;
+                    }
+                });
+
+                // select the new component
+                window.editor.select(newComponent);
             },
-            error: function () {
+            error: function() {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
                 component.attributes['is-updating'] = false;
             }

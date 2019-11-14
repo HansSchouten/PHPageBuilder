@@ -8,7 +8,7 @@ $(document).ready(function() {
     });
 
     /**
-     * Save page on Ctrl + S
+     * Save page on Ctrl + S.
      */
     $(document).bind("keydown", function(e){
         if(e.ctrlKey && e.which === 83) {
