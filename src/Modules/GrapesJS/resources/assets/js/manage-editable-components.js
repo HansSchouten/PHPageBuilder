@@ -157,24 +157,18 @@
             return;
         }
 
-        console.log(component.changed['attributes']);
-
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getDataInStorageFormat(container);
 
-        console.log(component.attributes['block-id']);
-
         // refresh component contents with updated version requested via ajax call
         $.ajax({
             type: "POST",
             url: window.renderBlockUrl,
             data: {
-                blockSlug: component.attributes['block-slug'],
-                blockId: component.attributes['block-id'],
-                blocksData: JSON.stringify(data.blocks)
+                data: JSON.stringify(data)
             },
             success: function(data) {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');

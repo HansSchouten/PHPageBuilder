@@ -175,26 +175,21 @@ class PageRenderer
     }
 
     /**
-     * Render the given theme block to be used as a block in GrapesJS.
+     * Parse the given shortcode to html.
      *
-     * @param ThemeBlock $themeBlock
-     * @param array $blocksData
+     * @param string $shortcode
+     * @param array $data           the data for each block to be used wile parsing the shortcode
      * @return string
      * @throws Exception
      */
-    public function getGrapesJSBlockHtml(ThemeBlock $themeBlock, array $blocksData = [])
+    public function parseShortcode(string $shortcode, $data = [])
     {
-        $existingData = $this->pageBlocksData;
+        $originalData = $this->pageBlocksData;
 
-        if (! empty($blocksData)) {
-            dd($themeBlock->get('id'));
-            $this->pageBlocksData = $blocksData;
-        }
-        //$id = $themeBlock->get('id') ?? $themeBlock->getSlug();
-        $blockShortcode = '[block slug="' . e($themeBlock->getSlug()) . '"]';
-        $html = $this->shortcodeParser->doShortcodes($blockShortcode);
+        $this->pageBlocksData = $data;
+        $html = $this->shortcodeParser->doShortcodes($shortcode);
 
-        $this->pageBlocksData = $existingData;
+        $this->pageBlocksData = $originalData;
         return $html;
     }
 

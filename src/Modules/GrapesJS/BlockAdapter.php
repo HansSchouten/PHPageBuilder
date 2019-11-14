@@ -80,10 +80,11 @@ class BlockAdapter
      */
     public function getBlockManagerArray()
     {
+        $blockShortcode = '[block slug="' . e($this->block->getSlug()) . '"]';
         $data = [
             'label' => $this->getTitle(),
             'category' => $this->getCategory(),
-            'content' => $this->pageRenderer->getGrapesJSBlockHtml($this->block)
+            'content' => $this->pageRenderer->parseShortcode($blockShortcode)
         ];
 
         $iconClass = 'fa fa-bars';
