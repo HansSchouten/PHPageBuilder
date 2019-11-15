@@ -170,16 +170,27 @@
             data: {
                 data: JSON.stringify(data)
             },
-            success: function(data) {
-                component.replaceWith(data);
+            success: function(blockHtml) {
+                let blockId = $(blockHtml).attr('block-id');
 
+                // update dynamic block settings for this component
+                if (window.dynamicBlocks[blockId] === undefined) {
+                    window.dynamicBlocks[blockId] = {settings: {}};
+                }
+                let settingValues = {};
+                if (data.blocks[blockId] !== undefined) {
+                    settingValues = data.blocks[blockId].attributes;
+                }
+                window.dynamicBlocks[blockId].settings.attributes = settingValues;
+
+                // replace old component for html rendered by server
+                component.replaceWith(blockHtml);
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
                 restrictEditAccess(container);
 
                 // get the new component
                 let newComponent;
-                let blockId = $(data).attr('block-id');
                 container.components().each(function(containerChild) {
                     if (containerChild.attributes['block-id'] === blockId) {
                         newComponent = containerChild;
