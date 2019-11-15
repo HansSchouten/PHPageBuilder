@@ -29,7 +29,7 @@
 
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
-            if (window.dynamicBlocks[id] !== undefined) {
+            if (window.dynamicBlocks[id] !== undefined && window.dynamicBlocks[id]['html'] !== undefined) {
                 newComponent = component.replaceWith(window.dynamicBlocks[id]['html']);
             }
         }
@@ -156,12 +156,15 @@
         if (window.isLoaded !== true || component.attributes['is-updating'] || component.changed['attributes'] === undefined) {
             return;
         }
+        if ($(".gjs-frame").contents().find("#" + component.ccid).length === 0) {
+            return;
+        }
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
-        let data = window.getDataInStorageFormat(container);
+        let data = window.getComponentDataInStorageFormat(component);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({

@@ -42,7 +42,22 @@ $(document).ready(function() {
         });
     }
 
-    window.getDataInStorageFormat = function(container) {
+    window.getComponentDataInStorageFormat = function(component) {
+        // clone component's parent to enable us removing all component's siblings
+        let container = window.cloneComponent(component.parent());
+
+        // remove component's siblings, since we only want the given component in storage format
+        let index = component.index();
+        for (let i = 0; i < container.components().length; i++) {
+            if (i !== index) {
+                container.components().models[i].remove();
+            }
+        }
+
+        return getDataInStorageFormat(container);
+    };
+
+    function getDataInStorageFormat(container) {
         // clone the container since we will be replacing components with placeholders without updating the page builder
         container = window.cloneComponent(container);
         // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
@@ -61,7 +76,7 @@ $(document).ready(function() {
             blocks: blocksData,
             style: style,
         }
-    };
+    }
 
     /**
      * Return the html representation of the contents of the given container.
