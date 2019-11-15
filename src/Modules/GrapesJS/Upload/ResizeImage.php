@@ -19,65 +19,56 @@ class ResizeImage {
     /**
      * Extension of image
      *
-     * @access private
      * @var string
      */
-    private $ext;
+    protected $ext;
 
     /**
      * created image
      *
-     * @access private
      * @var string
      */
-    private $image;
+    protected $image;
 
     /**
-     *
      * Name new image
      *
-     * @access private
      * @var string
      */
-    private $newImage;
+    protected $newImage;
 
     /**
-     *
      * Original width of image
      *
-     * @access private
      * @var integer
      */
-    private $origWidth;
+    protected $origWidth;
 
     /**
      * Original height of image
      *
-     * @access private
      * @var integer
      */
-    private $origHeight;
+    protected $origHeight;
 
     /**
      * Resize width to new image resized
      *
-     * @access private
      * @var integer
      */
-    private $resizeWidth;
+    protected $resizeWidth;
 
     /**
      * Resize height to new image resized
      *
-     * @access private
      * @var integer
      */
-    private $resizeHeight;
+    protected $resizeHeight;
 
     /**
      * Class constructor requires to send through the image filename.
      *
-     * @param string $filename - Filename of the image you want to resize
+     * @param string $filename          filename of the image you want to resize
      * @throws Exception
      */
     public function __construct($filename) {
@@ -91,11 +82,10 @@ class ResizeImage {
     /**
      * Set the image variable by using image create.
      *
-     * @access private
-     * @param string $filename - The image filename
+     * @param string $filename          the image filename
      * @throws Exception
      */
-    private function setImage($filename) {
+    protected function setImage($filename) {
         $size = getimagesize($filename);
         $this->ext = $size['mime'];
 
@@ -129,9 +119,8 @@ class ResizeImage {
     /**
      * Save the image as the image type the original image was
      *
-     * @access public
-     * @param  String $savePath     The path to store the new image
-     * @param  string $imageQuality The qulaity level of image to create
+     * @param string $savePath          the path to store the new image
+     * @param string $imageQuality      the quality level of image to create
      */
     public function saveImage($savePath, $imageQuality = "100") {
         switch ($this->ext) {
@@ -166,12 +155,9 @@ class ResizeImage {
     /**
      * Resize the image to these set dimensions
      *
-     * @access public
-     * @param  integer  $width            Max width of the image
-     * @param  integer  $height           Max height of the image
-     * @param  string   $resizeOption     Scale option for the image
-     *
-     * @version 0.3
+     * @param integer $width            max width of the image
+     * @param integer $height           max height of the image
+     * @param string $resizeOption      scale option for the image
      */
     public function resizeTo($width, $height, $resizeOption = 'default') {
         switch (strtolower($resizeOption)) {
@@ -228,22 +214,20 @@ class ResizeImage {
     /**
      * Get the resized height from the width keeping the aspect ratio
      *
-     * @access private
-     * @param  integer $width  Max image width
+     * @param integer $width        max image width
      * @return float
      */
-    private function resizeHeightByWidth($width) {
+    protected function resizeHeightByWidth($width) {
         return floor(($this->origHeight / $this->origWidth) * $width);
     }
 
     /**
      * Get the resized width from the height keeping the aspect ratio
      *
-     * @access private
-     * @param  int $height - Max image height
+     * @param int $height           max image height
      * @return float
      */
-    private function resizeWidthByHeight($height) {
+    protected function resizeWidthByHeight($height) {
         return floor(($this->origWidth / $this->origHeight) * $height);
     }
 }
