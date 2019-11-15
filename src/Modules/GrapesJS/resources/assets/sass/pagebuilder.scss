@@ -227,14 +227,14 @@ html, body, #gjs {
   padding-right: 0;
   background: #16b8ec;
   height: 40px;
-  z-index: 1000;
+  z-index: 100;
   border-right: 2px solid #dfe0e1;
 }
 #toggle-sidebar {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
   color: #fff;
   background: #16b8ec;
   border-radius: 0;
@@ -394,4 +394,5 @@ html, body, #gjs {
 
 @import 'fields';
 @import 'style-manager';
+@import 'asset-manager';
 @import 'ckeditor';

@@ -65,5 +65,11 @@ return [
                 'advanced' => 'Advanced',
             ]
         ],
+        'asset-manager' => [
+            'modal-title' => 'Select Image',
+            'drop-files' => 'Drop files here or click to upload',
+            'url-placeholder' => 'Image URL',
+            'add-image' => 'Add Image',
+        ],
     ]
 ];
