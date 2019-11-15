@@ -390,7 +390,7 @@ class Uploader {
     /**
      * Set the variable this function to define max size file is allowed.
      *
-     * @param integer $size         Size max in Bytes 1 000 000 bytes is equal to 1 MB
+     * @param integer $size         Maximum size in Bytes (1 000 000 bytes is equal to 1 MB)
      * @return Uploader
      */
     public function file_max_size($size) {

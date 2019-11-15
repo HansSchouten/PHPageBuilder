@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Theme;
 use Exception;
@@ -61,6 +62,20 @@ class PageBuilder implements PageBuilderContract
                     if (isset($_POST) && isset($_POST['data'])) {
                         $data = json_decode($_POST['data'], true);
                         $this->updatePage($page, $data);
+                    }
+                    break;
+                case 'uploadAsset':
+                    if (isset($_FILES)) {
+                        $uploader = new Uploader('files');
+                        $uploader
+                            ->file_name(true)
+                            ->upload_to(phpb_config('storage.uploads_folder') . '/')
+                            ->run();
+                        if (! $uploader->was_uploaded) {
+                            die("Error : {$uploader->error}");
+                        } else {
+                            echo 'Upload successful!';
+                        }
                     }
                     break;
                 case 'renderBlock':

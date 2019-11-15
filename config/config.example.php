@@ -34,7 +34,8 @@ return [
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
-        ]
+        ],
+        'uploads_folder' => __DIR__ . '/uploads'
     ],
 
     /*
