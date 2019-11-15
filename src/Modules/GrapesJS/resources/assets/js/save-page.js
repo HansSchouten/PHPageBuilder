@@ -46,13 +46,9 @@ $(document).ready(function() {
         // clone component's parent to enable us removing all component's siblings
         let container = window.cloneComponent(component.parent());
 
-        // remove component's siblings, since we only want the given component in storage format
-        let index = component.index();
-        for (let i = 0; i < container.components().length; i++) {
-            if (i !== index) {
-                container.components().models[i].remove();
-            }
-        }
+        // remove all component's siblings since we only want to return the given component in storage format
+        container.get('components').reset();
+        container.append(component);
 
         return getDataInStorageFormat(container);
     };
