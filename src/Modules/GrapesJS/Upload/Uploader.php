@@ -212,7 +212,7 @@ class Uploader {
             return false;
         }
 
-        // extract info from file uploaded
+        // extract info from uploaded file
         $this->file_src_name = $file["name"];
         $this->file_src_temp = $file["tmp_name"];
         $this->file_src_size = $file["size"];
@@ -231,7 +231,7 @@ class Uploader {
      * @throws Exception
      */
     public function run() {
-        // check the final name if it is in shuffle mode
+        // check whether the final name is in shuffle mode
         if ($this->file_name !== true) {
             // preserve file extension if provided
             if (! pathinfo($this->file_name, PATHINFO_EXTENSION)) {
@@ -276,8 +276,7 @@ class Uploader {
             return false;
         }
 
-
-        // check file already exist or if are to replace it
+        // check whether file already exists or if are replacing it
         if (file_exists($path)) {
             if (! $this->get_auto_replace) {
                 $this->was_uploaded = false;
@@ -322,7 +321,7 @@ class Uploader {
                 $this->file_width = $w;
                 $this->file_height = $h;
 
-                // resize image if configured
+                // resize image if necessary
                 if (isset($this->resize)) {
                     $resize = new ResizeImage($path);
                     $resize->resizeTo($this->image_x, $this->image_y, $this->resize_option);

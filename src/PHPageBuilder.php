@@ -9,6 +9,7 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Core\DB;
+use PHPageBuilder\Repositories\UploadRepository;
 
 class PHPageBuilder
 {
@@ -237,8 +238,11 @@ class PHPageBuilder
             $this->pageBuilder->handleRequest($route, $action);
         }
 
+        // return uploaded files
+        $this->handleUploadedFileRequest();
+
         // return assets
-        $this->handleAssetRequest();
+        $this->handlePagebuilderAssetRequest();
 
         // let the page router resolve the current URL
         $page = $this->router->resolve($_SERVER['REQUEST_URI']);
@@ -251,9 +255,35 @@ class PHPageBuilder
     }
 
     /**
-     * Handle asset requests.
+     * Handle uploaded file requests.
      */
-    public function handleAssetRequest()
+    public function handleUploadedFileRequest()
+    {
+        $fileId = $_GET['file'] ?? null;
+        if ($fileId && is_string($fileId)) {
+            $uploadRepository = new UploadRepository;
+            $uploadedFile = $uploadRepository->findWhere('public_id', $fileId);
+            if (! $uploadedFile) die('File not found');
+
+            $uploadedFile = $uploadedFile[0];
+            $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
+            if (! $serverFile) die('File not found');
+
+            header('Content-Type: ' . $uploadedFile->mime_type);
+            header('Content-Disposition: inline; filename="' . basename($uploadedFile->original_file) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Content-Length: ' . filesize($serverFile));
+
+            readfile($serverFile);
+            exit();
+        }
+    }
+
+    /**
+     * Handle pagebuilder asset requests.
+     */
+    public function handlePagebuilderAssetRequest()
     {
         $asset = $_GET['asset'] ?? null;
         if ($asset && is_string($asset)) {

@@ -9,22 +9,27 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 CREATE TABLE `pages` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL auto_increment,
   `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `route` varchar(512) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `layout` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `pages`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-COMMIT;
+CREATE TABLE `uploads` (
+  `id` int(11) NOT NULL auto_increment,
+  `public_id` VARCHAR(50) NOT NULL,
+  `original_file` VARCHAR(512) NOT NULL,
+  `mime_type` VARCHAR(50) NOT NULL,
+  `server_file` VARCHAR(512) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE (`public_id`),
+  UNIQUE (`server_file`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

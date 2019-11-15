@@ -7,9 +7,9 @@ use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
+use PHPageBuilder\Repositories\UploadRepository;
 use PHPageBuilder\Theme;
 use Exception;
-use PHPageBuilder\ThemeBlock;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -66,16 +66,7 @@ class PageBuilder implements PageBuilderContract
                     break;
                 case 'uploadAsset':
                     if (isset($_FILES)) {
-                        $uploader = new Uploader('files');
-                        $uploader
-                            ->file_name(true)
-                            ->upload_to(phpb_config('storage.uploads_folder') . '/')
-                            ->run();
-                        if (! $uploader->was_uploaded) {
-                            die("Error : {$uploader->error}");
-                        } else {
-                            echo 'Upload successful!';
-                        }
+                        $this->handleFileUpload();
                     }
                     break;
                 case 'renderBlock':
@@ -84,6 +75,45 @@ class PageBuilder implements PageBuilderContract
                     }
             }
 
+            exit();
+        }
+    }
+
+    /**
+     * Handle uploading of the posted file.
+     *
+     * @throws Exception
+     */
+    public function handleFileUpload()
+    {
+        $uploader = new Uploader('files');
+        $uploader
+            ->file_name(true)
+            ->upload_to(phpb_config('storage.uploads_folder') . '/')
+            ->run();
+
+        if (! $uploader->was_uploaded) {
+            die("Upload error: {$uploader->error}");
+        } else {
+            $originalFile = $uploader->file_src_name;
+            $originalMime = $uploader->file_src_mime;
+            $serverFile = $uploader->final_file_name;
+            $publicId = explode('.', $serverFile)[0];
+
+            $uploadRepository = new UploadRepository;
+            $uploadedFile = $uploadRepository->create([
+                'public_id' => $publicId,
+                'original_file' => $originalFile,
+                'mime_type' => $originalMime,
+                'server_file' => $serverFile
+            ]);
+
+            echo json_encode([
+                'data' => [
+                    'src' => $uploadedFile->getUrl(),
+                    'type' => 'image'
+                ]
+            ]);
             exit();
         }
     }
