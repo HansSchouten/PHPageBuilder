@@ -9,57 +9,58 @@ use Exception;
  *
  * Credits: https://github.com/brunoribeiro94/php-upload
  *
- * Can resize to exact size
- * Max width size while keep aspect ratio
- * Max height size while keep aspect ratio
- * Automatic while keep aspect ratio
+ * Can resize to:
+ * - exact image size
+ * - max width size while maintaining aspect ratio
+ * - max height size while maintaining aspect ratio
+ * - automatic dimensions maintaining aspect ratio
  */
 class ResizeImage {
 
     /**
-     * Extension of image
+     * Image extension.
      *
      * @var string
      */
     protected $ext;
 
     /**
-     * created image
+     * Created image.
      *
      * @var string
      */
     protected $image;
 
     /**
-     * Name new image
+     * Name of new image.
      *
      * @var string
      */
     protected $newImage;
 
     /**
-     * Original width of image
+     * Original image width.
      *
      * @var integer
      */
     protected $origWidth;
 
     /**
-     * Original height of image
+     * Original image height.
      *
      * @var integer
      */
     protected $origHeight;
 
     /**
-     * Resize width to new image resized
+     * New image width.
      *
      * @var integer
      */
     protected $resizeWidth;
 
     /**
-     * Resize height to new image resized
+     * New image height.
      *
      * @var integer
      */
@@ -117,7 +118,7 @@ class ResizeImage {
     }
 
     /**
-     * Save the image as the image type the original image was
+     * Save the image as the image type the original image was.
      *
      * @param string $savePath          the path to store the new image
      * @param string $imageQuality      the quality level of image to create
@@ -153,7 +154,7 @@ class ResizeImage {
     }
 
     /**
-     * Resize the image to these set dimensions
+     * Resize the image to the given dimensions.
      *
      * @param integer $width            max width of the image
      * @param integer $height           max height of the image
@@ -212,7 +213,7 @@ class ResizeImage {
     }
 
     /**
-     * Get the resized height from the width keeping the aspect ratio
+     * Get the resized height from the width maintaining aspect ratio.
      *
      * @param integer $width        max image width
      * @return float
@@ -222,7 +223,7 @@ class ResizeImage {
     }
 
     /**
-     * Get the resized width from the height keeping the aspect ratio
+     * Get the resized width from the height maintaining aspect ratio.
      *
      * @param int $height           max image height
      * @return float

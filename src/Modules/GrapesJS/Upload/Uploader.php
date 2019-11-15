@@ -17,56 +17,56 @@ use Exception;
 class Uploader {
 
     /**
-     * Indicates if the file has been uploaded properly
+     * Indicates if the file has been uploaded properly.
      *
      * @var boolean
      */
     public $was_uploaded = false;
 
     /**
-     * Contains error message
+     * Contains error message.
      *
      * @var string
      */
     public $error;
 
     /**
-     * Filename
+     * Filename.
      *
      * @var string
      */
     public $file_src_name;
 
     /**
-     * File extension
+     * File extension.
      *
      * @var string
      */
     public $file_src_name_ext;
 
     /**
-     * Uploaded file size, in bytes
+     * Uploaded file size, in bytes.
      *
      * @var double
      */
     public $file_src_size;
 
     /**
-     * Uploaded file size, in bytes
+     * Uploaded file size (in bytes).
      *
      * @var integer
      */
     public $file_src_errors;
 
     /**
-     * File source temp
+     * File source temp.
      *
      * @var string
      */
     protected $file_src_temp;
 
     /**
-     * Uploaded file MIME type
+     * Uploaded file MIME type.
      *
      * @access public
      * @var string
@@ -74,61 +74,57 @@ class Uploader {
     public $file_src_mime;
 
     /**
-     * Final file name
+     * Final file name.
      *
      * @var string
      */
     public $final_file_name;
 
     /**
-     * File width resolution
+     * File resolution width.
      *
      * @var integer
      */
     public $file_width;
 
     /**
-     * File height resolution
+     * File resolution height.
      *
      * @var integer
      */
     public $file_height;
 
     /**
-     * Set this variable to change the maximum size in bytes for an uploaded file
-     *
-     * Default value is the value <i>upload_max_filesize</i> from php.ini
-     *
-     * Remember you can also set calling <pre> $Upload->file_max_size($value)</pre>
+     * Set this variable to change the maximum size in bytes for an uploaded file.
+     * Default value is the value upload_max_filesize from php.ini.
+     * Remember you can also set calling $Upload->file_max_size($value).
      *
      * @var double
      */
-    protected $get_file_max_size = 8000000;
+    protected $get_file_max_size = 25000000;
 
     /**
-     * Set auto replace if the file already exist
-     *
-     * Remember you can also set calling <pre> $Upload->auto_replace($value_boolean)</pre>
+     * Set auto replace if the file already exist.
+     * Remember you can also set calling $Upload->auto_replace($value_boolean).
      *
      * @var boolean
      */
     protected $get_auto_replace = true;
 
     /**
-     * Set auto create path if the folder not exist
-     *
-     * Remember you can also set calling <pre> $Upload->auto_create_path($value_boolean)</pre>
+     * Set auto create path if the folder not exist.
+     * Remember you can also set calling $Upload->auto_create_path($value_boolean).
      *
      * @var boolean
      */
     protected $get_auto_create_path = true;
 
     /**
-     * Allowed MIME types
+     * Allowed MIME types.
      *
      * @var array
      */
-    public $MIME_allowed = array(
+    public $MIME_allowed = [
         "application/arj",
         "application/excel",
         "application/gnutar",
@@ -201,17 +197,17 @@ class Uploader {
         "video/x-ms-asf-plugin",
         "video/x-msvideo",
         "x-music/x-midi"
-    );
+    ];
 
     /**
      * Uploader constructor.
      *
-     * @param string|array $img         image source
-     * @param boolean $autoRead         auto read $_FILE
+     * @param string|array $source      image source
+     * @param boolean $fromFiles        read from $_FILE
      * @return boolean
      */
-    public function __construct($img, $autoRead = true) {
-        $file = $autoRead ? $_FILES[$img] : $img;
+    public function __construct($source, $fromFiles = true) {
+        $file = $fromFiles ? $_FILES[$source] : $source;
         if (! isset($file)) {
             return false;
         }
@@ -235,10 +231,10 @@ class Uploader {
      * @throws Exception
      */
     public function run() {
-        // checks the final name if it is in shuffle mode
+        // check the final name if it is in shuffle mode
         if ($this->file_name !== true) {
-            // preserve the file extension if there
-            if (!pathinfo($this->file_name, PATHINFO_EXTENSION)) {
+            // preserve file extension if provided
+            if (! pathinfo($this->file_name, PATHINFO_EXTENSION)) {
                 $file = $this->file_name . '.' . $this->file_src_name_ext;
             } else {
                 $file = $this->file_name;
@@ -252,7 +248,7 @@ class Uploader {
 
         $get_mime = isset($this->mime_check) ? true : false;
 
-        // checks MIME type which are allowed
+        // check MIME type which are allowed
         if ($get_mime && empty($this->file_src_mime)) {
             $this->was_uploaded = false;
             $this->error = "MIME type can't be detected!";
@@ -261,36 +257,36 @@ class Uploader {
             $this->error = "Incorrect type of file";
         }
 
-        // checks file maximum size
+        // check file maximum size
         if ($this->file_src_size > $this->get_file_max_size) {
             $this->error = 'File too big Original Size : ' . $this->file_src_size . ' File size limit : ' . $this->get_file_max_size;
             $this->was_uploaded = false;
             return false;
         }
 
-        // checks if the destination directory exists, and attempt to create it
+        // check whether destination directory exists or attempt to create it
         if ($this->get_auto_create_path) {
-            if (!$this->r_mkdir($this->upload_to)) {
+            if (! $this->r_mkdir($this->upload_to)) {
                 $this->was_uploaded = false;
                 $this->error = "Destination directory can't be created. Can't carry on a process";
                 return false;
             }
-        } elseif (!is_dir($this->upload_to)) {
+        } elseif (! is_dir($this->upload_to)) {
             $this->error = "Destination directory doesn't exist. Can't carry on a process";
             return false;
         }
 
 
-        // checks file already exist or if are to replace it
+        // check file already exist or if are to replace it
         if (file_exists($path)) {
-            if (!$this->get_auto_replace) {
+            if (! $this->get_auto_replace) {
                 $this->was_uploaded = false;
                 $this->error = $this->file_src_name . ' already exists. Please change the file name';
             }
             return false;
         }
 
-        // checks more likely errors that can happen
+        // check common error types
         switch ($this->file_src_errors) {
             case 0:
                 // all is OK
@@ -316,16 +312,17 @@ class Uploader {
                 $this->error = "File upload error (unknown error code)";
         }
 
-        // checks if not occurred an error to upload file
+        // move file if successfully uploaded
         if ($this->was_uploaded) {
             if (move_uploaded_file($this->file_src_temp, $path)) {
                 $this->final_file_name = $file;
-                // extracts image dimensions
+
+                // extract image dimensions
                 list($w, $h) = getimagesize($path);
                 $this->file_width = $w;
                 $this->file_height = $h;
 
-                // the resize mode is available ?
+                // resize image if configured
                 if (isset($this->resize)) {
                     $resize = new ResizeImage($path);
                     $resize->resizeTo($this->image_x, $this->image_y, $this->resize_option);
@@ -343,11 +340,10 @@ class Uploader {
     }
 
     /**
-     * Creates directories recursively
+     * Create directories recursively.
      *
      * @param  string  $path        Path to create
      * @param  integer $mode        Optional permissions
-     *
      * @return boolean Success
      */
     protected function r_mkdir($path, $mode = 0777) {
@@ -355,11 +351,10 @@ class Uploader {
     }
 
     /**
-     * Creates directory
+     * Create directory.
      *
      * @param  string  $path        Path to create
      * @param  integer $mode        Optional permissions
-     *
      * @return boolean Success
      */
     protected function _mkdir($path, $mode = 0777) {
@@ -371,10 +366,9 @@ class Uploader {
 
     /**
      * Set the variable this function to define final name of the uploaded file.
-     * use the value true for generate unique name (random name)
+     * Use the value true for generate unique name (random name).
      *
      * @param boolean|string $file_name     Final name of the file uploaded
-     *
      * @return Uploader
      */
     public function file_name($file_name) {
@@ -383,10 +377,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to define auto replacement if the file already exist
+     * Set the variable this function to define auto replacement if the file already exist.
      *
      * @param boolean $bool
-     *
      * @return Uploader
      */
     public function auto_replace($bool) {
@@ -395,10 +388,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to define max size file is allowed
+     * Set the variable this function to define max size file is allowed.
      *
      * @param integer $size         Size max in Bytes 1 000 000 bytes is equal to 1 MB
-     *
      * @return Uploader
      */
     public function file_max_size($size) {
@@ -407,11 +399,10 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to false if you don't want to check the MIME against the allowed list
-     * This variable is set to true by default for security reason
+     * Set the variable this function to false if you don't want to check the MIME against the allowed list.
+     * This variable is set to true by default for security reason.
      *
      * @param boolean $bool         Set to false to not check
-     *
      * @return Uploader
      */
     public function mime_check($bool = true) {
@@ -420,10 +411,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to choose a new path location for the image
+     * Set the variable this function to choose a new path location for the image.
      *
      * @param string $path          Path location of the uploaded file, with an ending slash
-     *
      * @return Uploader
      */
     public function upload_to($path) {
@@ -432,12 +422,10 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to true to resize the file if it is an image
-     *
-     * You will probably want to set {@link image_x()} and {@link image_y()}, and maybe one of the ratio variables
+     * Set the variable this function to true to resize the file if it is an image.
+     * You will probably want to set {@link image_x()} and {@link image_y()}, and maybe one of the ratio variables.
      *
      * @param boolean $bool         Default value is false (no resizing)
-     *
      * @return Uploader
      */
     public function resize($bool = false) {
@@ -446,10 +434,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to the wanted (or maximum/minimum) width for the processed image, in pixels
+     * Set the variable this function to the wanted (or maximum/minimum) width for the processed image, in pixels.
      *
      * @param integer $width        Default value is 150
-     *
      * @return Uploader
      */
     public function image_x($width) {
@@ -458,10 +445,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to the wanted (or maximum/minimum) height for the processed image, in pixels
+     * Set the variable this function to the wanted (or maximum/minimum) height for the processed image, in pixels.
      *
      * @param integer $height       Default value is 150
-     *
      * @return Uploader
      */
     public function image_y($height = 150) {
@@ -470,10 +456,9 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to choose the scale option for the image
+     * Set the variable this function to choose the scale option for the image.
      *
-     * @param string $option        Default value is default, but you can use <b>exact</b>, <b>maxwidth</b>, <b>maxheight</b> or <b>proportionally</b>
-     *
+     * @param string $option        Default value is default, but you can use: exact, maxwidth, maxheight or proportional
      * @return Uploader
      */
     public function resize_option($option = 'default') {
@@ -482,7 +467,7 @@ class Uploader {
     }
 
     /**
-     * Alias for {@link resize()} instead of using both {@link image_x()} && {@link image_y()} && {@link resize_option()}
+     * Alias for {@link resize()} instead of using both {@link image_x()} && {@link image_y()} && {@link resize_option()}.
      *
      * @param integer $width            Max width of the image
      * @param integer $height           Max height of the image
