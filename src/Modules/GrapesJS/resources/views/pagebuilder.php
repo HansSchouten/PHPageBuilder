@@ -30,7 +30,7 @@ window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
-window.renderBlockUrl = '<?= phpb_route('?route=pagebuilder&action=renderBlock&page=' . $page->id) ?>';
+window.renderBlockUrl = '<?= phpb_url('pagebuilder.index', ['action' => 'renderBlock', 'page' => $page->id]) ?>';
 
 window.editor = grapesjs.init({
     container: '#gjs',
@@ -46,7 +46,7 @@ window.editor = grapesjs.init({
         uploadText: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>',
         inputPlaceholder: '<?= phpb_trans('pagebuilder.asset-manager.url-placeholder') ?>',
         addBtnText: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
-        upload: '<?= phpb_route('?route=pagebuilder&action=uploadAsset&page=' . $page->id) ?>',
+        upload: '<?= phpb_url('pagebuilder.index', ['action' => 'upload', 'page' => $page->id]) ?>',
         uploadName: 'files',
         multiUpload: false,
     },
@@ -173,7 +173,7 @@ require __DIR__ . '/style-manager.php';
 </div>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn" data-url="<?= phpb_route('?route=pagebuilder&action=store&page=' . $page->id) ?>">
+    <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder.index', ['action' => 'store', 'page' => $page->id]) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="fa fa-floppy-o"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>
@@ -184,7 +184,7 @@ require __DIR__ . '/style-manager.php';
         <?= phpb_trans('pagebuilder.view-page') ?>
     </a>
 
-    <a id="go-back" href="<?= phpb_route('') ?>" class="btn">
+    <a id="go-back" href="<?= phpb_url('website_manager.index') ?>" class="btn">
         <i class="fa fa-arrow-circle-o-left"></i>
         <?= phpb_trans('pagebuilder.go-back') ?>
     </a>

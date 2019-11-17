@@ -227,14 +227,18 @@ class PHPageBuilder
         $route = $_GET['route'] ?? null;
         $action = $_GET['action'] ?? null;
 
-        // if we are at the backend, handle login, website manager and page builder requests
-        if (strpos($_SERVER['REQUEST_URI'], phpb_config('project.pagebuilder_url')) === 0) {
-            if (phpb_config('login.use_login')) {
-                $this->login->handleRequest($route, $action);
-            }
-            if (phpb_config('website_manager.use_website_manager')) {
+        // if we are at the backend, handle login and website manager
+        if (phpb_config('website_manager.use_website_manager')) {
+            if (strpos($_SERVER['REQUEST_URI'], phpb_url('website_manager.index', [], false)) === 0) {
+                if (phpb_config('login.use_login')) {
+                    $this->login->handleRequest($route, $action);
+                }
                 $this->websiteManager->handleRequest($route, $action);
             }
+        }
+
+        // handle pagebuilder requests
+        if (strpos($_SERVER['REQUEST_URI'], phpb_url('pagebuilder.index', [], false)) === 0) {
             $this->pageBuilder->handleRequest($route, $action);
         }
 

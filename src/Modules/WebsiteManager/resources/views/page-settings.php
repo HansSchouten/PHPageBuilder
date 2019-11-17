@@ -62,7 +62,7 @@ if (isset($page)) {
 
                 <hr class="mb-3">
 
-                <a href="<?= phpb_route('') ?>" class="btn btn-light btn-sm mr-1">
+                <a href="<?= phpb_url('website_manager.index') ?>" class="btn btn-light btn-sm mr-1">
                     <?= phpb_trans('website-manager.back') ?>
                 </a>
                 <button class="btn btn-primary btn-sm">

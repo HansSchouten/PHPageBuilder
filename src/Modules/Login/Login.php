@@ -17,9 +17,9 @@ class Login implements LoginContract
         if ($route === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
             if ($_POST['username'] === phpb_config('login.username') && $_POST['password'] === phpb_config('login.password')) {
                 $_SESSION['phpb_logged_in'] = true;
-                phpb_redirect('');
+                phpb_redirect(phpb_url('website_manager.index'));
             } else {
-                phpb_redirect('', [
+                phpb_redirect(phpb_url('website_manager.index'), [
                     'message-type' => 'warning',
                     'message' => phpb_trans('login.invalid-credentials')
                 ]);
@@ -28,7 +28,7 @@ class Login implements LoginContract
 
         if ($route === 'logout') {
             unset($_SESSION['phpb_logged_in']);
-            phpb_redirect('');
+            phpb_redirect(phpb_url('website_manager.index'));
         }
 
         if (! isset($_SESSION['phpb_logged_in'])) {

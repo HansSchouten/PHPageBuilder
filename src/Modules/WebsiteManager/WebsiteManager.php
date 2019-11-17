@@ -32,7 +32,7 @@ class WebsiteManager implements WebsiteManagerContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
             if (is_null($page)) {
-                phpb_redirect('');
+                phpb_redirect(phpb_url('website_manager.index'));
             }
 
             if ($action === 'edit') {
@@ -53,7 +53,7 @@ class WebsiteManager implements WebsiteManagerContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->create($_POST);
             if ($page) {
-                phpb_redirect('', [
+                phpb_redirect(phpb_url('website_manager.index'), [
                     'message-type' => 'success',
                     'message' => phpb_trans('website-manager.page-created')
                 ]);
@@ -74,7 +74,7 @@ class WebsiteManager implements WebsiteManagerContract
             $pageRepository = new PageRepository;
             $success = $pageRepository->update($page, $_POST);
             if ($success) {
-                phpb_redirect('', [
+                phpb_redirect(phpb_url('website_manager.index'), [
                     'message-type' => 'success',
                     'message' => phpb_trans('website-manager.page-updated')
                 ]);
@@ -93,7 +93,7 @@ class WebsiteManager implements WebsiteManagerContract
     {
         $pageRepository = new PageRepository;
         $pageRepository->destroy($page->id);
-        phpb_redirect('', [
+        phpb_redirect(phpb_url('website_manager.index'), [
             'message-type' => 'success',
             'message' => phpb_trans('website-manager.page-deleted')
         ]);

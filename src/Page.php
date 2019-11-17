@@ -21,7 +21,7 @@ class Page implements PageContract
      */
     public function getUrl()
     {
-        return phpb_url($this->route);
+        return $this->route;
     }
 
     /**

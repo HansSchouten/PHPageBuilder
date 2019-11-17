@@ -11,7 +11,6 @@ return [
      */
     'project' => [
         'public_folder' => __DIR__ . '/public',
-        'pagebuilder_url' => '/admin',
         'language' => 'en',
     ],
 
@@ -65,6 +64,9 @@ return [
     'website_manager' => [
         'use_website_manager' => true,
         'class' => PHPageBuilder\Modules\WebsiteManager\WebsiteManager::class,
+        'routes' => [
+            'index' => '/admin'
+        ]
     ],
 
     /*
@@ -77,6 +79,9 @@ return [
      */
     'pagebuilder' => [
         'class' => PHPageBuilder\Modules\GrapesJS\PageBuilder::class,
+        'routes' => [
+            'index' => '/admin/pagebuilder'
+        ]
     ],
 
     /*

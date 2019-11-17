@@ -149,55 +149,58 @@ if (! function_exists('phpb_trans')) {
     }
 }
 
-if (! function_exists('phpb_route')) {
-    /**
-     * Give the URL of a given page builder route.
-     * The given route will be prefixed with pagebuilder_url from config.
-     *
-     * @param string $route
-     * @return string
-     */
-    function phpb_route($route = '')
-    {
-        $prefix = phpb_config('project.pagebuilder_url');
-        if (empty($prefix)) {
-            $prefix = '/';
-        }
-
-        return $prefix . $route;
-    }
-}
-
 if (! function_exists('phpb_url')) {
     /**
      * Give the full URL of a given public path.
      *
-     * @param string $path
+     * @param string $route
+     * @param array $parameters
+     * @param bool $fullUrl
      * @return string
      */
-    function phpb_url($path = '')
+    function phpb_url($route, array $parameters = [], $fullUrl = true)
     {
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        $base =  $protocol . "://" . $_SERVER['SERVER_NAME'];
-        return $base . $path;
+        $url = '';
+        if ($fullUrl) {
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $url =  $protocol . "://" . $_SERVER['SERVER_NAME'];
+        }
+
+        $parts = explode('.', $route);
+        if (sizeof($parts) < 2) {
+            die('Invalid phpb_url route: ' . $route);
+        }
+        $module = array_shift($parts);
+        $route = implode('.', $parts);
+        $url .= phpb_config($module . '.routes.' . $route);
+
+        if (! empty($parameters)) {
+            $url .= '?';
+            $pairs = [];
+            foreach ($parameters as $key => $value) {
+                $pairs[] = e($key) . '=' . e($value);
+            }
+            $url .= implode('&', $pairs);
+        }
+
+        return $url;
     }
 }
 
 if (! function_exists('phpb_redirect')) {
     /**
-     * Redirect to the given page builder route.
-     * The given route will be prefixed with pagebuilder_url from config.
+     * Redirect to the given URL with optional session flash data.
      *
-     * @param string $route
+     * @param string $url
      * @param array $flashData
      */
-    function phpb_redirect($route = '', $flashData = [])
+    function phpb_redirect($url, $flashData = [])
     {
         if (! empty($flashData)) {
             $_SESSION["phpb_flash"] = $flashData;
         }
 
-        header('Location: ' . phpb_route($route));
+        header('Location: ' . $url);
         exit();
     }
 }
