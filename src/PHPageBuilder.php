@@ -227,9 +227,9 @@ class PHPageBuilder
         $route = $_GET['route'] ?? null;
         $action = $_GET['action'] ?? null;
 
-        // if we are at the backend, handle login and website manager
+        // if we are at the backend, handle auth check, login and website manager
         if (phpb_config('website_manager.use_website_manager')) {
-            if (strpos($_SERVER['REQUEST_URI'], phpb_url('website_manager.index', [], false)) === 0) {
+            if (phpb_in_module('website_manager')) {
                 if (phpb_config('login.use_login')) {
                     $this->login->handleRequest($route, $action);
                 }
@@ -238,7 +238,7 @@ class PHPageBuilder
         }
 
         // handle pagebuilder requests
-        if (strpos($_SERVER['REQUEST_URI'], phpb_url('pagebuilder.index', [], false)) === 0) {
+        if (phpb_in_module('pagebuilder')) {
             $this->pageBuilder->handleRequest($route, $action);
         }
 

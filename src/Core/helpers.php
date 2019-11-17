@@ -153,26 +153,19 @@ if (! function_exists('phpb_url')) {
     /**
      * Give the full URL of a given public path.
      *
-     * @param string $route
+     * @param string $module
      * @param array $parameters
      * @param bool $fullUrl
      * @return string
      */
-    function phpb_url($route, array $parameters = [], $fullUrl = true)
+    function phpb_url($module, array $parameters = [], $fullUrl = true)
     {
         $url = '';
         if ($fullUrl) {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
             $url =  $protocol . "://" . $_SERVER['SERVER_NAME'];
         }
-
-        $parts = explode('.', $route);
-        if (sizeof($parts) < 2) {
-            die('Invalid phpb_url route: ' . $route);
-        }
-        $module = array_shift($parts);
-        $route = implode('.', $parts);
-        $url .= phpb_config($module . '.routes.' . $route);
+        $url .= phpb_config($module . '.url');
 
         if (! empty($parameters)) {
             $url .= '?';
@@ -184,6 +177,36 @@ if (! function_exists('phpb_url')) {
         }
 
         return $url;
+    }
+}
+
+if (! function_exists('phpb_in_module')) {
+    /**
+     * Return whether we are currently accessing the given module.
+     *
+     * @param string $module
+     * @return bool
+     */
+    function phpb_in_module($module)
+    {
+        $url = phpb_url($module, [], false);
+        $currentUrl = explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+        return $currentUrl === $url;
+    }
+}
+
+if (! function_exists('phpb_on_url')) {
+    /**
+     * Return whether we are currently on the given URL.
+     *
+     * @param string $module
+     * @param array $parameters
+     * @return bool
+     */
+    function phpb_on_url($module, array $parameters = [])
+    {
+        $url = phpb_url($module, $parameters, false);
+        return $_SERVER['REQUEST_URI'] === $url;
     }
 }
 

@@ -61,7 +61,7 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                                         <a href="<?= e($page->route) ?>" target="_blank" class="btn btn-light btn-sm">
                                             <span><?= phpb_trans('website-manager.view') ?></span> <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<?= phpb_url('pagebuilder.index', ['action' => 'edit', 'page' => $page->id]) ?>" class="btn btn-primary btn-sm">
+                                        <a href="<?= phpb_url('pagebuilder', ['action' => 'edit', 'page' => $page->id]) ?>" class="btn btn-primary btn-sm">
                                             <span><?= phpb_trans('website-manager.edit') ?></span> <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="?route=page_settings&action=edit&page=<?= e($page->id) ?>" class="btn btn-secondary btn-sm">

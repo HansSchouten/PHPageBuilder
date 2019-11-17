@@ -45,38 +45,36 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleRequest($route, $action)
     {
-        if ($route === 'pagebuilder') {
-            $pageId = $_GET['page'] ?? null;
-            $pageRepository = new PageRepository;
-            $page = $pageRepository->findWithId($pageId);
+        $pageId = $_GET['page'] ?? null;
+        $pageRepository = new PageRepository;
+        $page = $pageRepository->findWithId($pageId);
 
-            if (! ($page instanceof PageContract)) {
-                die('Page not found');
-            }
-
-            switch ($action) {
-                case 'edit':
-                    $this->renderPageBuilder($page);
-                    break;
-                case 'store':
-                    if (isset($_POST) && isset($_POST['data'])) {
-                        $data = json_decode($_POST['data'], true);
-                        $this->updatePage($page, $data);
-                    }
-                    break;
-                case 'uploadAsset':
-                    if (isset($_FILES)) {
-                        $this->handleFileUpload();
-                    }
-                    break;
-                case 'renderBlock':
-                    if (isset($_POST['data'])) {
-                        $this->renderPageBuilderBlock($page, json_decode($_POST['data'], true));
-                    }
-            }
-
-            exit();
+        if (! ($page instanceof PageContract)) {
+            die('Page not found');
         }
+
+        switch ($action) {
+            case 'edit':
+                $this->renderPageBuilder($page);
+                break;
+            case 'store':
+                if (isset($_POST) && isset($_POST['data'])) {
+                    $data = json_decode($_POST['data'], true);
+                    $this->updatePage($page, $data);
+                }
+                break;
+            case 'uploadAsset':
+                if (isset($_FILES)) {
+                    $this->handleFileUpload();
+                }
+                break;
+            case 'renderBlock':
+                if (isset($_POST['data'])) {
+                    $this->renderPageBuilderBlock($page, json_decode($_POST['data'], true));
+                }
+        }
+
+        die('Page not found');
     }
 
     /**
