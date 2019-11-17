@@ -2,7 +2,7 @@
 
 namespace PHPageBuilder;
 
-use PHPageBuilder\Contracts\LoginContract;
+use PHPageBuilder\Contracts\AuthContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
@@ -14,9 +14,9 @@ use PHPageBuilder\Repositories\UploadRepository;
 class PHPageBuilder
 {
     /**
-     * @var LoginContract $login
+     * @var AuthContract $auth
      */
-    protected $login;
+    protected $auth;
 
     /**
      * @var WebsiteManagerContract $websiteManager
@@ -61,9 +61,9 @@ class PHPageBuilder
             $this->setDatabaseConnection(phpb_config('storage.database'));
         }
 
-        // init the default login, if enabled
-        if (phpb_config('login.use_login')) {
-            $this->login = phpb_instance('login');
+        // init the default authentication, if enabled
+        if (phpb_config('auth.use_login')) {
+            $this->auth = phpb_instance('auth');
         }
 
         // init the default website manager, if enabled
@@ -115,13 +115,13 @@ class PHPageBuilder
     }
 
     /**
-     * Set a custom login.
+     * Set a custom auth.
      *
-     * @param LoginContract $login
+     * @param AuthContract $auth
      */
-    public function setLogin(LoginContract $login)
+    public function setAuth(AuthContract $auth)
     {
-        $this->login = $login;
+        $this->auth = $auth;
     }
 
     /**
@@ -169,13 +169,13 @@ class PHPageBuilder
 
 
     /**
-     * Return the Login instance of this PHPageBuilder.
+     * Return the Auth instance of this PHPageBuilder.
      *
-     * @return LoginContract
+     * @return AuthContract
      */
-    public function getLogin()
+    public function getAuth()
     {
-        return $this->login;
+        return $this->auth;
     }
 
     /**
@@ -230,8 +230,8 @@ class PHPageBuilder
         // if we are at the backend, handle auth check, login and website manager
         if (phpb_config('website_manager.use_website_manager')) {
             if (phpb_in_module('website_manager')) {
-                if (phpb_config('login.use_login')) {
-                    $this->login->handleRequest($route, $action);
+                if (phpb_config('auth.use_login')) {
+                    $this->auth->handleRequest($action);
                 }
                 $this->websiteManager->handleRequest($route, $action);
             }

@@ -1,32 +1,31 @@
 <?php
 
-namespace PHPageBuilder\Modules\Login;
+namespace PHPageBuilder\Modules\Auth;
 
-use PHPageBuilder\Contracts\LoginContract;
+use PHPageBuilder\Contracts\AuthContract;
 
-class Login implements LoginContract
+class Auth implements AuthContract
 {
     /**
      * Process the current GET or POST request and redirect or render the requested page.
      *
-     * @param $route
      * @param $action
      */
-    public function handleRequest($route, $action)
+    public function handleRequest($action)
     {
-        if ($route === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
-            if ($_POST['username'] === phpb_config('login.username') && $_POST['password'] === phpb_config('login.password')) {
+        if ($action === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
+            if ($_POST['username'] === phpb_config('auth.username') && $_POST['password'] === phpb_config('auth.password')) {
                 $_SESSION['phpb_logged_in'] = true;
                 phpb_redirect(phpb_url('website_manager'));
             } else {
                 phpb_redirect(phpb_url('website_manager'), [
                     'message-type' => 'warning',
-                    'message' => phpb_trans('login.invalid-credentials')
+                    'message' => phpb_trans('auth.invalid-credentials')
                 ]);
             }
         }
 
-        if ($route === 'logout') {
+        if ($action === 'logout') {
             unset($_SESSION['phpb_logged_in']);
             phpb_redirect(phpb_url('website_manager'));
         }

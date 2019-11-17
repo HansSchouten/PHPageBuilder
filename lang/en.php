@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'login' => [
+    'auth' => [
         'title' => 'Website Manager',
         'username' => 'Username',
         'password' => 'Password',

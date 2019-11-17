@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'login' => [
+    'auth' => [
         'title' => 'Websitebeheer',
         'username' => 'Gebruikersnaam',
         'password' => 'Wachtwoord',

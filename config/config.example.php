@@ -39,17 +39,17 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Login settings
+     | Auth settings
      |--------------------------------------------------------------------------
      |
-     | By default a login class is provided which checks for the credentials
-     | configured in this setting block.
+     | By default an authentication class is provided which checks for the
+     | credentials configured in this setting block.
      |
      */
-    'login' => [
+    'auth' => [
         'use_login' => true,
-        'class' => PHPageBuilder\Modules\Login\Login::class,
-        'url' => '/admin/login',
+        'class' => PHPageBuilder\Modules\Auth\Auth::class,
+        'url' => '/admin/auth',
         'username' => 'admin',
         'password' => 'changethispassword'
     ],

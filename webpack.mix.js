@@ -1,7 +1,7 @@
 let mix = require('webpack-mix').mix;
 
-let loginAssetsPath = 'src/Modules/Login/resources/assets/';
-mix.sass(loginAssetsPath + 'sass/app.scss', 'dist/login');
+let authAssetsPath = 'src/Modules/Auth/resources/assets/';
+mix.sass(authAssetsPath + 'sass/app.scss', 'dist/auth');
 
 let websiteManagerAssetsPath = 'src/Modules/WebsiteManager/resources/assets/';
 mix.sass(websiteManagerAssetsPath + 'sass/app.scss', 'dist/websitemanager');

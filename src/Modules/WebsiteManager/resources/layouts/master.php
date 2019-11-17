@@ -14,11 +14,11 @@
 
 <div class="container">
     <?php
-    if (phpb_config('login.use_login')):
-        ?>
-        <a href="?route=logout" class="btn btn-light clear btn-sm mt-1 float-right">
-            <i class="fas fa-sign-out-alt"></i> <?= phpb_trans('website-manager.logout') ?>
-        </a>
+    if (phpb_config('auth.use_login')):
+    ?>
+    <a href="<?= phpb_url('auth', ['action' => 'logout']) ?>" class="btn btn-light clear btn-sm mt-1 float-right">
+        <i class="fas fa-sign-out-alt"></i> <?= phpb_trans('website-manager.logout') ?>
+    </a>
     <?php
     endif;
     ?>
