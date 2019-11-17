@@ -13,7 +13,7 @@ class Auth implements AuthContract
      */
     public function handleRequest($action)
     {
-        if ($action === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
+        if (phpb_in_module('auth') && $action === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
             if ($_POST['username'] === phpb_config('auth.username') && $_POST['password'] === phpb_config('auth.password')) {
                 $_SESSION['phpb_logged_in'] = true;
                 phpb_redirect(phpb_url('website_manager'));
@@ -25,7 +25,7 @@ class Auth implements AuthContract
             }
         }
 
-        if ($action === 'logout') {
+        if (phpb_in_module('auth') && $action === 'logout') {
             unset($_SESSION['phpb_logged_in']);
             phpb_redirect(phpb_url('website_manager'));
         }

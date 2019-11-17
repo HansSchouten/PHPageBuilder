@@ -42,8 +42,6 @@ class WebsiteManager implements WebsiteManagerContract
                 $this->handleDestroy($page);
             }
         }
-
-        die('Page not found');
     }
 
     /**

@@ -41,6 +41,7 @@ class PageBuilder implements PageBuilderContract
      *
      * @param $route
      * @param $action
+     * @return bool
      * @throws Exception
      */
     public function handleRequest($route, $action)
@@ -50,12 +51,13 @@ class PageBuilder implements PageBuilderContract
         $page = $pageRepository->findWithId($pageId);
 
         if (! ($page instanceof PageContract)) {
-            die('Page not found');
+            return false;
         }
 
         switch ($action) {
             case 'edit':
                 $this->renderPageBuilder($page);
+                exit();
                 break;
             case 'store':
                 if (isset($_POST) && isset($_POST['data'])) {
@@ -71,10 +73,11 @@ class PageBuilder implements PageBuilderContract
             case 'renderBlock':
                 if (isset($_POST['data'])) {
                     $this->renderPageBuilderBlock($page, json_decode($_POST['data'], true));
+                    exit();
                 }
         }
 
-        die('Page not found');
+        return false;
     }
 
     /**

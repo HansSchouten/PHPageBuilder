@@ -227,26 +227,27 @@ class PHPageBuilder
         $route = $_GET['route'] ?? null;
         $action = $_GET['action'] ?? null;
 
+        // return uploaded files
+        $this->handleUploadedFileRequest();
+        // return assets
+        $this->handlePagebuilderAssetRequest();
+
         // if we are at the backend, handle auth check, login and website manager
         if (phpb_config('website_manager.use_website_manager')) {
+            if (phpb_config('auth.use_login')) {
+                $this->auth->handleRequest($action);
+            }
             if (phpb_in_module('website_manager')) {
-                if (phpb_config('auth.use_login')) {
-                    $this->auth->handleRequest($action);
-                }
                 $this->websiteManager->handleRequest($route, $action);
+                die('Page not found');
             }
         }
 
-        // handle pagebuilder requests
+        // handle page builder requests
         if (phpb_in_module('pagebuilder')) {
             $this->pageBuilder->handleRequest($route, $action);
+            die('Page not found');
         }
-
-        // return uploaded files
-        $this->handleUploadedFileRequest();
-
-        // return assets
-        $this->handlePagebuilderAssetRequest();
 
         // let the page router resolve the current URL
         $page = $this->router->resolve($_SERVER['REQUEST_URI']);
