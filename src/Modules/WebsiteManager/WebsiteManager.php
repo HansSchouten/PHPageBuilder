@@ -31,7 +31,7 @@ class WebsiteManager implements WebsiteManagerContract
             $pageId = $_GET['page'] ?? null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
-            if (is_null($page)) {
+            if (! ($page instanceof PageContract)) {
                 phpb_redirect(phpb_url('website_manager'));
             }
 

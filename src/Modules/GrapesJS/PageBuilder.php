@@ -63,6 +63,7 @@ class PageBuilder implements PageBuilderContract
                 if (isset($_POST) && isset($_POST['data'])) {
                     $data = json_decode($_POST['data'], true);
                     $this->updatePage($page, $data);
+                    exit();
                 }
                 break;
             case 'uploadAsset':

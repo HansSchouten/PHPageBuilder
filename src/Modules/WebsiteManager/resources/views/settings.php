@@ -1,4 +1,4 @@
-<form method="post" action="?tab=settings">
+<form method="post" action="<?= phpb_url('website_manager', ['route' => 'settings', 'action' => 'edit', 'tab' => 'settings']) ?>">
 
     <div class="main-spacing">
 

@@ -13,7 +13,7 @@ if (isset($page)) {
     <div class="col-12">
 
         <div class="manager-panel">
-            <form method="post" action="?route=page_settings&action=<?= e($action) ?><?= $pageUrlParam ?>">
+            <form method="post" action="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => $action]) ?><?= $pageUrlParam ?>">
                 <h4>
                     <?php
                     if ($action === 'create'):

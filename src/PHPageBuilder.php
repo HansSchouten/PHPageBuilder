@@ -232,11 +232,12 @@ class PHPageBuilder
         // return assets
         $this->handlePagebuilderAssetRequest();
 
-        // if we are at the backend, handle auth check, login and website manager
         if (phpb_config('website_manager.use_website_manager')) {
+            // handle auth check, login and logout
             if (phpb_config('auth.use_login')) {
                 $this->auth->handleRequest($action);
             }
+            // if we are at the backend, handle website manager
             if (phpb_in_module('website_manager')) {
                 $this->websiteManager->handleRequest($route, $action);
                 die('Page not found');
