@@ -48,7 +48,7 @@ class DB
      */
     protected function prefixTable($table)
     {
-        return $this->prefix . preg_replace('\W*', '', $table);
+        return $this->prefix . preg_replace('/\W*/', '', $table);
     }
 
     /**
