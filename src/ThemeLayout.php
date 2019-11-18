@@ -57,6 +57,16 @@ class ThemeLayout
     }
 
     /**
+     * Return the title of this theme layout.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title ?? ucfirst($this->getSlug());
+    }
+
+    /**
      * Return configuration with the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
