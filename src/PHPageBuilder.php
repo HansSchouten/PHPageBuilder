@@ -77,7 +77,7 @@ class PHPageBuilder
         $this->router = phpb_instance('router');
 
         // load translations of the configured language
-        $this->loadTranslations(phpb_config('project.language'));
+        $this->loadTranslations(phpb_config('general.language'));
     }
 
     /**
@@ -227,10 +227,16 @@ class PHPageBuilder
         $route = $_GET['route'] ?? null;
         $action = $_GET['action'] ?? null;
 
-        // return uploaded files
-        $this->handleUploadedFileRequest();
-        // return assets
-        $this->handlePagebuilderAssetRequest();
+        // if we are on the URL of an upload, return uploaded file
+        if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.uploads_url') . '/') === 0) {
+            $this->handleUploadedFileRequest();
+            die('File not found');
+        }
+        // if we are on the URL of a PHPageBuilder asset, return the asset
+        if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.assets_url') . '/') === 0) {
+            $this->handlePagebuilderAssetRequest();
+            die('Asset not found');
+        }
 
         if (phpb_config('website_manager.use_website_manager')) {
             // handle auth check, login and logout
@@ -265,25 +271,28 @@ class PHPageBuilder
      */
     public function handleUploadedFileRequest()
     {
-        $fileId = $_GET['file'] ?? null;
-        if ($fileId && is_string($fileId)) {
-            $uploadRepository = new UploadRepository;
-            $uploadedFile = $uploadRepository->findWhere('public_id', $fileId);
-            if (! $uploadedFile) die('File not found');
+        // get the requested file by stripping the configured uploads_url prefix from the current request URI
+        $file = substr($_SERVER['REQUEST_URI'], strlen(phpb_config('general.uploads_url')) + 1);
+        // $file is in the format {file id}/{file name}.{file extension}, so get file id as the part before /
+        $fileId = explode('/', $file)[0];
+        if (empty($fileId)) die('File not found');
 
-            $uploadedFile = $uploadedFile[0];
-            $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
-            if (! $serverFile) die('File not found');
+        $uploadRepository = new UploadRepository;
+        $uploadedFile = $uploadRepository->findWhere('public_id', $fileId);
+        if (! $uploadedFile) die('File not found');
 
-            header('Content-Type: ' . $uploadedFile->mime_type);
-            header('Content-Disposition: inline; filename="' . basename($uploadedFile->original_file) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Content-Length: ' . filesize($serverFile));
+        $uploadedFile = $uploadedFile[0];
+        $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
+        if (! $serverFile) die('File not found');
 
-            readfile($serverFile);
-            exit();
-        }
+        header('Content-Type: ' . $uploadedFile->mime_type);
+        header('Content-Disposition: inline; filename="' . basename($uploadedFile->original_file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Length: ' . filesize($serverFile));
+
+        readfile($serverFile);
+        exit();
     }
 
     /**
@@ -291,28 +300,28 @@ class PHPageBuilder
      */
     public function handlePagebuilderAssetRequest()
     {
-        $asset = $_GET['asset'] ?? null;
-        if ($asset && is_string($asset)) {
-            $distPath = realpath(__DIR__ . '/../dist/');
-            $requestedFile = realpath($distPath . '/' . $asset);
-            if (! $requestedFile) die('Asset not found');
+        // get asset file path by stripping the configured assets_url prefix from the current request URI
+        $asset = substr($_SERVER['REQUEST_URI'], strlen(phpb_config('general.assets_url')) + 1);
 
-            // prevent path traversal by ensuring the requested file is inside the dist folder
-            if (strpos($requestedFile, $distPath) !== 0) die('Asset not found');
+        $distPath = realpath(__DIR__ . '/../dist/');
+        $requestedFile = realpath($distPath . '/' . $asset);
+        if (! $requestedFile) die('Asset not found');
 
-            // only allow specific extensions
-            $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
-            if (! in_array($ext, ['js', 'css'])) die('Asset not found');
+        // prevent path traversal by ensuring the requested file is inside the dist folder
+        if (strpos($requestedFile, $distPath) !== 0) die('Asset not found');
 
-            header('Content-Type: text/' . $ext);
-            header('Content-Disposition: inline; filename="' . basename($requestedFile) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Content-Length: ' . filesize($requestedFile));
+        // only allow specific extensions
+        $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
+        if (! in_array($ext, ['js', 'css'])) die('Asset not found');
 
-            readfile($requestedFile);
-            exit();
-        }
+        header('Content-Type: text/' . $ext);
+        header('Content-Disposition: inline; filename="' . basename($requestedFile) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Length: ' . filesize($requestedFile));
+
+        readfile($requestedFile);
+        exit();
     }
 
 

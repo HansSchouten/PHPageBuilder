@@ -66,7 +66,7 @@ class PageBuilder implements PageBuilderContract
                     exit();
                 }
                 break;
-            case 'uploadAsset':
+            case 'upload':
                 if (isset($_FILES)) {
                     $this->handleFileUpload();
                 }

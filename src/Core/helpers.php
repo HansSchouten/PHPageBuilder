@@ -23,7 +23,7 @@ if (! function_exists('phpb_asset')) {
      */
     function phpb_asset($path)
     {
-        return '/?asset=' . $path;
+        return phpb_config('general.assets_url') . '/' . $path;
     }
 }
 

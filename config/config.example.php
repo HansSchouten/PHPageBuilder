@@ -3,15 +3,16 @@
 return [
     /*
      |--------------------------------------------------------------------------
-     | Project settings
+     | General settings
      |--------------------------------------------------------------------------
      |
-     | Settings related to the project in which the PageBuilder is included.
+     | General settings for configuring the PageBuilder.
      |
      */
-    'project' => [
-        'public_folder' => __DIR__ . '/public',
+    'general' => [
         'language' => 'en',
+        'assets_url' => '/assets',
+        'uploads_url' => '/uploads'
     ],
 
     /*
@@ -90,7 +91,7 @@ return [
      |
      */
     'page' => [
-        'class' => PHPageBuilder\Page::class,
+        'class' => PHPageBuilder\Page::class
     ],
 
     /*
@@ -106,7 +107,7 @@ return [
     'themes' => [
         'folder' => __DIR__ . '/themes',
         'folder_url' => '/themes',
-        'active_theme' => 'default',
+        'active_theme' => 'default'
     ],
 
     /*
