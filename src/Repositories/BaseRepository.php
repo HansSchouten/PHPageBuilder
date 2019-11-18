@@ -40,6 +40,9 @@ class BaseRepository
     {
         global $phpb_db;
         $this->db = $phpb_db;
+
+        // apply the configured prefix to the table set in the superclass and remove non-alphanumeric characters
+        $this->table = phpb_config('storage.database.prefix') . preg_replace('/\W*/', '', $this->table);
     }
 
     /**
