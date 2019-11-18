@@ -9,9 +9,6 @@ use PDO;
  *
  * A basic shell around PDO.
  *
- * Note: be aware to NEVER pass user input in the $table parameter, or this would result in SQL Injections.
- * $table should be a property configured in your repository classes.
- *
  * @package PHPageBuilder\Core
  */
 class DB
@@ -22,18 +19,36 @@ class DB
     protected $pdo;
 
     /**
+     * @var string $prefix
+     */
+    protected $prefix;
+
+    /**
      * DB constructor.
      *
      * @param array $config
      */
     public function __construct(array $config)
     {
+        $this->prefix = phpb_config('storage.database.prefix');
+
         $this->pdo = new PDO(
             $config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['database'] . ';charset=' . $config['charset'],
             $config['username'],
             $config['password'],
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
+    }
+
+    /**
+     * Return the given table name with prefix.
+     *
+     * @param $table
+     * @return string
+     */
+    protected function prefixTable($table)
+    {
+        return $this->prefix . preg_replace('\W*', '', $table);
     }
 
     /**
@@ -54,6 +69,7 @@ class DB
      */
     public function all(string $table)
     {
+        $table = $this->prefixTable($table);
         $stmt = $this->pdo->prepare("SELECT * FROM {$table}");
         $stmt->execute();
         return $stmt->fetchAll();
@@ -68,6 +84,7 @@ class DB
      */
     public function findWithId(string $table, $id)
     {
+        $table = $this->prefixTable($table);
         $stmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetchAll();

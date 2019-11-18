@@ -9,10 +9,8 @@ use Exception;
  *
  * Credits: https://github.com/brunoribeiro94/php-upload
  *
- * @see README.md
  * @version 0.6.2
- * @access public
- * @package Upload
+ * @package PHPageBuilder\Modules\GrapesJS\Upload
  */
 class Uploader {
 

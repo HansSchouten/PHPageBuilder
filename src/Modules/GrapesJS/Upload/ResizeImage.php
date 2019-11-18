@@ -14,6 +14,8 @@ use Exception;
  * - max width size while maintaining aspect ratio
  * - max height size while maintaining aspect ratio
  * - automatic dimensions maintaining aspect ratio
+ *
+ * @package PHPageBuilder\Modules\GrapesJS\Upload
  */
 class ResizeImage {
 
