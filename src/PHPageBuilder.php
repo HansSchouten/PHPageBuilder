@@ -224,9 +224,28 @@ class PHPageBuilder
      */
     public function handleRequest()
     {
-        $route = $_GET['route'] ?? null;
-        $action = $_GET['action'] ?? null;
+        if (! phpb_config('auth.use_login') || ! phpb_config('website_manager.use_website_manager')) {
+            die('Authentication is disabled, use handlePublicRequest() and renderPageBuilder()');
+        }
 
+        // handle requests without authentication
+        $this->handlePublicRequest();
+
+        // handle auth check, login and logout
+        $action = $_GET['action'] ?? null;
+        $this->auth->handleRequest($action);
+
+        // handle requests with authentication
+        $this->handleAuthenticatedRequest();
+
+        die('Page not found');
+    }
+
+    /**
+     * Handle public requests, allowed without any authentication.
+     */
+    public function handlePublicRequest()
+    {
         // if we are on the URL of an upload, return uploaded file
         if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.uploads_url') . '/') === 0) {
             $this->handleUploadedFileRequest();
@@ -234,26 +253,8 @@ class PHPageBuilder
         }
         // if we are on the URL of a PHPageBuilder asset, return the asset
         if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.assets_url') . '/') === 0) {
-            $this->handlePagebuilderAssetRequest();
+            $this->handlePageBuilderAssetRequest();
             die('Asset not found');
-        }
-
-        if (phpb_config('website_manager.use_website_manager')) {
-            // handle auth check, login and logout
-            if (phpb_config('auth.use_login')) {
-                $this->auth->handleRequest($action);
-            }
-            // if we are at the backend, handle website manager
-            if (phpb_in_module('website_manager')) {
-                $this->websiteManager->handleRequest($route, $action);
-                die('Page not found');
-            }
-        }
-
-        // handle page builder requests
-        if (phpb_in_module('pagebuilder')) {
-            $this->pageBuilder->handleRequest($route, $action);
-            die('Page not found');
         }
 
         // let the page router resolve the current URL
@@ -262,8 +263,27 @@ class PHPageBuilder
             $this->pageBuilder->renderPage($page);
             exit();
         }
+    }
 
-        die('Page not found');
+    /**
+     * Handle authenticated requests, this method assumes you have checked that the user is currently logged in.
+     */
+    public function handleAuthenticatedRequest()
+    {
+        $route = $_GET['route'] ?? null;
+        $action = $_GET['action'] ?? null;
+
+        // handle website manager requests
+        if (phpb_in_module('website_manager')) {
+            $this->websiteManager->handleRequest($route, $action);
+            die('Page not found');
+        }
+
+        // handle page builder requests
+        if (phpb_in_module('pagebuilder')) {
+            $this->pageBuilder->handleRequest($route, $action);
+            die('Page not found');
+        }
     }
 
     /**
@@ -296,9 +316,9 @@ class PHPageBuilder
     }
 
     /**
-     * Handle pagebuilder asset requests.
+     * Handle page builder asset requests.
      */
-    public function handlePagebuilderAssetRequest()
+    public function handlePageBuilderAssetRequest()
     {
         // get asset file path by stripping the configured assets_url prefix from the current request URI
         $asset = substr($_SERVER['REQUEST_URI'], strlen(phpb_config('general.assets_url')) + 1);
