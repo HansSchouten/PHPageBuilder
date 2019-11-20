@@ -184,7 +184,7 @@ require __DIR__ . '/style-manager.php';
         <?= phpb_trans('pagebuilder.view-page') ?>
     </a>
 
-    <a id="go-back" href="<?= phpb_url(phpb_config('pagebuilder.actions.back')) ?>" class="btn">
+    <a id="go-back" href="<?= phpb_config('pagebuilder.actions.back') ?>" class="btn">
         <i class="fa fa-arrow-circle-o-left"></i>
         <?= phpb_trans('pagebuilder.go-back') ?>
     </a>
