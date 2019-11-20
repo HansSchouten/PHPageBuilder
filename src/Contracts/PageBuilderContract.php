@@ -9,8 +9,9 @@ interface PageBuilderContract
      *
      * @param $route
      * @param $action
+     * @param PageContract|null $page
      */
-    public function handleRequest($route, $action);
+    public function handleRequest($route, $action, PageContract $page = null);
 
     /**
      * Render the given page inside the PageBuilder.

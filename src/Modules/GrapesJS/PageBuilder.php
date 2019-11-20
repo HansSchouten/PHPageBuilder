@@ -57,6 +57,7 @@ class PageBuilder implements PageBuilderContract
         }
 
         switch ($action) {
+            case null:
             case 'edit':
                 $this->renderPageBuilder($page);
                 exit();
