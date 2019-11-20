@@ -29,8 +29,24 @@ class Auth implements AuthContract
             unset($_SESSION['phpb_logged_in']);
             phpb_redirect(phpb_url('website_manager'));
         }
+    }
 
-        if (! isset($_SESSION['phpb_logged_in'])) {
+    /**
+     * Return whether the current request has an authenticated session.
+     *
+     * @return bool
+     */
+    public function isAuthenticated()
+    {
+        return isset($_SESSION['phpb_logged_in']);
+    }
+
+    /**
+     * If the user is not authenticated, show the login form.
+     */
+    public function requireAuth()
+    {
+        if (! $this->isAuthenticated()) {
             $this->renderLoginForm();
             exit();
         }

@@ -226,20 +226,32 @@ class PHPageBuilder
      */
     public function handleRequest($action = null)
     {
+        $route = $route ?? $_GET['route'] ?? null;
         $action = $action ?? $_GET['action'] ?? null;
 
         if (! phpb_config('auth.use_login') || ! phpb_config('website_manager.use_website_manager')) {
-            die('Authentication is disabled, use handlePublicRequest() and renderPageBuilder()');
+            die('Authentication is disabled, use handlePublicRequest() and handleAuthenticatedRequest()');
         }
 
-        // handle requests without authentication
+        // handle all requests that do not need authentication
         $this->handlePublicRequest();
 
-        // handle auth check, login and logout
+        // handle login and logout requests
         $this->auth->handleRequest($action);
 
-        // handle requests with authentication
-        $this->handleAuthenticatedRequest();
+        // handle website manager requests
+        if (phpb_in_module('website_manager')) {
+            $this->auth->requireAuth();
+            $this->websiteManager->handleRequest($route, $action);
+            die('Page not found');
+        }
+
+        // handle page builder requests
+        if (phpb_in_module('pagebuilder')) {
+            $this->auth->requireAuth();
+            $this->pageBuilder->handleRequest($route, $action);
+            die('Page not found');
+        }
 
         die('Page not found');
     }

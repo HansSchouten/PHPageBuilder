@@ -10,4 +10,21 @@ interface AuthContract
      * @param $action
      */
     public function handleRequest($action);
+
+    /**
+     * Return whether the current request has an authenticated session.
+     *
+     * @return bool
+     */
+    public function isAuthenticated();
+
+    /**
+     * If the current user is not authenticated, show the login form.
+     */
+    public function requireAuth();
+
+    /**
+     * Render the login form.
+     */
+    public function renderLoginForm();
 }
