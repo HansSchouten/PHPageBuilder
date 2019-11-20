@@ -221,9 +221,13 @@ class PHPageBuilder
 
     /**
      * Process the current GET or POST request and redirect or render the requested page.
+     *
+     * @param string|null $action
      */
-    public function handleRequest()
+    public function handleRequest($action = null)
     {
+        $action = $action ?? $_GET['action'] ?? null;
+
         if (! phpb_config('auth.use_login') || ! phpb_config('website_manager.use_website_manager')) {
             die('Authentication is disabled, use handlePublicRequest() and renderPageBuilder()');
         }
@@ -232,7 +236,6 @@ class PHPageBuilder
         $this->handlePublicRequest();
 
         // handle auth check, login and logout
-        $action = $_GET['action'] ?? null;
         $this->auth->handleRequest($action);
 
         // handle requests with authentication
@@ -267,14 +270,17 @@ class PHPageBuilder
 
     /**
      * Handle authenticated requests, this method assumes you have checked that the user is currently logged in.
+     *
+     * @param string|null $route
+     * @param string|null $action
      */
-    public function handleAuthenticatedRequest()
+    public function handleAuthenticatedRequest($route = null, $action = null)
     {
-        $route = $_GET['route'] ?? null;
-        $action = $_GET['action'] ?? null;
+        $route = $route ?? $_GET['route'] ?? null;
+        $action = $action ?? $_GET['action'] ?? null;
 
         // handle website manager requests
-        if (phpb_in_module('website_manager')) {
+        if (phpb_config('website_manager.use_website_manager') && phpb_in_module('website_manager')) {
             $this->websiteManager->handleRequest($route, $action);
             die('Page not found');
         }

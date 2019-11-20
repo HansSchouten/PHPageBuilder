@@ -41,15 +41,17 @@ class PageBuilder implements PageBuilderContract
      *
      * @param $route
      * @param $action
+     * @param PageContract|null $page
      * @return bool
      * @throws Exception
      */
-    public function handleRequest($route, $action)
+    public function handleRequest($route, $action, PageContract $page = null)
     {
-        $pageId = $_GET['page'] ?? null;
-        $pageRepository = new PageRepository;
-        $page = $pageRepository->findWithId($pageId);
-
+        if (is_null($page)) {
+            $pageId = $_GET['page'] ?? null;
+            $pageRepository = new PageRepository;
+            $page = $pageRepository->findWithId($pageId);
+        }
         if (! ($page instanceof PageContract)) {
             return false;
         }
