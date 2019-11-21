@@ -19,6 +19,16 @@ class PageBuilder implements PageBuilderContract
     protected $theme;
 
     /**
+     * @var string $script
+     */
+    protected $script;
+
+    /**
+     * @var string $css
+     */
+    protected $css;
+
+    /**
      * PageBuilder constructor.
      */
     public function __construct()
@@ -230,5 +240,33 @@ class PageBuilder implements PageBuilderContract
             return $data['style'];
         }
         return [];
+    }
+
+    /**
+     * Get or set a custom css for customizing layout of the page builder.
+     *
+     * @param string|null $css
+     * @return string
+     */
+    public function customCss(string $css = null)
+    {
+        if (! is_null($this->css)) {
+            $this->css = $css;
+        }
+        return $this->css;
+    }
+
+    /**
+     * Get or set a custom script for customizing behaviour of the page builder.
+     *
+     * @param string|null $script
+     * @return string
+     */
+    public function customScript(string $script = null)
+    {
+        if (! is_null($this->script)) {
+            $this->script = $script;
+        }
+        return $this->script;
     }
 }

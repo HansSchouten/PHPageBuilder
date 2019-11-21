@@ -35,4 +35,20 @@ interface PageBuilderContract
      * @return bool|object|null
      */
     public function updatePage(PageContract $page, $data);
+
+    /**
+     * Get or set a custom css for customizing layout of the page builder.
+     *
+     * @param string|null $css
+     * @return string
+     */
+    public function customCss(string $css = null);
+
+    /**
+     * Get or set a custom script for customizing behaviour of the page builder.
+     *
+     * @param string|null $script
+     * @return string
+     */
+    public function customScript(string $script = null);
 }
