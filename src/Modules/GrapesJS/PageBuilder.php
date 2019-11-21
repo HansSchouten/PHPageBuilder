@@ -250,7 +250,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function customStyle(string $css = null)
     {
-        if (! is_null($this->css)) {
+        if (! is_null($css)) {
             $this->css = $css;
         }
         return $this->css;
@@ -264,7 +264,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function customScripts(string $scripts = null)
     {
-        if (! is_null($this->scripts)) {
+        if (! is_null($scripts)) {
             $this->scripts = $scripts;
         }
         return $this->scripts;
