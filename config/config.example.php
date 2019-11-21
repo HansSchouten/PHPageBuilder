@@ -110,7 +110,7 @@ return [
     'themes' => [
         'folder' => __DIR__ . '/themes',
         'folder_url' => '/themes',
-        'active_theme' => 'default'
+        'active_theme' => 'demo'
     ],
 
     /*
