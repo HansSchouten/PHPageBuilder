@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="<?= phpb_asset('pagebuilder/app.css') ?>">
-    <style>
-        <?= $pageBuilder->customCss(); ?>
-    </style>
+    <?= $pageBuilder->customStyle(); ?>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.15.8/grapes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
@@ -27,8 +25,6 @@ require __DIR__ . '/pagebuilder.php';
 ?>
 
 <script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
-<script type="text/javascript">
-    <?= $pageBuilder->customScript(); ?>
-</script>
+<?= $pageBuilder->customScripts(); ?>
 </body>
 </html>

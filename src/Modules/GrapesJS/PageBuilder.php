@@ -19,9 +19,9 @@ class PageBuilder implements PageBuilderContract
     protected $theme;
 
     /**
-     * @var string $script
+     * @var string $scripts
      */
-    protected $script;
+    protected $scripts;
 
     /**
      * @var string $css
@@ -243,12 +243,12 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
-     * Get or set a custom css for customizing layout of the page builder.
+     * Get or set custom css for customizing layout of the page builder.
      *
      * @param string|null $css
      * @return string
      */
-    public function customCss(string $css = null)
+    public function customStyle(string $css = null)
     {
         if (! is_null($this->css)) {
             $this->css = $css;
@@ -257,16 +257,16 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
-     * Get or set a custom script for customizing behaviour of the page builder.
+     * Get or set custom scripts for customizing behaviour of the page builder.
      *
-     * @param string|null $script
+     * @param string|null $scripts
      * @return string
      */
-    public function customScript(string $script = null)
+    public function customScripts(string $scripts = null)
     {
-        if (! is_null($this->script)) {
-            $this->script = $script;
+        if (! is_null($this->scripts)) {
+            $this->scripts = $scripts;
         }
-        return $this->script;
+        return $this->scripts;
     }
 }

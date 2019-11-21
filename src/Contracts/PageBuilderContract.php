@@ -37,18 +37,18 @@ interface PageBuilderContract
     public function updatePage(PageContract $page, $data);
 
     /**
-     * Get or set a custom css for customizing layout of the page builder.
+     * Get or set custom css for customizing layout of the page builder.
      *
      * @param string|null $css
      * @return string
      */
-    public function customCss(string $css = null);
+    public function customStyle(string $css = null);
 
     /**
-     * Get or set a custom script for customizing behaviour of the page builder.
+     * Get or set custom scripts for customizing behaviour of the page builder.
      *
-     * @param string|null $script
+     * @param string|null $scripts
      * @return string
      */
-    public function customScript(string $script = null);
+    public function customScripts(string $scripts = null);
 }
