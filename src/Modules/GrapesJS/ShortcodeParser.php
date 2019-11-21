@@ -58,6 +58,7 @@ class ShortcodeParser
     {
         $html = $this->doBlockShortcodes($html);
         $html = $this->doPageShortcodes($html);
+        $html = $this->doThemeUrlShortcodes($html);
         return $html;
     }
 
@@ -132,6 +133,28 @@ class ShortcodeParser
                 $url = $this->pages[$pageId];
             }
             $html = str_replace($match['shortcode'], $url, $html);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Replace all [theme-url] shortcodes for the absolute URL to the theme's public folder.
+     *
+     * @param $html
+     * @return mixed
+     */
+    protected function doThemeUrlShortcodes($html)
+    {
+        $matches = $this->findMatches('theme-url', $html);
+
+        if (empty($matches)) {
+            return $html;
+        }
+
+        foreach ($matches as $match) {
+            $themeUrl = phpb_config('themes.folder_url') . '/' . e(phpb_config('themes.active_theme'));
+            $html = str_replace($match['shortcode'], $themeUrl, $html);
         }
 
         return $html;
