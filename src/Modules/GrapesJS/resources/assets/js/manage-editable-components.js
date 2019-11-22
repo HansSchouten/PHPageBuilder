@@ -307,7 +307,7 @@
         if (allowEditWhitelistedTags) {
             allowEditBasedOnTag(component);
         }
-        allowEditBasedOnClass(component);
+        allowEditBasedOnAttribute(component);
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));
@@ -333,12 +333,13 @@
     }
 
     /**
-     * Set the given component's editability based on its html class attribute.
+     * Set the given component's editability based on its html attributes.
      *
      * @param component
      */
-    function allowEditBasedOnClass(component) {
-        if ('phpb-editable' in component.attributes.attributes) {
+    function allowEditBasedOnAttribute(component) {
+        if ('phpb-editable' in component.attributes.attributes
+            || 'phpb-block-container' in component.attributes.attributes) {
             makeComponentEditable(component);
         }
     }
