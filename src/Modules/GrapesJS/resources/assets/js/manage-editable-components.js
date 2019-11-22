@@ -356,7 +356,7 @@
             stylable: true,
         };
         if ('phpb-block-container' in component.attributes.attributes) {
-            settings.draggable = true;
+            settings.droppable = true;
         }
         component.set(settings);
         addUniqueClass(component);
