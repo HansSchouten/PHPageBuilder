@@ -349,12 +349,16 @@
      * @param component
      */
     function makeComponentEditable(component) {
-        component.set({
+        let settings = {
             hoverable: true,
             selectable: true,
             editable: true,
             stylable: true,
-        });
+        };
+        if ('phpb-block-container' in component.attributes.attributes) {
+            settings.draggable = true;
+        }
+        component.set(settings);
         addUniqueClass(component);
     }
 
