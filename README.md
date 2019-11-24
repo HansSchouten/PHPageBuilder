@@ -104,7 +104,7 @@ The layouts folder contains a sub folder for each page layout. A page layout con
 The public folder contains all assets (css, javascript, images, etc) that should be publicly accessible. The `[theme-url]` shortcode can be used to point to a file in the public folder of the currently active theme. For instance the file `public/css/style.css` can be loaded via `<link rel="stylesheet" href="[theme-url]/css/style.css">`.
 
 ### Blocks inside blocks
-#### Include a block into another block file
+#### Include a block into a block or layout file
 A shortcode can be used to include a block inside another block. For instance adding the shortcode: `[block slug="header"]` to `layouts/master/view.php` includes the block: `blocks/header/view.php` inside each page that uses the `master` layout.
 
 #### Nested blocks in the page builder
