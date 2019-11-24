@@ -91,7 +91,32 @@ $builder->handleRequest();
 ### Configure a database
 If you use PHPagebuilder out of the box, it requires a database for storing your pages. Just create a database and run the queries from `config/create-tables.sql`. Next, add the database credentials to your config file.
 
-## Customization
+## Create a theme
+The `config.php` contains a config key `themes` in which a `themes_folder` and `active_theme` are specified. To create a new theme, add a new folder to the configured themes folder. The name of this folder will be the identifier of the theme, which can be used to select the theme in the `themes > active_theme` configuration.
+
+A theme should have the following folder structure:
+
+- **/blocks**  
+The blocks folder contains a sub folder for each block that can be used in the page builder. The folder of a single block contains a `view.php` or a `view.html`. If a `view.html` is used, the block content (the html elements) are fully editable inside the page builder. If `view.php` is used, the block can contain server-side logic (PHP) and hence the html content itself cannot be changed from within the page builder. 
+- **/layouts**  
+The layouts folder contains a sub folder for each page layout. A page layout contains a `view.php` file which defines the base html structure with all stylesheets and scripts needed for the blocks dragged on this type of page. Each layout requires the string: `<?= $body ?>` on the location at which the html blocks need to be added in the page layout. 
+- **/public**  
+The public folder contains all assets (css, javascript, images, etc) that should be publicly accessible. The `[theme-url]` shortcode can be used to point to a file in the public folder of the currently active theme. For instance the file `public/css/style.css` can be loaded via `<link rel="stylesheet" href="[theme-url]/css/style.css">`.
+
+### Blocks inside blocks
+#### Include a block into another block file
+A shortcode can be used to include a block inside another block. For instance adding the shortcode: `[block slug="header"]` to `layouts/master/view.php` includes the block: `blocks/header/view.php` inside each page that uses the `master` layout.
+
+#### Nested blocks in the page builder
+To allow dropping blocks into a block in the page builder, a block container element should be added. To transform a html element into a block container element, simply add the `phpb-block-container` attribute. The following html syntax allows dropping blocks inside a bootstrap container element:
+```html
+<div class="container">
+    <div phpb-block-container>
+    </div>
+</div>
+``` 
+
+## Customize PHPageBuilder
 
 PHPagebuilder is build with customization in mind. It comes with an extensive example config file in wich you can easily adapt the pagebuilder to your needs.
 
