@@ -97,7 +97,7 @@ The `config.php` contains a config key `themes` in which a `themes_folder` and `
 A theme should have the following folder structure:
 
 - **/blocks**  
-The blocks folder contains a sub folder for each block that can be used in the page builder. The folder of a single block contains a `view.php` or a `view.html`. If a `view.html` is used, the block content (the html elements) are fully editable inside the page builder. If `view.php` is used, the block can contain server-side logic (PHP) and hence the html content itself cannot be changed from within the page builder. 
+The blocks folder contains a sub folder for each block that can be used in the page builder. The folder of a single block contains a `view.php` or a `view.html`. If a `view.html` is used, the block content (the html elements) are fully editable inside the page builder. If `view.php` is used, the block can be rendered with server-side logic (PHP) and hence the html content itself cannot be changed from within the page builder. 
 - **/layouts**  
 The layouts folder contains a sub folder for each page layout. A page layout contains a `view.php` file which defines the base html structure with all stylesheets and scripts needed for the blocks dragged on this type of page. Each layout requires the string: `<?= $body ?>` on the location at which the html blocks need to be added in the page layout. 
 - **/public**  
@@ -105,7 +105,7 @@ The public folder contains all assets (css, javascript, images, etc) that should
 
 ### Blocks inside blocks
 #### Include a block into a block or layout file
-A shortcode can be used to include a block inside another block. For instance adding the shortcode: `[block slug="header"]` to `layouts/master/view.php` includes the block: `blocks/header/view.php` inside each page that uses the `master` layout.
+A shortcode can be used to include a block inside another block or into a layout file. For instance, adding the shortcode: `[block slug="header"]` to `layouts/master/view.php` includes the block: `blocks/header/view.php` inside each page that uses the `master` layout.
 
 #### Nested blocks in the page builder
 To allow dropping blocks into a block in the page builder, a block container element should be added. To transform a html element into a block container element, simply add the `phpb-block-container` attribute. The following html syntax allows dropping blocks inside a bootstrap container element:
