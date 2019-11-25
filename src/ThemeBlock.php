@@ -43,7 +43,7 @@ class ThemeBlock
      */
     public function getFolder()
     {
-        return $this->theme->getFolder() . '/blocks/' . $this->blockSlug;
+        return $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug);
     }
 
     /**

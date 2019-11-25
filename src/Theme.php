@@ -101,6 +101,6 @@ class Theme implements ThemeContract
      */
     public function getFolder()
     {
-        return $this->config['folder'] . '/' . $this->themeSlug;
+        return $this->config['folder'] . '/' . basename($this->themeSlug);
     }
 }

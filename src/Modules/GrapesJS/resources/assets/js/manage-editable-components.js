@@ -58,7 +58,9 @@
      */
     window.editor.on('component:selected', function(component) {
         document.querySelector('.gjs-toolbar').classList.add('d-none');
-        if (component.attributes.draggable || component.attributes.removable) {
+        if (component.attributes.draggable
+            || component.attributes.removable
+            || "phpb-block-container" in component.attributes.attributes) {
             document.querySelector('.gjs-toolbar').classList.remove('d-none');
         }
     });

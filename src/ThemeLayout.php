@@ -63,7 +63,7 @@ class ThemeLayout
      */
     public function getTitle()
     {
-        return $this->title ?? ucfirst($this->getSlug());
+        return $this->get('title') ?? ucfirst($this->getSlug());
     }
 
     /**
