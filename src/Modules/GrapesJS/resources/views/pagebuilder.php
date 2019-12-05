@@ -118,7 +118,7 @@ window.editor = grapesjs.init({
             '<?= phpb_asset('pagebuilder/page-injection.css') ?>',
         ],
         scripts: [
-            'https://code.jquery.com/jquery-3.4.1.slim.min.js',
+            'https://code.jquery.com/jquery-3.4.1.min.js',
             '<?= phpb_asset('pagebuilder/page-injection.js') ?>',
         ]
     },
