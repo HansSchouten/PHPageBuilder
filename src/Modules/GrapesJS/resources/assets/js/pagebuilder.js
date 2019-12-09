@@ -6,6 +6,7 @@ $(document).ready(function() {
 
     $("#toggle-sidebar").click(function() {
         $("#gjs").toggleClass('sidebar-collapsed');
+        triggerEditorResize();
     });
 
     window.editor.on('run:open-sm', function(editor) {
@@ -15,13 +16,18 @@ $(document).ready(function() {
     window.editor.on('block:drag:start', function(block) {
         if ($(window).width() < 1000) {
             $("#gjs").addClass('sidebar-collapsed');
+            triggerEditorResize();
         }
     });
+
+    function triggerEditorResize() {
+        window.editor.trigger('change:canvasOffset canvasScroll');
+    }
 
 });
 
 function addBlockSearch() {
-    $(".gjs-blocks-cs").prepend("<div class='block-search'><input type='text' class='form-control' placeholder='Filter'></div>");
+    $(".gjs-blocks-cs").prepend($("#block-search"));
 }
 
 // listen to messages from iframe

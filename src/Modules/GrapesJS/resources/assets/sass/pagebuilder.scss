@@ -245,14 +245,24 @@ html, body, #gjs {
 
 /*   BLOCKS PANEL VIEW   */
 
-.block-search {
+#block-search {
+  position: relative;
   background: #e1e8eb;
   padding-bottom: 10px;
   border-radius: 0;
 
+  i.fa-search {
+    position: absolute;
+    top: 11px;
+    left: 9px;
+    font-size: 15px;
+    color: #aaa;
+  }
+
   input {
     border-radius: 0;
     border-right: none;
+    padding-left: 28px;
 
     &::placeholder {
       color: #aaa;

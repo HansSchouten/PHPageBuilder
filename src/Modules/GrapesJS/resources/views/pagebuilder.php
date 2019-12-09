@@ -189,3 +189,8 @@ require __DIR__ . '/style-manager.php';
         <?= phpb_trans('pagebuilder.go-back') ?>
     </a>
 </div>
+
+<div id="block-search">
+    <i class="fa fa-search"></i>
+    <input type="text" class="form-control" placeholder="Filter">
+</div>
