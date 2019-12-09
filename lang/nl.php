@@ -23,7 +23,7 @@ return [
         'settings' => 'Instellingen',
         'remove' => 'Verwijder',
         'add-new-page' => 'Pagina toevoegen',
-        'edit-page' => 'Edit page',
+        'edit-page' => 'Pagina wijzigen',
         'back' => 'Terug',
         'save-changes' => 'Wijzigingen opslaan',
         'theme' => 'Thema',

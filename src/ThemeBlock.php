@@ -66,11 +66,13 @@ class ThemeBlock
      */
     public function getThumbPath()
     {
-        if (file_exists($this->getFolder() . '/thumb.jpg')) {
-            return $this->getFolder() . '/thumb.jpg';
-        }
-        $hash = md5(file_get_contents($this->getViewFile()));
-        return $this->getFolder() . "/thumb-{$hash}.jpg";
+        $blockThumbsFolder = $this->theme->getFolder() . '/public/block-thumbs/';
+        return $blockThumbsFolder . md5($this->blockSlug) . '/' . md5(file_get_contents($this->getViewFile())) . '.jpg';
+    }
+
+    public function getThumbUrl()
+    {
+        return phpb_theme_asset('block-thumbs/' . md5($this->blockSlug) . '/' . md5(file_get_contents($this->getViewFile())) . '.jpg');
     }
 
     /**

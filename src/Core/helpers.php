@@ -149,6 +149,20 @@ if (! function_exists('phpb_trans')) {
     }
 }
 
+if (! function_exists('phpb_full_url')) {
+    /**
+     * Give the full URL of a given relative URL.
+     *
+     * @param string $relativeUrl
+     * @return string
+     */
+    function phpb_full_url($relativeUrl)
+    {
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+        return  $protocol . "://" . $_SERVER['SERVER_NAME'] . $relativeUrl;
+    }
+}
+
 if (! function_exists('phpb_url')) {
     /**
      * Give the full URL of a given public path.
@@ -160,11 +174,7 @@ if (! function_exists('phpb_url')) {
      */
     function phpb_url($module, array $parameters = [], $fullUrl = true)
     {
-        $url = '';
-        if ($fullUrl) {
-            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-            $url =  $protocol . "://" . $_SERVER['SERVER_NAME'];
-        }
+        $url = $fullUrl ? phpb_full_url('') : '';
         $url .= phpb_config($module . '.url');
 
         if (! empty($parameters)) {

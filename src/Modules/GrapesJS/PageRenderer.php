@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Page;
 use PHPageBuilder\Theme;
 use PHPageBuilder\ThemeBlock;
 use Exception;
@@ -63,7 +64,8 @@ class PageRenderer
      */
     public function getPageLayoutPath()
     {
-        return $this->theme->getFolder() . '/layouts/' . basename($this->page->getLayout()) . '/view.php';
+        $layout = basename($this->page->getLayout());
+        return $this->theme->getFolder() . '/layouts/' . $layout . '/view.php';
     }
 
     /**
@@ -73,7 +75,7 @@ class PageRenderer
      */
     public function getPageBlocksData()
     {
-        return $this->pageData['blocks'];
+        return $this->pageData['blocks'] ?? [];
     }
 
     /**

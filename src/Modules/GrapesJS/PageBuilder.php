@@ -58,6 +58,11 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleRequest($route, $action, PageContract $page = null)
     {
+        if ($route === 'thumb_generator') {
+            $thumbGenerator = new ThumbGenerator($this->theme);
+            return $thumbGenerator->handleThumbRequest($action);
+        }
+
         if (is_null($page)) {
             $pageId = $_GET['page'] ?? null;
             $pageRepository = new PageRepository;
@@ -191,16 +196,6 @@ class PageBuilder implements PageBuilderContract
     {
         $pageRepository = new PageRepository;
         return $pageRepository->updatePageData($page, $data);
-    }
-
-    /**
-     * Run (asynchronous) tasks required to support the page builder functionality.
-     */
-    public function runTasks()
-    {
-        // generate one missing or outdated thumb of the given theme.
-        $generator = new ThumbGenerator;
-        $generator->generateNextMissingThumb($this->theme);
     }
 
     /**

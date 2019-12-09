@@ -22,6 +22,11 @@ class WebsiteManager implements WebsiteManagerContract
             exit();
         }
 
+        if ($route === 'settings' && $action === 'renderBlockThumbs') {
+            $this->renderBlockThumbs();
+            exit();
+        }
+
         if ($route === 'page_settings') {
             if ($action === 'create') {
                 $this->handleCreate();
@@ -131,6 +136,15 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderMenuSettings()
     {
         $viewFile = 'menu-settings';
+        require __DIR__ . '/resources/layouts/master.php';
+    }
+
+    /**
+     * Render a thumbnail for each theme block.
+     */
+    public function renderBlockThumbs()
+    {
+        $viewFile = 'block-thumbs';
         require __DIR__ . '/resources/layouts/master.php';
     }
 }

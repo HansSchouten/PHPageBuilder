@@ -37,11 +37,6 @@ interface PageBuilderContract
     public function updatePage(PageContract $page, $data);
 
     /**
-     * Run (asynchronous) tasks required to support the page builder functionality.
-     */
-    public function runTasks();
-
-    /**
      * Get or set custom css for customizing layout of the page builder.
      *
      * @param string|null $css

@@ -81,17 +81,25 @@ class BlockAdapter
     public function getBlockManagerArray()
     {
         $blockShortcode = '[block slug="' . e($this->block->getSlug()) . '"]';
+
+        $img = '';
+        if (file_exists($this->block->getThumbPath())) {
+            $img = '<div style="height: 70px; overflow: hidden"><img src="' . $this->block->getThumbUrl() . '" style="width: 100%"></div>';
+        }
+
         $data = [
-            'label' => $this->getTitle(),
+            'label' => $img . $this->getTitle(),
             'category' => $this->getCategory(),
             'content' => $this->pageRenderer->parseShortcode($blockShortcode)
         ];
 
-        $iconClass = 'fa fa-bars';
-        if ($this->block->get('icon')) {
-            $iconClass = $this->block->get('icon');
+        if (! $img) {
+            $iconClass = 'fa fa-bars';
+            if ($this->block->get('icon')) {
+                $iconClass = $this->block->get('icon');
+            }
+            $data['attributes'] = ['class' => $iconClass];
         }
-        $data['attributes'] = ['class' => $iconClass];
 
         return $data;
     }
