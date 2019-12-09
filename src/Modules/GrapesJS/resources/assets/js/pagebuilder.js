@@ -20,6 +20,10 @@ $(document).ready(function() {
 
 });
 
+function addBlockSearch() {
+    $(".gjs-blocks-cs").prepend("<div class='block-search'><input type='text' class='form-control' placeholder='Filter'></div>");
+}
+
 // listen to messages from iframe
 window.addEventListener("message", onMessage, false);
 
@@ -28,6 +32,7 @@ function onMessage(event) {
     if (event.data === 'page-loaded') {
         setTimeout(function() {
             $("#phpb-loading").addClass('loaded');
+            addBlockSearch();
             window.isLoaded = true;
         }, 500);
     } else if(event.data === 'touch-start') {

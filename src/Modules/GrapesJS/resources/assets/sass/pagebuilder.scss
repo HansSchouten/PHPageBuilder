@@ -245,6 +245,16 @@ html, body, #gjs {
 
 /*   BLOCKS PANEL VIEW   */
 
+.block-search {
+  background: #e1e8eb;
+  padding-bottom: 10px;
+  border-radius: 0;
+
+  input {
+    border-radius: 0;
+  }
+}
+
 .gjs-block {
   border: none;
   box-shadow: none;
