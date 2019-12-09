@@ -252,6 +252,11 @@ html, body, #gjs {
 
   input {
     border-radius: 0;
+    border-right: none;
+
+    &::placeholder {
+      color: #aaa;
+    }
   }
 }
 
