@@ -129,7 +129,7 @@ class PageRenderer
 
     /**
      * Include a rendered theme block with the given slug, data instance id and data context.
-     * Note: this method is called from php blocks, layout files or via shortcodes.
+     * Note: this method is called from php blocks, layout files or after parsing shortcodes.
      *
      * @param $slug
      * @param null $id                  the id with which data for this block is stored

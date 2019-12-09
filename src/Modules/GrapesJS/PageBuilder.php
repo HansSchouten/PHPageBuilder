@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
@@ -190,6 +191,16 @@ class PageBuilder implements PageBuilderContract
     {
         $pageRepository = new PageRepository;
         return $pageRepository->updatePageData($page, $data);
+    }
+
+    /**
+     * Run (asynchronous) tasks required to support the page builder functionality.
+     */
+    public function runTasks()
+    {
+        // generate one missing or outdated thumb of the given theme.
+        $generator = new ThumbGenerator;
+        $generator->generateNextMissingThumb($this->theme);
     }
 
     /**

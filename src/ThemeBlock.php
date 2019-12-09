@@ -60,6 +60,20 @@ class ThemeBlock
     }
 
     /**
+     * Return the file path of the thumbnail of this block.
+     *
+     * @return string
+     */
+    public function getThumbPath()
+    {
+        if (file_exists($this->getFolder() . '/thumb.jpg')) {
+            return $this->getFolder() . '/thumb.jpg';
+        }
+        $hash = md5(file_get_contents($this->getViewFile()));
+        return $this->getFolder() . "/thumb-{$hash}.jpg";
+    }
+
+    /**
      * Return the slug identifying this type of block.
      *
      * @return string
