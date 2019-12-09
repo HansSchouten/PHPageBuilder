@@ -84,7 +84,7 @@ class BlockAdapter
 
         $img = '';
         if (file_exists($this->block->getThumbPath())) {
-            $img = '<div style="height: 70px; overflow: hidden"><img src="' . $this->block->getThumbUrl() . '" style="width: 100%"></div>';
+            $img = '<div style="height: 70px; overflow: hidden"><img src="' . phpb_full_url($this->block->getThumbUrl()) . '" style="width: 100%"></div>';
         }
 
         $data = [

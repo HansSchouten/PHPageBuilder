@@ -21,6 +21,7 @@ return [
         'view' => 'Bekijk',
         'edit' => 'Wijzig',
         'settings' => 'Instellingen',
+        'render-thumbs' => 'Blok afbeeldingen genereren',
         'remove' => 'Verwijder',
         'add-new-page' => 'Pagina toevoegen',
         'edit-page' => 'Pagina wijzigen',

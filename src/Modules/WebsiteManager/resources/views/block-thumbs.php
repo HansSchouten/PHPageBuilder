@@ -13,7 +13,7 @@ if (isset($page)) {
     <div class="col-12">
 
         <div class="manager-panel">
-            <h4>Render thumbnails</h4>
+            <h4><?= phpb_trans('website-manager.render-thumbs') ?></h4>
 
             <div class="main-spacing">
                 <iframe class="thumb-renderer" src="<?= phpb_url('pagebuilder', ['route' => 'thumb_generator', 'action' => 'renderNextBlockThumb']) ?>"></iframe>

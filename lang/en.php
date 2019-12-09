@@ -21,6 +21,7 @@ return [
         'view' => 'View',
         'edit' => 'Edit',
         'settings' => 'Settings',
+        'render-thumbs' => 'Render Thumbnails',
         'remove' => 'Remove',
         'add-new-page' => 'Add new page',
         'edit-page' => 'Edit page',
