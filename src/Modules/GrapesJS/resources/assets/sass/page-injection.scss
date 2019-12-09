@@ -15,3 +15,21 @@ div[data-gjs-type].gjs-comp-selected {
   min-height: 100px;
   width: 100%;
 }
+
+html,
+body {
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+
+    &:hover {
+      background-color: #bbb;
+    }
+  }
+}

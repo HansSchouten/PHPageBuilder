@@ -108,7 +108,21 @@ html, body, #gjs {
   -moz-box-shadow: none;
   box-shadow: none;
 }
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f5f5 !important;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(22, 184, 236) !important;
+  border-radius: 3px;
 
+  &:hover {
+    background-color: #08a4d6 !important;
+  }
+}
 
 /*   SIDEBAR   */
 
@@ -116,7 +130,7 @@ html, body, #gjs {
   top: 40px;
 
   .gjs-pn-btn {
-    width: 33%;
+    width: 33.33%;
     margin-right: 0;
     padding: 16px 15px 16px 15px;
     -webkit-border-radius: 0;
@@ -159,9 +173,16 @@ html, body, #gjs {
 }
 .gjs-pn-views-container {
   border-right: 2px solid rgb(223, 224, 225);
-  padding-top: 104px;
+  padding-top: 89px;
   background: rgb(225, 232, 235);
   height: calc(100% - #{$sidebar-bottom-buttons-height});
+  overflow: hidden;
+
+  > div {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 10px;
+  }
 
   > div > div {
     background: #fff;
