@@ -4,7 +4,8 @@ let authAssetsPath = 'src/Modules/Auth/resources/assets/';
 mix.sass(authAssetsPath + 'sass/app.scss', 'dist/auth');
 
 let websiteManagerAssetsPath = 'src/Modules/WebsiteManager/resources/assets/';
-mix.sass(websiteManagerAssetsPath + 'sass/app.scss', 'dist/websitemanager');
+mix.sass(websiteManagerAssetsPath + 'sass/app.scss', 'dist/websitemanager')
+    .js(websiteManagerAssetsPath + 'js/app.js', 'dist/websitemanager');
 
 let grapesJSAssetsPath = 'src/Modules/GrapesJS/resources/assets/';
 mix.sass(grapesJSAssetsPath + 'sass/app.scss', 'dist/pagebuilder')

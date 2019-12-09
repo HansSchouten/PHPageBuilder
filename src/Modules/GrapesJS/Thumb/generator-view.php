@@ -1,7 +1,12 @@
+<style>
+html, body {
+    padding: 0;
+    margin: 0;
+}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('body').css('padding', 0);
     html2canvas($('body'), {
         allowTaint: false,
         useCORS: true,
@@ -17,6 +22,7 @@ $(document).ready(function() {
                     data: data
                 },
                 success: function() {
+                    window.parent.postMessage("thumb-saved", '*');
                 },
                 error: function() {
                 }
