@@ -76,6 +76,8 @@
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
+
+        refreshComponentOrder();
     });
 
     /**
