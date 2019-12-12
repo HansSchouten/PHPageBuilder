@@ -42,6 +42,17 @@ $(document).ready(function() {
         });
     }
 
+    window.refreshComponentOrder = function() {
+        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
+        let data = getDataInStorageFormat(container);
+        container.components(JSON.parse(JSON.stringify(data.components)));
+    };
+
+    /**
+     * Get the given component in storage format (in context of its container with all siblings removed).
+     *
+     * @param component
+     */
     window.getComponentDataInStorageFormat = function(component) {
         // clone component's parent to enable us removing all component's siblings
         let container = window.cloneComponent(component.parent());
@@ -53,6 +64,11 @@ $(document).ready(function() {
         return getDataInStorageFormat(container);
     };
 
+    /**
+     * Get the given container in storage format.
+     *
+     * @param container
+     */
     function getDataInStorageFormat(container) {
         // clone the container since we will be replacing components with placeholders without updating the page builder
         container = window.cloneComponent(container);
