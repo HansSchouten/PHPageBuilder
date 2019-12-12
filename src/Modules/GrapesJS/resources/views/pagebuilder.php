@@ -39,7 +39,7 @@ window.editor = grapesjs.init({
     storageManager: {
         type: 'remote',
         autoload: false,
-        autosave: false,
+        autosave: false
     },
     assetManager: {
         modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
@@ -48,7 +48,7 @@ window.editor = grapesjs.init({
         addBtnText: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
         upload: '<?= phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->id]) ?>',
         uploadName: 'files',
-        multiUpload: false,
+        multiUpload: false
     },
     styleManager: {
         textNoElement: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>',

@@ -13,10 +13,12 @@
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
 
+        /*
         replacePlaceholdersForRenderedBlocks(container);
         applyBlockAttributesToComponents(container);
 
         restrictEditAccess(container);
+        */
     });
 
     /**
@@ -69,6 +71,7 @@
      * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
      * from the server and restrict edit access to editable components.
      */
+    /*
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
         if (! droppedComponent) return;
@@ -76,9 +79,8 @@
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
-
-        refreshComponentOrder();
     });
+    */
 
     /**
      * Apply the block attributes which are stored in <phpb-block> elements to the top-level html element of the block.

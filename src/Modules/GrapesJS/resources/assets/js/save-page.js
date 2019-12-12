@@ -42,12 +42,6 @@ $(document).ready(function() {
         });
     }
 
-    window.refreshComponentOrder = function() {
-        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-        let data = getDataInStorageFormat(container);
-        container.components(JSON.parse(JSON.stringify(data.components)));
-    };
-
     /**
      * Get the given component in storage format (in context of its container with all siblings removed).
      *
@@ -78,8 +72,7 @@ $(document).ready(function() {
         let html = window.html_beautify(getHtml(container));
         let css = window.editor.getCss();
         let style = window.editor.getStyle();
-        let components = [];
-        container.get('components').forEach(component => components.push(component.toJSON()));
+        let components = JSON.parse(JSON.stringify(container.get('components')));
 
         return {
             html: html,

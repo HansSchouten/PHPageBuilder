@@ -164,12 +164,14 @@ class PageRenderer
             ob_end_clean();
         }
 
+        /*
         if ($this->forPageBuilder) {
             $id = $id ?? $slug;
             $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
         }
+        */
 
         return $html;
     }
