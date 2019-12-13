@@ -143,6 +143,7 @@ class PageBuilder implements PageBuilderContract
      * Render the PageBuilder for the given page.
      *
      * @param PageContract $page
+     * @throws Exception
      */
     public function renderPageBuilder(PageContract $page)
     {
@@ -152,8 +153,11 @@ class PageBuilder implements PageBuilderContract
 
         // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
         $blocks = [];
+        $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
-            $blocks[] = new BlockAdapter($pageRenderer, $themeBlock);
+            $adapter = new BlockAdapter($pageRenderer, $themeBlock);
+            $blocks[$themeBlock->getSlug()] = $adapter->getBlockManagerArray();
+            $blockSettings[$themeBlock->getSlug()] = $adapter->getBlockSettingsArray();
         }
 
         require __DIR__ . '/resources/views/layout.php';

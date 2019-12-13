@@ -81,16 +81,17 @@ class BlockAdapter
     public function getBlockManagerArray()
     {
         $blockShortcode = '[block slug="' . e($this->block->getSlug()) . '"]';
+        $content = $this->pageRenderer->parseShortcode($blockShortcode);
 
         $img = '';
         if (file_exists($this->block->getThumbPath())) {
-            $img = '<div style="height: 70px; overflow: hidden"><img src="' . phpb_full_url($this->block->getThumbUrl()) . '" style="width: 100%"></div>';
+            $img = '<div class="block-thumb"><img src="' . phpb_full_url($this->block->getThumbUrl()) . '"></div>';
         }
 
         $data = [
             'label' => $img . $this->getTitle(),
             'category' => $this->getCategory(),
-            'content' => $this->pageRenderer->parseShortcode($blockShortcode)
+            'content' => $content
         ];
 
         if (! $img) {

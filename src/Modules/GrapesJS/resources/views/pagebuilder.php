@@ -28,6 +28,8 @@ CKEDITOR.dtd.$editable.small = 1;
 
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
+window.themeBlocks = <?= json_encode($blocks) ?>;
+window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->id]) ?>';
@@ -151,14 +153,6 @@ editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
 
 // load the earlier saved page css components
 editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>);
-
-<?php
-foreach ($blocks as $block):
-?>
-editor.BlockManager.add('<?= e($block->getSlug()) ?>', <?= json_encode($block->getBlockManagerArray()) ?>);
-<?php
-endforeach;
-?>
 </script>
 
 <?php

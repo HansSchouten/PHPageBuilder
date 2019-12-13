@@ -18,13 +18,4 @@ editor.DomComponents.addType('default', {
     },
 });
 
-<?php
-$settings = [];
-foreach ($blocks as $block) {
-    $settings[$block->getSlug()] = $block->getBlockSettingsArray();
-}
-?>
-
-window.blockSettings = <?= json_encode($settings) ?>;
-
 </script>

@@ -298,6 +298,15 @@ html, body, #gjs {
   &:hover {
     color: #16b8ec !important;
   }
+
+  .block-thumb {
+    height: 70px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
 }
 .gjs-blocks-c {
   background: #e1e8eb;

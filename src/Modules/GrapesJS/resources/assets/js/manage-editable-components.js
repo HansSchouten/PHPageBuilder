@@ -6,6 +6,7 @@
      */
     window.editor.on('load', function(editor) {
         denyAccessToLayoutElements(editor.getWrapper());
+        addThemeBlocks();
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
@@ -18,6 +19,27 @@
 
         restrictEditAccess(container);
     });
+
+    /**
+     * Add all theme blocks to GrapesJS blocks manager.
+     */
+    function addThemeBlocks() {
+        for (let blockSlug in window.themeBlocks) {
+            let block = window.themeBlocks[blockSlug];
+
+            // remove whitespace from phpb-block-container elements, otherwise these components will become type=text,
+            // resulting in components dropped inside the container jumping to the dropped position - 1
+            let $blockHtml = $("<container>").append(block.content);
+            $blockHtml.find("[phpb-blocks-container]").each(function() {
+                if ($(this).html() !== '' && $(this).html().trim() === '') {
+                    $(this).html('');
+                }
+            });
+            block.content = $blockHtml.html();
+
+            editor.BlockManager.add(blockSlug, block);
+        }
+    }
 
     /**
      * Replace phpb-blocks elements with the server-side rendered version of each dynamic block.
