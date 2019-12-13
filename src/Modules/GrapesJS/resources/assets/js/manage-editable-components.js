@@ -13,12 +13,10 @@
         // add all previously stored page components inside the content container
         container.components(window.pageComponents);
 
-        /*
         replacePlaceholdersForRenderedBlocks(container);
         applyBlockAttributesToComponents(container);
 
         restrictEditAccess(container);
-        */
     });
 
     /**
@@ -62,7 +60,7 @@
         document.querySelector('.gjs-toolbar').classList.add('d-none');
         if (component.attributes.draggable
             || component.attributes.removable
-            || "phpb-block-container" in component.attributes.attributes) {
+            || "phpb-blocks-container" in component.attributes.attributes) {
             document.querySelector('.gjs-toolbar').classList.remove('d-none');
         }
     });
@@ -71,7 +69,6 @@
      * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
      * from the server and restrict edit access to editable components.
      */
-    /*
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
         if (! droppedComponent) return;
@@ -80,7 +77,6 @@
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
     });
-    */
 
     /**
      * Apply the block attributes which are stored in <phpb-block> elements to the top-level html element of the block.
@@ -345,7 +341,7 @@
      */
     function allowEditBasedOnAttribute(component) {
         if ('phpb-editable' in component.attributes.attributes
-            || 'phpb-block-container' in component.attributes.attributes) {
+            || 'phpb-blocks-container' in component.attributes.attributes) {
             makeComponentEditable(component);
         }
     }
@@ -362,7 +358,7 @@
             editable: true,
             stylable: true,
         };
-        if ('phpb-block-container' in component.attributes.attributes) {
+        if ('phpb-blocks-container' in component.attributes.attributes) {
             settings.droppable = true;
         }
         component.set(settings);

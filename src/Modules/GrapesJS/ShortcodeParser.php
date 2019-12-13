@@ -59,6 +59,7 @@ class ShortcodeParser
         $html = $this->doBlockShortcodes($html);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
+        $html = $this->doBlocksContainerShortcodes($html);
         return $html;
     }
 
@@ -155,6 +156,28 @@ class ShortcodeParser
         foreach ($matches as $match) {
             $themeUrl = phpb_config('themes.folder_url') . '/' . e(phpb_config('themes.active_theme'));
             $html = str_replace($match['shortcode'], $themeUrl, $html);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Replace all [blocks-container] shortcodes for a <div phpb-blocks-container></div>
+     *
+     * @param $html
+     * @return mixed
+     */
+    protected function doBlocksContainerShortcodes($html)
+    {
+        $matches = $this->findMatches('blocks-container', $html);
+
+        if (empty($matches)) {
+            return $html;
+        }
+
+        foreach ($matches as $match) {
+            $replacement = '<div phpb-blocks-container></div>';
+            $html = str_replace($match['shortcode'], $replacement, $html);
         }
 
         return $html;

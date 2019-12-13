@@ -108,11 +108,10 @@ The public folder contains all assets (css, javascript, images, etc) that should
 A shortcode can be used to include a block inside another block or into a layout file. For instance, adding the shortcode: `[block slug="header"]` to `layouts/master/view.php` includes the block: `blocks/header/view.php` inside each page that uses the `master` layout.
 
 #### Nested blocks in the page builder
-To allow dropping blocks into a block in the page builder, a block container element should be added. To transform a html element into a block container element, simply add the `phpb-block-container` attribute. The following html syntax allows dropping blocks inside a bootstrap container element:
+To allow dropping blocks into a block in the page builder, a blocks container element should be added. To add a blocks container, simply add `[blocks-container]` at the desired location in a block view file. The following html syntax allows dropping blocks inside a bootstrap container element:
 ```html
 <div class="container">
-    <div phpb-block-container>
-    </div>
+    [block-container]
 </div>
 ``` 
 
