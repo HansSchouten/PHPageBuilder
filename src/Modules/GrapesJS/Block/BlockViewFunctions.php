@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPageBuilder\Modules\GrapesJS;
+namespace PHPageBuilder\Modules\GrapesJS\Block;
 
 use PHPageBuilder\ThemeBlock;
 

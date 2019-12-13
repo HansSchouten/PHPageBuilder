@@ -1,7 +1,8 @@
 <?php
 
-namespace PHPageBuilder\Modules\GrapesJS;
+namespace PHPageBuilder\Modules\GrapesJS\Block;
 
+use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\ThemeBlock;
 use Exception;
 

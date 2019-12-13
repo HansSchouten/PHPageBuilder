@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Modules\GrapesJS\Block\BlockViewFunctions;
 use PHPageBuilder\Page;
 use PHPageBuilder\Theme;
 use PHPageBuilder\ThemeBlock;

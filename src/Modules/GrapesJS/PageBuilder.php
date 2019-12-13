@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\Block\BlockAdapter;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
@@ -151,13 +152,14 @@ class PageBuilder implements PageBuilderContract
         $pageBuilder = $this;
         $pageRenderer = new PageRenderer($this->theme, $page, true);
 
-        // create an array of theme block adapters, adapting each theme block to the representation for GrapesJS
+        // create an array of theme blocks and of theme block settings
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
+            $slug = e($themeBlock->getSlug());
             $adapter = new BlockAdapter($pageRenderer, $themeBlock);
-            $blocks[$themeBlock->getSlug()] = $adapter->getBlockManagerArray();
-            $blockSettings[$themeBlock->getSlug()] = $adapter->getBlockSettingsArray();
+            $blocks[$slug] = $adapter->getBlockManagerArray();
+            $blockSettings[$slug] = $adapter->getBlockSettingsArray();
         }
 
         require __DIR__ . '/resources/views/layout.php';
