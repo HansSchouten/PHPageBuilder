@@ -27,7 +27,7 @@ Whether you are a novice or an experienced web developer, PHPagebuilder can make
 
 ### Page Builder
 PHPagebuilder features a page builder built on [GrapesJS](https://grapesjs.com/).
-![PageBuilder](https://user-images.githubusercontent.com/5946444/67634896-837e9b80-f8c1-11e9-88c5-c03cc7909c8a.jpg)
+![PageBuilder](https://user-images.githubusercontent.com/5946444/70818285-97c81a80-1dd3-11ea-84b0-2a6ff3a8765a.png)
 
 ### Website Manager
 A basic website manager is included with a [Bootstrap](https://getbootstrap.com/) UI. This website manager offers basic functionality to add or remove pages and to edit page settings like page title or URL. Clicking the edit button will open the page builder.
@@ -117,9 +117,9 @@ To allow dropping blocks into a block in the page builder, a blocks container sh
 An alternative method is adding the `phpb-blocks-container` attribute to a html element, as shown in this example:
 ```html
 <div class="row">
-    <div class="col-md-6" phpb-block-container>
+    <div class="col-md-6" phpb-blocks-container>
     </div>
-    <div class="col-md-6" phpb-block-container>
+    <div class="col-md-6" phpb-blocks-container>
     </div>
 </div>
 ```
