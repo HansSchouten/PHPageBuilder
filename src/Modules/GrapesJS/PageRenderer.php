@@ -138,7 +138,7 @@ class PageRenderer
      * @param null $parentBlockId
      * @return false|string
      */
-    public function block($slug, $id = null, $parentBlockId = null)
+    public function renderBlock($slug, $id = null, $parentBlockId = null)
     {
         $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);

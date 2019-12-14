@@ -90,7 +90,7 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->block($slug, $id, $parentBlockId);
+            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $parentBlockId);
 
             // recursive call to render shortcodes inside the newly loaded block
             $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);

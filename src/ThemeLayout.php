@@ -2,6 +2,8 @@
 
 namespace PHPageBuilder;
 
+use PHPageBuilder\Contracts\ThemeContract;
+
 class ThemeLayout
 {
     /**
@@ -10,7 +12,7 @@ class ThemeLayout
     protected $config;
 
     /**
-     * @var Theme $theme
+     * @var ThemeContract $theme
      */
     protected $theme;
 
@@ -22,10 +24,10 @@ class ThemeLayout
     /**
      * Theme ThemeLayout.
      *
-     * @param Theme $theme         the theme this layout belongs to
+     * @param ThemeContract $theme         the theme this layout belongs to
      * @param string $layoutSlug
      */
-    public function __construct(Theme $theme, string $layoutSlug)
+    public function __construct(ThemeContract $theme, string $layoutSlug)
     {
         $this->theme = $theme;
         $this->layoutSlug = $layoutSlug;

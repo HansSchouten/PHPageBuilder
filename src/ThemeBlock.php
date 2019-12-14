@@ -2,6 +2,8 @@
 
 namespace PHPageBuilder;
 
+use PHPageBuilder\Contracts\ThemeContract;
+
 class ThemeBlock
 {
     /**
@@ -10,7 +12,7 @@ class ThemeBlock
     protected $config;
 
     /**
-     * @var Theme $theme
+     * @var ThemeContract $theme
      */
     protected $theme;
 
@@ -22,10 +24,10 @@ class ThemeBlock
     /**
      * Theme constructor.
      *
-     * @param Theme $theme         the theme this block belongs to
+     * @param ThemeContract $theme         the theme this block belongs to
      * @param string $blockSlug
      */
-    public function __construct(Theme $theme, string $blockSlug)
+    public function __construct(ThemeContract $theme, string $blockSlug)
     {
         $this->theme = $theme;
         $this->blockSlug = $blockSlug;
