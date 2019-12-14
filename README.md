@@ -92,7 +92,7 @@ $builder->handleRequest();
 If you use PHPagebuilder out of the box, it requires a database for storing your pages. Just create a database and run the queries from `config/create-tables.sql`. Next, add the database credentials to your config file.
 
 ## Create a theme
-The `config.php` contains a config key `themes` in which a `themes_folder` and `active_theme` are specified. To create a new theme, add a new folder to the configured themes folder. The name of this folder will be the identifier of the theme, which can be used to select the theme in the `themes > active_theme` configuration.
+The `config.php` contains a config key `theme` in which a `themes_folder` and `active_theme` are specified. To create a new theme, add a new folder to the configured themes folder. The name of this folder will be the identifier of the theme, which can be used to select the theme in the `theme > active_theme` configuration.
 
 A theme should have the following folder structure:
 

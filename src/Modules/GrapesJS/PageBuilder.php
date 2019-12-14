@@ -10,7 +10,6 @@ use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
-use PHPageBuilder\Theme;
 use Exception;
 
 class PageBuilder implements PageBuilderContract
@@ -35,7 +34,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function __construct()
     {
-        $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+        $this->theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
     }
 
     /**

@@ -3,16 +3,15 @@
 namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Block\BlockViewFunctions;
-use PHPageBuilder\Page;
-use PHPageBuilder\Theme;
 use PHPageBuilder\ThemeBlock;
 use Exception;
 
 class PageRenderer
 {
     /**
-     * @var Theme $theme
+     * @var ThemeContract $theme
      */
     protected $theme;
 
@@ -44,11 +43,11 @@ class PageRenderer
     /**
      * PageRenderer constructor.
      *
-     * @param Theme $theme
+     * @param ThemeContract $theme
      * @param PageContract $page
      * @param bool $forPageBuilder
      */
-    public function __construct(Theme $theme, PageContract $page, $forPageBuilder = false)
+    public function __construct(ThemeContract $theme, PageContract $page, $forPageBuilder = false)
     {
         $this->theme = $theme;
         $this->page = $page;

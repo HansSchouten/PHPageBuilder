@@ -124,7 +124,7 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderPageSettings(PageContract $page = null)
     {
         $action = isset($page) ? 'edit' : 'create';
-        $theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+        $theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
 
         $viewFile = 'page-settings';
         require __DIR__ . '/resources/layouts/master.php';

@@ -73,7 +73,7 @@ class PHPageBuilder
 
         // init the default page builder, active theme and page router
         $this->pageBuilder = phpb_instance('pagebuilder');
-        $this->theme = new Theme(phpb_config('themes'), phpb_config('themes.active_theme'));
+        $this->theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
         $this->router = phpb_instance('router');
 
         // load translations of the configured language

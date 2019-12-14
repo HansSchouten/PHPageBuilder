@@ -99,7 +99,7 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Themes settings
+     | Theme settings
      |--------------------------------------------------------------------------
      |
      | PageBuilder requires a themes folder in which for each theme the individual
@@ -107,7 +107,8 @@ return [
      | containing a view, model (optional) and controller (optional).
      |
      */
-    'themes' => [
+    'theme' => [
+        'class' => PHPageBuilder\Theme::class,
         'folder' => __DIR__ . '/themes',
         'folder_url' => '/themes',
         'active_theme' => 'demo'

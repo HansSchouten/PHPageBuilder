@@ -36,7 +36,7 @@ if (! function_exists('phpb_theme_asset')) {
      */
     function phpb_theme_asset($path)
     {
-        $themeFolder = phpb_config('themes.folder_url') . '/' . phpb_config('themes.active_theme');
+        $themeFolder = phpb_config('theme.folder_url') . '/' . phpb_config('theme.active_theme');
         return $themeFolder . '/' . $path;
     }
 }
@@ -270,7 +270,7 @@ if (! function_exists('phpb_instance')) {
     {
         if (phpb_config($name . '.class')) {
             $className = phpb_config($name . '.class');
-            return new $className;
+            return new $className(...$params);
         }
         return null;
     }
