@@ -201,7 +201,7 @@ class PageRenderer
      */
     public function getDynamicBlocks()
     {
-        // trigger renderBody to ensure the shortcode parser has rendered versions of all dynamic blocks
+        // trigger renderBody to ensure the shortcode parser has rendered all dynamic blocks
         $this->renderBody();
         // return the rendered html and settings for each dynamic block
         return $this->shortcodeParser->getRenderedBlocks();
