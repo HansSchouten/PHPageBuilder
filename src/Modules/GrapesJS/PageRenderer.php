@@ -4,8 +4,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
-use PHPageBuilder\Modules\GrapesJS\Block\BaseModel;
-use PHPageBuilder\Modules\GrapesJS\Block\BlockViewFunctions;
+use PHPageBuilder\Modules\GrapesJS\Block\BlockRenderer;
 use PHPageBuilder\ThemeBlock;
 use Exception;
 
@@ -132,43 +131,29 @@ class PageRenderer
 
     /**
      * Include a rendered theme block with the given slug, data instance id and data context.
-     * Note: this method is called from php blocks, layout files or after parsing shortcodes.
+     * This method is called on parsing shortcodes.
      *
      * @param $slug
      * @param null $id                  the id with which data for this block is stored
      * @param null $parentBlockId
-     * @return false|string
+     * @return string
      */
     public function renderBlock($slug, $id = null, $parentBlockId = null)
     {
-        $html = '';
         $themeBlock = new ThemeBlock($this->theme, $slug);
-        $blockData = $this->pageBlocksData;
 
-        if ($themeBlock->isHtmlBlock()) {
-            // if for this block id in the parent block's context is html data stored, use that html for this block
-            if (! is_null($parentBlockId) && isset($blockData[$parentBlockId]) && isset($blockData[$parentBlockId][$id])) {
-                $html = $blockData[$parentBlockId][$id];
-            } else {
-                $html = file_get_contents($themeBlock->getViewFile());
-            }
-        } else {
-            $modelPath = $themeBlock->getModelFile();
-            require_once $modelPath;
-
-            $block = new BaseModel;
-            $data = $blockData[$id] ?? [];
-            $block->init($themeBlock, $data, $this->forPageBuilder);
-
-            // init additional variables that should be accessible in the view
-            $renderer = $this;
-            $page = $this->page;
-
-            ob_start();
-            require $themeBlock->getViewFile();
-            $html = ob_get_contents();
-            ob_end_clean();
+        $pageBlocksData = $this->pageBlocksData;
+        $blockData = null;
+        // get data for this block stored in the context of the parent block
+        if (! is_null($parentBlockId) && isset($pageBlocksData[$parentBlockId]) && isset($pageBlocksData[$parentBlockId][$id])) {
+            $blockData = $pageBlocksData[$parentBlockId][$id];
+        } elseif (isset($pageBlocksData[$id])) {
+            // if no data is stored in context of the parent block, get data stored for this block's id
+            $blockData = $pageBlocksData[$id];
         }
+
+        $blockRenderer = new BlockRenderer($this->page, $this->forPageBuilder);
+        $html = $blockRenderer->render($themeBlock, $blockData);
 
         if ($this->forPageBuilder) {
             $id = $id ?? $slug;
@@ -192,6 +177,7 @@ class PageRenderer
     {
         $originalData = $this->pageBlocksData;
 
+        // parse the shortcode with the data array passed as an argument to this method
         $this->pageBlocksData = $data;
         $html = $this->shortcodeParser->doShortcodes($shortcode);
 

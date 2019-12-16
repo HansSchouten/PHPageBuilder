@@ -3,6 +3,8 @@
 namespace PHPageBuilder;
 
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\Block\BaseController;
+use PHPageBuilder\Modules\GrapesJS\Block\BaseModel;
 
 class ThemeBlock
 {
@@ -34,7 +36,7 @@ class ThemeBlock
 
         $this->config = [];
         if (file_exists($this->getFolder() . '/config.php')) {
-            $this->config = include $this->getFolder() . '/config.php';
+            $this->config = require $this->getFolder() . '/config.php';
         }
     }
 
@@ -49,29 +51,83 @@ class ThemeBlock
     }
 
     /**
-     * Return the controller file of this theme block.
+     * Return the namespace to the folder of this theme block.
      *
      * @return string
+     */
+    protected function getNamespace()
+    {
+        $themesPath = phpb_config('theme.folder');
+        $themesFolderName = basename($themesPath);
+        $blockFolder = $this->getFolder();
+        $namespacePath = $themesFolderName . str_replace($themesPath, '', $blockFolder);
+
+        // convert each character after a - to uppercase
+        $namespace = implode('-', array_map('ucfirst', explode('-', $namespacePath)));
+        // convert each character after a _ to uppercase
+        $namespace = implode('_', array_map('ucfirst', explode('-', $namespace)));
+        // convert each character after a / to uppercase
+        $namespace = implode('/', array_map('ucfirst', explode('/', $namespace)));
+        // remove all dashes
+        $namespace = str_replace('-', '', $namespace);
+        // remove all underscores
+        $namespace = str_replace('_', '', $namespace);
+        // replace / by \
+        $namespace = str_replace('/', '\\', $namespace);
+
+        return $namespace;
+    }
+
+    /**
+     * Return the controller class of this theme block.
+     *
+     * @return string
+     */
+    public function getControllerClass()
+    {
+        if (file_exists($this->getFolder() . '/controller.php')) {
+            return $this->getNamespace() . '\\Controller';
+        }
+        return BaseController::class;
+    }
+
+    /**
+     * Return the controller file of this theme block.
+     *
+     * @return string|null
      */
     public function getControllerFile()
     {
         if (file_exists($this->getFolder() . '/controller.php')) {
             return $this->getFolder() . '/controller.php';
         }
-        return __DIR__ . '/Modules/GrapesJS/Block/BaseController.php';
+        return null;
+    }
+
+    /**
+     * Return the model class of this theme block.
+     *
+     * @return string
+     */
+    public function getModelClass()
+    {
+        if (file_exists($this->getFolder() . '/model.php')) {
+            return $this->getNamespace() . '\\Model';
+        }
+        return BaseModel::class;
     }
 
     /**
      * Return the model file of this theme block.
      *
-     * @return string
+     * @return string|null
      */
     public function getModelFile()
     {
         if (file_exists($this->getFolder() . '/model.php')) {
             return $this->getFolder() . '/model.php';
         }
-        return __DIR__ . '/Modules/GrapesJS/Block/BaseModel.php';
+        return null;
     }
 
     /**
