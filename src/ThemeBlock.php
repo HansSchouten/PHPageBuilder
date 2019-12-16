@@ -49,6 +49,32 @@ class ThemeBlock
     }
 
     /**
+     * Return the controller file of this theme block.
+     *
+     * @return string
+     */
+    public function getControllerFile()
+    {
+        if (file_exists($this->getFolder() . '/controller.php')) {
+            return $this->getFolder() . '/controller.php';
+        }
+        return __DIR__ . '/Modules/GrapesJS/Block/BaseController.php';
+    }
+
+    /**
+     * Return the model file of this theme block.
+     *
+     * @return string
+     */
+    public function getModelFile()
+    {
+        if (file_exists($this->getFolder() . '/model.php')) {
+            return $this->getFolder() . '/model.php';
+        }
+        return __DIR__ . '/Modules/GrapesJS/Block/BaseModel.php';
+    }
+
+    /**
      * Return the view file of this theme block.
      *
      * @return string

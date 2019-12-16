@@ -4,6 +4,7 @@ namespace PHPageBuilder\Modules\GrapesJS;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\Block\BaseModel;
 use PHPageBuilder\Modules\GrapesJS\Block\BlockViewFunctions;
 use PHPageBuilder\ThemeBlock;
 use Exception;
@@ -152,11 +153,16 @@ class PageRenderer
                 $html = file_get_contents($themeBlock->getViewFile());
             }
         } else {
+            $modelPath = $themeBlock->getModelFile();
+            require_once $modelPath;
+
+            $block = new BaseModel;
             $data = $blockData[$id] ?? [];
-            // init variables that should be accessible in the view
+            $block->init($themeBlock, $data, $this->forPageBuilder);
+
+            // init additional variables that should be accessible in the view
             $renderer = $this;
             $page = $this->page;
-            $block = new BlockViewFunctions($themeBlock, $data, $this->forPageBuilder);
 
             ob_start();
             require $themeBlock->getViewFile();

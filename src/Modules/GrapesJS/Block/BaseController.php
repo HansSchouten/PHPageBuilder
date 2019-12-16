@@ -2,7 +2,11 @@
 
 namespace PHPageBuilder\Modules\GrapesJS\Block;
 
-abstract class BaseController
+class BaseController
 {
+
+    public function index()
+    {
+    }
 
 }
