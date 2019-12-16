@@ -17,22 +17,22 @@ class BaseModel
     protected $data;
 
     /**
-     * @var bool $editMode
+     * @var bool $forPageBuilder
      */
-    protected $editMode;
+    protected $forPageBuilder;
 
     /**
      * Pass essential data to this Block model instance.
      *
      * @param ThemeBlock $block
      * @param array $data
-     * @param bool $editMode
+     * @param bool $forPageBuilder
      */
-    public function init(ThemeBlock $block, $data = [], $editMode = false)
+    public function init(ThemeBlock $block, $data = [], $forPageBuilder = false)
     {
         $this->block = $block;
         $this->data = is_array($data) ? $data : [];
-        $this->editMode = $editMode;
+        $this->forPageBuilder = $forPageBuilder;
     }
 
     /**

@@ -72,25 +72,27 @@ class BlockRenderer
     protected function renderDynamicBlock(ThemeBlock $themeBlock, $blockData)
     {
         $controller = new BaseController;
-        $block = new BaseModel;
-
-        if ($themeBlock->getControllerClass()) {
-            require_once $themeBlock->getControllerFile();
-            $controllerClass = $themeBlock->getControllerClass();
-            $controller = new $controllerClass;
-        }
-        $controller->index();
+        $model = new BaseModel;
+        $blockData = $blockData ?? [];
 
         if ($themeBlock->getModelFile()) {
             require_once $themeBlock->getModelFile();
             $modelClass = $themeBlock->getModelClass();
-            $block = new $modelClass;
+            $model = new $modelClass;
         }
-        $blockData = $blockData ?? [];
-        $block->init($themeBlock, $blockData, $this->forPageBuilder);
+        $model->init($themeBlock, $blockData, $this->forPageBuilder);
+
+        if ($themeBlock->getControllerFile()) {
+            require_once $themeBlock->getControllerFile();
+            $controllerClass = $themeBlock->getControllerClass();
+            $controller = new $controllerClass;
+        }
+        $controller->init($model, $this->forPageBuilder);
+        $controller->handleRequest();
 
         // init additional variables that should be accessible in the view
         $page = $this->page;
+        $block = $model;
 
         ob_start();
         require $themeBlock->getViewFile();
