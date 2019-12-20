@@ -56,7 +56,7 @@ if (! function_exists('phpb_flash')) {
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
             if ($encode) {
-                return e($phpb_flash[$key]) ?? false;
+                return e($phpb_flash[$key] ?? false);
             }
             return $phpb_flash[$key] ?? false;
         }
