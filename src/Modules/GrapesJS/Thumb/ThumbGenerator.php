@@ -119,7 +119,7 @@ class ThumbGenerator
      * @param ThemeBlock $block
      * @throws Exception
      */
-    protected function renderThumbForBlock(ThemeBlock $block)
+    public function renderThumbForBlock(ThemeBlock $block)
     {
         $thumbPath = $block->getThumbPath();
         if (file_exists($thumbPath)) {
