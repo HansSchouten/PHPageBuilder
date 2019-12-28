@@ -3,10 +3,16 @@
 namespace PHPageBuilder\Modules\GrapesJS\Block;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\ThemeBlock;
 
 class BlockRenderer
 {
+    /**
+     * @var ThemeContract $theme
+     */
+    protected $theme;
+
     /**
      * @var PageContract $page
      */
@@ -20,13 +26,27 @@ class BlockRenderer
     /**
      * BlockAdapter constructor.
      *
+     * @param ThemeContract $theme
      * @param PageContract $page
-     * @param bool $forPageBuilder
+     * @param $forPageBuilder
      */
-    public function __construct(PageContract $page, $forPageBuilder)
+    public function __construct(ThemeContract $theme, PageContract $page, $forPageBuilder)
     {
+        $this->theme = $theme;
         $this->page = $page;
         $this->forPageBuilder = $forPageBuilder;
+    }
+
+    /**
+     * Output a rendered theme block with the given slug using the given block data.
+     *
+     * @param string $blockSlug
+     * @param $blockData
+     */
+    public function renderWithSlug(string $blockSlug, $blockData)
+    {
+        $block = new ThemeBlock($this->theme, $blockSlug);
+        echo $this->render($block, $blockData);
     }
 
     /**
@@ -91,8 +111,12 @@ class BlockRenderer
         $controller->handleRequest();
 
         // init additional variables that should be accessible in the view
+        $renderer = $this;
         $page = $this->page;
         $block = $model;
+
+        // unset variables that should be inaccessible inside the view
+        unset($controller, $model, $blockData);
 
         ob_start();
         require $themeBlock->getViewFile();
