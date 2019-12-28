@@ -29,6 +29,7 @@ class DatabasePageRouter implements RouterContract
      */
     public function resolve($route)
     {
+        $route = explode('?', $route, 2)[0];
         $page = $this->attempt($route);
         if ($page) return $page;
 
