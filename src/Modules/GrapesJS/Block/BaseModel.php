@@ -36,7 +36,7 @@ class BaseModel
     }
 
     /**
-     * Return the given setting stored for this block instance.
+     * Return the given setting stored for this block instance using the page builder.
      *
      * @param $setting
      * @param bool $allowHtml
@@ -51,6 +51,17 @@ class BaseModel
         }
 
         return $allowHtml ? $value : e($value);
+    }
+
+    /**
+     * Return data passed to this block instance with the given key.
+     *
+     * @param $key
+     * @return string
+     */
+    public function data($key)
+    {
+        return $this->data[$key] ?? null;
     }
 
 }
