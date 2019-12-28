@@ -38,15 +38,16 @@ class BlockRenderer
     }
 
     /**
-     * Output a rendered theme block with the given slug using the given block data.
+     * Render a theme block with the given slug using the given block data.
      *
      * @param string $blockSlug
      * @param $blockData
+     * @return string
      */
     public function renderWithSlug(string $blockSlug, $blockData)
     {
         $block = new ThemeBlock($this->theme, $blockSlug);
-        echo $this->render($block, $blockData);
+        return $this->render($block, $blockData);
     }
 
     /**
