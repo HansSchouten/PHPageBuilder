@@ -56,40 +56,22 @@ class DatabasePageRouter implements RouterContract
      */
     protected function onRoute($urlSegments, $routeSegments)
     {
-        foreach ($urlSegments as $segment) {
-            $segmentsMatching = true;
+        foreach ($routeSegments as $i => $routeSegment) {
+            if (! isset($urlSegments[$i])) {
+                return false;
+            }
 
-            foreach ($routeSegments as $routeSegment) {
-                if ($segment === $routeSegment) {
-                    continue;
-                }
-                if ($routeSegment === '*') {
-                    continue;
-                }
-                $segmentsMatching = false;
+            $segment = $urlSegments[$i];
+            if ($segment === $routeSegment) {
+                continue;
+            }
+            if ($routeSegment === '*') {
                 break;
             }
 
-            if ($segmentsMatching) {
-                return true;
-            }
+            return false;
         }
-        return false;
-    }
 
-    /**
-     * Attempt to resolve the given route into a Page.
-     *
-     * @param $route
-     * @return PageContract|null
-     */
-    protected function attempt($route)
-    {
-        $pages = $this->pageRepository->findWhere('route', $route);
-
-        if (empty($pages)) {
-            return null;
-        }
-        return $pages[0];
+        return true;
     }
 }
