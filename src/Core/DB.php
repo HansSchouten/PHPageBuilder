@@ -46,12 +46,21 @@ class DB
     /**
      * Return all records of the given table and return instances of the given class.
      *
+     * @param array|string $columns
      * @param string $table
      * @return array
      */
-    public function all(string $table)
+    public function all(string $table, $columns = '*')
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$table}");
+        if (is_array($columns)) {
+            foreach ($columns as &$column) {
+                $column = preg_replace('/[^a-zA-Z_]*/', '', $column);
+            }
+            $columns = implode(',', $columns);
+            $stmt = $this->pdo->prepare("SELECT {$columns} FROM {$table}");
+        } else {
+            $stmt = $this->pdo->prepare("SELECT * FROM {$table}");
+        }
         $stmt->execute();
         return $stmt->fetchAll();
     }

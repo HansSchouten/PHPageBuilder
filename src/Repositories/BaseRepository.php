@@ -111,11 +111,12 @@ class BaseRepository
     /**
      * Return an array of all pages.
      *
+     * @param array|string $columns
      * @return array
      */
-    public function getAll()
+    public function getAll($columns = '*')
     {
-        return $this->createInstances($this->db->all($this->table));
+        return $this->createInstances($this->db->all($this->table, $columns));
     }
 
     /**
