@@ -5,10 +5,10 @@ namespace PHPageBuilder\Contracts;
 interface RouterContract
 {
     /**
-     * Return the page corresponding to the given route.
+     * Return the page corresponding to the given URL.
      *
-     * @param $route
+     * @param $url
      * @return PageContract|null
      */
-    public function resolve($route);
+    public function resolve($url);
 }

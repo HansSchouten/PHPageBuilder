@@ -22,34 +22,59 @@ class DatabasePageRouter implements RouterContract
     }
 
     /**
-     * Return the page from database corresponding to the given route.
+     * Return the page from database corresponding to the given URL.
      *
-     * @param $route
+     * @param $url
      * @return PageContract|null
      */
-    public function resolve($route)
+    public function resolve($url)
     {
-        $route = explode('?', $route, 2)[0];
-        $page = $this->attempt($route);
-        if ($page) return $page;
+        // strip URL query parameters
+        $url = explode('?', $url, 2)[0];
+        // split URL into segments using / as separator
+        $urlSegments = explode('/', $url);
 
-        // asterisk will be used as wildcard character, so remove all asterisks
-        $route = str_replace('*', '', $route);
+        // request all routes and match with current URL segments
+        $pages = $this->pageRepository->getAll(['id', 'route']);
+        foreach ($pages as $page) {
+            $routeSegments = explode('/', $page->route);
 
-        // repeat until we are at the empty URL
-        while ($route !== '/*') {
-            $route = str_replace('/*', '', $route);
-
-            // replace /blog/this-is-a-post with /blog/*
-            $lastSlash = strrpos($route,"/");
-            $route = substr($route, 0, $lastSlash) . '/*';
-
-            // try to find the route with wildcard
-            $page = $this->attempt($route);
-            if ($page) return $page;
+            if ($this->onRoute($urlSegments, $routeSegments)) {
+                return $this->pageRepository->findWithId($page->id);
+            }
         }
 
         return null;
+    }
+
+    /**
+     * Return whether the given URL segments match with the given route segments.
+     *
+     * @param $urlSegments
+     * @param $routeSegments
+     * @return bool
+     */
+    protected function onRoute($urlSegments, $routeSegments)
+    {
+        foreach ($urlSegments as $segment) {
+            $segmentsMatching = true;
+
+            foreach ($routeSegments as $routeSegment) {
+                if ($segment === $routeSegment) {
+                    continue;
+                }
+                if ($routeSegment === '*') {
+                    continue;
+                }
+                $segmentsMatching = false;
+                break;
+            }
+
+            if ($segmentsMatching) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
