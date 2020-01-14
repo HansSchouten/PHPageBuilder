@@ -233,9 +233,6 @@ class PHPageBuilder
             die('Authentication is disabled, use handlePublicRequest() and handleAuthenticatedRequest()');
         }
 
-        // handle all requests that do not need authentication
-        $this->handlePublicRequest();
-
         // handle login and logout requests
         $this->auth->handleRequest($action);
 
@@ -252,6 +249,9 @@ class PHPageBuilder
             $this->pageBuilder->handleRequest($route, $action);
             die('Page not found');
         }
+
+        // handle all requests that do not need authentication
+        $this->handlePublicRequest();
 
         die('Page not found');
     }
