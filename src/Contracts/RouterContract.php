@@ -13,12 +13,28 @@ interface RouterContract
     public function resolve($url);
 
     /**
-     * Return the full page instance based on the given matched route or page id.
+     * Return the full page instance based on the given matched route.
      * (this method is helpful when extending a router to perform additional checks after a route has been matched)
      *
      * @param string $matchedRoute              the matched route
-     * @param string|null $pageId               the page id of the matched route
      * @return PageContract|null
      */
-    public function getMatchedPage(string $matchedRoute, $pageId = null);
+    public function getMatchedPage(string $matchedRoute);
+
+    /**
+     * Order the given routes into the order in which they need to be evaluated.
+     *
+     * @param $allRoutes
+     * @return array
+     */
+    public function getRoutesInOrder($allRoutes);
+
+    /**
+     * Compare two given routes and return -1,0,1 indicating which route should be evaluated first.
+     *
+     * @param $route1
+     * @param $route2
+     * @return int
+     */
+    public function routeOrderComparison($route1, $route2);
 }
