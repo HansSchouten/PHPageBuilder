@@ -46,15 +46,30 @@ class DatabasePageRouter implements RouterContract
             $routeSegments = explode('/', $page->route);
 
             if ($this->onRoute($urlSegments, $routeSegments)) {
-                global $phpb_route_parameters;
-                $phpb_route_parameters = $this->routeParameters;
+                $matchedPage = $this->getMatchedPage($page->route, $page->id);
+                if ($matchedPage) {
+                    global $phpb_route_parameters;
+                    $phpb_route_parameters = $this->routeParameters;
 
-                // return page that corresponds with the matched route
-                return $this->pageRepository->findWithId($page->id);
+                    return $matchedPage;
+                }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Return the full page instance based on the given matched route or page id.
+     * (this method is helpful when extending a router to perform additional checks after a route has been matched)
+     *
+     * @param string $matchedRoute              the matched route
+     * @param string|null $pageId               the page id of the matched route
+     * @return PageContract|null
+     */
+    public function getMatchedPage(string $matchedRoute, $pageId = null)
+    {
+        return $this->pageRepository->findWithId($pageId);
     }
 
     /**
