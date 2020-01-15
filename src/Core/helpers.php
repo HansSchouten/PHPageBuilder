@@ -238,6 +238,35 @@ if (! function_exists('phpb_redirect')) {
     }
 }
 
+if (! function_exists('phpb_route_parameters')) {
+    /**
+     * Return the named route parameters resolved from the current URL.
+     *
+     * @return array|null
+     */
+    function phpb_route_parameters()
+    {
+        global $phpb_route_parameters;
+
+        return $phpb_route_parameters ?? [];
+    }
+}
+
+if (! function_exists('phpb_route_parameter')) {
+    /**
+     * Return the value of the given named route parameter resolved from the current URL.
+     *
+     * @param string $parameter
+     * @return string|null
+     */
+    function phpb_route_parameter($parameter)
+    {
+        global $phpb_route_parameters;
+
+        return $phpb_route_parameters[$parameter] ?? null;
+    }
+}
+
 if (! function_exists('phpb_field_value')) {
     /**
      * Return the posted value or the attribute value of the given instance.

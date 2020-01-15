@@ -46,6 +46,9 @@ class DatabasePageRouter implements RouterContract
             $routeSegments = explode('/', $page->route);
 
             if ($this->onRoute($urlSegments, $routeSegments)) {
+                global $phpb_route_parameters;
+                $phpb_route_parameters = $this->routeParameters;
+
                 // return page that corresponds with the matched route
                 return $this->pageRepository->findWithId($page->id);
             }
