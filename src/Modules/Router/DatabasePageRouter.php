@@ -14,11 +14,17 @@ class DatabasePageRouter implements RouterContract
     protected $pageRepository;
 
     /**
+     * @var array $routeParameters
+     */
+    protected $routeParameters;
+
+    /**
      * DatabasePageRouter constructor.
      */
     public function __construct()
     {
         $this->pageRepository = new PageRepository;
+        $this->routeParameters = [];
     }
 
     /**
@@ -40,6 +46,7 @@ class DatabasePageRouter implements RouterContract
             $routeSegments = explode('/', $page->route);
 
             if ($this->onRoute($urlSegments, $routeSegments)) {
+                // return page that corresponds with the matched route
                 return $this->pageRepository->findWithId($page->id);
             }
         }
@@ -56,22 +63,35 @@ class DatabasePageRouter implements RouterContract
      */
     protected function onRoute($urlSegments, $routeSegments)
     {
+        $routeParameters = [];
+
+        // try matching each route segment with the same level URL segment
         foreach ($routeSegments as $i => $routeSegment) {
             if (! isset($urlSegments[$i])) {
                 return false;
             }
+            $urlSegment = $urlSegments[$i];
 
-            $segment = $urlSegments[$i];
-            if ($segment === $routeSegment) {
+            // the URL segment matches if the route segment is a {parameter}
+            if (substr($routeSegment,0, 1) === '{' && substr($routeSegment, -1) === '}') {
+                $parameter = trim($routeSegment, '{}');
+                $routeParameters[$parameter] = $urlSegment;
                 continue;
             }
+            // the URL fully matches if the route segment is a wild character
             if ($routeSegment === '*') {
                 break;
             }
+            // the URL segment matches if equal to the route segment
+            if ($urlSegment === $routeSegment) {
+                continue;
+            }
 
+            // the URL segment and route segment did not match
             return false;
         }
 
+        $this->routeParameters = $routeParameters;
         return true;
     }
 }
