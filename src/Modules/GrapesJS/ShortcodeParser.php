@@ -42,8 +42,8 @@ class ShortcodeParser
 
         // set properties for parsing page shortcodes
         $pageRepository = new PageRepository;
-        foreach ($pageRepository->getAll() as $page) {
-            $this->pages[$page->id] = $page->getUrl();
+        foreach ($pageRepository->getAll(['route']) as $page) {
+            $this->pages[$page->get('id')] = $page->getRoute();
         }
     }
 
@@ -111,6 +111,7 @@ class ShortcodeParser
 
     /**
      * Replace all page shortcodes for the corresponding absolute page url.
+     * @todo this currently replaces the shortcode with page route instead of URL
      *
      * @param $html
      * @return mixed
@@ -129,11 +130,11 @@ class ShortcodeParser
             }
             $pageId = $match['attributes']['id'];
 
-            $url = '';
+            $route = '';
             if (isset($this->pages[$pageId])) {
-                $url = $this->pages[$pageId];
+                $route = $this->pages[$pageId];
             }
-            $html = str_replace($match['shortcode'], $url, $html);
+            $html = str_replace($match['shortcode'], $route, $html);
         }
 
         return $html;

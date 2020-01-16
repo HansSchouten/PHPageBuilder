@@ -32,7 +32,7 @@ window.themeBlocks = <?= json_encode($blocks) ?>;
 window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
-window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->id]) ?>';
+window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->get('id')]) ?>';
 
 window.editor = grapesjs.init({
     container: '#gjs',
@@ -48,7 +48,7 @@ window.editor = grapesjs.init({
         uploadText: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>',
         inputPlaceholder: '<?= phpb_trans('pagebuilder.asset-manager.url-placeholder') ?>',
         addBtnText: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
-        upload: '<?= phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->id]) ?>',
+        upload: '<?= phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->get('id')]) ?>',
         uploadName: 'files',
         multiUpload: false
     },
@@ -167,13 +167,13 @@ require __DIR__ . '/style-manager.php';
 </div>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder', ['action' => 'store', 'page' => $page->id]) ?>">
+    <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder', ['action' => 'store', 'page' => $page->get('id')]) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="fa fa-save"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>
     </button>
 
-    <a id="view-page" href="<?= e($page->getUrl()) ?>" target="_blank" class="btn">
+    <a id="view-page" href="<?= e($page->getRoute()) ?>" target="_blank" class="btn">
         <i class="fa fa-external-link"></i>
         <?= phpb_trans('pagebuilder.view-page') ?>
     </a>

@@ -44,7 +44,7 @@ class DatabasePageRouter implements RouterContract
         $pages = $this->pageRepository->getAll(['route']);
         $routes = [];
         foreach ($pages as $page) {
-            $routeSegments = explode('/', $page->route);
+            $routeSegments = explode('/', $page->getRoute());
             $routes[] = $routeSegments;
         }
 

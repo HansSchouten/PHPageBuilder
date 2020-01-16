@@ -171,8 +171,16 @@ class BaseRepository
         $result = [];
         foreach ($records as $record) {
             $instance = new $this->class;
-            foreach($record as $k => $v) {
-                $instance->$k = $v;
+            if (method_exists($instance, 'setData')) {
+                $data = [];
+                foreach($record as $k => $v) {
+                    $data[$k] = $v;
+                }
+                $instance->setData($data);
+            } else {
+                foreach($record as $k => $v) {
+                    $instance->$k = $v;
+                }
             }
             $result[] = $instance;
         }

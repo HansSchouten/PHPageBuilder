@@ -127,8 +127,8 @@ class ThumbGenerator
         }
 
         $page = new Page;
-        $page->layout = 'master';
-        $page->data = json_encode([
+        $page->setData([
+            'layout' => 'master',
             'html' => '[block slug="' . $block->getSlug() . '"]'
         ]);
 

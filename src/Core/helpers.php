@@ -281,7 +281,11 @@ if (! function_exists('phpb_field_value')) {
             return e($_POST[$attribute]);
         }
         if (isset($instance)) {
-            return e($instance->$attribute);
+            if (method_exists($instance, 'get')) {
+                return e($instance->get($attribute));
+            } else {
+                return e($instance->$attribute);
+            }
         }
         return '';
     }
