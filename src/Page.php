@@ -7,9 +7,9 @@ use PHPageBuilder\Contracts\PageContract;
 class Page implements PageContract
 {
     /**
-     * @var array|null $data
+     * @var array|null $attributes
      */
-    protected $data;
+    protected $attributes;
 
     /**
      * Set the data stored for this page.
@@ -19,24 +19,38 @@ class Page implements PageContract
      */
     public function setData($data, $fullOverwrite = true)
     {
+        // if page builder data is set, try to decode json
+        if (isset($data['data']) && is_string($data['data'])) {
+            $data['data'] = json_decode($data['data'], true);
+        }
         if ($fullOverwrite) {
-            $this->data = $data;
+            $this->attributes = $data;
         }  elseif (is_array($data)) {
-            $this->data = is_null($this->data) ? [] : $this->data;
+            $this->attributes = is_null($this->attributes) ? [] : $this->attributes;
             foreach ($data as $key => $value) {
-                $this->data[$key] = $value;
+                $this->attributes[$key] = $value;
             }
         }
     }
 
     /**
-     * Return the data stored for this page.
+     * Return all data stored for this page (page builder data and other data set via setData).
      *
      * @return array|null
      */
     public function getData()
     {
-        return $this->data;
+        return $this->attributes;
+    }
+
+    /**
+     * Return the page builder data stored for this page.
+     *
+     * @return array|null
+     */
+    public function getBuilderData()
+    {
+        return $this->attributes['data'] ?? [];
     }
 
     /**
@@ -69,8 +83,8 @@ class Page implements PageContract
             return $this->$property;
         }
 
-        if ($this->data && is_array($this->data)) {
-            return $this->data[$property] ?? null;
+        if ($this->attributes && is_array($this->attributes)) {
+            return $this->attributes[$property] ?? null;
         }
 
         return null;

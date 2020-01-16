@@ -13,9 +13,18 @@ interface PageContract
     public function setData($data, $fullOverwrite = true);
 
     /**
-     * Return the data stored for this page.
+     * Return all data stored for this page (page builder data and other data set via setData).
+     *
+     * @return array|null
      */
     public function getData();
+
+    /**
+     * Return the page builder data stored for this page.
+     *
+     * @return array|null
+     */
+    public function getBuilderData();
 
     /**
      * Get the value of the given property of this Page.

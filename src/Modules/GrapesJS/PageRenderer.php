@@ -51,7 +51,7 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
-        $this->pageData = $page->getData();
+        $this->pageData = $page->getBuilderData();
         $this->pageBlocksData = $this->getPageBlocksData();
         $this->shortcodeParser = new ShortcodeParser($this);
         $this->forPageBuilder = $forPageBuilder;

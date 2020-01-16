@@ -5,7 +5,6 @@ namespace PHPageBuilder\Modules\WebsiteManager;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Repositories\PageRepository;
-use PHPageBuilder\Theme;
 
 class WebsiteManager implements WebsiteManagerContract
 {

@@ -129,7 +129,9 @@ class ThumbGenerator
         $page = new Page;
         $page->setData([
             'layout' => 'master',
-            'html' => '[block slug="' . $block->getSlug() . '"]'
+            'data' => [
+                'html' => '[block slug="' . $block->getSlug() . '"]'
+            ]
         ]);
 
         $renderer = new PageRenderer($this->theme, $page);

@@ -177,7 +177,7 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
-     * Render in context of the given page, the given block with the passed settings, for updating the pagebuilder.
+     * Render in context of the given page, the given block with the passed settings, for updating the page builder.
      *
      * @param PageContract $page
      * @param array $blockData
@@ -231,7 +231,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function getPageComponents(PageContract $page)
     {
-        $data = $page->getData();
+        $data = $page->getBuilderData();
         if (isset($data['components'])) {
             return $data['components'];
         }
@@ -246,7 +246,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function getPageStyleComponents(PageContract $page)
     {
-        $data = $page->getData();
+        $data = $page->getBuilderData();
         if (isset($data['style'])) {
             return $data['style'];
         }
