@@ -10,10 +10,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL auto_increment,
-  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `title` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `route` varchar(512) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `layout` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `route` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `layout` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
