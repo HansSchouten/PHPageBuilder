@@ -262,18 +262,18 @@ class PHPageBuilder
     public function handlePublicRequest()
     {
         // if we are on the URL of an upload, return uploaded file
-        if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.uploads_url') . '/') === 0) {
+        if (strpos(urldecode($_SERVER['REQUEST_URI']), phpb_config('general.uploads_url') . '/') === 0) {
             $this->handleUploadedFileRequest();
             die('File not found');
         }
         // if we are on the URL of a PHPageBuilder asset, return the asset
-        if (strpos($_SERVER['REQUEST_URI'], phpb_config('general.assets_url') . '/') === 0) {
+        if (strpos(urldecode($_SERVER['REQUEST_URI']), phpb_config('general.assets_url') . '/') === 0) {
             $this->handlePageBuilderAssetRequest();
             die('Asset not found');
         }
 
         // let the page router resolve the current URL
-        $page = $this->router->resolve($_SERVER['REQUEST_URI']);
+        $page = $this->router->resolve(urldecode($_SERVER['REQUEST_URI']));
         if ($page instanceof PageContract) {
             $this->pageBuilder->renderPage($page);
             exit();
@@ -310,7 +310,7 @@ class PHPageBuilder
     public function handleUploadedFileRequest()
     {
         // get the requested file by stripping the configured uploads_url prefix from the current request URI
-        $file = substr($_SERVER['REQUEST_URI'], strlen(phpb_config('general.uploads_url')) + 1);
+        $file = substr(urldecode($_SERVER['REQUEST_URI']), strlen(phpb_config('general.uploads_url')) + 1);
         // $file is in the format {file id}/{file name}.{file extension}, so get file id as the part before /
         $fileId = explode('/', $file)[0];
         if (empty($fileId)) die('File not found');
@@ -339,7 +339,7 @@ class PHPageBuilder
     public function handlePageBuilderAssetRequest()
     {
         // get asset file path by stripping the configured assets_url prefix from the current request URI
-        $asset = substr($_SERVER['REQUEST_URI'], strlen(phpb_config('general.assets_url')) + 1);
+        $asset = substr(urldecode($_SERVER['REQUEST_URI']), strlen(phpb_config('general.assets_url')) + 1);
 
         $distPath = realpath(__DIR__ . '/../dist/');
         $requestedFile = realpath($distPath . '/' . $asset);

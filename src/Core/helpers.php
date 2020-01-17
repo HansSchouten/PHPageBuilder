@@ -200,7 +200,7 @@ if (! function_exists('phpb_in_module')) {
     function phpb_in_module($module)
     {
         $url = phpb_url($module, [], false);
-        $currentUrl = explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+        $currentUrl = explode('?', urldecode($_SERVER['REQUEST_URI']), 2)[0];
         return $currentUrl === $url;
     }
 }
@@ -216,7 +216,7 @@ if (! function_exists('phpb_on_url')) {
     function phpb_on_url($module, array $parameters = [])
     {
         $url = phpb_url($module, $parameters, false);
-        return $_SERVER['REQUEST_URI'] === $url;
+        return urldecode($_SERVER['REQUEST_URI']) === $url;
     }
 }
 
