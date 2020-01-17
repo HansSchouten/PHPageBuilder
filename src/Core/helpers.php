@@ -14,6 +14,20 @@ if (! function_exists('e')) {
     }
 }
 
+if (! function_exists('encode_or_null')) {
+    /**
+     * Encode HTML special characters in a string, but return null if the string is empty.
+     *
+     * @param string $value
+     * @param bool $doubleEncode
+     * @return string
+     */
+    function encode_or_null($value, $doubleEncode = true)
+    {
+        return empty($value) ? null : e($value, $doubleEncode);
+    }
+}
+
 if (! function_exists('phpb_asset')) {
     /**
      * Return the public path of a PHPageBuilder asset.
