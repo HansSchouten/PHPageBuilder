@@ -1,7 +1,7 @@
 <?php
 $pageUrlParam = '';
 if (isset($page)) {
-    $pageUrlParam = '&page=' . e($page->get('id'));
+    $pageUrlParam = '&page=' . e($page->getId());
 }
 ?>
 

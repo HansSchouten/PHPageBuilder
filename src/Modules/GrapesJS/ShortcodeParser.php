@@ -43,7 +43,7 @@ class ShortcodeParser
         // set properties for parsing page shortcodes
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll(['route']) as $page) {
-            $this->pages[$page->get('id')] = $page->getRoute();
+            $this->pages[$page->getId()] = $page->getRoute();
         }
     }
 

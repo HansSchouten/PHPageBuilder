@@ -54,6 +54,26 @@ class Page implements PageContract
     }
 
     /**
+     * Return the id of this page.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->get('id');
+    }
+
+    /**
+     * Return the name of this page.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->get('name');
+    }
+
+    /**
      * Return the layout (file name) of this page.
      *
      * @return string
@@ -65,6 +85,8 @@ class Page implements PageContract
 
     /**
      * Return the route of this page.
+     *
+     * @return string
      */
     public function getRoute()
     {

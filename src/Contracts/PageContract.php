@@ -27,12 +27,18 @@ interface PageContract
     public function getBuilderData();
 
     /**
-     * Get the value of the given property of this Page.
+     * Return the id of this page.
      *
-     * @param $property
-     * @return mixed|null
+     * @return string
      */
-    public function get($property);
+    public function getId();
+
+    /**
+     * Return the name of this page.
+     *
+     * @return string
+     */
+    public function getName();
 
     /**
      * Return the layout (file name) of this page.
@@ -43,6 +49,16 @@ interface PageContract
 
     /**
      * Return the route of this page.
+     *
+     * @return string
      */
     public function getRoute();
+
+    /**
+     * Get the value of the given property of this Page.
+     *
+     * @param $property
+     * @return mixed|null
+     */
+    public function get($property);
 }

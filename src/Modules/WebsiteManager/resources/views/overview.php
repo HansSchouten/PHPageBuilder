@@ -52,7 +52,7 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                                 ?>
                                 <tr>
                                     <td>
-                                        <?= e($page->get('name')) ?>
+                                        <?= e($page->getName()) ?>
                                     </td>
                                     <td>
                                         <?= e($page->getRoute()) ?>
@@ -61,13 +61,13 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                                         <a href="<?= e($page->getRoute()) ?>" target="_blank" class="btn btn-light btn-sm">
                                             <span><?= phpb_trans('website-manager.view') ?></span> <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<?= phpb_url('pagebuilder', ['page' => $page->get('id')]) ?>" class="btn btn-primary btn-sm">
+                                        <a href="<?= phpb_url('pagebuilder', ['page' => $page->getId()]) ?>" class="btn btn-primary btn-sm">
                                             <span><?= phpb_trans('website-manager.edit') ?></span> <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'edit', 'page' => $page->get('id')]) ?>" class="btn btn-secondary btn-sm">
+                                        <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'edit', 'page' => $page->getId()]) ?>" class="btn btn-secondary btn-sm">
                                             <span><?= phpb_trans('website-manager.settings') ?></span> <i class="fas fa-cog"></i>
                                         </a>
-                                        <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'destroy', 'page' => $page->get('id')]) ?>" class="btn btn-danger btn-sm">
+                                        <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'destroy', 'page' => $page->getId()]) ?>" class="btn btn-danger btn-sm">
                                             <span><?= phpb_trans('website-manager.remove') ?></span> <i class="fas fa-trash"></i>
                                         </a>
                                     </td>

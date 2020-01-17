@@ -96,7 +96,7 @@ class WebsiteManager implements WebsiteManagerContract
     public function handleDestroy(PageContract $page)
     {
         $pageRepository = new PageRepository;
-        $pageRepository->destroy($page->get('id'));
+        $pageRepository->destroy($page->getId());
         phpb_redirect(phpb_url('website_manager'), [
             'message-type' => 'success',
             'message' => phpb_trans('website-manager.page-deleted')

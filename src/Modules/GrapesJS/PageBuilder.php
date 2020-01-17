@@ -215,8 +215,8 @@ class PageBuilder implements PageBuilderContract
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll() as $page) {
             $pages[] = [
-                e($page->get('name')),
-                e($page->get('id'))
+                e($page->getName()),
+                e($page->getId())
             ];
         }
 

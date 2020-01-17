@@ -86,7 +86,7 @@ class BaseRepository
         }
 
         $values = array_values($data);
-        $values[] = $instance->id ?? $instance->get('id');
+        $values[] = $instance->id ?? $instance->getId();
 
         return $this->db->query(
             "UPDATE {$this->table} SET {$set} WHERE id=?",
