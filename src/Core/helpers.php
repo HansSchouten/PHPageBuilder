@@ -16,7 +16,7 @@ if (! function_exists('e')) {
 
 if (! function_exists('encode_or_null')) {
     /**
-     * Encode HTML special characters in a string, but return null if the string is empty.
+     * Encode HTML special characters in a string, but preserve a null value if the passed input equals null.
      *
      * @param string $value
      * @param bool $doubleEncode
@@ -24,7 +24,7 @@ if (! function_exists('encode_or_null')) {
      */
     function encode_or_null($value, $doubleEncode = true)
     {
-        return empty($value) ? null : e($value, $doubleEncode);
+        return is_null($value) ? null : e($value, $doubleEncode);
     }
 }
 
