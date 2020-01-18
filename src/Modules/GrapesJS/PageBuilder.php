@@ -58,6 +58,9 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleRequest($route, $action, PageContract $page = null)
     {
+        global $phpb_in_editmode;
+        $phpb_in_editmode = true;
+
         if ($route === 'thumb_generator') {
             $thumbGenerator = new ThumbGenerator($this->theme);
             return $thumbGenerator->handleThumbRequest($action);

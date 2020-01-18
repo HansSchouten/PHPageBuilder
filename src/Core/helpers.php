@@ -234,6 +234,20 @@ if (! function_exists('phpb_on_url')) {
     }
 }
 
+if (! function_exists('phpb_in_editmode')) {
+    /**
+     * Return whether the current page is load in edit mode (i.e. inside the page builder)
+     *
+     * @return bool
+     */
+    function phpb_in_editmode()
+    {
+        global $phpb_in_editmode;
+
+        return $phpb_in_editmode ?? false;
+    }
+}
+
 if (! function_exists('phpb_redirect')) {
     /**
      * Redirect to the given URL with optional session flash data.

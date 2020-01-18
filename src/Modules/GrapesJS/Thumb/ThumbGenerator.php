@@ -2,9 +2,9 @@
 
 namespace PHPageBuilder\Modules\GrapesJS\Thumb;
 
+use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Page;
-use PHPageBuilder\Theme;
 use PHPageBuilder\ThemeBlock;
 use Exception;
 
@@ -16,9 +16,9 @@ class ThumbGenerator
     /**
      * ThumbGenerator constructor.
      *
-     * @param Theme $theme
+     * @param ThemeContract $theme
      */
-    public function __construct(Theme $theme)
+    public function __construct(ThemeContract $theme)
     {
         $this->theme = $theme;
     }
