@@ -58,8 +58,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleRequest($route, $action, PageContract $page = null)
     {
-        global $phpb_in_editmode;
-        $phpb_in_editmode = true;
+        phpb_set_in_editmode();
 
         if ($route === 'thumb_generator') {
             $thumbGenerator = new ThumbGenerator($this->theme);
@@ -150,6 +149,8 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPageBuilder(PageContract $page)
     {
+        phpb_set_in_editmode();
+
         // init variables that should be accessible in the view
         $pageBuilder = $this;
         $pageRenderer = new PageRenderer($this->theme, $page, true);
@@ -188,6 +189,8 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPageBuilderBlock(PageContract $page, $blockData = [])
     {
+        phpb_set_in_editmode();
+
         $blockData = is_array($blockData) ? $blockData : [];
         $renderer = new PageRenderer($this->theme, $page, true);
         echo $renderer->parseShortcode($blockData['html'], $blockData['blocks']);

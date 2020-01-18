@@ -10,7 +10,9 @@ use Exception;
 
 class ThumbGenerator
 {
-
+    /**
+     * @var ThemeContract $theme
+     */
     protected $theme;
 
     /**
@@ -32,6 +34,8 @@ class ThumbGenerator
      */
     public function handleThumbRequest($action)
     {
+        phpb_set_in_editmode();
+
         if ($action === 'renderNextBlockThumb') {
             $this->renderNextBlockThumb();
             exit();
@@ -121,6 +125,8 @@ class ThumbGenerator
      */
     public function renderThumbForBlock(ThemeBlock $block)
     {
+        phpb_set_in_editmode();
+
         $thumbPath = $block->getThumbPath();
         if (file_exists($thumbPath)) {
             return;

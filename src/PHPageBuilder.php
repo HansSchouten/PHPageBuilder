@@ -246,6 +246,7 @@ class PHPageBuilder
         // handle page builder requests
         if (phpb_in_module('pagebuilder')) {
             $this->auth->requireAuth();
+            phpb_set_in_editmode();
             $this->pageBuilder->handleRequest($route, $action);
             die('Page not found');
         }
@@ -299,6 +300,7 @@ class PHPageBuilder
 
         // handle page builder requests
         if (phpb_in_module('pagebuilder')) {
+            phpb_set_in_editmode();
             $this->pageBuilder->handleRequest($route, $action);
             die('Page not found');
         }
@@ -370,6 +372,7 @@ class PHPageBuilder
      */
     public function renderPageBuilder(PageContract $page)
     {
+        phpb_set_in_editmode();
         $this->pageBuilder->renderPageBuilder($page);
     }
 }

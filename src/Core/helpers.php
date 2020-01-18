@@ -234,9 +234,23 @@ if (! function_exists('phpb_on_url')) {
     }
 }
 
+if (! function_exists('phpb_set_in_editmode')) {
+    /**
+     * Set whether the current page is being load in edit mode (i.e. inside the page builder).
+     *
+     * @param bool $inEditMode
+     */
+    function phpb_set_in_editmode($inEditMode = true)
+    {
+        global $phpb_in_editmode;
+
+        $phpb_in_editmode = $inEditMode;
+    }
+}
+
 if (! function_exists('phpb_in_editmode')) {
     /**
-     * Return whether the current page is load in edit mode (i.e. inside the page builder)
+     * Return whether the current page is load in edit mode (i.e. inside the page builder).
      *
      * @return bool
      */
