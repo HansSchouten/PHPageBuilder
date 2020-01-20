@@ -69,10 +69,10 @@ if (! function_exists('phpb_flash')) {
 
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
-            if ($encode) {
-                return e($phpb_flash[$key] ?? false);
+            if (! isset($phpb_flash[$key])) {
+                return false;
             }
-            return $phpb_flash[$key] ?? false;
+            return $encode ? e($phpb_flash[$key]) : $phpb_flash[$key];
         }
 
         // if dot notation is used, traverse config string
@@ -311,25 +311,25 @@ if (! function_exists('phpb_route_parameter')) {
 
 if (! function_exists('phpb_field_value')) {
     /**
-     * Return the posted value or the attribute value of the given instance.
+     * Return the posted value or the attribute value of the given instance, or null if no value was found.
      *
      * @param $attribute
      * @param object $instance
-     * @return string
+     * @return string|null
      */
     function phpb_field_value($attribute, $instance = null)
     {
         if (isset($_POST[$attribute])) {
-            return e($_POST[$attribute]);
+            return encode_or_null($_POST[$attribute]);
         }
         if (isset($instance)) {
             if (method_exists($instance, 'get')) {
-                return e($instance->get($attribute));
+                return encode_or_null($instance->get($attribute));
             } else {
-                return e($instance->$attribute);
+                return encode_or_null($instance->$attribute);
             }
         }
-        return '';
+        return null;
     }
 }
 
