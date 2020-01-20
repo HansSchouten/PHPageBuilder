@@ -371,7 +371,7 @@ if (! function_exists('phpb_autoload')) {
         $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
         // remove leading PHPageBuilder/ from the class path
-        $fileName = str_replace('PHPageBuilder/', '', $fileName);
+        $fileName = str_replace('PHPageBuilder' . DIRECTORY_SEPARATOR, '', $fileName);
 
         // include class files starting in the src directory
         require __DIR__ . '/../' . $fileName;
