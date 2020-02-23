@@ -76,7 +76,7 @@ class ShortcodeParser
     {
         if ($maxDepth === 0) {
             throw new Exception("Maximum doBlockShortcodes depth has been reached, "
-                . "probably due to a circular shortcode reference in the defined theme blocks.");
+                . "probably due to a circular shortcode reference in one of the theme blocks.");
         }
 
         $matches = $this->findMatches('block', $html);

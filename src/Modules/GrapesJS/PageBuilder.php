@@ -155,7 +155,7 @@ class PageBuilder implements PageBuilderContract
         $pageBuilder = $this;
         $pageRenderer = new PageRenderer($this->theme, $page, true);
 
-        // create an array of theme blocks and of theme block settings
+        // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {

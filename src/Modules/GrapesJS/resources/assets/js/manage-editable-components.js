@@ -11,12 +11,16 @@
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
 
-        // add all previously stored page components inside the content container
+        // add all previously stored page components to the page builder
         container.components(window.pageComponents);
 
+        // add the server-side rendered html of all dynamic blocks
         replacePlaceholdersForRenderedBlocks(container);
+
+        // apply dynamic block attributes to the server-side rendered html
         applyBlockAttributesToComponents(container);
 
+        // only allow edit to html blocks
         restrictEditAccess(container);
     });
 
@@ -49,6 +53,7 @@
     function replacePlaceholdersForRenderedBlocks(component) {
         let newComponent = component;
 
+        // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
             if (window.dynamicBlocks[id] !== undefined && window.dynamicBlocks[id]['html'] !== undefined) {
@@ -112,7 +117,7 @@
             let clone = cloneComponent(component);
 
             // Since component is a <phpb-block> that should be removed and replaced by its children,
-            // the component's parent child that has the same id as component needs to be replaced.
+            // the component's parent's child that has the same id as component needs to be replaced.
             let blockRootComponent;
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
@@ -312,8 +317,10 @@
             };
             addUniqueClass(component);
             if (component.attributes['is-html'] === 'false') {
-                // we are inside a dynamic block, the first layer of child blocks are directly inside a dynamic block
+                // we just entered a dynamic block, the first layer of child blocks are directly inside a dynamic block
                 directlyInsideDynamicBlock = true;
+                // in a dynamic block, editing elements (based on their html tag) is not allowed
+                allowEditWhitelistedTags = false;
             } else {
                 if (directlyInsideDynamicBlock) {
                     // we are inside a html block directly inside a dynamic block, these html blocks are not removable/copyable/draggable
