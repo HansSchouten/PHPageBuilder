@@ -8,7 +8,7 @@ $(document).ready(function() {
         editor.on('paste', function(event) {
             let $element = $(editor.element['$']);
             let $iframeDocument = $element.closest('body');
-            $iframeDocument.animate({scrollTop: $iframeDocument.scrollTop()});
+            $iframeDocument.animate({scrollTop: $iframeDocument.scrollTop()}, 10);
         });
     });
 
