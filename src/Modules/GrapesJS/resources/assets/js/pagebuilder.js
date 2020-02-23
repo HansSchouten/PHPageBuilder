@@ -24,6 +24,16 @@ $(document).ready(function() {
         window.editor.trigger('change:canvasOffset canvasScroll');
     }
 
+    // prevent exiting page builder with backspace button
+    let backspaceIsPressed = false;
+    $(document).keydown(function(event) {
+        if (event.which === 8) backspaceIsPressed = true;
+    }).keyup(function(event) {
+        if (event.which === 8) backspaceIsPressed = false;
+    }).on('beforeunload', function(event) {
+        if (backspaceIsPressed) event.preventDefault();
+    });
+
 });
 
 function addBlockSearch() {
