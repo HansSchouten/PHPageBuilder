@@ -22,17 +22,25 @@ class BaseModel
     protected $forPageBuilder;
 
     /**
-     * Pass essential data to this Block model instance.
+     * Construct a new model instance.
      *
      * @param ThemeBlock $block
      * @param array $data
      * @param bool $forPageBuilder
      */
-    public function init(ThemeBlock $block, $data = [], $forPageBuilder = false)
+    public function __construct(ThemeBlock $block, $data = [], $forPageBuilder = false)
     {
         $this->block = $block;
         $this->data = is_array($data) ? $data : [];
         $this->forPageBuilder = $forPageBuilder;
+        $this->init();
+    }
+
+    /**
+     * Initialize the model.
+     */
+    protected function init()
+    {
     }
 
     /**

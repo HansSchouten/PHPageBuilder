@@ -30,7 +30,8 @@ $(document).ready(function() {
         if (event.which === 8) backspaceIsPressed = true;
     }).keyup(function(event) {
         if (event.which === 8) backspaceIsPressed = false;
-    }).on('beforeunload', function(event) {
+    });
+    $(window).on('beforeunload', function(event) {
         if (backspaceIsPressed) event.preventDefault();
     });
 
