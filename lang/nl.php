@@ -51,6 +51,10 @@ return [
         'page-content' => 'Pagina inhoud',
         'toastr-changes-saved' => 'Wijzigingen opgeslagen',
         'toastr-saving-failed' => 'Fout tijdens opslaan van wijzigingen',
+        'block-settings' => [
+            'yes' => 'Ja',
+            'no' => 'Nee',
+        ],
         'selector-manager' => [
             'label' => 'CSS klasses',
             'states-label' => 'Opmaak voor',

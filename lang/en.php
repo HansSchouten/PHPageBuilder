@@ -51,6 +51,10 @@ return [
         'page-content' => 'Page contents',
         'toastr-changes-saved' => 'Changes saved',
         'toastr-saving-failed' => 'Error while saving changes',
+        'block-settings' => [
+            'yes' => 'Yes',
+            'no' => 'No',
+        ],
         'selector-manager' => [
             'label' => 'CSS classes',
             'states-label' => 'Layout for',

@@ -113,23 +113,37 @@ class BlockAdapter
      */
     public function getBlockSettingsArray()
     {
-        $configSettings = $this->block->get('settings');
-        if ($this->block->isHtmlBlock() || ! is_array($configSettings)) {
+        $blockSettings = $this->block->get('settings');
+        if ($this->block->isHtmlBlock() || ! is_array($blockSettings)) {
             return [];
         }
 
         $settings = [];
-        foreach ($configSettings as $name => $setting) {
-            if (! isset($setting['label'])) {
+        foreach ($blockSettings as $name => $blockSetting) {
+            if (! isset($blockSetting['label'])) {
                 continue;
             }
+            $type = $blockSetting['type'] ?? 'text';
 
-            $settings[] = [
-                'type' => $setting['type'] ?? 'text',
+            $setting = [
+                'type' => $type,
                 'name' => $name,
-                'label' => $setting['label'],
-                'default-value' => $setting['value'] ?? ''
+                'label' => $blockSetting['label'],
+                'default-value' => $blockSetting['value'] ?? '',
+                'placeholder' => $blockSetting['placeholder'] ?? '',
             ];
+
+            if ($type === 'select') {
+                $setting['options'] = $blockSetting['options'] ?? [];
+            } elseif ($type === 'yes_no') {
+                $setting['type'] = 'select';
+                $setting['options'] = [
+                    ['id' => 0, 'name' => phpb_trans('pagebuilder.block-settings.no')],
+                    ['id' => 1, 'name' => phpb_trans('pagebuilder.block-settings.yes')]
+                ];
+            }
+
+            $settings[] = $setting;
         }
 
         return $settings;
