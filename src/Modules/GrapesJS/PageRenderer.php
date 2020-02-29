@@ -153,16 +153,7 @@ class PageRenderer
         }
 
         $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
-        $html = $blockRenderer->render($themeBlock, $blockData);
-
-        if ($this->forPageBuilder) {
-            $id = $id ?? $slug;
-            $html = '<phpb-block block-slug="' . e($slug) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
-                . $html
-                . '</phpb-block>';
-        }
-
-        return $html;
+        return $blockRenderer->render($themeBlock, $blockData, $id ?? $themeBlock->getSlug());
     }
 
     /**

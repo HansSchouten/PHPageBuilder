@@ -42,9 +42,10 @@ class BlockRenderer
      *
      * @param string $blockSlug
      * @param string|array|null $blockData
+     * @param null $id                          id of the specific block instance
      * @return string
      */
-    public function renderWithSlug(string $blockSlug, $blockData = null)
+    public function renderWithSlug(string $blockSlug, $blockData = null, $id = null)
     {
         $block = new ThemeBlock($this->theme, $blockSlug);
         return $this->render($block, $blockData);
@@ -55,15 +56,24 @@ class BlockRenderer
      *
      * @param ThemeBlock $themeBlock
      * @param $blockData
+     * @param null $id                          id of the specific block instance
      * @return string
      */
-    public function render(ThemeBlock $themeBlock, $blockData)
+    public function render(ThemeBlock $themeBlock, $blockData, $id = null)
     {
         if ($themeBlock->isHtmlBlock()) {
-            return $this->renderHtmlBlock($themeBlock, $blockData);
+            $html = $this->renderHtmlBlock($themeBlock, $blockData);
         } else {
-            return $this->renderDynamicBlock($themeBlock, $blockData);
+            $html = $this->renderDynamicBlock($themeBlock, $blockData);
         }
+
+        if ($this->forPageBuilder) {
+            $id = $id ?? $themeBlock->getSlug();
+            $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
+                . $html
+                . '</phpb-block>';
+        }
+        return $html;
     }
 
     /**
