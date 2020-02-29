@@ -152,7 +152,7 @@ class PageRenderer
             $blockData = $pageBlocksData[$id];
         }
 
-        $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
+        $blockRenderer = new BlockRenderer($this->theme, $this->page, $blockData, $this->forPageBuilder);
         return $blockRenderer->render($themeBlock, $blockData, $id ?? $themeBlock->getSlug());
     }
 

@@ -127,6 +127,7 @@ $(document).ready(function() {
         // depth first recursive call for replacing nested blocks (the deepest blocks are handled first)
         component.get('components').forEach(function(childComponent) {
             let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newInDynamicBlock, newInHtmlBlockInDynamicBlock);
+
             // update data object with child data
             for (let id in childData.current_block) { data.current_block[id] = childData.current_block[id]; }
             for (let id in childData.blocks) { data.blocks[id] = childData.blocks[id]; }
@@ -144,8 +145,15 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['attributes'] = attributes;
-                // if the current component is a dynamic block, replace this component with a placeholder with a unique id
-                // and store data.current_block data inside data.blocks with the generated id
+
+                // if the block has received styling, store its style-identifier
+                // this will be used in a wrapper around the dynamic block to give the block its styling
+                if (component.attributes['style-identifier'] !== undefined) {
+                    data.current_block['attributes']['style-identifier'] = component.attributes['style-identifier'];
+                }
+
+                // replace this dynamic component by a shortcode with a unique id
+                // and store data.current_block data inside data.blocks with the unique id we just generated
                 let instanceId = generateId();
                 component.replaceWith({
                     tagName: 'phpb-block',

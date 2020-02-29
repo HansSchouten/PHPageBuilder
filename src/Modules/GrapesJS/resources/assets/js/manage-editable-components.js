@@ -337,7 +337,7 @@
                 // in a dynamic block, editing elements (based on their html tag) is not allowed
                 allowEditWhitelistedTags = false;
                 // dynamic blocks do not have text cursors
-                component.addClass('cursor-default');
+                component.getEl().setAttribute('data-cursor', 'default');
             }
             component.set(permissions);
         }
@@ -400,7 +400,7 @@
         }
         component.set(settings);
         addUniqueClass(component);
-        component.addClass('cursor-text');
+        component.getEl().setAttribute('data-cursor', 'text');
     }
 
     /**

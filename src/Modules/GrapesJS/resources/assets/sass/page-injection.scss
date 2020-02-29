@@ -2,10 +2,10 @@ form {
   margin-block-end: 0;
 }
 
-.cursor-default, .cursor-default * {
+[data-cursor="default"] {
   cursor: default;
 }
-.cursor-text {
+[data-cursor="text"] {
   cursor: text;
 }
 

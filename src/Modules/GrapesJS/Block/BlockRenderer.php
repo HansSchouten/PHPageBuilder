@@ -19,21 +19,28 @@ class BlockRenderer
     protected $page;
 
     /**
+     * @var array $renderContext
+     */
+    protected $renderContext;
+
+    /**
      * @var bool $forPageBuilder
      */
     protected $forPageBuilder;
 
     /**
-     * BlockAdapter constructor.
+     * BlockRenderer constructor.
      *
      * @param ThemeContract $theme
      * @param PageContract $page
-     * @param $forPageBuilder
+     * @param array $renderContext
+     * @param bool $forPageBuilder
      */
-    public function __construct(ThemeContract $theme, PageContract $page, $forPageBuilder)
+    public function __construct(ThemeContract $theme, PageContract $page, $renderContext = [], $forPageBuilder = false)
     {
         $this->theme = $theme;
         $this->page = $page;
+        $this->renderContext = $renderContext ?? [];
         $this->forPageBuilder = $forPageBuilder;
     }
 
@@ -41,26 +48,28 @@ class BlockRenderer
      * Render a theme block with the given slug using the given block data.
      *
      * @param string $blockSlug
-     * @param string|array|null $blockData
+     * @param array|null $blockData
      * @param null $id                          id of the specific block instance
      * @return string
      */
     public function renderWithSlug(string $blockSlug, $blockData = null, $id = null)
     {
         $block = new ThemeBlock($this->theme, $blockSlug);
-        return $this->render($block, $blockData);
+        return $this->render($block, $blockData, $id);
     }
 
     /**
      * Render the given theme block with the given stored block data.
      *
      * @param ThemeBlock $themeBlock
-     * @param $blockData
+     * @param array|null $blockData
      * @param null $id                          id of the specific block instance
      * @return string
      */
-    public function render(ThemeBlock $themeBlock, $blockData, $id = null)
+    public function render(ThemeBlock $themeBlock, $blockData = null, $id = null)
     {
+        $blockData = $blockData ?? [];
+
         if ($themeBlock->isHtmlBlock()) {
             $html = $this->renderHtmlBlock($themeBlock, $blockData);
         } else {
@@ -72,6 +81,9 @@ class BlockRenderer
             $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
+        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['attributes']['style-identifier'])) {
+            // add wrapper div around dynamic blocks, which receives the style identifier class if styling is added to the dynamic block using the pagebuilder
+            $html = '<div class="' . e($blockData['attributes']['style-identifier']) . '">' . $html . '</div>';
         }
         return $html;
     }
