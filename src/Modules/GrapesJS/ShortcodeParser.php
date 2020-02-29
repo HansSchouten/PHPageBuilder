@@ -92,7 +92,7 @@ class ShortcodeParser
             $id = $match['attributes']['id'] ?? $slug;
             $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $parentBlockId);
 
-            // recursive call to render shortcodes inside the newly loaded block
+            // recursive call to render shortcodes from inside the html of the newly rendered block
             $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
@@ -103,7 +103,7 @@ class ShortcodeParser
                 ];
             }
 
-            // replace shortcode match with the $blockHtml (this replaces only the first match)
+            // replace shortcode match with the $blockHtml (note: this replaces only the first match)
             $pos = strpos($html, $match['shortcode']);
             if ($pos !== false) {
                 $html = substr_replace($html, $blockHtml, $pos, strlen($match['shortcode']));

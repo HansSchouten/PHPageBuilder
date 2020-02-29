@@ -306,29 +306,32 @@
                 hoverable: true,
             });
         } else if (component.attributes['block-slug'] !== undefined) {
-            // by default a block has the following permissions
-            let permissions = {
-                removable: true,
-                draggable: true,
-                copyable: true,
-                selectable: true,
-                hoverable: true,
-                stylable: true,
-            };
-            addUniqueClass(component);
+            // we just entered a new block, set permissions
+            let permissions = {};
+            if (! directlyInsideDynamicBlock) {
+                // the block we entered is located not directly inside a dynamic block, hence this block can be modified
+                permissions = {
+                    removable: true,
+                    draggable: true,
+                    copyable: true,
+                    selectable: true,
+                    hoverable: true,
+                    stylable: true,
+                };
+                // for styling this particular block, the block needs to have a unique class
+                addUniqueClass(component);
+            }
             if (component.attributes['is-html'] === 'false') {
-                // we just entered a dynamic block, the first layer of child blocks are directly inside a dynamic block
+                // the block we just entered is dynamic,
+                // the next layer of child blocks are directly inside a dynamic block
                 directlyInsideDynamicBlock = true;
                 // in a dynamic block, editing elements (based on their html tag) is not allowed
                 allowEditWhitelistedTags = false;
             } else {
-                if (directlyInsideDynamicBlock) {
-                    // we are inside a html block directly inside a dynamic block, these html blocks are not removable/copyable/draggable
-                    permissions.removable = false;
-                    permissions.copyable = false;
-                    permissions.draggable = false;
-                    directlyInsideDynamicBlock = false;
-                }
+                // the block we just entered is an html block,
+                // the next layer of child blocks are not directly inside a dynamic block
+                directlyInsideDynamicBlock = false;
+                // in an html block, editing elements (based on their html tag) is allowed
                 allowEditWhitelistedTags = true;
             }
             component.set(permissions);
