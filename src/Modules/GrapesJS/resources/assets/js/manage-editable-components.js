@@ -307,9 +307,12 @@
             });
         } else if (component.attributes['block-slug'] !== undefined) {
             // we just entered a new block, set permissions
-            let permissions = {};
+            let permissions = {
+                selectable: true,
+                hoverable: true,
+            };
             if (! directlyInsideDynamicBlock) {
-                // the block we entered is located not directly inside a dynamic block, hence this block can be modified
+                // the block we entered is not located directly inside a dynamic block, hence this block can be modified
                 permissions = {
                     removable: true,
                     draggable: true,
@@ -321,18 +324,20 @@
                 // for styling this particular block, the block needs to have a unique class
                 addUniqueClass(component);
             }
-            if (component.attributes['is-html'] === 'false') {
-                // the block we just entered is dynamic,
-                // the next layer of child blocks are directly inside a dynamic block
-                directlyInsideDynamicBlock = true;
-                // in a dynamic block, editing elements (based on their html tag) is not allowed
-                allowEditWhitelistedTags = false;
-            } else {
+            if (component.attributes['is-html'] === 'true') {
                 // the block we just entered is an html block,
                 // the next layer of child blocks are not directly inside a dynamic block
                 directlyInsideDynamicBlock = false;
                 // in an html block, editing elements (based on their html tag) is allowed
                 allowEditWhitelistedTags = true;
+            } else {
+                // the block we just entered is dynamic,
+                // the next layer of child blocks are directly inside a dynamic block
+                directlyInsideDynamicBlock = true;
+                // in a dynamic block, editing elements (based on their html tag) is not allowed
+                allowEditWhitelistedTags = false;
+                // dynamic blocks do not have text cursors
+                component.addClass('cursor-default');
             }
             component.set(permissions);
         }
@@ -395,6 +400,7 @@
         }
         component.set(settings);
         addUniqueClass(component);
+        component.addClass('cursor-text');
     }
 
     /**

@@ -2,6 +2,13 @@ form {
   margin-block-end: 0;
 }
 
+.cursor-default, .cursor-default * {
+  cursor: default;
+}
+.cursor-text {
+  cursor: text;
+}
+
 [data-gjs-type].gjs-comp-selected {
   outline: 2px solid #3b97e3 !important;
   outline-offset: 1px !important;

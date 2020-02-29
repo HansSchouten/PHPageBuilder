@@ -41,10 +41,10 @@ class BlockRenderer
      * Render a theme block with the given slug using the given block data.
      *
      * @param string $blockSlug
-     * @param $blockData
+     * @param string|array|null $blockData
      * @return string
      */
-    public function renderWithSlug(string $blockSlug, $blockData)
+    public function renderWithSlug(string $blockSlug, $blockData = null)
     {
         $block = new ThemeBlock($this->theme, $blockSlug);
         return $this->render($block, $blockData);
