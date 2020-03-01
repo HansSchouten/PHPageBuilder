@@ -164,6 +164,10 @@
         if (window.dynamicBlocks[blockId] !== undefined && window.dynamicBlocks[blockId].settings.attributes !== undefined) {
             settingValues = window.dynamicBlocks[blockId].settings.attributes;
         }
+        // set style identifier class to the dynamic block wrapper, if an identifier is stored in the block settings from saving the pagebuilder earlier
+        if (settingValues['style-identifier'] !== undefined) {
+            component.addClass(settingValues['style-identifier']);
+        }
         // for each setting add a trait to the settings sidebar panel with the earlier stored or default value
         component.attributes['is-updating'] = true;
         let settings = window.blockSettings[component.attributes['block-slug']];
@@ -409,10 +413,20 @@
      * @param component
      */
     function addUniqueClass(component) {
+        // get component identifier class if one is already to the component's html when saving the pagebuilder previously
+        let componentIdentifier = false;
+        component.getClasses().forEach(componentClass => {
+            if (componentClass.startsWith('ID') && componentClass.length === 16) {
+                componentIdentifier = componentClass;
+            }
+        });
+
         if (component.attributes['style-identifier'] === undefined) {
-            component.attributes['style-identifier'] = generateId();
+            component.attributes['style-identifier'] = componentIdentifier ? componentIdentifier : generateId();
         }
-        component.addClass(component.attributes['style-identifier']);
+        if (! componentIdentifier) {
+            component.addClass(component.attributes['style-identifier']);
+        }
     }
 
     /**
