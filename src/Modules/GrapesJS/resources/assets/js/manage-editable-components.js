@@ -14,7 +14,7 @@
         // add all previously stored page components to the page builder
         container.components(window.pageComponents);
 
-        // add the server-side rendered html of all dynamic blocks
+        // replace phpb-block elements with the server-side rendered version of each dynamic block.
         replacePlaceholdersForRenderedBlocks(container);
 
         // apply dynamic block attributes to the server-side rendered html
@@ -46,7 +46,7 @@
     }
 
     /**
-     * Replace phpb-blocks elements with the server-side rendered version of each dynamic block.
+     * Replace phpb-block elements with the server-side rendered version of each dynamic block.
      *
      * @param component
      */
@@ -106,8 +106,8 @@
     });
 
     /**
-     * Apply the block attributes which are stored in <phpb-block> elements to the top-level html element of the block.
-     * If the block starts with multiple html elements at top-level, add a div element wrapping the block's top-level elements.
+     * Apply the block attributes which are stored in <phpb-block> elements to the top-level html element inside the block.
+     * If the block starts with multiple top-level html elements, add a div element wrapping the block's top-level elements.
      *
      * @param component
      */
@@ -136,10 +136,10 @@
             component.remove();
 
             copyAttributes(clone, blockRootComponent, true, false);
+            // add all settings of this component to the settings panel in the sidebar
+            addSettings(blockRootComponent);
             // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(blockRootComponent);
-            // add all settings of this component type to the settings panel in the sidebar
-            addSettings(blockRootComponent);
         } else {
             component.components().each(function(childComponent) {
                 // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
@@ -149,8 +149,8 @@
     }
 
     /**
-     * Add all settings from the block's config file to the given component, to allow them being changed in
-     * the settings side panel.
+     * Add all settings from the block's config file to the given component,
+     * to allow them to be changed in the settings side panel.
      *
      * @param component
      */
@@ -158,11 +158,21 @@
         if (window.blockSettings[component.attributes['block-slug']] === undefined) {
             return;
         }
-        // get the values stored for each setting
+        component.attributes.settings = {};
+        // get the stored settings of the given component (from saving the pagebuilder earlier)
         let settingValues = [];
         let blockId = component.attributes['block-id'];
         if (window.dynamicBlocks[blockId] !== undefined && window.dynamicBlocks[blockId].settings.attributes !== undefined) {
+            component.attributes.settings = window.dynamicBlocks[blockId].settings;
             settingValues = window.dynamicBlocks[blockId].settings.attributes;
+        } else if (component.parent() && component.parent().attributes['settings'] !== undefined) {
+            // the settings of this component are not stored globally in window.dynamicBlocks,
+            // so try to retrieve this component's settings from the parent block (which is necessary for nested dynamic blocks)
+            let parentSettings = component.parent().attributes['settings'];
+            if (parentSettings[blockId] !== undefined && parentSettings[blockId].attributes !== undefined) {
+                component.attributes.settings = parentSettings[blockId];
+                settingValues = parentSettings[blockId].attributes;
+            }
         }
         // set style identifier class to the dynamic block wrapper, if an identifier is stored in the block settings from saving the pagebuilder earlier
         if (settingValues['style-identifier'] !== undefined) {
@@ -216,30 +226,25 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
-                // update dynamic block settings for the updated component
+                // set dynamic block settings for the updated component to the new values
                 if (window.dynamicBlocks[blockId] === undefined) {
                     window.dynamicBlocks[blockId] = {settings: {}};
                 }
-                let settingValues = {};
-                if (data.blocks[blockId] !== undefined) {
-                    settingValues = data.blocks[blockId];
-                }
-                window.dynamicBlocks[blockId].settings = settingValues;
+                window.dynamicBlocks[blockId].settings = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
-                // replace old component for html rendered by server
+                // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
                 restrictEditAccess(container);
 
-                // get the new component
+                // select the component that was selected before the ajax call
                 let newComponent;
                 container.components().each(function(containerChild) {
                     if (containerChild.attributes['block-id'] === blockId) {
                         newComponent = containerChild;
                     }
                 });
-                // select the new component
                 window.editor.select(newComponent);
             },
             error: function() {
