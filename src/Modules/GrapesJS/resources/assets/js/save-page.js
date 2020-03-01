@@ -124,7 +124,7 @@ $(document).ready(function() {
             }
         }
 
-        // depth first recursive call for replacing nested blocks (the deepest blocks are handled first)
+        // depth-first recursive call for replacing nested blocks (the deepest blocks are handled first)
         component.get('components').forEach(function(childComponent) {
             let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newInDynamicBlock, newInHtmlBlockInDynamicBlock);
 
@@ -162,8 +162,17 @@ $(document).ready(function() {
                         id: instanceId
                     }
                 });
-                data.blocks[instanceId] = data.current_block;
-                data.current_block = {};
+
+                if (inDynamicBlock) {
+                    // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
+                    let currentBlockForParent = {};
+                    currentBlockForParent[component.attributes['block-id']] = data.current_block;
+                    data.current_block = currentBlockForParent;
+                } else {
+                    // in an html block, the block data is globally stored in the blocks array
+                    data.blocks[instanceId] = data.current_block;
+                    data.current_block = {};
+                }
             }
         }
 

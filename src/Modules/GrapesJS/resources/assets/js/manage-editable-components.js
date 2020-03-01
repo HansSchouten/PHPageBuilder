@@ -193,6 +193,13 @@
             return;
         }
 
+        // dynamic blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself
+        let componentToUpdate = component;
+        while (componentToUpdate.parent() && componentToUpdate.parent().attributes['is-html'] === 'false') {
+            componentToUpdate = componentToUpdate.parent();
+        }
+        component = componentToUpdate;
+
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
@@ -209,7 +216,7 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
-                // update dynamic block settings for this component
+                // update dynamic block settings for the updated component
                 if (window.dynamicBlocks[blockId] === undefined) {
                     window.dynamicBlocks[blockId] = {settings: {}};
                 }
@@ -232,7 +239,6 @@
                         newComponent = containerChild;
                     }
                 });
-
                 // select the new component
                 window.editor.select(newComponent);
             },
