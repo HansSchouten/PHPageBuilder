@@ -10,7 +10,14 @@ $(document).ready(function() {
     });
 
     window.editor.on('run:open-sm', function(editor) {
+        $(".gjs-trt-traits").parent().parent().css('display', 'none');
+        $(".gjs-sm-sectors").parent().parent().css('display', 'block');
+        // move element classes editor to advanced section
         $("#gjs-sm-advanced .gjs-sm-properties").append($(".gjs-clm-tags"));
+    });
+    window.editor.on('run:open-tm', function(editor) {
+        $(".gjs-sm-sectors").parent().parent().css('display', 'none');
+        $(".gjs-trt-traits").parent().parent().css('display', 'block');
     });
 
     window.editor.on('block:drag:start', function(block) {
