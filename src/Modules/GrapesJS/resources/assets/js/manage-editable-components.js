@@ -222,9 +222,9 @@
                 }
                 let settingValues = {};
                 if (data.blocks[blockId] !== undefined) {
-                    settingValues = data.blocks[blockId].attributes;
+                    settingValues = data.blocks[blockId];
                 }
-                window.dynamicBlocks[blockId].settings.attributes = settingValues;
+                window.dynamicBlocks[blockId].settings = settingValues;
 
                 // replace old component for html rendered by server
                 component.replaceWith(blockHtml);

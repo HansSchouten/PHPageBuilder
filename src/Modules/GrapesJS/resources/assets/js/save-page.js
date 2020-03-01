@@ -154,7 +154,7 @@ $(document).ready(function() {
 
                 // replace this dynamic component by a shortcode with a unique id
                 // and store data.current_block data inside data.blocks with the unique id we just generated
-                let instanceId = generateId();
+                let instanceId = component.attributes['block-id'] !== undefined ? component.attributes['block-id'] : generateId();
                 component.replaceWith({
                     tagName: 'phpb-block',
                     attributes: {
