@@ -35,7 +35,7 @@ window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';
 
 <?php
-$config = require 'grapesjs-config.php';
+$config = require __DIR__ . '/grapesjs/config.php';
 ?>
 let config = <?= json_encode($config) ?>;
 if (window.customConfig !== undefined) {
@@ -54,9 +54,10 @@ editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>)
 </script>
 
 <?php
-require __DIR__ . '/settings-manager.php';
-require __DIR__ . '/style-manager.php';
-require __DIR__ . '/trait-manager.php';
+require __DIR__ . '/grapesjs/asset-manager.php';
+require __DIR__ . '/grapesjs/component-type-manager.php';
+require __DIR__ . '/grapesjs/style-manager.php';
+require __DIR__ . '/grapesjs/trait-manager.php';
 ?>
 
 <button id="toggle-sidebar" class="btn">

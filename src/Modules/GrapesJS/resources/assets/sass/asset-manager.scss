@@ -8,6 +8,13 @@
 .gjs-am-assets {
   height: 325px;
 }
+.gjs-am-asset {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 .gjs-btn-prim {
   display: inline-block;

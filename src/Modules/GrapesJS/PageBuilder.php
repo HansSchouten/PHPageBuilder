@@ -92,6 +92,11 @@ class PageBuilder implements PageBuilderContract
                     $this->handleFileUpload();
                 }
                 break;
+            case 'upload_delete':
+                if (isset($_POST['id'])) {
+                    $this->handleFileDelete();
+                }
+                break;
             case 'renderBlock':
                 if (isset($_POST['data'])) {
                     $this->renderPageBuilderBlock($page, json_decode($_POST['data'], true));
@@ -142,6 +147,40 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
+     * Handle deleting of the posted previously uploaded file.
+     */
+    public function handleFileDelete()
+    {
+        $uploadRepository = new UploadRepository;
+        $uploadedFileResult = $uploadRepository->findWhere('public_id', $_POST['id']);
+        if (empty($uploadedFileResult)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'File not found'
+            ]);
+            exit();
+        }
+
+        $uploadedFile = $uploadedFileResult[0];
+        $uploadRepository->destroy($uploadedFile->id);
+
+        $serverFilePath = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
+        if (! $serverFilePath) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'File not found'
+            ]);
+            exit();
+        }
+        unlink($serverFilePath);
+
+        echo json_encode([
+            'success' => true
+        ]);
+        exit();
+    }
+
+    /**
      * Render the PageBuilder for the given page.
      *
      * @param PageContract $page
@@ -171,7 +210,10 @@ class PageBuilder implements PageBuilderContract
         // create an array of all uploaded assets
         $assets = [];
         foreach ((new UploadRepository)->getAll() as $file) {
-            $assets[] = $file->getUrl();
+            $assets[] = [
+                'src' => $file->getUrl(),
+                'public_id' => $file->public_id
+            ];
         }
 
         require __DIR__ . '/resources/views/layout.php';
