@@ -161,8 +161,11 @@ class PageBuilder implements PageBuilderContract
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = e($themeBlock->getSlug());
             $adapter = new BlockAdapter($pageRenderer, $themeBlock);
-            $blocks[$slug] = $adapter->getBlockManagerArray();
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
+
+            if ($themeBlock->get('hidden') !== true) {
+                $blocks[$slug] = $adapter->getBlockManagerArray();
+            }
         }
 
         require __DIR__ . '/resources/views/layout.php';
