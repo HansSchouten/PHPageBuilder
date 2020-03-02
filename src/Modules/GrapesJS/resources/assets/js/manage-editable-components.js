@@ -128,16 +128,12 @@
             let blockRootComponent;
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
-                    if (component.components().length === 1) {
-                        blockRootComponent = cloneComponent(component.components().models[0]);
-                        component.replaceWith(blockRootComponent);
-                    } else {
-                        // if the phpb-block has multiple direct children, add a wrapper first
-                        blockRootComponent = component.replaceWith({tagName: 'div'});
-                        clone.components().each(function(componentChild) {
-                            blockRootComponent.append(cloneComponent(componentChild));
-                        });
-                    }
+                    // replace the <phpb-block> with the actual component
+                    // the component is wrapped with a div to allow styling dynamic blocks (with only the .style-identifier in the css selector)
+                    blockRootComponent = component.replaceWith({tagName: 'div'});
+                    clone.components().each(function(componentChild) {
+                        blockRootComponent.append(cloneComponent(componentChild));
+                    });
                 }
             });
             component.remove();
