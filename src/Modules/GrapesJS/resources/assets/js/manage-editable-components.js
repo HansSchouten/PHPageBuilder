@@ -81,14 +81,21 @@
 
 
     /**
-     * On selecting a component, only show the copy/drag/remove toolbar if the component is draggable or removable.
+     * Component select handler.
      */
     window.editor.on('component:selected', function(component) {
+        // only show the copy/drag/remove toolbar if the component is draggable or removable
         document.querySelector('.gjs-toolbar').classList.add('d-none');
         if (component.attributes.draggable
             || component.attributes.removable
             || "phpb-blocks-container" in component.attributes.attributes) {
             document.querySelector('.gjs-toolbar').classList.remove('d-none');
+        }
+
+        // if the component has settings, activate settings panel in pagebuilder sidebar
+        if (window.blockSettings[component.attributes['block-slug']] !== undefined &&
+            window.blockSettings[component.attributes['block-slug']].length) {
+            $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(2)").click();
         }
     });
 
