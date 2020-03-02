@@ -16,7 +16,8 @@ return [
         'addBtnText' => phpb_trans('pagebuilder.asset-manager.add-image'),
         'upload' => phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->getId()]),
         'uploadName' => 'files',
-        'multiUpload' => false
+        'multiUpload' => false,
+        'assets' => $assets
     ],
     'styleManager' => [
         'textNoElement' => phpb_trans('pagebuilder.style-no-element-selected'),

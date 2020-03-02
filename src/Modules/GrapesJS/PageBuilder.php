@@ -168,6 +168,12 @@ class PageBuilder implements PageBuilderContract
             }
         }
 
+        // create an array of all uploaded assets
+        $assets = [];
+        foreach ((new UploadRepository)->getAll() as $file) {
+            $assets[] = $file->getUrl();
+        }
+
         require __DIR__ . '/resources/views/layout.php';
     }
 
