@@ -158,6 +158,7 @@ editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>)
 <?php
 require __DIR__ . '/settings-manager.php';
 require __DIR__ . '/style-manager.php';
+require __DIR__ . '/trait-manager.php';
 ?>
 
 <button id="toggle-sidebar" class="btn">

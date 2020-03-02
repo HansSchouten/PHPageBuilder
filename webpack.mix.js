@@ -8,7 +8,8 @@ mix.sass(websiteManagerAssetsPath + 'sass/app.scss', 'dist/websitemanager')
     .js(websiteManagerAssetsPath + 'js/app.js', 'dist/websitemanager');
 
 let grapesJSAssetsPath = 'src/Modules/GrapesJS/resources/assets/';
-mix.sass(grapesJSAssetsPath + 'sass/app.scss', 'dist/pagebuilder')
+mix.copy(grapesJSAssetsPath + 'images', 'dist/pagebuilder/images')
+   .sass(grapesJSAssetsPath + 'sass/app.scss', 'dist/pagebuilder')
    .sass(grapesJSAssetsPath + 'sass/page-injection.scss', 'dist/pagebuilder')
    .js(grapesJSAssetsPath + 'js/app.js', 'dist/pagebuilder')
    .js(grapesJSAssetsPath + 'js/page-injection.js', 'dist/pagebuilder');

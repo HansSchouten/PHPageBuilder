@@ -10,6 +10,10 @@ html, body, #gjs {
   overflow: hidden;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .gjs-editor {
   font-size: 0.9rem;
 }
@@ -397,6 +401,16 @@ html, body, #gjs {
 }
 .gjs-trt-traits .gjs-label-wrp {
   width: 100%;
+}
+
+.gjs-trt-trait .gjs-field-image {
+  background: #fff;
+  padding: 0;
+
+  img {
+    max-width: 100%;
+    max-height: 200px;
+  }
 }
 
 
