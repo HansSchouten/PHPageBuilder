@@ -20,9 +20,9 @@ class PageBuilder implements PageBuilderContract
     protected $theme;
 
     /**
-     * @var string $scripts
+     * @var array $scripts
      */
-    protected $scripts;
+    protected $scripts = [];
 
     /**
      * @var string $css
@@ -279,14 +279,15 @@ class PageBuilder implements PageBuilderContract
     /**
      * Get or set custom scripts for customizing behaviour of the page builder.
      *
+     * @param string $location              head|body
      * @param string|null $scripts
      * @return string
      */
-    public function customScripts(string $scripts = null)
+    public function customScripts(string $location, string $scripts = null)
     {
         if (! is_null($scripts)) {
-            $this->scripts = $scripts;
+            $this->scripts[$location] = $scripts;
         }
-        return $this->scripts;
+        return $this->scripts[$location] ?? '';
     }
 }

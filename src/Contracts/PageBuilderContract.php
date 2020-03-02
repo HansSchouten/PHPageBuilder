@@ -47,8 +47,9 @@ interface PageBuilderContract
     /**
      * Get or set custom scripts for customizing behaviour of the page builder.
      *
+     * @param string $location              head|body
      * @param string|null $scripts
      * @return string
      */
-    public function customScripts(string $scripts = null);
+    public function customScripts(string $location, string $scripts = null);
 }

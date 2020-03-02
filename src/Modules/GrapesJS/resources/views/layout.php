@@ -18,6 +18,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.10.2/beautify-html.min.js"></script>
+    <?= $pageBuilder->customScripts('head'); ?>
 </head>
 
 <body>
@@ -27,6 +28,6 @@ require __DIR__ . '/pagebuilder.php';
 ?>
 
 <script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
-<?= $pageBuilder->customScripts(); ?>
+<?= $pageBuilder->customScripts('body'); ?>
 </body>
 </html>
