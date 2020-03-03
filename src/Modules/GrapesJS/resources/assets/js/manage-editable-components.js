@@ -97,7 +97,29 @@
             window.blockSettings[component.attributes['block-slug']].length) {
             $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(2)").click();
         }
+        else if (componentHasBackground(component)) {
+            // on selecting a component without settings, with editable background, show background styling
+            $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(3)").click();
+            if ($("#gjs-sm-position").hasClass("gjs-sm-open")) {
+                $("#gjs-sm-position").find(".gjs-sm-title").click();
+            }
+            if (! $("#gjs-sm-background").hasClass("gjs-sm-open")) {
+                $("#gjs-sm-background").find(".gjs-sm-title").click();
+            }
+        }
     });
+
+    /**
+     * Return whether the given component contains a CSS background, that should be editable.
+     *
+     * @param component
+     * @returns {boolean}
+     */
+    function componentHasBackground(component) {
+        let css = window.editor.CodeManager.getCode(component, 'css', {cssc: window.editor.CssComposer});
+        console.log(css);
+        return css.includes('background:') || css.includes('background-');
+    }
 
     /**
      * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
