@@ -117,7 +117,6 @@
      */
     function componentHasBackground(component) {
         let css = window.editor.CodeManager.getCode(component, 'css', {cssc: window.editor.CssComposer});
-        console.log(css);
         return css.includes('background:') || css.includes('background-');
     }
 
@@ -382,9 +381,9 @@
             component.set(permissions);
         }
 
-        // set editable access based on tags or html class attribute
+        // set editable access based on tags, styling or html class attribute
         if (allowEditWhitelistedTags) {
-            allowEditBasedOnTag(component);
+            allowEditBasedOnTagAndStyling(component);
         }
         allowEditBasedOnAttribute(component);
 
@@ -393,11 +392,12 @@
     }
 
     /**
-     * Set the given component's editability based on which tag the component represents.
+     * Set the given component's editability based on which tag the component represents
+     * or which theme styling is assigned.
      *
      * @param component
      */
-    function allowEditBasedOnTag(component) {
+    function allowEditBasedOnTagAndStyling(component) {
         let htmlTag = component.get('tagName');
         let editableTags = [
             //'div','span',   // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
@@ -406,7 +406,7 @@
             'ul','li','th','td'
         ];
 
-        if (editableTags.includes(htmlTag)) {
+        if (editableTags.includes(htmlTag) || componentHasBackground(component)) {
             makeComponentEditable(component);
         }
     }
