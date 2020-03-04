@@ -116,16 +116,22 @@
      * @returns {boolean}
      */
     function componentHasBackground(component) {
-        let componentStyle = window.getComputedStyle(component.getEl());
+        try {
+            let componentStyle = window.getComputedStyle(component.getEl());
 
-        let hasBackground = false;
-        ['background', 'background-image', 'background-color'].forEach(property => {
-            let value = componentStyle.getPropertyValue(property);
-            if (value !== undefined && value !== '' && ! value.includes('none') && ! value.includes('rgba(0, 0, 0, 0)')) {
-                hasBackground = true;
-            }
-        });
-        return hasBackground;
+            let hasBackground = false;
+            ['background', 'background-image', 'background-color'].forEach(property => {
+                let value = componentStyle.getPropertyValue(property);
+                if (value !== undefined && value !== '' && ! value.includes('none') && ! value.includes('rgba(0, 0, 0, 0)')) {
+                    hasBackground = true;
+                }
+            });
+            return hasBackground;
+        }
+        catch (e) {
+            console.log(e);
+            return false;
+        }
     }
 
     /**
