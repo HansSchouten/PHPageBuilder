@@ -116,8 +116,16 @@
      * @returns {boolean}
      */
     function componentHasBackground(component) {
-        let css = window.editor.CodeManager.getCode(component, 'css', {cssc: window.editor.CssComposer});
-        return css.includes('background:') || css.includes('background-');
+        let componentStyle = window.getComputedStyle(component.getEl());
+
+        let hasBackground = false;
+        ['background', 'background-image', 'background-color'].forEach(property => {
+            let value = componentStyle.getPropertyValue(property);
+            if (value !== undefined && value !== '' && ! value.includes('none') && ! value.includes('rgba(0, 0, 0, 0)')) {
+                hasBackground = true;
+            }
+        });
+        return hasBackground;
     }
 
     /**
