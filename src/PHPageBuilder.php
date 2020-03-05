@@ -45,7 +45,9 @@ class PHPageBuilder
      */
     public function __construct(array $config)
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         // if flash session data is set, set global session flash data and remove data
         if (isset($_SESSION['phpb_flash'])) {
