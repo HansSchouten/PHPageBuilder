@@ -112,6 +112,9 @@ $(document).ready(function() {
         data['current_block'] = {};
         data['blocks'] = {};
 
+        // editor css, used to checker whether a component has received styling
+        let editorCss = window.editor.getCss();
+
         // update variables for passing context to the recursive calls on child components
         let newInDynamicBlock = inDynamicBlock;
         let newInHtmlBlockInDynamicBlock = inHtmlBlockInDynamicBlock;
@@ -147,8 +150,8 @@ $(document).ready(function() {
                 data.current_block['attributes'] = attributes;
 
                 // if the block has received styling, store its style-identifier
-                // this will be used in a wrapper around the dynamic block to give the block its styling
-                if (component.attributes['style-identifier'] !== undefined) {
+                // this will be used as class in a wrapper around the dynamic block to give the block its styling
+                if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
                     data.current_block['attributes']['style-identifier'] = component.attributes['style-identifier'];
                 }
 
