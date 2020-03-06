@@ -20,8 +20,11 @@
         // apply dynamic block attributes to the server-side rendered html
         applyBlockAttributesToComponents(container);
 
-        // only allow edit to html blocks
-        restrictEditAccess(container);
+        // only allow to edit html blocks
+        // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
+        setTimeout(function() {
+            restrictEditAccess(container);
+        }, 500);
     });
 
     /**
@@ -124,11 +127,14 @@
 
             ['background', 'background-image', 'background-color'].forEach(property => {
                 let value = componentStyle.getPropertyValue(property);
+                console.log(value);
                 if (value !== undefined && value !== '' && ! value.includes('none') && ! value.includes('rgba(0, 0, 0, 0)')) {
                     hasBackground = true;
                 }
             });
         }
+
+        console.log(hasBackground);
 
         return hasBackground;
     }

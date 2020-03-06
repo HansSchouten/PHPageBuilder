@@ -22,12 +22,14 @@ return [
     'styleManager' => [
         'textNoElement' => phpb_trans('pagebuilder.style-no-element-selected'),
         'sectors' => [[
+            'id' => 'position',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.position'),
             'open' => true,
             'buildProps' => ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin']
         ], [
+            'id' => 'background',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.background'),
-             'open' => false,
+            'open' => false,
             'buildProps' => ['background-color', 'background']
         ]]
     ],
