@@ -95,13 +95,12 @@
             document.querySelector('.gjs-toolbar').classList.remove('d-none');
         }
 
-        // if the component has settings, activate settings panel in pagebuilder sidebar
-        if (window.blockSettings[component.attributes['block-slug']] !== undefined &&
-            window.blockSettings[component.attributes['block-slug']].length) {
+        // if the component is a link or has settings, activate settings panel in pagebuilder sidebar
+        if (component.get('type') === 'link' || componentHasBlockSettings(component)) {
             $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(2)").click();
         }
-        else if (componentHasBackground(component)) {
-            // on selecting a component without settings, with editable background, show background styling
+        else if (component.get('type') === '' && componentHasBackground(component)) {
+            // on selecting a default component without settings, with editable background, show background styling
             $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(3)").click();
             if ($("#gjs-sm-position").hasClass("gjs-sm-open")) {
                 $("#gjs-sm-position").find(".gjs-sm-title").click();
@@ -134,6 +133,17 @@
         }
 
         return hasBackground;
+    }
+
+    /**
+     * Return whether the given component has settings defined in its block config file.
+     *
+     * @param component
+     * @returns {boolean}
+     */
+    function componentHasBlockSettings(component) {
+        return (window.blockSettings[component.attributes['block-slug']] !== undefined &&
+            window.blockSettings[component.attributes['block-slug']].length);
     }
 
     /**
