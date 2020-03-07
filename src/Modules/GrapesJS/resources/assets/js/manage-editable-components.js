@@ -127,14 +127,11 @@
 
             ['background', 'background-image', 'background-color'].forEach(property => {
                 let value = componentStyle.getPropertyValue(property);
-                console.log(value);
                 if (value !== undefined && value !== '' && ! value.includes('none') && ! value.includes('rgba(0, 0, 0, 0)')) {
                     hasBackground = true;
                 }
             });
         }
-
-        console.log(hasBackground);
 
         return hasBackground;
     }
@@ -459,7 +456,6 @@
         }
         component.set(settings);
         addUniqueClass(component);
-        component.getEl().setAttribute('data-cursor', 'text');
     }
 
     /**
