@@ -38,8 +38,6 @@ return [
         'style-no-element-selected' => 'Select an element to modify the style.',
         'trait-no-element-selected' => 'Select an element to modify any attributes.',
         'trait-settings' => 'Settings',
-        'trait-this-window' => 'This window',
-        'trait-new-window' => 'New window',
         'default-category' => 'General',
         'view-blocks' => 'Blocks',
         'view-settings' => 'Settings',
@@ -51,9 +49,12 @@ return [
         'page-content' => 'Page contents',
         'toastr-changes-saved' => 'Changes saved',
         'toastr-saving-failed' => 'Error while saving changes',
-        'block-settings' => [
-            'yes' => 'Yes',
-            'no' => 'No',
+        'yes' => 'Yes',
+        'no' => 'No',
+        'trait-manager' => [
+            'link' => [
+                'target' => 'Open in new tab?'
+            ]
         ],
         'selector-manager' => [
             'label' => 'CSS classes',

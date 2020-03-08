@@ -44,14 +44,10 @@ return [
         ],
     ],
     'traitManager' => [
-        'textNoElement' => phpb_trans('pagebuilder.trait-no-element-selected'),
         'labelContainer' => phpb_trans('pagebuilder.trait-settings'),
+        'textNoElement' => phpb_trans('pagebuilder.trait-no-element-selected'),
         'labelPlhText' => '',
-        'labelPlhHref' => 'https =>//website.com',
-        'optionsTarget' => [
-            ['value' => '', 'name' => phpb_trans('pagebuilder.trait-this-window')],
-            ['value' => '_blank', 'name' => phpb_trans('pagebuilder.trait-new-window')]
-        ]
+        'labelPlhHref' => 'https://website.com'
     ],
     'panels' => [
         'defaults' => [

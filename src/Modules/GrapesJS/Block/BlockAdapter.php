@@ -138,8 +138,8 @@ class BlockAdapter
             } elseif ($type === 'yes_no') {
                 $setting['type'] = 'select';
                 $setting['options'] = [
-                    ['id' => 0, 'name' => phpb_trans('pagebuilder.block-settings.no')],
-                    ['id' => 1, 'name' => phpb_trans('pagebuilder.block-settings.yes')]
+                    ['id' => 0, 'name' => phpb_trans('pagebuilder.no')],
+                    ['id' => 1, 'name' => phpb_trans('pagebuilder.yes')]
                 ];
             }
 

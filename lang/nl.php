@@ -38,8 +38,6 @@ return [
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',
         'trait-no-element-selected' => 'Selecteer een element om de eigenschappen aan te passen.',
         'trait-settings' => 'Instellingen',
-        'trait-this-window' => 'Dit venster',
-        'trait-new-window' => 'Nieuw venster',
         'default-category' => 'Algemeen',
         'view-blocks' => 'Blokken',
         'view-settings' => 'Instellingen',
@@ -51,9 +49,12 @@ return [
         'page-content' => 'Pagina inhoud',
         'toastr-changes-saved' => 'Wijzigingen opgeslagen',
         'toastr-saving-failed' => 'Fout tijdens opslaan van wijzigingen',
-        'block-settings' => [
-            'yes' => 'Ja',
-            'no' => 'Nee',
+        'yes' => 'Ja',
+        'no' => 'Nee',
+        'trait-manager' => [
+            'link' => [
+                'target' => 'Open in nieuw tabblad?'
+            ]
         ],
         'selector-manager' => [
             'label' => 'CSS klasses',
