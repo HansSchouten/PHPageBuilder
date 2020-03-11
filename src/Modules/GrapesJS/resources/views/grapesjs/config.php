@@ -20,7 +20,6 @@ return [
         'assets' => $assets
     ],
     'styleManager' => [
-        'textNoElement' => phpb_trans('pagebuilder.style-no-element-selected'),
         'sectors' => [[
             'id' => 'position',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.position'),
@@ -44,8 +43,6 @@ return [
         ],
     ],
     'traitManager' => [
-        'labelContainer' => phpb_trans('pagebuilder.trait-settings'),
-        'textNoElement' => phpb_trans('pagebuilder.trait-no-element-selected'),
         'labelPlhText' => '',
         'labelPlhHref' => 'https://website.com'
     ],
@@ -55,7 +52,7 @@ return [
                 'id' => 'views',
                 'buttons' => [
                     [
-                        'id' => 'open-blocks',
+                        'id' => 'open-blocks-button',
                         'className' => 'fa fa-th-large',
                         'command' => 'open-blocks',
                         'togglable' => 0,
@@ -63,14 +60,14 @@ return [
                         'active' => true,
                     ],
                     [
-                        'id' => 'open-settings',
+                        'id' => 'open-settings-button',
                         'className' => 'fa fa-cog',
                         'command' => 'open-tm',
                         'togglable' => 0,
                         'attributes' => ['title' => phpb_trans('pagebuilder.view-settings')],
                     ],
                     [
-                        'id' => 'open-style',
+                        'id' => 'open-style-button',
                         'className' => 'fa fa-paint-brush',
                         'command' => 'open-sm',
                         'togglable' => 0,

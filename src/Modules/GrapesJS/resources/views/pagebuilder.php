@@ -43,6 +43,18 @@ if (window.customConfig !== undefined) {
 }
 window.editor = grapesjs.init(config);
 
+window.editor.I18n.addMessages({
+    en: {
+        styleManager: {
+            empty: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
+        },
+        traitManager: {
+            empty: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
+            label: '<?= phpb_trans('pagebuilder.trait-settings') ?>'
+        }
+    }
+});
+
 // set custom name for the wrapper component containing all page components
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
 
