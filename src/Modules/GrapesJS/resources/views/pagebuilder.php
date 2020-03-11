@@ -44,13 +44,19 @@ if (window.customConfig !== undefined) {
 window.editor = grapesjs.init(config);
 
 window.editor.I18n.addMessages({
-    en: {
+    <?= phpb_config('general.language') ?>: {
         styleManager: {
             empty: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
         },
         traitManager: {
             empty: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
             label: '<?= phpb_trans('pagebuilder.trait-settings') ?>'
+        },
+        assetManager: {
+            addButton: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
+            inputPlh: 'http://path/to/the/image.jpg',
+            modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
+            uploadTitle: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>'
         }
     }
 });
@@ -90,7 +96,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
         <?= phpb_trans('pagebuilder.view-page') ?>
     </a>
 
-    <a id="go-back" href="<?= phpb_config('pagebuilder.actions.back') ?>" class="btn">
+    <a id="go-back" href="<?= e(phpb_config('pagebuilder.actions.back')) ?>" class="btn">
         <i class="fa fa-arrow-circle-left"></i>
         <?= phpb_trans('pagebuilder.go-back') ?>
     </a>

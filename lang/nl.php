@@ -74,7 +74,6 @@ return [
         'asset-manager' => [
             'modal-title' => 'Selecteer afbeelding',
             'drop-files' => 'Klik hier of sleep bestanden hierheen',
-            'url-placeholder' => 'Afbeelding URL',
             'add-image' => 'Afbeelding toevoegen',
         ],
     ],

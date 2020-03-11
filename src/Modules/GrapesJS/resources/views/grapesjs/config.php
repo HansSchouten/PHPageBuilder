@@ -10,10 +10,6 @@ return [
         'autosave' => false
     ],
     'assetManager' => [
-        'modalTitle' => phpb_trans('pagebuilder.asset-manager.modal-title'),
-        'uploadText' => phpb_trans('pagebuilder.asset-manager.drop-files'),
-        'inputPlaceholder' => phpb_trans('pagebuilder.asset-manager.url-placeholder'),
-        'addBtnText' => phpb_trans('pagebuilder.asset-manager.add-image'),
         'upload' => phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->getId()]),
         'uploadName' => 'files',
         'multiUpload' => false,
