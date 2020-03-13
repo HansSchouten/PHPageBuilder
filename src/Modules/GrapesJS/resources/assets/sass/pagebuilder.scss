@@ -182,6 +182,10 @@ html, body, #gjs {
   height: calc(100% - #{$sidebar-bottom-buttons-height});
   overflow: hidden;
 
+  > div:first-of-type {
+    margin-top: 50px;
+  }
+
   > div {
     height: 100%;
     overflow-y: auto;
@@ -271,10 +275,11 @@ html, body, #gjs {
 /*   BLOCKS PANEL VIEW   */
 
 #block-search {
-  position: relative;
+  position: fixed;
   background: #e1e8eb;
-  padding-bottom: 10px;
   border-radius: 0;
+  width: 298px;
+  margin-top: -51px;
 
   i.fa-search {
     position: absolute;
