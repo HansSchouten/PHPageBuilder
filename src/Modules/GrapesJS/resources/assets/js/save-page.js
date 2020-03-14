@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    let editorCss = '';
+
     /**
      * Save page on clicking save button.
      */
@@ -21,25 +23,30 @@ $(document).ready(function() {
     function savePage() {
         toggleWaiting();
 
-        // get the page content container (so skip all layout blocks) and prepare data for being stored
-        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-        let data = getDataInStorageFormat(container);
+        // use timeout to ensure the waiting spinner is correctly displayed before the page briefly freezes due to high JS workload
+        setTimeout(function() {
 
-        $.ajax({
-            type: "POST",
-            url: $("#save-page").data('url'),
-            data: {
-                data: JSON.stringify(data)
-            },
-            success: function() {
-                toggleWaiting();
-                window.toastr.success(window.translations['toastr-changes-saved']);
-            },
-            error: function () {
-                toggleWaiting();
-                window.toastr.error(window.translations['toastr-saving-failed']);
-            }
-        });
+            // get the page content container (so skip all layout blocks) and prepare data for being stored
+            let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
+            let data = getDataInStorageFormat(container);
+
+            $.ajax({
+                type: "POST",
+                url: $("#save-page").data('url'),
+                data: {
+                    data: JSON.stringify(data)
+                },
+                success: function() {
+                    toggleWaiting();
+                    window.toastr.success(window.translations['toastr-changes-saved']);
+                },
+                error: function () {
+                    toggleWaiting();
+                    window.toastr.error(window.translations['toastr-saving-failed']);
+                }
+            });
+
+        }, 200);
     }
 
     /**
@@ -66,6 +73,8 @@ $(document).ready(function() {
     function getDataInStorageFormat(container) {
         // clone the container since we will be replacing components with placeholders without updating the page builder
         container = window.cloneComponent(container);
+        // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
+        editorCss = window.editor.getCss();
         // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
@@ -111,9 +120,6 @@ $(document).ready(function() {
         let data = {};
         data['current_block'] = {};
         data['blocks'] = {};
-
-        // editor css, used to checker whether a component has received styling
-        let editorCss = window.editor.getCss();
 
         // update variables for passing context to the recursive calls on child components
         let newInDynamicBlock = inDynamicBlock;
