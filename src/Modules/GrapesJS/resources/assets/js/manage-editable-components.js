@@ -426,9 +426,10 @@
     function allowEditBasedOnTagAndStyling(component) {
         let htmlTag = component.get('tagName');
         let editableTags = [
-            //'div','span',   // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
+            //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
-            'p','a','img','button','small','b','strong','i','em',
+            'p','a','img','button',
+            //'small','b','strong','i','em', // not editable since these elements will be added by ckeditor inside other editable element (like p and a)
             'ul','li','th','td'
         ];
 
