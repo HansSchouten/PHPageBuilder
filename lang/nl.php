@@ -67,6 +67,14 @@ return [
                 'position' => 'Positie',
                 'background' => 'Achtergrond',
                 'advanced' => 'Geavanceerd',
+            ],
+            'properties' => [
+                'position' => [
+                    'height' => 'Hoogte',
+                    'width' => 'Breedte',
+                    'min-height' => 'Minimale hoogte',
+                    'min-width' => 'Minimale breedte'
+                ]
             ]
         ],
         'asset-manager' => [

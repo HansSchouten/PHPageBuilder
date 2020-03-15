@@ -60,6 +60,13 @@ window.editor.I18n.addMessages({
         }
     }
 });
+<?php
+foreach (phpb_trans('pagebuilder.style-manager.properties') as $sector => $sectorProperties) {
+    foreach ($sectorProperties as $property => $translation) {
+        echo "window.editor.StyleManager.getProperty('" . e($sector) . "', '" . e($property) . "').set({ name: '" . e($translation) . "' });";
+    }
+}
+?>
 
 // set custom name for the wrapper component containing all page components
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');

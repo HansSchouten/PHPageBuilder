@@ -155,8 +155,8 @@ if (! function_exists('phpb_trans')) {
             }
         }
 
-        // if the remaining sub array is a string, return this translation
-        if (is_string($subArray)) {
+        // if the remaining sub array is a non-empty string/array, return this translation or translations structure
+        if (! empty($subArray)) {
             return $subArray;
         }
         return '';

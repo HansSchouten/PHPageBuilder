@@ -67,6 +67,14 @@ return [
                 'position' => 'Position',
                 'background' => 'Background',
                 'advanced' => 'Advanced',
+            ],
+            'properties' => [
+                'position' => [
+                    'height' => 'Height',
+                    'width' => 'Width',
+                    'min-height' => 'Minimum height',
+                    'min-width' => 'Minimum width'
+                ]
             ]
         ],
         'asset-manager' => [
