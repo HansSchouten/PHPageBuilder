@@ -52,9 +52,7 @@ return [
         'yes' => 'Ja',
         'no' => 'Nee',
         'trait-manager' => [
-            'link' => [
-                'target' => 'Open in nieuw tabblad?'
-            ]
+            'no-settings' => 'Dit blok heeft geen instellingen.'
         ],
         'selector-manager' => [
             'label' => 'CSS klasses',

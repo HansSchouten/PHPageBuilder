@@ -52,9 +52,7 @@ return [
         'yes' => 'Yes',
         'no' => 'No',
         'trait-manager' => [
-            'link' => [
-                'target' => 'Open in new tab?'
-            ]
+            'no-settings' => 'This block does not have settings.'
         ],
         'selector-manager' => [
             'label' => 'CSS classes',

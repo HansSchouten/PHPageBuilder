@@ -95,8 +95,8 @@
             document.querySelector('.gjs-toolbar').classList.remove('d-none');
         }
 
-        // if the component is a link or has settings, activate settings panel in pagebuilder sidebar
-        if (component.get('type') === 'link' || componentHasBlockSettings(component)) {
+        // if the component has settings, activate settings panel in pagebuilder sidebar
+        if (componentHasBlockSettings(component)) {
             $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(2)").click();
         }
         else if (component.get('type') === '' && componentHasBackground(component)) {
@@ -108,6 +108,13 @@
             if (! $("#gjs-sm-background").hasClass("gjs-sm-open")) {
                 $("#gjs-sm-background").find(".gjs-sm-title").click();
             }
+        }
+
+        // if component has no settings, add no settings text to settings panel in sidebar
+        if (! componentHasBlockSettings(component)) {
+            setTimeout(function() {
+                $(".gjs-trt-traits").html('<p class="no-settings">' + window.translations['trait-manager']['no-settings'] + '</p>');
+            }, 0);
         }
     });
 
