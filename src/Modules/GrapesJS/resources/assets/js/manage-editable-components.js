@@ -458,9 +458,7 @@
     function makeComponentEditable(component) {
         let settings = {
             hoverable: true,
-            selectable: true,
             editable: true,
-            stylable: true,
         };
         if ('phpb-blocks-container' in component.attributes.attributes) {
             settings.droppable = true;
