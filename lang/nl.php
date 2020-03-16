@@ -86,8 +86,18 @@ return [
                         ]
                     ],
                     'margin' => [
-                        'name' => 'Ruimte buitenkant (marge)'
+                        'name' => 'Ruimte buitenkant (marge)',
+                        'properties' => [
+                            'margin-top' => 'Buitenrand boven',
+                            'margin-right' => 'Buitenrand rechts',
+                            'margin-bottom' => 'Buitenrand onder',
+                            'margin-left' => 'Buitenrand links'
+                        ]
                     ]
+                ],
+                'background' => [
+                    'background-color' => 'Achtergrond kleur',
+                    'background' => 'Achtergrond',
                 ]
             ]
         ],

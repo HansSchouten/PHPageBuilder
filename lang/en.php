@@ -76,11 +76,28 @@ return [
                     'height' => 'Height',
                     'min-height' => 'Minimum height',
                     'max-height' => 'Maximum height',
-                    'padding' => 'Opvulling / padding',
-                    'padding-top' => '',
-                    'padding-right' => '',
-                    'padding-bottom' => '',
-                    'padding-left' => ''
+                    'padding' => [
+                        'name' => 'Padding',
+                        'properties' => [
+                            'padding-top' => 'Padding top',
+                            'padding-right' => 'Padding right',
+                            'padding-bottom' => 'Padding bottom',
+                            'padding-left' => 'Padding left'
+                        ]
+                    ],
+                    'margin' => [
+                        'name' => 'Margin',
+                        'properties' => [
+                            'margin-top' => 'Margin top',
+                            'margin-right' => 'Margin right',
+                            'margin-bottom' => 'Margin bottom',
+                            'margin-left' => 'Margin left'
+                        ]
+                    ]
+                ],
+                'background' => [
+                    'background-color' => 'Background color',
+                    'background' => 'Background',
                 ]
             ]
         ],
