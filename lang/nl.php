@@ -70,10 +70,24 @@ return [
             ],
             'properties' => [
                 'position' => [
-                    'height' => 'Hoogte',
                     'width' => 'Breedte',
+                    'min-width' => 'Minimale breedte',
+                    'max-width' => 'Maximale breedte',
+                    'height' => 'Hoogte',
                     'min-height' => 'Minimale hoogte',
-                    'min-width' => 'Minimale breedte'
+                    'max-height' => 'Maximale hoogte',
+                    'padding' => [
+                        'name' => 'Ruimte binnenkant (padding)',
+                        'properties' => [
+                            'padding-top' => 'Binnenrand boven',
+                            'padding-right' => 'Binnenrand rechts',
+                            'padding-bottom' => 'Binnenrand onder',
+                            'padding-left' => 'Binnenrand links'
+                        ]
+                    ],
+                    'margin' => [
+                        'name' => 'Ruimte buitenkant (marge)'
+                    ]
                 ]
             ]
         ],

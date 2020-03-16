@@ -70,10 +70,17 @@ return [
             ],
             'properties' => [
                 'position' => [
-                    'height' => 'Height',
                     'width' => 'Width',
+                    'min-width' => 'Minimum width',
+                    'max-width' => 'Maximum width',
+                    'height' => 'Height',
                     'min-height' => 'Minimum height',
-                    'min-width' => 'Minimum width'
+                    'max-height' => 'Maximum height',
+                    'padding' => 'Opvulling / padding',
+                    'padding-top' => '',
+                    'padding-right' => '',
+                    'padding-bottom' => '',
+                    'padding-left' => ''
                 ]
             ]
         ],
