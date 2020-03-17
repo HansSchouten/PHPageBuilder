@@ -415,10 +415,15 @@
         }
 
         // set editable access based on tags, styling or html class attribute
+        let componentMadeEditable = false;
         if (allowEditWhitelistedTags) {
-            allowEditBasedOnTagAndStyling(component);
+            componentMadeEditable = allowEditBasedOnTagAndStyling(component);
         }
-        allowEditBasedOnAttribute(component);
+        componentMadeEditable = allowEditBasedOnAttribute(component) || componentMadeEditable;
+        if (componentMadeEditable) {
+            // do not allow text-editable components within text-editable components
+            allowEditWhitelistedTags = false;
+        }
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));
@@ -429,6 +434,7 @@
      * or which theme styling is assigned.
      *
      * @param component
+     * @returns {boolean}
      */
     function allowEditBasedOnTagAndStyling(component) {
         let htmlTag = component.get('tagName');
@@ -436,25 +442,30 @@
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
             'p','a','img','button',
-            //'small','b','strong','i','em', // not editable since these elements will be added by ckeditor inside other editable element (like p and a)
+            'small','b','strong','i','em',
             'ul','li','th','td'
         ];
 
         if (editableTags.includes(htmlTag) || componentHasBackground(component)) {
             makeComponentEditable(component);
+            return true;
         }
+        return false;
     }
 
     /**
      * Set the given component's editability based on its html attributes.
      *
      * @param component
+     * @returns {boolean}
      */
     function allowEditBasedOnAttribute(component) {
         if ('phpb-editable' in component.attributes.attributes
             || 'phpb-blocks-container' in component.attributes.attributes) {
             makeComponentEditable(component);
+            return true;
         }
+        return false;
     }
 
     /**
