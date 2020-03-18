@@ -480,6 +480,7 @@
         };
         if ('phpb-blocks-container' in component.attributes.attributes) {
             settings.droppable = true;
+            settings.selectable = true;
         }
         component.set(settings);
         addUniqueClass(component);
