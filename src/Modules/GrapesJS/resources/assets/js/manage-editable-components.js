@@ -371,9 +371,9 @@
      *
      * @param component
      * @param directlyInsideDynamicBlock
-     * @param allowEditWhitelistedTags
+     * @param allowEditableComponents
      */
-    function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditWhitelistedTags = false) {
+    function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditableComponents = false) {
         disableAllEditFunctionality(component);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
@@ -406,13 +406,13 @@
                 // the next layer of child blocks are not directly inside a dynamic block
                 directlyInsideDynamicBlock = false;
                 // in an html block, editing elements (based on their html tag) is allowed
-                allowEditWhitelistedTags = true;
+                allowEditableComponents = true;
             } else {
                 // the block we just entered is dynamic,
                 // the next layer of child blocks are directly inside a dynamic block
                 directlyInsideDynamicBlock = true;
                 // in a dynamic block, editing elements (based on their html tag) is not allowed
-                allowEditWhitelistedTags = false;
+                allowEditableComponents = false;
                 // dynamic blocks do not have text-editable components, so remove text cursors
                 component.getEl().setAttribute('data-cursor', 'default');
             }
@@ -420,18 +420,19 @@
         }
 
         // set editable access based on tags, styling or html class attribute
-        let componentMadeEditable = false;
-        if (allowEditWhitelistedTags) {
-            componentMadeEditable = allowEditBasedOnTagAndStyling(component);
+        if (allowEditableComponents) {
+            allowEditBasedOnTagAndStyling(component);
+            allowEditBasedOnAttribute(component);
         }
-        componentMadeEditable = allowEditBasedOnAttribute(component) || componentMadeEditable;
+        /*
         if (componentMadeEditable) {
             // do not allow text-editable components within text-editable components
-            allowEditWhitelistedTags = false;
+            allowEditableComponents = false;
         }
+         */
 
         // apply edit restrictions to child components
-        component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditWhitelistedTags));
+        component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditableComponents));
     }
 
     /**
@@ -453,9 +454,7 @@
 
         if (editableTags.includes(htmlTag) || componentHasBackground(component)) {
             makeComponentEditable(component);
-            return true;
         }
-        return false;
     }
 
     /**
@@ -468,9 +467,7 @@
         if ('phpb-editable' in component.attributes.attributes
             || 'phpb-blocks-container' in component.attributes.attributes) {
             makeComponentEditable(component);
-            return true;
         }
-        return false;
     }
 
     /**
@@ -480,7 +477,6 @@
      */
     function makeComponentEditable(component) {
         let settings = {
-            hoverable: true,
             editable: true
         };
         if ('phpb-blocks-container' in component.attributes.attributes) {

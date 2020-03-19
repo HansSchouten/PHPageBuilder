@@ -9,6 +9,7 @@ return [
         'autoload' => false,
         'autosave' => false
     ],
+    'canvasCss' => 'body {height: auto;}',
     'assetManager' => [
         'upload' => phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->getId()]),
         'uploadName' => 'files',
