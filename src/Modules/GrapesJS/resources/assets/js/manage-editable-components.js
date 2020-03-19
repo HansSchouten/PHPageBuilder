@@ -355,7 +355,7 @@
      */
     function copyAttributes(component, targetComponent, copyGrapesAttributes, copyHtmlElementAttributes) {
         let componentAttributes = component.attributes.attributes;
-        for (var attribute in componentAttributes) {
+        for (let attribute in componentAttributes) {
             if (componentAttributes.hasOwnProperty(attribute)) {
                 if (copyHtmlElementAttributes) {
                     targetComponent.attributes.attributes[attribute] = componentAttributes[attribute];
@@ -422,28 +422,25 @@
 
         // set editable access based on tags, styling or html class attribute
         if (allowEditableComponents) {
-            allowEditBasedOnTagAndStyling(component);
-            allowEditBasedOnAttribute(component);
+            let madeEditable = allowEditBasedOnComponentAttributes(component);
+            // do not allow editable components within text-editable components
+            if (madeEditable && component.attributes.type === 'text') {
+                allowEditableComponents = false;
+            }
         }
-        /*
-        if (componentMadeEditable) {
-            // do not allow text-editable components within text-editable components
-            allowEditableComponents = false;
-        }
-         */
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditableComponents));
     }
 
     /**
-     * Set the given component's editability based on which tag the component represents
-     * or which theme styling is assigned.
+     * Set the given component's editability based on which tag the component represents,
+     * which attributes are set or which styling is applied.
      *
      * @param component
      * @returns {boolean}
      */
-    function allowEditBasedOnTagAndStyling(component) {
+    function allowEditBasedOnComponentAttributes(component) {
         let htmlTag = component.get('tagName');
         let editableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
@@ -453,22 +450,14 @@
             'ul','li','th','td'
         ];
 
-        if (editableTags.includes(htmlTag) || componentHasBackground(component)) {
-            makeComponentEditable(component);
-        }
-    }
-
-    /**
-     * Set the given component's editability based on its html attributes.
-     *
-     * @param component
-     * @returns {boolean}
-     */
-    function allowEditBasedOnAttribute(component) {
-        if ('phpb-editable' in component.attributes.attributes
+        if (editableTags.includes(htmlTag)
+            || componentHasBackground(component)
+            || 'phpb-editable' in component.attributes.attributes
             || 'phpb-blocks-container' in component.attributes.attributes) {
             makeComponentEditable(component);
+            return true;
         }
+        return false;
     }
 
     /**
