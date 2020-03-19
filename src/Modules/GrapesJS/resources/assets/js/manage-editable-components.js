@@ -87,14 +87,6 @@
      * Component select handler.
      */
     window.editor.on('component:selected', function(component) {
-        // only show the copy/drag/remove toolbar if the component is draggable or removable
-        document.querySelector('.gjs-toolbar').classList.add('d-none');
-        if (component.attributes.draggable
-            || component.attributes.removable
-            || "phpb-blocks-container" in component.attributes.attributes) {
-            document.querySelector('.gjs-toolbar').classList.remove('d-none');
-        }
-
         // if the component has settings, activate settings panel in pagebuilder sidebar
         if (componentHasBlockSettings(component)) {
             $(".gjs-pn-buttons .gjs-pn-btn:nth-of-type(2)").click();
@@ -116,6 +108,19 @@
                 $(".gjs-trt-traits").html('<p class="no-settings">' + window.translations['trait-manager']['no-settings'] + '</p>');
             }, 0);
         }
+
+        // only show the toolbar buttons that are applicable
+        setTimeout(function() {
+            if (! component.attributes.removable) {
+                $(".gjs-toolbar .fa-trash-o.gjs-toolbar-item").hide();
+            }
+            if (! component.attributes.copyable) {
+                $(".gjs-toolbar .fa-clone.gjs-toolbar-item").hide();
+            }
+            if (! component.attributes.draggable) {
+                $(".gjs-toolbar .fa-arrows.gjs-toolbar-item").hide();
+            }
+        }, 0);
     });
 
     /**
@@ -372,19 +377,19 @@
         disableAllEditFunctionality(component);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
-            // we are in the content container of the current page, this component can receive other components
+            // the content container of the current page can receive other components
             component.set({
                 droppable: true,
                 hoverable: true,
             });
         } else if (component.attributes['block-slug'] !== undefined) {
-            // we just entered a new block, set permissions
+            // we just entered a new block, set default permissions
             let permissions = {
                 selectable: true,
                 hoverable: true,
             };
             if (! directlyInsideDynamicBlock) {
-                // the block we entered is not located directly inside a dynamic block, hence this block can be modified
+                // the block we entered is not located directly inside a dynamic block, hence this block can be removed, dragged, configured and styled
                 permissions = {
                     removable: true,
                     draggable: true,
@@ -408,7 +413,7 @@
                 directlyInsideDynamicBlock = true;
                 // in a dynamic block, editing elements (based on their html tag) is not allowed
                 allowEditWhitelistedTags = false;
-                // dynamic blocks do not have text cursors
+                // dynamic blocks do not have text-editable components, so remove text cursors
                 component.getEl().setAttribute('data-cursor', 'default');
             }
             component.set(permissions);
@@ -476,7 +481,7 @@
     function makeComponentEditable(component) {
         let settings = {
             hoverable: true,
-            editable: true,
+            editable: true
         };
         if ('phpb-blocks-container' in component.attributes.attributes) {
             settings.droppable = true;
