@@ -123,6 +123,7 @@
         }, 0);
     });
 
+
     /**
      * Return whether the given component contains a CSS background, that should be editable.
      *

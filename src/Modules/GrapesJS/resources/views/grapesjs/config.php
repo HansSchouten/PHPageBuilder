@@ -9,7 +9,7 @@ return [
         'autoload' => false,
         'autosave' => false
     ],
-    'canvasCss' => 'body {height: auto;}',
+    'canvasCss' => 'body {height: auto;}',  // prevent scrollbar jump on pasting in CKEditor
     'assetManager' => [
         'upload' => phpb_url('pagebuilder', ['action' => 'upload', 'page' => $page->getId()]),
         'uploadName' => 'files',

@@ -8,6 +8,7 @@ $(document).ready(function() {
         $("#gjs").toggleClass('sidebar-collapsed');
         triggerEditorResize();
     });
+    autoCollapseSidebar();
 
     window.editor.on('run:open-sm', function(editor) {
         $(".gjs-trt-traits").parent().parent().css('display', 'none');
@@ -21,11 +22,15 @@ $(document).ready(function() {
     });
 
     window.editor.on('block:drag:start', function(block) {
+        autoCollapseSidebar();
+    });
+
+    function autoCollapseSidebar() {
         if ($(window).width() < 1000) {
             $("#gjs").addClass('sidebar-collapsed');
             triggerEditorResize();
         }
-    });
+    }
 
     function triggerEditorResize() {
         window.editor.trigger('change:canvasOffset canvasScroll');

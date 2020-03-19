@@ -9,13 +9,15 @@ editor.DomComponents.addType('link', {
     },
 });
 
+const textType = editor.DomComponents.getType('text');
 editor.DomComponents.addType('text', {
-    model: {
-        defaults: {
-            traits: [],
-            attributes: {},
+    model: textType.model,
+    view: textType.view.extend({
+        events: {
+            click: 'onActive',
+            touchend: 'onActive'
         },
-    },
+    }),
 });
 
 editor.DomComponents.addType('default', {
