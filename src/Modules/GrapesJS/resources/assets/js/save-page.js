@@ -14,6 +14,7 @@ $(document).ready(function() {
      */
     $(document).bind("keydown", function(e){
         if(e.ctrlKey && e.which === 83) {
+            window.editor.store(); // text-editor updates are not applied until focus is lost, so force update
             savePage();
             e.preventDefault();
             return false;
