@@ -155,8 +155,7 @@
      * @returns {boolean}
      */
     function componentHasBlockSettings(component) {
-        return (window.blockSettings[component.attributes['block-slug']] !== undefined &&
-            window.blockSettings[component.attributes['block-slug']].length);
+        return component.attributes.traits.length > 0;
     }
 
     /**
@@ -169,7 +168,7 @@
 
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
-        restrictEditAccess(parent, false, true);
+        restrictEditAccess(parent);
     });
 
     /**
@@ -374,7 +373,7 @@
      * @param directlyInsideDynamicBlock
      * @param allowEditableComponents
      */
-    function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditableComponents = false) {
+    function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditableComponents = true) {
         disableAllEditFunctionality(component);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
@@ -445,8 +444,8 @@
         let editableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
-            'p','a','img','button',
-            'small','b','strong','i','em',
+            'img','button','a',
+            'p','small','b','strong','i','em',
             'ul','li','th','td'
         ];
 
@@ -472,6 +471,13 @@
         if ('phpb-blocks-container' in component.attributes.attributes) {
             settings.droppable = true;
             settings.selectable = true;
+        }
+        if (component.get('tagName') === 'a') {
+            settings = {
+                hoverable: true,
+                selectable: true,
+                stylable: true
+            };
         }
         component.set(settings);
         addUniqueClass(component);

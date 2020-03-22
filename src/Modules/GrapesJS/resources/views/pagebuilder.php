@@ -50,7 +50,15 @@ window.editor.I18n.addMessages({
         },
         traitManager: {
             empty: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
-            label: '<?= phpb_trans('pagebuilder.trait-settings') ?>'
+            label: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
+            traits: {
+                options: {
+                    target: {
+                        false: '<?= phpb_trans('pagebuilder.no') ?>',
+                        _blank: '<?= phpb_trans('pagebuilder.yes') ?>'
+                    }
+                }
+            }
         },
         assetManager: {
             addButton: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
