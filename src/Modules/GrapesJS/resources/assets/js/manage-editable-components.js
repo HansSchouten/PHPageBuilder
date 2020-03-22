@@ -169,7 +169,7 @@
 
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
-        restrictEditAccess(parent);
+        restrictEditAccess(parent, false, true);
     });
 
     /**
