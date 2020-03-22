@@ -39,7 +39,12 @@ editor.DomComponents.addType('link', {
 
 const textType = editor.DomComponents.getType('text');
 editor.DomComponents.addType('text', {
-    model: textType.model,
+    model: {
+        defaults: {
+            traits: [],
+            attributes: {},
+        },
+    },
     view: textType.view.extend({
         events: {
             click: 'onActive',
