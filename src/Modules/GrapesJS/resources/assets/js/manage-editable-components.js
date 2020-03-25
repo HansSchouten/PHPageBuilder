@@ -441,46 +441,51 @@
      */
     function allowEditBasedOnComponentAttributes(component) {
         let htmlTag = component.get('tagName');
-        let editableTags = [
+        let textEditableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
-            'img','button','a',
+            'img','button',
             'p','small','b','strong','i','em',
             'ul','li','th','td'
         ];
 
-        if (editableTags.includes(htmlTag)
-            || componentHasBackground(component)
-            || 'phpb-editable' in component.attributes.attributes
-            || 'phpb-blocks-container' in component.attributes.attributes) {
-            makeComponentEditable(component);
+        if ('phpb-blocks-container' in component.attributes.attributes) {
+            component.set({
+                hoverable: true,
+                selectable: true,
+                droppable: true
+            });
             return true;
         }
-        return false;
-    }
 
-    /**
-     * Make the given component editable.
-     *
-     * @param component
-     */
-    function makeComponentEditable(component) {
-        let settings = {
-            editable: true
-        };
-        if ('phpb-blocks-container' in component.attributes.attributes) {
-            settings.droppable = true;
-            settings.selectable = true;
+        if (textEditableTags.includes(htmlTag) || 'phpb-editable') {
+            component.set({
+                editable: true
+            });
+            return true;
         }
-        if (component.get('tagName') === 'a') {
-            settings = {
+
+        if (htmlTag === 'a') {
+            component.set({
                 hoverable: true,
                 selectable: true,
                 stylable: true
-            };
+            });
+            addUniqueClass(component);
+            return true;
         }
-        component.set(settings);
-        addUniqueClass(component);
+
+        if (componentHasBackground(component)) {
+            component.set({
+                hoverable: true,
+                selectable: true,
+                stylable: true
+            });
+            addUniqueClass(component);
+            return true;
+        }
+
+        return false;
     }
 
     /**
