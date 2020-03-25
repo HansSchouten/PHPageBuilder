@@ -449,42 +449,36 @@
             'ul','li','th','td'
         ];
 
+        let settings = {};
         if ('phpb-blocks-container' in component.attributes.attributes) {
-            component.set({
-                hoverable: true,
-                selectable: true,
-                droppable: true
-            });
-            return true;
+            settings.hoverable = true;
+            settings.selectable = true;
+            settings.droppable = true;
         }
 
         if (textEditableTags.includes(htmlTag) || 'phpb-editable') {
-            component.set({
-                editable: true
-            });
-            return true;
-        }
-
-        if (htmlTag === 'a') {
-            component.set({
-                hoverable: true,
-                selectable: true,
-                stylable: true
-            });
-            addUniqueClass(component);
-            return true;
+            settings.editable = true;
         }
 
         if (componentHasBackground(component)) {
-            component.set({
-                hoverable: true,
-                selectable: true,
-                stylable: true
-            });
-            addUniqueClass(component);
-            return true;
+            settings.hoverable = true;
+            settings.selectable = true;
+            settings.stylable = true;
         }
 
+        if (htmlTag === 'a') {
+            settings.hoverable = true;
+            settings.selectable = true;
+            settings.stylable = true;
+        }
+
+        if (! $.isEmptyObject(settings)) {
+            component.set(settings);
+            if (settings.stylable !== undefined && settings.stylable) {
+                addUniqueClass(component);
+            }
+            return true;
+        }
         return false;
     }
 
