@@ -456,7 +456,7 @@
             settings.droppable = true;
         }
 
-        if (textEditableTags.includes(htmlTag) || 'phpb-editable') {
+        if (textEditableTags.includes(htmlTag) || 'phpb-editable' in component.attributes.attributes) {
             settings.editable = true;
         }
 
