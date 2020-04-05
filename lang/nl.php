@@ -35,6 +35,7 @@ return [
         'website-languages' => 'Website talen',
         'languages-selector-placeholder' => 'Selecteer één of meerdere talen',
         'save-settings' => 'Instellingen opslaan',
+        'settings-updated' => 'Instellingen opgeslagen',
         'pagebuilder-block-images' => 'Pagebuilder blok afbeeldingen',
         'render-thumbs' => 'Blok afbeeldingen genereren',
     ],

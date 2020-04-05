@@ -1,6 +1,16 @@
-<form method="post" action="<?= phpb_url('website_manager', ['route' => 'settings', 'action' => 'edit', 'tab' => 'settings']) ?>">
+<form method="post" action="<?= phpb_url('website_manager', ['route' => 'settings', 'action' => 'update', 'tab' => 'settings']) ?>">
 
     <div class="main-spacing">
+        <?php
+        if (phpb_flash('message')):
+        ?>
+        <div class="alert alert-<?= phpb_flash('message-type') ?>">
+            <?= phpb_flash('message') ?>
+        </div>
+        <?php
+        endif;
+        ?>
+
         <div class="form-group required">
             <label for="languages">
                 <?= phpb_trans('website-manager.website-languages') ?>

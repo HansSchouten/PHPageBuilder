@@ -109,6 +109,18 @@ class BaseRepository
     }
 
     /**
+     * Destroy all instances in the database.
+     *
+     * @return bool
+     */
+    public function destroyAll()
+    {
+        return $this->db->query(
+            "DELETE FROM {$this->table}"
+        );
+    }
+
+    /**
      * Return an array of all pages.
      *
      * @param array|string $columns
@@ -169,6 +181,11 @@ class BaseRepository
     protected function createInstances(array $records)
     {
         $result = [];
+
+        if (empty($this->class)) {
+            return $records;
+        }
+
         foreach ($records as $record) {
             $instance = new $this->class;
             if (method_exists($instance, 'setData')) {

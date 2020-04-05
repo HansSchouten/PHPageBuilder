@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\WebsiteManager;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Repositories\PageRepository;
+use PHPageBuilder\Repositories\SettingRepository;
 
 class WebsiteManager implements WebsiteManagerContract
 {
@@ -21,9 +22,15 @@ class WebsiteManager implements WebsiteManagerContract
             exit();
         }
 
-        if ($route === 'settings' && $action === 'renderBlockThumbs') {
-            $this->renderBlockThumbs();
-            exit();
+        if ($route === 'settings') {
+            if ($action === 'renderBlockThumbs') {
+                $this->renderBlockThumbs();
+                exit();
+            }
+            if ($action === 'update') {
+                $this->handleUpdateSettings();
+                exit();
+            }
         }
 
         if ($route === 'page_settings') {
@@ -101,6 +108,23 @@ class WebsiteManager implements WebsiteManagerContract
             'message-type' => 'success',
             'message' => phpb_trans('website-manager.page-deleted')
         ]);
+    }
+
+    /**
+     * Handle requests for updating the website settings.
+     */
+    public function handleUpdateSettings()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $settingRepository = new SettingRepository;
+            $success = $settingRepository->updateSettings($_POST);
+            if ($success) {
+                phpb_redirect(phpb_url('website_manager', ['tab' => 'settings']), [
+                    'message-type' => 'success',
+                    'message' => phpb_trans('website-manager.settings-updated')
+                ]);
+            }
+        }
     }
 
     /**

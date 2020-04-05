@@ -33,7 +33,7 @@ CREATE TABLE `uploads` (
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL auto_increment,
-  `key` VARCHAR(50) NOT NULL,
+  `setting` VARCHAR(50) NOT NULL,
   `value` MEDIUMTEXT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE (`key`)
