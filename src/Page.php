@@ -13,6 +13,11 @@ class Page implements PageContract
     protected $attributes;
 
     /**
+     * @var array|null $translations
+     */
+    protected $translations;
+
+    /**
      * Set the data stored for this page.
      *
      * @param array|null $data
@@ -91,22 +96,28 @@ class Page implements PageContract
      */
     public function getTranslations()
     {
-        $records = (new PageTranslationRepository)->findWhere('page_id', $this->getId());
-        $translations = [];
-        foreach ($records as $record) {
-            $translations[$record['locale']] = $record;
+        if (is_null($this->translations)) {
+            $records = (new PageTranslationRepository)->findWhere('page_id', $this->getId());
+            $translations = [];
+            foreach ($records as $record) {
+                $translations[$record['locale']] = $record;
+            }
+            $this->translations = $translations;
         }
-        return $translations;
+        return $this->translations;
     }
 
     /**
      * Return the route of this page.
      *
-     * @return string
+     * @param string|null $locale
+     * @return mixed|string|null
      */
-    public function getRoute()
+    public function getRoute($locale = null)
     {
-        return $this->get('route');
+        $translations = $this->getTranslations();
+        $locale = $locale ?? phpb_config('general.language');
+        return $translations[$locale]['route'] ?? null;
     }
 
     /**

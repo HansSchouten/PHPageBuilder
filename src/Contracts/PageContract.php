@@ -34,13 +34,6 @@ interface PageContract
     public function getId();
 
     /**
-     * Return the name of this page.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
      * Return the layout (file name) of this page.
      *
      * @return string
@@ -48,11 +41,19 @@ interface PageContract
     public function getLayout();
 
     /**
-     * Return the route of this page.
+     * Return the name of this page.
      *
      * @return string
      */
-    public function getRoute();
+    public function getName();
+
+    /**
+     * Return the (translated) route of this page.
+     *
+     * @param string|null $locale
+     * @return mixed
+     */
+    public function getRoute($locale = null);
 
     /**
      * Get the value of the given property of this Page.

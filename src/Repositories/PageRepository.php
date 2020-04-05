@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Repositories;
 
 use PHPageBuilder\Contracts\PageRepositoryContract;
+use PHPageBuilder\Setting;
 
 class PageRepository extends BaseRepository implements PageRepositoryContract
 {
@@ -61,17 +62,33 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      */
     public function update($page, array $data)
     {
-        $fields = ['name', 'title', 'route', 'layout'];
-        foreach ($fields as $field) {
+        foreach (['name', 'layout'] as $field) {
             if (! isset($data[$field]) || ! is_string($data[$field])) {
                 return false;
             }
         }
 
+        $activeLanguages = Setting::get('languages') ?? [phpb_config('general.language')];
+        foreach (['title', 'route'] as $field) {
+            foreach ($activeLanguages as $locale) {
+                if (! isset($data[$field][$locale])) {
+                    return false;
+                }
+            }
+        }
+        $pageTranslationRepository = new PageTranslationRepository;
+        $pageTranslationRepository->destroyAll();
+        foreach ($activeLanguages as $locale) {
+            $pageTranslationRepository->create([
+                'page_id' => $page->getId(),
+                'locale' => $locale,
+                'title' => $data['title'][$locale],
+                'route' => $data['route'][$locale],
+            ]);
+        }
+
         return parent::update($page, [
             'name' => $data['name'],
-            'title' => $data['title'],
-            'route' => $data['route'],
             'layout' => $data['layout'],
         ]);
     }
