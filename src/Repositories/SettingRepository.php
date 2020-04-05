@@ -32,9 +32,15 @@ class SettingRepository extends BaseRepository implements SettingRepositoryContr
         $this->destroyAll();
 
         foreach ($data as $key => $value) {
+            $isArray = is_array($value);
+            if ($isArray) {
+                $value = implode(',', $value);
+            }
+
             $this->create([
                 'setting' => $key,
                 'value' => $value,
+                'is_array' => $isArray,
             ]);
         }
 

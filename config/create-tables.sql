@@ -35,8 +35,9 @@ CREATE TABLE `settings` (
   `id` int(11) NOT NULL auto_increment,
   `setting` VARCHAR(50) NOT NULL,
   `value` MEDIUMTEXT NOT NULL,
+  `is_array` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE (`key`)
+  UNIQUE (`setting`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

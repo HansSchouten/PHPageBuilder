@@ -1,3 +1,7 @@
+<?php
+$setting = phpb_instance('setting');
+?>
+
 <form method="post" action="<?= phpb_url('website_manager', ['route' => 'settings', 'action' => 'update', 'tab' => 'settings']) ?>">
 
     <div class="main-spacing">
@@ -15,9 +19,12 @@
             <label for="languages">
                 <?= phpb_trans('website-manager.website-languages') ?>
             </label>
-            <select class="form-control" title="<?= phpb_trans('website-manager.languages-selector-placeholder') ?>" id="languages" name="languages" required multiple>
-                <option value="en">English</option>
-                <option value="nl">Dutch</option>
+            <select class="form-control" id="languages" name="languages[]" title="<?= phpb_trans('website-manager.languages-selector-placeholder') ?>" required multiple>
+                <option value="en" <?= $setting::has('languages', 'en') ? 'selected' : '' ?>>English</option>
+                <option value="nl" <?= $setting::has('languages', 'nl') ? 'selected' : '' ?>>Nederlands</option>
+                <option value="es" <?= $setting::has('languages', 'es') ? 'selected' : '' ?>>Espanol</option>
+                <option value="fr" <?= $setting::has('languages', 'fr') ? 'selected' : '' ?>>Français</option>
+                <option value="de" <?= $setting::has('languages', 'de') ? 'selected' : '' ?>>Deutsch</option>
             </select>
         </div>
 
