@@ -6,4 +6,6 @@ $(function() {
             $("iframe.thumb-renderer").attr("src", $("iframe.thumb-renderer").attr('src'));
         }
     }
+
+    $('select').selectpicker();
 });

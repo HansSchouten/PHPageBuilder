@@ -20,8 +20,6 @@ return [
         'actions' => 'Actions',
         'view' => 'View',
         'edit' => 'Edit',
-        'settings' => 'Settings',
-        'render-thumbs' => 'Render Thumbnails',
         'remove' => 'Remove',
         'add-new-page' => 'Add new page',
         'edit-page' => 'Edit page',
@@ -32,6 +30,13 @@ return [
         'page-created' => 'Page successfully created',
         'page-updated' => 'Page successfully updated',
         'page-deleted' => 'Page removed',
+
+        'settings' => 'Settings',
+        'website-languages' => 'Website languages',
+        'languages-selector-placeholder' => 'Select one or more languages',
+        'save-settings' => 'Save settings',
+        'pagebuilder-block-images' => 'Pagebuilder block thumbnails',
+        'render-thumbs' => 'Render Thumbnails',
     ],
     'pagebuilder' => [
         'loading-text' => 'Loading pagebuilder..',

@@ -20,8 +20,6 @@ return [
         'actions' => 'Acties',
         'view' => 'Bekijk',
         'edit' => 'Wijzig',
-        'settings' => 'Instellingen',
-        'render-thumbs' => 'Blok afbeeldingen genereren',
         'remove' => 'Verwijder',
         'add-new-page' => 'Pagina toevoegen',
         'edit-page' => 'Pagina wijzigen',
@@ -32,6 +30,13 @@ return [
         'page-created' => 'Nieuwe pagina aangemaakt',
         'page-updated' => 'Pagina wijziging opgeslagen',
         'page-deleted' => 'Pagina verwijderd',
+
+        'settings' => 'Instellingen',
+        'website-languages' => 'Website talen',
+        'languages-selector-placeholder' => 'Selecteer één of meerdere talen',
+        'save-settings' => 'Instellingen opslaan',
+        'pagebuilder-block-images' => 'Pagebuilder blok afbeeldingen',
+        'render-thumbs' => 'Blok afbeeldingen genereren',
     ],
     'pagebuilder' => [
         'loading-text' => 'Bewerkmodus laden..',
