@@ -5,6 +5,7 @@ if (isset($page)) {
 }
 
 $languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
+$pageTranslations = $page->getTranslations();
 ?>
 
 <div class="py-5 text-center">
@@ -54,16 +55,16 @@ $languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general
                     <?php
                     foreach ($languages as $locale):
                     ?>
-                    <h5 class="pt-3"><?= phpb_trans('languages.' . $locale) ?></h5>
-                    <div class="pt-1 pl-3 pr-3">
+                    <h5 class="pt-2"><?= phpb_trans('languages.' . $locale) ?></h5>
+                    <div class="pt-2 pl-3 pr-3">
                         <div class="form-group required">
                             <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                            <input type="text" class="form-control" id="page-title" name="title[<?= $locale ?>]" value="<?= phpb_field_value('title', $page) ?>" required>
+                            <input type="text" class="form-control" id="page-title" name="title[<?= e($locale) ?>]" value="<?= e($pageTranslations[$locale]['title']) ?? '' ?>" required>
                         </div>
 
                         <div class="form-group required">
                             <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                            <input type="text" class="form-control" id="route" name="route[<?= $locale ?>]" value="<?= phpb_field_value('route', $page) ?>" required>
+                            <input type="text" class="form-control" id="route" name="route[<?= e($locale) ?>]" value="<?= e($pageTranslations[$locale]['route']) ?? '' ?>" required>
                         </div>
                     </div>
                     <?php

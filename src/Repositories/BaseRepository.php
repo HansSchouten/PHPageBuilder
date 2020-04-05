@@ -95,7 +95,7 @@ class BaseRepository
     }
 
     /**
-     * Destroy the given instance in the database.
+     * Remove the given instance from the database.
      *
      * @param $id
      * @return bool
@@ -109,7 +109,7 @@ class BaseRepository
     }
 
     /**
-     * Destroy all instances in the database.
+     * Remove all instances from the database.
      *
      * @return bool
      */

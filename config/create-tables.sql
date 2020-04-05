@@ -11,14 +11,25 @@ SET time_zone = "+00:00";
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `route` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `layout` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `page_translations` (
+  `id` int(11) NOT NULL auto_increment,
+  `page_id` int(11) NOT NULL,
+  `locale` VARCHAR(50) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `route` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+  UNIQUE (`page_id`,`locale`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `page_translations` ADD FOREIGN KEY (`page_id`) REFERENCES `pages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE `uploads` (
   `id` int(11) NOT NULL auto_increment,

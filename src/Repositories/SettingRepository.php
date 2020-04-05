@@ -14,14 +14,6 @@ class SettingRepository extends BaseRepository implements SettingRepositoryContr
     protected $table = 'settings';
 
     /**
-     * SettingRepository constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Replace all website settings by the given data.
      *
      * @param array $data

@@ -3,6 +3,7 @@
 namespace PHPageBuilder;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Repositories\PageTranslationRepository;
 
 class Page implements PageContract
 {
@@ -81,6 +82,21 @@ class Page implements PageContract
     public function getLayout()
     {
         return $this->get('layout');
+    }
+
+    /**
+     * Return the translated settings of this page.
+     *
+     * @return array
+     */
+    public function getTranslations()
+    {
+        $records = (new PageTranslationRepository)->findWhere('page_id', $this->getId());
+        $translations = [];
+        foreach ($records as $record) {
+            $translations[$record['locale']] = $record;
+        }
+        return $translations;
     }
 
     /**
