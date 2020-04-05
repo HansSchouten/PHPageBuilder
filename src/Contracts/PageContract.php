@@ -48,13 +48,13 @@ interface PageContract
     public function getName();
 
     /**
-     * Return the given translated field for this page, in the current or in the given language.
+     * Return the given language dependant setting for this page, in the current or in the given language.
      *
-     * @param string $field
+     * @param string $setting
      * @param string|null $locale
      * @return mixed|string|null
      */
-    public function getTranslatedField(string $field, $locale = null);
+    public function getTranslation(string $setting, $locale = null);
 
     /**
      * Return the route of this page, in the current or in the given language.

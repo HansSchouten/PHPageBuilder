@@ -108,6 +108,20 @@ class Page implements PageContract
     }
 
     /**
+     * Return the given language dependant setting for this page, in the current or in the given language.
+     *
+     * @param string $setting
+     * @param string|null $locale
+     * @return mixed|string|null
+     */
+    public function getTranslation(string $setting, $locale = null)
+    {
+        $translations = $this->getTranslations();
+        $locale = $locale ?? phpb_config('general.language');
+        return $translations[$locale][$setting] ?? null;
+    }
+
+    /**
      * Return the route of this page.
      *
      * @param string|null $locale
@@ -115,21 +129,7 @@ class Page implements PageContract
      */
     public function getRoute($locale = null)
     {
-        return $this->getTranslatedField('route', $locale);
-    }
-
-    /**
-     * Return the given translated field of this page, optionally in the given language.
-     *
-     * @param string $field
-     * @param string|null $locale
-     * @return mixed|string|null
-     */
-    public function getTranslatedField(string $field, $locale = null)
-    {
-        $translations = $this->getTranslations();
-        $locale = $locale ?? phpb_config('general.language');
-        return $translations[$locale][$field] ?? null;
+        return $this->getTranslation('route', $locale);
     }
 
     /**
