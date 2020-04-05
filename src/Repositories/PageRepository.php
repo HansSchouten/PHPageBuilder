@@ -2,8 +2,10 @@
 
 namespace PHPageBuilder\Repositories;
 
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\PageRepositoryContract;
 use PHPageBuilder\Setting;
+use Exception;
 
 class PageRepository extends BaseRepository implements PageRepositoryContract
 {
@@ -34,23 +36,25 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      * Create a new page.
      *
      * @param array $data
-     * @return bool|object
+     * @return bool|object|null
+     * @throws Exception
      */
     public function create(array $data)
     {
-        $fields = ['name', 'title', 'route', 'layout'];
-        foreach ($fields as $field) {
+        foreach (['name', 'layout'] as $field) {
             if (! isset($data[$field]) || ! is_string($data[$field])) {
                 return false;
             }
         }
 
-        return parent::create([
+        $page = parent::create([
             'name' => $data['name'],
-            'title' => $data['title'],
-            'route' => $data['route'],
             'layout' => $data['layout'],
         ]);
+        if (! ($page instanceof PageContract)) {
+            throw new Exception("Page not of type PageContract");
+        }
+        return $this->replaceTranslations($page, $data);
     }
 
     /**
@@ -68,6 +72,23 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             }
         }
 
+        $this->replaceTranslations($page, $data);
+
+        return parent::update($page, [
+            'name' => $data['name'],
+            'layout' => $data['layout'],
+        ]);
+    }
+
+    /**
+     * Replace the translations of the given page by the given data.
+     *
+     * @param PageContract $page
+     * @param array $data
+     * @return bool
+     */
+    protected function replaceTranslations(PageContract $page, array $data)
+    {
         $activeLanguages = Setting::get('languages') ?? [phpb_config('general.language')];
         foreach (['title', 'route'] as $field) {
             foreach ($activeLanguages as $locale) {
@@ -76,8 +97,9 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
                 }
             }
         }
+
         $pageTranslationRepository = new PageTranslationRepository;
-        $pageTranslationRepository->destroyAll();
+        $pageTranslationRepository->destroyWhere('page_id', $page->getId());
         foreach ($activeLanguages as $locale) {
             $pageTranslationRepository->create([
                 'page_id' => $page->getId(),
@@ -87,10 +109,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             ]);
         }
 
-        return parent::update($page, [
-            'name' => $data['name'],
-            'layout' => $data['layout'],
-        ]);
+        return true;
     }
 
     /**

@@ -17,9 +17,10 @@ interface RouterContract
      * (this method is helpful when extending a router to perform additional checks after a route has been matched)
      *
      * @param string $matchedRoute              the matched route
+     * @param string $matchedPageId             the page id corresponding to the matched route
      * @return PageContract|null
      */
-    public function getMatchedPage(string $matchedRoute);
+    public function getMatchedPage(string $matchedRoute, string $matchedPageId);
 
     /**
      * Order the given routes into the order in which they need to be evaluated.

@@ -42,7 +42,7 @@ class BaseRepository
         $this->db = $phpb_db;
 
         // apply the configured prefix to the table set in the superclass and remove non-alphanumeric characters
-        $this->table = phpb_config('storage.database.prefix') . preg_replace('/\W*/', '', $this->table);
+        $this->table = phpb_config('storage.database.prefix') . $this->removeNonAlphaNumeric($this->table);
     }
 
     /**
@@ -53,7 +53,11 @@ class BaseRepository
      */
     protected function create(array $data)
     {
-        $columns = implode(', ', array_keys($data));
+        $columns = array_keys($data);
+        foreach ($columns as &$column) {
+            $column = $this->removeNonAlphaNumeric($column);
+        }
+        $columns = implode(', ', $columns);
         $questionMarks = implode(', ', array_fill(0, sizeof($data), '?'));
 
         $this->db->query(
@@ -82,7 +86,7 @@ class BaseRepository
             if ($set !== '') {
                 $set .= ', ';
             }
-            $set .= $column . '=?';
+            $set .= $this->removeNonAlphaNumeric($column) . '=?';
         }
 
         $values = array_values($data);
@@ -109,6 +113,22 @@ class BaseRepository
     }
 
     /**
+     * Remove all instances from the database that satisfy the given condition.
+     *
+     * @param string $column
+     * @param $value
+     * @return bool
+     */
+    public function destroyWhere(string $column, $value)
+    {
+        $column = $this->removeNonAlphaNumeric($column);
+        return $this->db->query(
+            "DELETE FROM {$this->table} WHERE {$column}=?",
+            [$value]
+        );
+    }
+
+    /**
      * Remove all instances from the database.
      *
      * @return bool
@@ -128,6 +148,11 @@ class BaseRepository
      */
     public function getAll($columns = '*')
     {
+        if (is_array($columns)) {
+            foreach ($columns as &$column) {
+                $column = $this->removeNonAlphaNumeric($column);
+            }
+        }
         return $this->createInstances($this->db->all($this->table, $columns));
     }
 
@@ -145,16 +170,28 @@ class BaseRepository
     /**
      * Return the instances for which the given condition holds.
      *
-     * @param string $field         do NOT pass user input here
+     * @param string $column         do NOT pass user input here
      * @param string $value
      * @return array
      */
-    public function findWhere($field, $value)
+    public function findWhere($column, $value)
     {
+        $column = $this->removeNonAlphaNumeric($column);
         return $this->createInstances($this->db->select(
-            "SELECT * FROM {$this->table} WHERE {$field} = ?",
+            "SELECT * FROM {$this->table} WHERE {$column} = ?",
             [$value]
         ));
+    }
+
+    /**
+     * Remove any non-alphanumeric characters.
+     *
+     * @param string $string
+     * @return string|null
+     */
+    protected function removeNonAlphaNumeric(string $string)
+    {
+        return preg_replace('/\W*/', '', $string);
     }
 
     /**
