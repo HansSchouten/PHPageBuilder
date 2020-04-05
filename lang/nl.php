@@ -117,4 +117,11 @@ return [
             'add-image' => 'Afbeelding toevoegen',
         ],
     ],
+    'languages' => [
+        'en' => 'Engels',
+        'nl' => 'Nederlands',
+        'es' => 'Spaans',
+        'fr' => 'Frans',
+        'de' => 'Duits',
+    ],
 ];

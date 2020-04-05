@@ -116,5 +116,12 @@ return [
             'drop-files' => 'Drop files here or click to upload',
             'add-image' => 'Add Image',
         ],
-    ]
+    ],
+    'languages' => [
+        'en' => 'English',
+        'nl' => 'Dutch',
+        'es' => 'Spanish',
+        'fr' => 'French',
+        'de' => 'German',
+    ],
 ];

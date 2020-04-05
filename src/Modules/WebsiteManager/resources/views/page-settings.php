@@ -3,6 +3,8 @@ $pageUrlParam = '';
 if (isset($page)) {
     $pageUrlParam = '&page=' . e($page->getId());
 }
+
+$languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
 ?>
 
 <div class="py-5 text-center">
@@ -34,16 +36,6 @@ if (isset($page)) {
                     </div>
 
                     <div class="form-group required">
-                        <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                        <input type="text" class="form-control" id="page-title" name="title" value="<?= phpb_field_value('title', $page) ?>" required>
-                    </div>
-
-                    <div class="form-group required">
-                        <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                        <input type="text" class="form-control" id="route" name="route" value="<?= phpb_field_value('route', $page) ?>" required>
-                    </div>
-
-                    <div class="form-group required">
                         <label for="layout"><?= phpb_trans('website-manager.layout') ?></label>
                         <select class="form-control" id="layout" name="layout" required>
                             <?php
@@ -58,6 +50,25 @@ if (isset($page)) {
                             ?>
                         </select>
                     </div>
+
+                    <?php
+                    foreach ($languages as $locale):
+                    ?>
+                    <h5 class="pt-3"><?= phpb_trans('languages.' . $locale) ?></h5>
+                    <div class="pt-1 pl-3 pr-3">
+                        <div class="form-group required">
+                            <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
+                            <input type="text" class="form-control" id="page-title" name="title[<?= $locale ?>]" value="<?= phpb_field_value('title', $page) ?>" required>
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="route"><?= phpb_trans('website-manager.route') ?></label>
+                            <input type="text" class="form-control" id="route" name="route[<?= $locale ?>]" value="<?= phpb_field_value('route', $page) ?>" required>
+                        </div>
+                    </div>
+                    <?php
+                    endforeach;
+                    ?>
                 </div>
 
                 <hr class="mb-3">
