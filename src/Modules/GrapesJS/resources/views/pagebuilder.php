@@ -89,6 +89,16 @@ require __DIR__ . '/grapesjs/trait-manager.php';
 <button id="toggle-sidebar" class="btn">
     <i class="fa fa-bars"></i>
 </button>
+<select class="language-selector selectpicker" data-width="fit">
+    <?php
+    $languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
+    foreach ($languages as $locale):
+    ?>
+    <option data-content='<?= e($locale) ?>'><?= phpb_trans('languages')[$locale] ?></option>
+    <?php
+    endforeach;
+    ?>
+</select>
 <div id="sidebar-header">
 </div>
 
