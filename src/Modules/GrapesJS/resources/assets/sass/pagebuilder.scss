@@ -259,6 +259,29 @@ html, body, #gjs {
   height: 40px;
   z-index: 100;
   border-right: 2px solid #dfe0e1;
+
+  #language-selector {
+    float: right;
+
+    li > a {
+      padding: 8px 25px 8px 18px;
+    }
+    .dropdown-item.active,
+    .dropdown-item:active {
+      background: #16b8ec !important;
+    }
+    .dropdown-menu.show {
+      padding: 0;
+    }
+    .dropdown-toggle {
+      margin-top: 2px;
+      color: #fff !important;
+      background: none !important;
+      border: none;
+      box-shadow: none;
+      outline: none !important;
+    }
+  }
 }
 #toggle-sidebar {
   position: absolute;
