@@ -41,6 +41,11 @@ class PageRenderer
     protected $forPageBuilder;
 
     /**
+     * @var string $language
+     */
+    protected $language;
+
+    /**
      * PageRenderer constructor.
      *
      * @param ThemeContract $theme
@@ -51,10 +56,22 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
+        $this->language = phpb_config('general.language');
         $this->pageData = $page->getBuilderData();
         $this->pageBlocksData = $this->getPageBlocksData();
         $this->shortcodeParser = new ShortcodeParser($this);
         $this->forPageBuilder = $forPageBuilder;
+    }
+
+    /**
+     * Set which page language variant to use while rendering.
+     *
+     * @param $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+        $this->pageBlocksData = $this->getPageBlocksData();
     }
 
     /**
@@ -71,11 +88,11 @@ class PageRenderer
     /**
      * Return an array with for each block of this page the stored html & settings data.
      *
-     * @return array
+     * @return array|mixed
      */
     public function getPageBlocksData()
     {
-        return $this->pageData['blocks'] ?? [];
+        return $this->pageData['blocks'][$this->language] ?? [];
     }
 
     /**
@@ -101,7 +118,7 @@ class PageRenderer
         ob_end_clean();
 
         // parse any shortcodes present in the page layout
-        $pageHtml = $this->shortcodeParser->doShortcodes($pageHtml);
+        $pageHtml = $this->shortcodeParser->doShortcodes($pageHtml, $this->language);
 
         return $pageHtml;
     }
@@ -119,7 +136,7 @@ class PageRenderer
 
         $data = $this->pageData;
         if (isset($data['html'])) {
-            $html .= $this->shortcodeParser->doShortcodes($data['html']);
+            $html .= $this->shortcodeParser->doShortcodes($data['html'], $this->language);
         }
         // include any style changes made via the page builder
         if (isset($data['css'])) {
@@ -170,7 +187,7 @@ class PageRenderer
 
         // parse the shortcode with the data array passed as an argument to this method
         $this->pageBlocksData = $data;
-        $html = $this->shortcodeParser->doShortcodes($shortcode);
+        $html = $this->shortcodeParser->doShortcodes($shortcode, $this->language);
 
         $this->pageBlocksData = $originalData;
         return $html;

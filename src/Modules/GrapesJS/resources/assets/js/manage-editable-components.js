@@ -1,7 +1,5 @@
 (function() {
 
-    let currentLanguage = null;
-
     /**
      * After loading the initial content of the page builder, restrict access to all layout components.
      * Only blocks and components inside the element with phpb-content-container attribute are editable.
@@ -30,40 +28,6 @@
     });
 
     /**
-     * Switch pagebuilder to another language variant on changing the language selector.
-     */
-    $("#language-selector select").on("change", function() {
-        let selectedLanguage = $(this).find("option:selected").val();
-        switchLanguage(selectedLanguage);
-    });
-
-    /**
-     * Switch the pagebuilder to the given language variant.
-     *
-     * @param locale
-     */
-    function switchLanguage(locale) {
-        currentLanguage = locale;
-
-        let container = editor.getWrapper().find("[phpb-content-container]")[0];
-
-        // reload pageComponents (with phpb-block elements) by simulating "save page"
-        container.components(window.pageComponents);
-
-        // replace phpb-block elements with the server-side rendered version of each dynamic block.
-        replacePlaceholdersForRenderedBlocks(container);
-
-        // apply dynamic block attributes to the server-side rendered html
-        applyBlockAttributesToComponents(container);
-
-        // only allow to edit html blocks
-        // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
-        setTimeout(function() {
-            restrictEditAccess(container);
-        }, 500);
-    }
-
-    /**
      * Add all theme blocks to GrapesJS blocks manager.
      */
     function addThemeBlocks() {
@@ -85,6 +49,40 @@
     }
 
     /**
+     * Switch pagebuilder to another language variant on changing the language selector.
+     */
+    $("#language-selector select").on("change", function() {
+        let selectedLanguage = $(this).find("option:selected").val();
+        switchLanguage(selectedLanguage);
+    });
+
+    /**
+     * Switch the pagebuilder to the given language variant.
+     *
+     * @param newLanguage
+     */
+    function switchLanguage(newLanguage) {
+        window.currentLanguage = newLanguage;
+
+        let container = editor.getWrapper().find("[phpb-content-container]")[0];
+
+        // reload pageComponents (with phpb-block elements) by simulating "save page"
+        container.components(window.pageComponents);
+
+        // replace phpb-block elements with the server-side rendered version of each dynamic block.
+        replacePlaceholdersForRenderedBlocks(container);
+
+        // apply dynamic block attributes to the server-side rendered html
+        applyBlockAttributesToComponents(container);
+
+        // only allow to edit html blocks
+        // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
+        setTimeout(function() {
+            restrictEditAccess(container);
+        }, 500);
+    }
+
+    /**
      * Replace phpb-block elements with the server-side rendered version of each dynamic block.
      *
      * @param component
@@ -95,8 +93,8 @@
         // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
-            if (window.dynamicBlocks[id] !== undefined && window.dynamicBlocks[id]['html'] !== undefined) {
-                newComponent = component.replaceWith(window.dynamicBlocks[id]['html']);
+            if (window.dynamicTranslatedBlocks[currentLanguage][id] !== undefined && window.dynamicTranslatedBlocks[currentLanguage][id]['html'] !== undefined) {
+                newComponent = component.replaceWith(window.dynamicTranslatedBlocks[currentLanguage][id]['html']);
             }
         }
 

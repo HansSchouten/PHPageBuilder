@@ -28,6 +28,11 @@ class ShortcodeParser
     protected $pages = [];
 
     /**
+     * @var string $language
+     */
+    protected $language;
+
+    /**
      * ShortcodeParser constructor.
      *
      * @param PageRenderer $pageRenderer
@@ -51,11 +56,13 @@ class ShortcodeParser
      * Perform the tasks for all shortcodes in the given html string.
      *
      * @param $html
-     * @return string
+     * @param string $language
+     * @return mixed|string
      * @throws Exception
      */
-    public function doShortcodes($html)
+    public function doShortcodes($html, $language)
     {
+        $this->language = $language;
         $html = $this->doBlockShortcodes($html);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
@@ -97,8 +104,8 @@ class ShortcodeParser
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
             if (phpb_in_editmode()) {
-                $this->renderedBlocks[$id] = [
-                    'html' => $this->doShortcodes($blockHtml),
+                $this->renderedBlocks[$this->language][$id] = [
+                    'html' => $this->doShortcodes($blockHtml, $this->language),
                     'settings' => $this->blocksData[$id] ?? []
                 ];
             }
