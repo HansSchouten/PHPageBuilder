@@ -263,9 +263,6 @@ html, body, #gjs {
   #language-selector {
     float: right;
 
-    li > a {
-      padding: 8px 25px 8px 18px;
-    }
     .dropdown-item.active,
     .dropdown-item:active {
       background: #16b8ec !important;
