@@ -11,20 +11,7 @@
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
 
-        // add all previously stored page components to the page builder
-        container.components(window.pageComponents);
-
-        // replace phpb-block elements with the server-side rendered version of each dynamic block.
-        replacePlaceholdersForRenderedBlocks(container);
-
-        // apply dynamic block attributes to the server-side rendered html
-        applyBlockAttributesToComponents(container);
-
-        // only allow to edit html blocks
-        // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
-        setTimeout(function() {
-            restrictEditAccess(container);
-        }, 500);
+        activateLanguage(window.currentLanguage);
     });
 
     /**
@@ -57,11 +44,11 @@
     });
 
     /**
-     * Switch the pagebuilder to the given language variant.
+     * Activate the given language variant in the pagebuilder.
      *
      * @param newLanguage
      */
-    function switchLanguage(newLanguage) {
+    function activateLanguage(newLanguage) {
         window.currentLanguage = newLanguage;
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];

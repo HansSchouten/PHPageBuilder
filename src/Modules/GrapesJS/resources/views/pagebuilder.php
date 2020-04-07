@@ -26,7 +26,7 @@ CKEDITOR.dtd.$editable.button = 1;
 CKEDITOR.dtd.$editable.strong = 1;
 CKEDITOR.dtd.$editable.small = 1;
 
-window.currentLanguage = 'nl';
+window.currentLanguage = <?= json_encode(phpb_config('general.language')) ?>;
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.themeBlocks = <?= json_encode($blocks) ?>;
