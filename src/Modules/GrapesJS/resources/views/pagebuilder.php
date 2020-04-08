@@ -74,7 +74,8 @@ window.editor.I18n.addMessages({
 editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
 
 // set the non-editable page layout components and the phpb-content-container in which all editable components will be loaded
-editor.setComponents(<?= json_encode($pageRenderer->render()) ?>);
+window.initialComponents = <?= json_encode($pageRenderer->render()) ?>;
+editor.setComponents(window.initialComponents);
 
 // load the earlier saved page css components
 editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>);

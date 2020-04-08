@@ -57,7 +57,7 @@ $(document).ready(function() {
             }
 
         }, 200);
-    };
+    }
 
     function saveAllTranslationsToServer() {
         saveCurrentTranslation(function() {

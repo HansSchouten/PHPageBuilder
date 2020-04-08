@@ -54,6 +54,12 @@
     function activateLanguage(newLanguage) {
         window.currentLanguage = newLanguage;
 
+        // clear everything before loading the new language variant
+        window.editor.DomComponents.clear();
+        window.editor.CssComposer.clear();
+        window.editor.UndoManager.clear();
+        window.editor.setComponents(window.initialComponents);
+
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
 
         // reload pageComponents (with phpb-block elements) by simulating "save page"
@@ -83,6 +89,7 @@
         // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
+            console.log(id);
             if (window.dynamicBlocks[currentLanguage][id] !== undefined && window.dynamicBlocks[currentLanguage][id]['html'] !== undefined) {
                 newComponent = component.replaceWith(window.dynamicBlocks[currentLanguage][id]['html']);
             }
