@@ -40,7 +40,7 @@
      */
     $("#language-selector select").on("change", function() {
         let selectedLanguage = $(this).find("option:selected").val();
-        switchLanguage(selectedLanguage);
+        activateLanguage(selectedLanguage);
     });
 
     /**

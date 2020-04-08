@@ -249,6 +249,14 @@ class ShortcodeParser
     }
 
     /**
+     * Reset the structure of all rendered blocks.
+     */
+    public function resetRenderedBlocks()
+    {
+        $this->renderedBlocks = [];
+    }
+
+    /**
      * Return the array of all blocks rendered while parsing shortcodes.
      *
      * @return array
