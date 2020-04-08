@@ -2,11 +2,14 @@ $(document).ready(function() {
 
     let editorCss = '';
 
+    window.pageData = {};
+    window.pageTranslationData = {};
+
     /**
      * Save page on clicking save button.
      */
     $("#save-page").click(function() {
-        savePage();
+        saveAllTranslationsToServer();
     });
 
     /**
@@ -15,39 +18,58 @@ $(document).ready(function() {
     $(document).bind("keydown", function(e){
         if(e.ctrlKey && e.which === 83) {
             window.editor.store(); // text-editor updates are not applied until focus is lost, so force update
-            savePage();
+            saveAllTranslationsToServer();
             e.preventDefault();
             return false;
         }
     });
 
-    function savePage() {
+    window.saveCurrentTranslation = function(saveAllTranslationsToServer = false) {
         toggleWaiting();
 
-        // use timeout to ensure the waiting spinner is correctly displayed before the page briefly freezes due to high JS workload
+        // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
         setTimeout(function() {
 
             // get the page content container (so skip all layout blocks) and prepare data for being stored
             let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
             let data = getDataInStorageFormat(container);
 
-            $.ajax({
-                type: "POST",
-                url: $("#save-page").data('url'),
-                data: {
-                    data: JSON.stringify(data)
-                },
-                success: function() {
-                    toggleWaiting();
-                    window.toastr.success(window.translations['toastr-changes-saved']);
-                },
-                error: function () {
-                    toggleWaiting();
-                    window.toastr.error(window.translations['toastr-saving-failed']);
-                }
-            });
+            window.pageData = {
+                html: data.html,
+                components: data.components,
+                css: data.css,
+                style: data.style,
+            };
+            window.pageTranslationData[window.currentLanguage] = data.blocks;
+
+            if (saveAllTranslationsToServer) {
+                let data = window.pageData;
+                data.blocks = window.pageTranslationData;
+
+                $.ajax({
+                    type: "POST",
+                    url: $("#save-page").data('url'),
+                    data: {
+                        data: JSON.stringify(data)
+                    },
+                    success: function() {
+                        toggleWaiting();
+                        window.toastr.success(window.translations['toastr-changes-saved']);
+                    },
+                    error: function () {
+                        toggleWaiting();
+                        window.toastr.error(window.translations['toastr-saving-failed']);
+                    }
+                });
+            } else {
+                toggleWaiting();
+            }
 
         }, 200);
+    };
+
+    function saveAllTranslationsToServer() {
+        saveCurrentTranslation(true);
     }
 
     /**

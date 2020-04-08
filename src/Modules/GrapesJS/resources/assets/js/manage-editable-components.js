@@ -80,8 +80,8 @@
         // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
-            if (window.dynamicTranslatedBlocks[currentLanguage][id] !== undefined && window.dynamicTranslatedBlocks[currentLanguage][id]['html'] !== undefined) {
-                newComponent = component.replaceWith(window.dynamicTranslatedBlocks[currentLanguage][id]['html']);
+            if (window.dynamicBlocks[currentLanguage][id] !== undefined && window.dynamicBlocks[currentLanguage][id]['html'] !== undefined) {
+                newComponent = component.replaceWith(window.dynamicBlocks[currentLanguage][id]['html']);
             }
         }
 
