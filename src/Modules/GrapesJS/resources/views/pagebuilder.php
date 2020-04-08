@@ -97,7 +97,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
             $languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
             foreach ($languages as $locale):
             ?>
-            <option value="<?= e($locale) ?>"><?= phpb_trans('languages')[$locale] ?></option>
+            <option value="<?= e($locale) ?>" <?= phpb_config('general.language') === $locale ? 'selected' : '' ?>><?= phpb_trans('languages')[$locale] ?></option>
             <?php
             endforeach;
             ?>

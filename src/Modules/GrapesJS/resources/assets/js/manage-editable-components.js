@@ -40,7 +40,10 @@
      */
     $("#language-selector select").on("change", function() {
         let selectedLanguage = $(this).find("option:selected").val();
-        activateLanguage(selectedLanguage);
+
+        window.switchLanguage(selectedLanguage, function() {
+            activateLanguage(selectedLanguage);
+        });
     });
 
     /**

@@ -24,7 +24,15 @@ $(document).ready(function() {
         }
     });
 
-    window.saveCurrentTranslation = function(saveAllTranslationsToServer = false) {
+    window.switchLanguage = function(newLanguage, callback) {
+        saveCurrentTranslation(function() {
+            window.pageComponents = window.pageData.components;
+            window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
+            callback();
+        });
+    };
+
+    function saveCurrentTranslation(callback) {
         toggleWaiting();
 
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
@@ -41,35 +49,39 @@ $(document).ready(function() {
                 style: data.style,
             };
             window.pageTranslationData[window.currentLanguage] = data.blocks;
+            window.pageComponents = data.components;
 
-            if (saveAllTranslationsToServer) {
-                let data = window.pageData;
-                data.blocks = window.pageTranslationData;
-
-                $.ajax({
-                    type: "POST",
-                    url: $("#save-page").data('url'),
-                    data: {
-                        data: JSON.stringify(data)
-                    },
-                    success: function() {
-                        toggleWaiting();
-                        window.toastr.success(window.translations['toastr-changes-saved']);
-                    },
-                    error: function () {
-                        toggleWaiting();
-                        window.toastr.error(window.translations['toastr-saving-failed']);
-                    }
-                });
-            } else {
-                toggleWaiting();
+            toggleWaiting();
+            if (callback) {
+                callback();
             }
 
         }, 200);
     };
 
     function saveAllTranslationsToServer() {
-        saveCurrentTranslation(true);
+        saveCurrentTranslation(function() {
+            toggleWaiting();
+
+            let data = window.pageData;
+            data.blocks = window.pageTranslationData;
+
+            $.ajax({
+                type: "POST",
+                url: $("#save-page").data('url'),
+                data: {
+                    data: JSON.stringify(data)
+                },
+                success: function() {
+                    toggleWaiting();
+                    window.toastr.success(window.translations['toastr-changes-saved']);
+                },
+                error: function () {
+                    toggleWaiting();
+                    window.toastr.error(window.translations['toastr-saving-failed']);
+                }
+            });
+        });
     }
 
     /**
