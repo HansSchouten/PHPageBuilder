@@ -42,43 +42,46 @@ let config = <?= json_encode($config) ?>;
 if (window.customConfig !== undefined) {
     config = $.extend(true, {}, window.customConfig, config);
 }
-window.editor = grapesjs.init(config);
 
-window.editor.I18n.addMessages({
+window.initialComponents = <?= json_encode($pageRenderer->render()) ?>;
+window.initialStyle = <?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>;
+window.grapesJSTranslations = {
     <?= phpb_config('general.language') ?>: {
         styleManager: {
             empty: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
         },
         traitManager: {
             empty: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
-            label: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
-            traits: {
+                label: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
+                traits: {
                 options: {
                     target: {
                         false: '<?= phpb_trans('pagebuilder.no') ?>',
-                        _blank: '<?= phpb_trans('pagebuilder.yes') ?>'
+                            _blank: '<?= phpb_trans('pagebuilder.yes') ?>'
                     }
                 }
             }
         },
         assetManager: {
             addButton: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
-            inputPlh: 'http://path/to/the/image.jpg',
-            modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
-            uploadTitle: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>'
+                inputPlh: 'http://path/to/the/image.jpg',
+                modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
+                uploadTitle: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>'
         }
     }
-});
+};
 
-// set custom name for the wrapper component containing all page components
-editor.DomComponents.getWrapper().set('custom-name', '<?= phpb_trans('pagebuilder.page') ?>');
+window.initGrapesJS = function() {
+    window.editor = window.grapesjs.init(config);
+    window.editor.I18n.addMessages(window.grapesJSTranslations);
 
-// set the non-editable page layout components and the phpb-content-container in which all editable components will be loaded
-window.initialComponents = <?= json_encode($pageRenderer->render()) ?>;
-editor.setComponents(window.initialComponents);
+    // set the non-editable page layout components and the phpb-content-container in which all editable components will be loaded
+    editor.setComponents(window.initialComponents);
 
-// load the earlier saved page css components
-editor.setStyle(<?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>);
+    // load the default or earlier saved page css components
+    editor.setStyle(window.initialStyle);
+};
+initGrapesJS();
 </script>
 
 <?php

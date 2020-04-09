@@ -5,11 +5,7 @@
      * Only blocks and components inside the element with phpb-content-container attribute are editable.
      */
     window.editor.on('load', function(editor) {
-        denyAccessToLayoutElements(editor.getWrapper());
         addThemeBlocks();
-
-        let container = editor.getWrapper().find("[phpb-content-container]")[0];
-        container.set('custom-name', window.translations['page-content']);
 
         activateLanguage(window.currentLanguage);
     });
@@ -59,8 +55,10 @@
         window.editor.CssComposer.clear();
         window.editor.UndoManager.clear();
         window.editor.setComponents(window.initialComponents);
+        denyAccessToLayoutElements(editor.getWrapper());
 
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
+        container.set('custom-name', window.translations['page-content']);
 
         // reload pageComponents (with phpb-block elements) by simulating "save page"
         container.components(window.pageComponents);

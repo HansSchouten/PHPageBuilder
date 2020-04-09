@@ -46,7 +46,6 @@ $(document).ready(function() {
     $(window).on('beforeunload', function(event) {
         if (backspaceIsPressed) event.preventDefault();
     });
-
 });
 
 function addBlockSearch() {
