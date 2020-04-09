@@ -9,8 +9,8 @@
   max-width: 1140px;
 }
 
-a {
-  outline: 0;
+* {
+  outline: 0 !important;
 }
 
 .main-spacing {
@@ -85,6 +85,25 @@ form {
   .required label:after {
     color: red;
     content: " *";
+  }
+}
+form .bootstrap-select {
+  .btn-light {
+    background: #fff !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da;
+
+    &[aria-expanded=true] {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+      outline: 0 !important;
+    }
+
+    &:focus,
+    &:active {
+      outline: 0 !important;
+      box-shadow: none;
+    }
   }
 }
 
