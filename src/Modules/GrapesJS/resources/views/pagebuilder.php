@@ -52,21 +52,21 @@ window.grapesJSTranslations = {
         },
         traitManager: {
             empty: '<?= phpb_trans('pagebuilder.trait-no-element-selected') ?>',
-                label: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
-                traits: {
+            label: '<?= phpb_trans('pagebuilder.trait-settings') ?>',
+            traits: {
                 options: {
                     target: {
                         false: '<?= phpb_trans('pagebuilder.no') ?>',
-                            _blank: '<?= phpb_trans('pagebuilder.yes') ?>'
+                        _blank: '<?= phpb_trans('pagebuilder.yes') ?>'
                     }
                 }
             }
         },
         assetManager: {
             addButton: '<?= phpb_trans('pagebuilder.asset-manager.add-image') ?>',
-                inputPlh: 'http://path/to/the/image.jpg',
-                modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
-                uploadTitle: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>'
+            inputPlh: 'http://path/to/the/image.jpg',
+            modalTitle: '<?= phpb_trans('pagebuilder.asset-manager.modal-title') ?>',
+            uploadTitle: '<?= phpb_trans('pagebuilder.asset-manager.drop-files') ?>'
         }
     }
 };

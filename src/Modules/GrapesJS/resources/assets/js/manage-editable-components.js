@@ -50,8 +50,9 @@
     function activateLanguage(newLanguage) {
         window.currentLanguage = newLanguage;
 
-        // clear everything before loading the new language variant
+        // reset GrapesJS editor before loading the new language variant
         window.editor.DomComponents.clear();
+        window.editor.DomComponents.componentsById = [];
         window.editor.CssComposer.clear();
         window.editor.UndoManager.clear();
         window.editor.setComponents(window.initialComponents);
@@ -87,9 +88,8 @@
         // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
-            console.log(id);
-            if (window.dynamicBlocks[currentLanguage][id] !== undefined && window.dynamicBlocks[currentLanguage][id]['html'] !== undefined) {
-                newComponent = component.replaceWith(window.dynamicBlocks[currentLanguage][id]['html']);
+            if (window.dynamicBlocks[window.currentLanguage][id] !== undefined && window.dynamicBlocks[window.currentLanguage][id]['html'] !== undefined) {
+                newComponent = component.replaceWith(window.dynamicBlocks[window.currentLanguage][id]['html']);
             }
         }
 
@@ -253,9 +253,11 @@
         // get the stored settings of the given component (from saving the pagebuilder earlier)
         let settingValues = [];
         let blockId = component.attributes['block-id'];
-        if (window.dynamicBlocks[blockId] !== undefined && window.dynamicBlocks[blockId].settings.attributes !== undefined) {
-            component.attributes.settings = window.dynamicBlocks[blockId].settings;
-            settingValues = window.dynamicBlocks[blockId].settings.attributes;
+        if (window.dynamicBlocks[window.currentLanguage][blockId] !== undefined &&
+            window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes !== undefined) {
+            // use the setting values stored in window.dynamicBlocks for this block id
+            component.attributes.settings = window.dynamicBlocks[window.currentLanguage][blockId].settings;
+            settingValues = window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes;
         } else if (component.parent() && component.parent().attributes['settings'] !== undefined) {
             // the settings of this component are not stored globally in window.dynamicBlocks,
             // so try to retrieve this component's settings from the parent block (which is necessary for nested dynamic blocks)
@@ -318,10 +320,10 @@
                 let blockId = $(blockHtml).attr('block-id');
 
                 // set dynamic block settings for the updated component to the new values
-                if (window.dynamicBlocks[blockId] === undefined) {
-                    window.dynamicBlocks[blockId] = {settings: {}};
+                if (window.dynamicBlocks[window.currentLanguage][blockId] === undefined) {
+                    window.dynamicBlocks[window.currentLanguage][blockId] = {settings: {}};
                 }
-                window.dynamicBlocks[blockId].settings = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
+                window.dynamicBlocks[window.currentLanguage][blockId].settings = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
                 // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);
