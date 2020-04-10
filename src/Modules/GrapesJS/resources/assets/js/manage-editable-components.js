@@ -259,7 +259,7 @@
         let settingValues = [];
         let blockId = component.attributes['block-id'];
         if (window.dynamicBlocks[window.currentLanguage][blockId] !== undefined &&
-            window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes !== undefined) {
+            window.dynamicBlocks[window.currentLanguage][blockId]['settings']['attributes'] !== undefined) {
             // use the setting values stored in window.dynamicBlocks for this block id
             component.attributes.settings = window.dynamicBlocks[window.currentLanguage][blockId].settings;
             settingValues = window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes;
@@ -328,7 +328,7 @@
                 if (window.dynamicBlocks[window.currentLanguage][blockId] === undefined) {
                     window.dynamicBlocks[window.currentLanguage][blockId] = {settings: {}};
                 }
-                window.dynamicBlocks[window.currentLanguage][blockId].settings = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
+                window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
                 // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);

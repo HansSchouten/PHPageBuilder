@@ -92,7 +92,7 @@ class PageRenderer
      */
     public function getPageBlocksData()
     {
-        return $this->pageData['blocks'][$this->language] ?? [];
+        return $this->pageData['blocks'] ?? [];
     }
 
     /**
@@ -170,7 +170,7 @@ class PageRenderer
         }
 
         $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
-        return $blockRenderer->render($themeBlock, $blockData['settings'], $id ?? $themeBlock->getSlug());
+        return $blockRenderer->render($themeBlock, $blockData, $id ?? $themeBlock->getSlug());
     }
 
     /**

@@ -54,8 +54,8 @@ class BaseModel
     {
         $value = $this->block->get('settings.' . $setting . '.value');
 
-        if (isset($this->data['attributes'][$setting])) {
-            $value = $this->data['attributes'][$setting];
+        if (isset($this->data['settings']['attributes'][$setting])) {
+            $value = $this->data['settings']['attributes'][$setting];
         }
 
         return $allowHtml ? $value : e($value);

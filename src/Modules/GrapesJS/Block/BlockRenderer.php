@@ -74,9 +74,9 @@ class BlockRenderer
             $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
-        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['attributes']['style-identifier'])) {
+        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
             // add wrapper div around dynamic blocks, which receives the style identifier class if styling is added to the dynamic block using the pagebuilder
-            $html = '<div class="' . e($blockData['attributes']['style-identifier']) . '">' . $html . '</div>';
+            $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">' . $html . '</div>';
         }
         return $html;
     }
@@ -90,8 +90,8 @@ class BlockRenderer
      */
     protected function renderHtmlBlock(ThemeBlock $themeBlock, $blockData)
     {
-        if (! empty($blockData)) {
-            $html = $blockData;
+        if (isset($blockData['html'])) {
+            $html = $blockData['html'];
         } else {
             $html = file_get_contents($themeBlock->getViewFile());
         }
@@ -107,9 +107,9 @@ class BlockRenderer
      */
     protected function renderDynamicBlock(ThemeBlock $themeBlock, $blockData)
     {
+        $blockData = $blockData ?? [];
         $controller = new BaseController;
         $model = new BaseModel($themeBlock, $blockData, $this->forPageBuilder);
-        $blockData = $blockData ?? [];
 
         if ($themeBlock->getModelFile()) {
             require_once $themeBlock->getModelFile();
