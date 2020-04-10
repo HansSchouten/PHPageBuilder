@@ -152,9 +152,10 @@ $(document).ready(function() {
      */
     function replaceDynamicBlocksWithPlaceholders(component, inDynamicBlock = false, inHtmlBlockInDynamicBlock = false) {
         // data structure to be filled with the data of nested blocks via recursive calls
-        let data = {};
-        data['current_block'] = {};
-        data['blocks'] = {};
+        let data = {
+            current_block: {settings: {}, blocks: {}, html: "", is_dynamic: true},
+            blocks: {}
+        };
 
         // update variables for passing context to the recursive calls on child components
         let newInDynamicBlock = inDynamicBlock;
@@ -173,27 +174,30 @@ $(document).ready(function() {
             let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newInDynamicBlock, newInHtmlBlockInDynamicBlock);
 
             // update data object with child data
-            for (let id in childData.current_block) { data.current_block[id] = childData.current_block[id]; }
-            for (let id in childData.blocks) { data.blocks[id] = childData.blocks[id]; }
+            for (let key in childData.current_block.blocks) { data.current_block.blocks[key] = childData.current_block.blocks[key]; }
+            for (let key in childData.blocks) { data.blocks[key] = childData.blocks[key]; }
         });
 
         // if this component is a dynamic block, do the actual replacement of this component with a placeholder component
         if (component.attributes['block-id'] !== undefined) {
+            let html = component.toHTML();
+
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block[component.attributes['block-id']] = window.html_beautify(component.toHTML());
+                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(html), is_dynamic: false};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
                 let attributes = {};
                 component.get('traits').each(function(trait) {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
-                data.current_block['attributes'] = attributes;
+                data.current_block['settings']['attributes'] = attributes;
+                data.current_block['html'] = html;
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
                 if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
-                    data.current_block['attributes']['style-identifier'] = component.attributes['style-identifier'];
+                    data.current_block['settings']['attributes']['style-identifier'] = component.attributes['style-identifier'];
                 }
 
                 // replace this dynamic component by a shortcode with a unique id
@@ -209,13 +213,13 @@ $(document).ready(function() {
 
                 if (inDynamicBlock) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
-                    let currentBlockForParent = {};
-                    currentBlockForParent[component.attributes['block-id']] = data.current_block;
+                    let currentBlockForParent = {settings: {}, blocks: {}, html: ""};
+                    currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
                     data.current_block = currentBlockForParent;
                 } else {
                     // in an html block, the block data is globally stored in the blocks array
                     data.blocks[instanceId] = data.current_block;
-                    data.current_block = {};
+                    data.current_block = {settings: {}, blocks: {}, html: "", is_dynamic: true};
                 }
             }
         }
