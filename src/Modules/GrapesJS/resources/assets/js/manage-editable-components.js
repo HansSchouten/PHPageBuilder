@@ -329,7 +329,7 @@
                 component.replaceWith(blockHtml);
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
-                restrictEditAccess(container);
+                restrictEditAccess(container, true, false);
 
                 // select the component that was selected before the ajax call
                 let newComponent;
