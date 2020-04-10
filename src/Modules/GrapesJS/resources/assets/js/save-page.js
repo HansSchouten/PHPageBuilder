@@ -180,11 +180,9 @@ $(document).ready(function() {
 
         // if this component is a dynamic block, do the actual replacement of this component with a placeholder component
         if (component.attributes['block-id'] !== undefined) {
-            let html = component.toHTML();
-
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(html), is_dynamic: false};
+                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_dynamic: false};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
                 let attributes = {};
@@ -192,7 +190,7 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['settings']['attributes'] = attributes;
-                data.current_block['html'] = html;
+                data.current_block['html'] = component.attributes.html;
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
