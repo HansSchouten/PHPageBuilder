@@ -162,15 +162,15 @@ class PageRenderer
         $pageBlocksData = $this->pageBlocksData;
         $blockData = null;
         // get data for this block stored in the context of the parent block
-        if (! is_null($parentBlockId) && isset($pageBlocksData[$parentBlockId]) && isset($pageBlocksData[$parentBlockId][$id])) {
-            $blockData = $pageBlocksData[$parentBlockId][$id];
+        if (! is_null($parentBlockId) && isset($pageBlocksData[$parentBlockId]['blocks'][$id])) {
+            $blockData = $pageBlocksData[$parentBlockId]['blocks'][$id];
         } elseif (isset($pageBlocksData[$id])) {
             // if no data is stored in context of the parent block, get data stored for this block's id
             $blockData = $pageBlocksData[$id];
         }
 
-        $blockRenderer = new BlockRenderer($this->theme, $this->page, $blockData, $this->forPageBuilder);
-        return $blockRenderer->render($themeBlock, $blockData, $id ?? $themeBlock->getSlug());
+        $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
+        return $blockRenderer->render($themeBlock, $blockData['settings'], $id ?? $themeBlock->getSlug());
     }
 
     /**

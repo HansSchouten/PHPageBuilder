@@ -19,11 +19,6 @@ class BlockRenderer
     protected $page;
 
     /**
-     * @var array $renderContext
-     */
-    protected $renderContext;
-
-    /**
      * @var bool $forPageBuilder
      */
     protected $forPageBuilder;
@@ -33,14 +28,12 @@ class BlockRenderer
      *
      * @param ThemeContract $theme
      * @param PageContract $page
-     * @param array $renderContext
      * @param bool $forPageBuilder
      */
-    public function __construct(ThemeContract $theme, PageContract $page, $renderContext = [], $forPageBuilder = false)
+    public function __construct(ThemeContract $theme, PageContract $page, $forPageBuilder = false)
     {
         $this->theme = $theme;
         $this->page = $page;
-        $this->renderContext = $renderContext ?? [];
         $this->forPageBuilder = $forPageBuilder;
     }
 
