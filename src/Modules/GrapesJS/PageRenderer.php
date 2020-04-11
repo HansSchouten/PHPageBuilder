@@ -56,9 +56,8 @@ class PageRenderer
     {
         $this->theme = $theme;
         $this->page = $page;
-        $this->language = phpb_config('general.language');
         $this->pageData = $page->getBuilderData();
-        $this->pageBlocksData = $this->getPageBlocksData();
+        $this->setLanguage(phpb_config('general.language'));
         $this->shortcodeParser = new ShortcodeParser($this);
         $this->forPageBuilder = $forPageBuilder;
     }
@@ -92,7 +91,7 @@ class PageRenderer
      */
     public function getPageBlocksData()
     {
-        return $this->pageData['blocks'] ?? [];
+        return $this->pageData['blocks'][$this->language] ?? [];
     }
 
     /**

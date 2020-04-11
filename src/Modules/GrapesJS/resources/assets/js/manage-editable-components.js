@@ -62,7 +62,7 @@
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
 
-        // reload pageComponents (with phpb-block elements) by simulating "save page"
+        // reload pageComponents (with phpb-block elements)
         container.components(window.pageComponents);
 
         // replace phpb-block elements with the server-side rendered version of each dynamic block.
@@ -195,10 +195,6 @@
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
         if (! droppedComponent) return;
-
-        // store html in block, used when switching language
-        let blockSlug = droppedComponent.attributes.attributes['block-slug'];
-        droppedComponent.attributes.attributes['html'] = window.themeBlocks[blockSlug].content;
 
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);

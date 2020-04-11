@@ -33,8 +33,6 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         saveCurrentTranslationLocally(function() {
-            window.pageComponents = window.pageData.components;
-            window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
             callback();
         });
     };
@@ -205,7 +203,6 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['settings']['attributes'] = attributes;
-                //data.current_block['html'] = component.attributes.html;
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling

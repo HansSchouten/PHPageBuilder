@@ -106,7 +106,7 @@ class ShortcodeParser
             if (phpb_in_editmode()) {
                 $this->renderedBlocks[$this->language][$id] = [
                     'html' => $this->doShortcodes($blockHtml, $this->language),
-                    'settings' => $this->blocksData[$id]['settings'] ?? []
+                    'settings' => $this->blocksData[$this->language][$id]['settings'] ?? []
                 ];
             }
 
