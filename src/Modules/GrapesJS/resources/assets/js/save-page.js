@@ -205,7 +205,7 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['settings']['attributes'] = attributes;
-                data.current_block['html'] = component.attributes.html;
+                //data.current_block['html'] = component.attributes.html;
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
@@ -227,7 +227,7 @@ $(document).ready(function() {
                 if (inDynamicBlock) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
                     let currentBlockForParent = {settings: {}, blocks: {}, html: ""};
-                    currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
+                    currentBlockForParent['blocks'][component.attributes['block-slug']] = data.current_block;
                     data.current_block = currentBlockForParent;
                 } else {
                     // in an html block, the block data is globally stored in the blocks array
