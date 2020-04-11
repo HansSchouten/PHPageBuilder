@@ -24,15 +24,27 @@ $(document).ready(function() {
         }
     });
 
+    /**
+     * Switch the pagebuilder to the given language.
+     * This stores the all data of the current language locally for later use.
+     *
+     * @param newLanguage
+     * @param callback
+     */
     window.switchLanguage = function(newLanguage, callback) {
-        saveCurrentTranslation(function() {
+        saveCurrentTranslationLocally(function() {
             window.pageComponents = window.pageData.components;
             window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
             callback();
         });
     };
 
-    function saveCurrentTranslation(callback) {
+    /**
+     * Store the all data of the current language locally for later use.
+     *
+     * @param callback
+     */
+    function saveCurrentTranslationLocally(callback) {
         toggleWaiting();
 
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
@@ -59,8 +71,11 @@ $(document).ready(function() {
         }, 200);
     }
 
+    /**
+     * Save the data of all translation variants on the server.
+     */
     function saveAllTranslationsToServer() {
-        saveCurrentTranslation(function() {
+        saveCurrentTranslationLocally(function() {
             toggleWaiting();
 
             let data = window.pageData;
@@ -153,7 +168,7 @@ $(document).ready(function() {
     function replaceDynamicBlocksWithPlaceholders(component, inDynamicBlock = false, inHtmlBlockInDynamicBlock = false) {
         // data structure to be filled with the data of nested blocks via recursive calls
         let data = {
-            current_block: {settings: {}, blocks: {}, html: "", is_dynamic: true},
+            current_block: {settings: {}, blocks: {}, html: "", is_html: false},
             blocks: {}
         };
 
@@ -182,7 +197,7 @@ $(document).ready(function() {
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_dynamic: false};
+                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
                 let attributes = {};
@@ -217,7 +232,7 @@ $(document).ready(function() {
                 } else {
                     // in an html block, the block data is globally stored in the blocks array
                     data.blocks[instanceId] = data.current_block;
-                    data.current_block = {settings: {}, blocks: {}, html: "", is_dynamic: true};
+                    data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
                 }
             }
         }
