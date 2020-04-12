@@ -151,25 +151,24 @@ class PageRenderer
      *
      * @param $slug
      * @param null $id                  the id with which data for this block is stored
-     * @param null $contextData
+     * @param null $context
+     * @param int $maxDepth
      * @return string
      * @throws Exception
      */
-    public function renderBlock($slug, $id = null, $contextData = null)
+    public function renderBlock($slug, $id = null, $context = null, $maxDepth = 15)
     {
         $themeBlock = new ThemeBlock($this->theme, $slug);
-        $contextData = $contextData ?? $this->pageBlocksData;
+        $context = $context ?? $this->pageBlocksData;
 
         $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
-        $renderedBlock = $blockRenderer->render($themeBlock, $contextData, $id ?? $themeBlock->getSlug());
+        $renderedBlock = $blockRenderer->render($themeBlock, $context, $id ?? $themeBlock->getSlug());
 
         // get data for this block stored in the context of the parent block
-        $contextData = $contextData[$id]['blocks'] ?? [];
+        $context = $context[$id]['blocks'] ?? [];
 
         // render children blocks with the context data of the current block
-        $this->shortcodeParser->doShortcodes($renderedBlock, $contextData);
-
-        return $renderedBlock;
+        return $this->shortcodeParser->doShortcodes($renderedBlock, $context, $maxDepth);
     }
 
     /**

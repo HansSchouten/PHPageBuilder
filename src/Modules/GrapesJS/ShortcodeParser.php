@@ -69,7 +69,7 @@ class ShortcodeParser
                 . "probably due to a circular shortcode reference in one of the theme blocks.");
         }
 
-        $html = $this->doBlockShortcodes($html, $context);
+        $html = $this->doBlockShortcodes($html, $context, $maxDepth);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
         $html = $this->doBlocksContainerShortcodes($html);
@@ -81,10 +81,11 @@ class ShortcodeParser
      *
      * @param string $html
      * @param array $context
+     * @param int $maxDepth
      * @return string
      * @throws Exception
      */
-    protected function doBlockShortcodes($html, array $context)
+    protected function doBlockShortcodes($html, array $context, $maxDepth)
     {
         $matches = $this->findMatches('block', $html);
         if (empty($matches)) {
@@ -97,7 +98,7 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context);
+            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context, $maxDepth);
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
             if (phpb_in_editmode()) {
