@@ -251,14 +251,17 @@
             return;
         }
         component.attributes.settings = {};
+
         // get the stored settings of the given component (from saving the pagebuilder earlier)
-        let settingValues = [];
+        let settingValues = {};
         let blockId = component.attributes['block-id'];
         if (window.dynamicBlocks[window.currentLanguage][blockId] !== undefined &&
             window.dynamicBlocks[window.currentLanguage][blockId]['settings']['attributes'] !== undefined) {
             // use the setting values stored in window.dynamicBlocks for this block id
             component.attributes.settings = window.dynamicBlocks[window.currentLanguage][blockId].settings;
             settingValues = window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes;
+        }
+        /*
         } else if (component.parent() && component.parent().attributes['settings'] !== undefined) {
             // the settings of this component are not stored globally in window.dynamicBlocks,
             // so try to retrieve this component's settings from the parent block (which is necessary for nested dynamic blocks)
@@ -268,10 +271,13 @@
                 settingValues = parentSettings[blockId].attributes;
             }
         }
+         */
+
         // set style identifier class to the dynamic block wrapper, if an identifier is stored in the block settings from saving the pagebuilder earlier
         if (settingValues['style-identifier'] !== undefined) {
             component.addClass(settingValues['style-identifier']);
         }
+
         // for each setting add a trait to the settings sidebar panel with the earlier stored or default value
         component.attributes['is-updating'] = true;
         let settings = window.blockSettings[component.attributes['block-slug']];
@@ -309,6 +315,7 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
+        console.log(data);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
@@ -318,6 +325,7 @@
                 data: JSON.stringify(data)
             },
             success: function(blockHtml) {
+                console.log(blockHtml);
                 let blockId = $(blockHtml).attr('block-id');
 
                 // set dynamic block settings for the updated component to the new values

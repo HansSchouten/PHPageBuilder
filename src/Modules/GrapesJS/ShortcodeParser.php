@@ -18,11 +18,6 @@ class ShortcodeParser
     protected $renderedBlocks;
 
     /**
-     * @var array $context
-     */
-    protected $context = [];
-
-    /**
      * @var array $pages
      */
     protected $pages = [];
@@ -63,13 +58,18 @@ class ShortcodeParser
      *
      * @param $html
      * @param array $context
+     * @param int $maxDepth
      * @return mixed|string
      * @throws Exception
      */
-    public function doShortcodes($html, array $context = [])
+    public function doShortcodes($html, array $context = [], $maxDepth = 15)
     {
-        $this->context = $context;
-        $html = $this->doBlockShortcodes($html);
+        if ($maxDepth === 0) {
+            throw new Exception("Maximum doShortcodes depth has been reached, "
+                . "probably due to a circular shortcode reference in one of the theme blocks.");
+        }
+
+        $html = $this->doBlockShortcodes($html, $context);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
         $html = $this->doBlocksContainerShortcodes($html);
@@ -79,18 +79,13 @@ class ShortcodeParser
     /**
      * Render all dynamic blocks defined with shortcodes in the given html string.
      *
-     * @param $html
-     * @param int $maxDepth                     maximum depth of blocks loaded inside blocks
+     * @param string $html
+     * @param array $context
      * @return string
      * @throws Exception
      */
-    protected function doBlockShortcodes($html, $maxDepth = 15)
+    protected function doBlockShortcodes($html, array $context)
     {
-        if ($maxDepth === 0) {
-            throw new Exception("Maximum doBlockShortcodes depth has been reached, "
-                . "probably due to a circular shortcode reference in one of the theme blocks.");
-        }
-
         $matches = $this->findMatches('block', $html);
         if (empty($matches)) {
             return $html;
@@ -102,16 +97,13 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $this->context);
-
-            // recursive call to render shortcodes from inside the html of the newly rendered block
-            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1);
+            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context);
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
             if (phpb_in_editmode()) {
                 $this->renderedBlocks[$this->language][$id] = [
-                    'html' => $this->doShortcodes($blockHtml, $this->context),
-                    'settings' => $this->blocksData[$this->language][$id]['settings'] ?? []
+                    'html' => $blockHtml,
+                    'settings' => $context
                 ];
             }
 

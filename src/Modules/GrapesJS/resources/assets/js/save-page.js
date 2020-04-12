@@ -78,6 +78,7 @@ $(document).ready(function() {
 
             let data = window.pageData;
             data.blocks = window.pageTranslationData;
+            console.log(data); return;
 
             $.ajax({
                 type: "POST",
