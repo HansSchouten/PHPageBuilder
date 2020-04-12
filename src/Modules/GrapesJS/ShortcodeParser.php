@@ -18,9 +18,9 @@ class ShortcodeParser
     protected $renderedBlocks;
 
     /**
-     * @var array $blocksData
+     * @var array $context
      */
-    protected $blocksData = [];
+    protected $context = [];
 
     /**
      * @var array $pages
@@ -40,12 +40,8 @@ class ShortcodeParser
     public function __construct(PageRenderer $pageRenderer)
     {
         $this->pageRenderer = $pageRenderer;
-
-        // set properties for parsing block shortcodes
         $this->renderedBlocks = [];
-        $this->blocksData = $pageRenderer->getPageBlocksData();
 
-        // set properties for parsing page shortcodes
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll(['id']) as $page) {
             $this->pages[$page->getId()] = $page->getRoute();
@@ -53,16 +49,26 @@ class ShortcodeParser
     }
 
     /**
+     * Set the current language.
+     *
+     * @param $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
      * Perform the tasks for all shortcodes in the given html string.
      *
      * @param $html
-     * @param string $language
+     * @param array $context
      * @return mixed|string
      * @throws Exception
      */
-    public function doShortcodes($html, $language)
+    public function doShortcodes($html, array $context = [])
     {
-        $this->language = $language;
+        $this->context = $context;
         $html = $this->doBlockShortcodes($html);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
@@ -75,11 +81,10 @@ class ShortcodeParser
      *
      * @param $html
      * @param int $maxDepth                     maximum depth of blocks loaded inside blocks
-     * @param string|null $parentBlockId
      * @return string
      * @throws Exception
      */
-    protected function doBlockShortcodes($html, $maxDepth = 15, $parentBlockId = null)
+    protected function doBlockShortcodes($html, $maxDepth = 15)
     {
         if ($maxDepth === 0) {
             throw new Exception("Maximum doBlockShortcodes depth has been reached, "
@@ -97,15 +102,15 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
-            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $parentBlockId);
+            $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $this->context);
 
             // recursive call to render shortcodes from inside the html of the newly rendered block
-            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1, $id);
+            $blockHtml = $this->doBlockShortcodes($blockHtml, $maxDepth - 1);
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
             if (phpb_in_editmode()) {
                 $this->renderedBlocks[$this->language][$id] = [
-                    'html' => $this->doShortcodes($blockHtml, $this->language),
+                    'html' => $this->doShortcodes($blockHtml, $this->context),
                     'settings' => $this->blocksData[$this->language][$id]['settings'] ?? []
                 ];
             }

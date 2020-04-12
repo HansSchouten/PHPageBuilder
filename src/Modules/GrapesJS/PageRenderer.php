@@ -146,50 +146,43 @@ class PageRenderer
     }
 
     /**
-     * Include a rendered theme block with the given slug, data instance id and data context.
-     * This method is called on parsing shortcodes.
+     * Return a fully rendered theme block (including children blocks) with the given slug, data instance id and data context.
+     * This method is called while parsing shortcodes.
      *
      * @param $slug
      * @param null $id                  the id with which data for this block is stored
-     * @param null $parentBlockId
-     * @return string
-     */
-    public function renderBlock($slug, $id = null, $parentBlockId = null)
-    {
-        $themeBlock = new ThemeBlock($this->theme, $slug);
-
-        $pageBlocksData = $this->pageBlocksData;
-        $blockData = null;
-        // get data for this block stored in the context of the parent block
-        if (! is_null($parentBlockId) && isset($pageBlocksData[$parentBlockId]['blocks'][$id])) {
-            $blockData = $pageBlocksData[$parentBlockId]['blocks'][$id];
-        } elseif (isset($pageBlocksData[$id])) {
-            // if no data is stored in context of the parent block, get data stored for this block's id
-            $blockData = $pageBlocksData[$id];
-        }
-
-        $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
-        return $blockRenderer->render($themeBlock, $blockData, $id ?? $themeBlock->getSlug());
-    }
-
-    /**
-     * Parse the given shortcode to html.
-     *
-     * @param string $shortcode
-     * @param array $data           the data for each block to be used wile parsing the shortcode
+     * @param null $contextData
      * @return string
      * @throws Exception
      */
-    public function parseShortcode(string $shortcode, $data = [])
+    public function renderBlock($slug, $id = null, $contextData = null)
     {
-        $originalData = $this->pageBlocksData;
+        $themeBlock = new ThemeBlock($this->theme, $slug);
+        $contextData = $contextData ?? $this->pageBlocksData;
 
-        // parse the shortcode with the data array passed as an argument to this method
-        $this->pageBlocksData = $data;
-        $html = $this->shortcodeParser->doShortcodes($shortcode, $this->language);
+        $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
+        $renderedBlock = $blockRenderer->render($themeBlock, $contextData, $id ?? $themeBlock->getSlug());
 
-        $this->pageBlocksData = $originalData;
-        return $html;
+        // get data for this block stored in the context of the parent block
+        $contextData = $contextData[$id]['blocks'] ?? [];
+
+        // render children blocks with the context data of the current block
+        $this->shortcodeParser->doShortcodes($renderedBlock, $contextData);
+
+        return $renderedBlock;
+    }
+
+    /**
+     * Parse the given html with shortcodes to fully rendered html.
+     *
+     * @param string $htmlWithShortcodes
+     * @param array $context                    the data for each block to be used while parsing the shortcodes
+     * @return string
+     * @throws Exception
+     */
+    public function parseShortcodes(string $htmlWithShortcodes, $context)
+    {
+        return $this->shortcodeParser->doShortcodes($htmlWithShortcodes, $context);
     }
 
     /**

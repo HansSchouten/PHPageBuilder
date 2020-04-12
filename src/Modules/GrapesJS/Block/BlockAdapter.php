@@ -81,8 +81,7 @@ class BlockAdapter
      */
     public function getBlockManagerArray()
     {
-        $blockShortcode = '[block slug="' . e($this->block->getSlug()) . '"]';
-        $content = $this->pageRenderer->parseShortcode($blockShortcode);
+        $content = $this->pageRenderer->renderBlock($this->block->getSlug());
 
         $img = '';
         if (file_exists($this->block->getThumbPath())) {

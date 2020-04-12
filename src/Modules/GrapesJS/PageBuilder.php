@@ -244,8 +244,9 @@ class PageBuilder implements PageBuilderContract
 
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], true);
+
         $renderer = new PageRenderer($this->theme, $page, true);
-        echo $renderer->parseShortcode($blockData['html'], $blockData['blocks']);
+        echo $renderer->parseShortcodes($blockData['html'], $blockData['blocks']);
     }
 
     /**
