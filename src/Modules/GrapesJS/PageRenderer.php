@@ -159,16 +159,16 @@ class PageRenderer
     public function renderBlock($slug, $id = null, $context = null, $maxDepth = 15)
     {
         $themeBlock = new ThemeBlock($this->theme, $slug);
+        $id = $id ?? $themeBlock->getSlug();
+
         $context = $context ?? $this->pageBlocksData;
+        $context = $context[$id] ?? [];
 
         $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
-        $renderedBlock = $blockRenderer->render($themeBlock, $context, $id ?? $themeBlock->getSlug());
-
-        // get data for this block stored in the context of the parent block
-        $context = $context[$id]['blocks'] ?? [];
+        $renderedBlock = $blockRenderer->render($themeBlock, $context ?? [], $id);
 
         // render children blocks with the context data of the current block
-        return $this->shortcodeParser->doShortcodes($renderedBlock, $context, $maxDepth);
+        return $this->shortcodeParser->doShortcodes($renderedBlock, $context['blocks'] ?? [], $maxDepth);
     }
 
     /**
