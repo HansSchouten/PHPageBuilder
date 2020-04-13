@@ -285,7 +285,7 @@
 
         let settingValues = getCurrentSettingValues(component);
 
-        // set style identifier class to the dynamic block wrapper, if an identifier is stored in the block settings from saving the pagebuilder earlier
+        // set style identifier class to the dynamic block wrapper, if an identifier has been stored during earlier getDataInStorageFormat calls
         if (settingValues['style-identifier'] !== undefined) {
             component.addClass(settingValues['style-identifier']);
         }
@@ -327,7 +327,6 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
-        let styleIdentifierBeforeUpdate = component.attributes['style-identifier'];
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
@@ -355,11 +354,6 @@
                         newComponent = containerChild;
                     }
                 });
-
-                // re-use old style identifier
-                if (styleIdentifierBeforeUpdate) {
-                    newComponent.attributes['style-identifier'] = styleIdentifierBeforeUpdate;
-                }
 
                 window.editor.select(newComponent);
             },
