@@ -246,10 +246,9 @@
      * @param component
      */
     function getCurrentSettingValues(component) {
-        // Block settings are stored in dynamicBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
-        // So, we need to find the root of the given component and store all block ids along the way, to traverse through the dynamicBlocks structure.
-        // These ids are only unique in the context of their parent, so we call them relative IDs.
-
+        // Block settings are stored in window.dynamicBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
+        // So, we need to find the root of the given component and store all block ids along the way, in order to traverse the dynamicBlocks structure to the settings of the given component.
+        // These block ids are only unique in the context of their parent (we can have multiple instances of the same nested block structure), so we call them relative IDs.
         let relativeIds = [];
 
         // get the root component of the given component (its first ancestor that does not have a dynamic parent itself)
@@ -266,6 +265,7 @@
             relativeIds.reverse().forEach(function (relativeId) {
                 settings = settings.blocks[relativeId];
             });
+            settings = settings.settings.attributes;
         }
 
         return settings;
@@ -283,36 +283,7 @@
         }
         component.attributes.settings = {};
 
-
-        let currentSettings = getCurrentSettingValues(component);
-        console.log(currentSettings);
-
-
-
-
-
-
-        // get the stored settings of the given component (from saving the pagebuilder earlier)
-        let settingValues = {};
-        let blockId = component.attributes['block-id'];
-        console.log(blockId);
-        if (window.dynamicBlocks[window.currentLanguage][blockId] !== undefined &&
-            window.dynamicBlocks[window.currentLanguage][blockId]['settings']['attributes'] !== undefined) {
-            // use the setting values stored in window.dynamicBlocks for this block id
-            component.attributes.settings = window.dynamicBlocks[window.currentLanguage][blockId].settings;
-            settingValues = window.dynamicBlocks[window.currentLanguage][blockId].settings.attributes;
-        }
-        /*
-        } else if (component.parent() && component.parent().attributes['settings'] !== undefined) {
-            // the settings of this component are not stored globally in window.dynamicBlocks,
-            // so try to retrieve this component's settings from the parent block (which is necessary for nested dynamic blocks)
-            let parentSettings = component.parent().attributes['settings'];
-            if (parentSettings[blockId] !== undefined && parentSettings[blockId].attributes !== undefined) {
-                component.attributes.settings = parentSettings[blockId];
-                settingValues = parentSettings[blockId].attributes;
-            }
-        }
-         */
+        let settingValues = getCurrentSettingValues(component);
 
         // set style identifier class to the dynamic block wrapper, if an identifier is stored in the block settings from saving the pagebuilder earlier
         if (settingValues['style-identifier'] !== undefined) {
