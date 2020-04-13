@@ -259,16 +259,22 @@
         }
         let rootId = rootComponent.attributes['block-id'];
 
-        let settings = {};
-        if (window.dynamicBlocks[window.currentLanguage][rootId] !== undefined) {
-            settings = window.dynamicBlocks[window.currentLanguage][rootId];
-            relativeIds.reverse().forEach(function (relativeId) {
+        // get the component settings by traversing the dynamicBlocks structure
+        let settings = window.dynamicBlocks[window.currentLanguage][rootId];
+        relativeIds.reverse().forEach(function (relativeId) {
+            if (settings === undefined || settings.blocks === undefined || settings.blocks[relativeId] === undefined) {
+                settings = {};
+            } else {
                 settings = settings.blocks[relativeId];
-            });
-            settings = settings.settings.attributes;
-        }
+            }
+        });
 
-        return settings;
+        // return the values stored in the current component's settings structure
+        let settingsValues = {};
+        if (settings !== undefined && settings.settings !== undefined && settings.settings.attributes !== undefined) {
+            settingsValues = settings.settings.attributes;
+        }
+        return settingsValues;
     }
 
     /**
@@ -327,6 +333,8 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
+
+        console.log(data.blocks);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({

@@ -62,7 +62,7 @@ class BaseModel
     }
 
     /**
-     * Return data passed to this block instance with the given key.
+     * Return data of this block, passed as argument by a parent block.
      *
      * @param $key
      * @return string
@@ -70,6 +70,17 @@ class BaseModel
     public function data($key)
     {
         return $this->data[$key] ?? null;
+    }
+
+    /**
+     * Return data of the child block with the given relative ID.
+     *
+     * @param $childBlockId
+     * @return string
+     */
+    public function childData($childBlockId)
+    {
+        return $this->data['blocks'][$childBlockId] ?? null;
     }
 
 }

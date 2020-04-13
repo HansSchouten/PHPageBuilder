@@ -168,7 +168,7 @@ class PageRenderer
         $renderedBlock = $blockRenderer->render($themeBlock, $context ?? [], $id);
 
         // render children blocks with the context data of the current block
-        return $this->shortcodeParser->doShortcodes($renderedBlock, $context['blocks'] ?? [], $maxDepth);
+        return $this->shortcodeParser->doShortcodes($renderedBlock, $context['blocks'] ?? [], $maxDepth - 1);
     }
 
     /**

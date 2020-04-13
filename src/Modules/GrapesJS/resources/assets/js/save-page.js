@@ -225,7 +225,7 @@ $(document).ready(function() {
                 if (inDynamicBlock) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
                     let currentBlockForParent = {settings: {}, blocks: {}, html: ""};
-                    currentBlockForParent['blocks'][component.attributes['block-slug']] = data.current_block;
+                    currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
                     data.current_block = currentBlockForParent;
                 } else {
                     // in an html block, the block data is globally stored in the blocks array
