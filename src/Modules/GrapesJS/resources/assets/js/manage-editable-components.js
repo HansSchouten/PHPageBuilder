@@ -315,7 +315,6 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
-        console.log(data);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
@@ -325,20 +324,21 @@
                 data: JSON.stringify(data)
             },
             success: function(blockHtml) {
-                console.log(blockHtml);
                 let blockId = $(blockHtml).attr('block-id');
 
+                /*
                 // set dynamic block settings for the updated component to the new values
                 if (window.dynamicBlocks[window.currentLanguage][blockId] === undefined) {
                     window.dynamicBlocks[window.currentLanguage][blockId] = {settings: {}};
                 }
                 window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
+                 */
 
                 // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
-                restrictEditAccess(container, true, false);
+                restrictEditAccess(container, false, false);
 
                 // select the component that was selected before the ajax call
                 let newComponent;

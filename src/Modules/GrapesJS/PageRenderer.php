@@ -117,7 +117,7 @@ class PageRenderer
         ob_end_clean();
 
         // parse any shortcodes present in the page layout
-        $pageHtml = $this->shortcodeParser->doShortcodes($pageHtml, $this->language);
+        $pageHtml = $this->parseShortcodes($pageHtml);
 
         return $pageHtml;
     }
@@ -135,7 +135,7 @@ class PageRenderer
 
         $data = $this->pageData;
         if (isset($data['html'])) {
-            $html .= $this->shortcodeParser->doShortcodes($data['html'], $this->language);
+            $html .= $this->parseShortcodes($data['html']);
         }
         // include any style changes made via the page builder
         if (isset($data['css'])) {
@@ -179,8 +179,9 @@ class PageRenderer
      * @return string
      * @throws Exception
      */
-    public function parseShortcodes(string $htmlWithShortcodes, $context)
+    public function parseShortcodes(string $htmlWithShortcodes, $context = null)
     {
+        $context = $context ?? $this->pageBlocksData;
         return $this->shortcodeParser->doShortcodes($htmlWithShortcodes, $context);
     }
 
