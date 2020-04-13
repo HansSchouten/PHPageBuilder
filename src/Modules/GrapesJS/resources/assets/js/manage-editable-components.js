@@ -229,7 +229,7 @@
 
             copyAttributes(clone, blockRootComponent, true, false);
             // add all settings of this component to the settings panel in the sidebar
-            addSettings(blockRootComponent);
+            addSettingsToSidebar(blockRootComponent);
             // recursive call to find and replace <phpb-block> elements of nested blocks (loaded via shortcodes)
             applyBlockAttributesToComponents(blockRootComponent);
         } else {
@@ -241,20 +241,61 @@
     }
 
     /**
+     * Get the current setting values for the given component.
+     *
+     * @param component
+     */
+    function getCurrentSettingValues(component) {
+        // Block settings are stored in dynamicBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
+        // So, we need to find the root of the given component and store all block ids along the way, to traverse through the dynamicBlocks structure.
+        // These ids are only unique in the context of their parent, so we call them relative IDs.
+
+        let relativeIds = [];
+
+        // get the root component of the given component (its first ancestor that does not have a dynamic parent itself)
+        let rootComponent = component;
+        while (rootComponent.parent() && rootComponent.parent().attributes['is-html'] === 'false') {
+            relativeIds.push(rootComponent.attributes['block-id']);
+            rootComponent = rootComponent.parent();
+        }
+        let rootId = rootComponent.attributes['block-id'];
+
+        let settings = {};
+        if (window.dynamicBlocks[window.currentLanguage][rootId] !== undefined) {
+            settings = window.dynamicBlocks[window.currentLanguage][rootId];
+            relativeIds.reverse().forEach(function (relativeId) {
+                settings = settings.blocks[relativeId];
+            });
+        }
+
+        return settings;
+    }
+
+    /**
      * Add all settings from the block's config file to the given component,
      * to allow them to be changed in the settings side panel.
      *
      * @param component
      */
-    function addSettings(component) {
+    function addSettingsToSidebar(component) {
         if (window.blockSettings[component.attributes['block-slug']] === undefined) {
             return;
         }
         component.attributes.settings = {};
 
+
+        let currentSettings = getCurrentSettingValues(component);
+        console.log(currentSettings);
+
+
+
+
+
+
         // get the stored settings of the given component (from saving the pagebuilder earlier)
         let settingValues = {};
         let blockId = component.attributes['block-id'];
+        console.log(blockId);
         if (window.dynamicBlocks[window.currentLanguage][blockId] !== undefined &&
             window.dynamicBlocks[window.currentLanguage][blockId]['settings']['attributes'] !== undefined) {
             // use the setting values stored in window.dynamicBlocks for this block id
@@ -309,13 +350,13 @@
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
-        let styleIdentifierBeforeUpdate = component.attributes['style-identifier'];
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
+        let styleIdentifierBeforeUpdate = component.attributes['style-identifier'];
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
