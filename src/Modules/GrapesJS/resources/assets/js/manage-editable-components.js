@@ -253,8 +253,13 @@
 
         // get the root component of the given component (its first ancestor that does not have a dynamic parent itself)
         let rootComponent = component;
-        while (rootComponent.parent() && rootComponent.parent().attributes['is-html'] === 'false') {
-            relativeIds.push(rootComponent.attributes['block-id']);
+        while (rootComponent.parent() &&
+            rootComponent.parent().attributes['is-html'] !== 'true' &&
+            rootComponent.parent().attributes.attributes['phpb-content-container'] === undefined
+        ) {
+            if (rootComponent.attributes['block-id'] !== undefined) {
+                relativeIds.push(rootComponent.attributes['block-id']);
+            }
             rootComponent = rootComponent.parent();
         }
         let rootId = rootComponent.attributes['block-id'];
@@ -323,7 +328,10 @@
 
         // dynamic blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself
         let componentToUpdate = component;
-        while (componentToUpdate.parent() && componentToUpdate.parent().attributes['is-html'] === 'false') {
+        while (componentToUpdate.parent() &&
+            componentToUpdate.parent().attributes['is-html'] !== 'true' &&
+            componentToUpdate.parent().attributes.attributes['phpb-content-container'] === undefined
+        ) {
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
@@ -333,8 +341,6 @@
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
         let data = window.getComponentDataInStorageFormat(component);
-
-        console.log(data.blocks);
 
         // refresh component contents with updated version requested via ajax call
         $.ajax({
@@ -358,6 +364,7 @@
                 // select the component that was selected before the ajax call
                 let newComponent;
                 container.components().each(function(containerChild) {
+                    // TODO: the root is selected instead of the previously selected child component
                     if (containerChild.attributes['block-id'] === blockId) {
                         newComponent = containerChild;
                     }
