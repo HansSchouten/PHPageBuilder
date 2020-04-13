@@ -309,6 +309,7 @@
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
+        let styleIdentifierBeforeUpdate = component.attributes['style-identifier'];
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
@@ -326,13 +327,8 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
-                /*
                 // set dynamic block settings for the updated component to the new values
-                if (window.dynamicBlocks[window.currentLanguage][blockId] === undefined) {
-                    window.dynamicBlocks[window.currentLanguage][blockId] = {settings: {}};
-                }
                 window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
-                 */
 
                 // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);
@@ -347,6 +343,12 @@
                         newComponent = containerChild;
                     }
                 });
+
+                // re-use old style identifier
+                if (styleIdentifierBeforeUpdate) {
+                    newComponent.attributes['style-identifier'] = styleIdentifierBeforeUpdate;
+                }
+
                 window.editor.select(newComponent);
             },
             error: function() {
@@ -395,13 +397,11 @@
     function copyAttributes(component, targetComponent, copyGrapesAttributes, copyHtmlElementAttributes) {
         let componentAttributes = component.attributes.attributes;
         for (let attribute in componentAttributes) {
-            if (componentAttributes.hasOwnProperty(attribute)) {
-                if (copyHtmlElementAttributes) {
-                    targetComponent.attributes.attributes[attribute] = componentAttributes[attribute];
-                }
-                if (copyGrapesAttributes) {
-                    targetComponent.attributes[attribute] = componentAttributes[attribute];
-                }
+            if (copyHtmlElementAttributes) {
+                targetComponent.attributes.attributes[attribute] = componentAttributes[attribute];
+            }
+            if (copyGrapesAttributes) {
+                targetComponent.attributes[attribute] = componentAttributes[attribute];
             }
         }
     }
