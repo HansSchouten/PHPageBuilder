@@ -266,7 +266,7 @@
 
         // get the component settings by traversing the dynamicBlocks structure
         let settings = window.dynamicBlocks[window.currentLanguage][rootId];
-        relativeIds.reverse().forEach(function (relativeId) {
+        relativeIds.reverse().forEach(function(relativeId) {
             if (settings === undefined || settings.blocks === undefined || settings.blocks[relativeId] === undefined) {
                 settings = {};
             } else {
@@ -326,12 +326,17 @@
             return;
         }
 
-        // dynamic blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself
+        // Dynamic blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
+        // Also keep track of all intermediate block ids, for re-selecting the currently selected component.
+        let relativeIds = [];
         let componentToUpdate = component;
         while (componentToUpdate.parent() &&
             componentToUpdate.parent().attributes['is-html'] !== 'true' &&
             componentToUpdate.parent().attributes.attributes['phpb-content-container'] === undefined
         ) {
+            if (componentToUpdate.attributes['block-id'] !== undefined) {
+                relativeIds.push(componentToUpdate.attributes['block-id']);
+            }
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
@@ -362,13 +367,8 @@
                 restrictEditAccess(container, false, false);
 
                 // select the component that was selected before the ajax call
-                let newComponent;
-                container.components().each(function(containerChild) {
-                    // TODO: the root is selected instead of the previously selected child component
-                    if (containerChild.attributes['block-id'] === blockId) {
-                        newComponent = containerChild;
-                    }
-                });
+                relativeIds.push(blockId);
+                let newComponent = findChildViaBlockIdsPath(container, relativeIds.reverse());
 
                 window.editor.select(newComponent);
             },
@@ -378,6 +378,39 @@
             }
         });
     });
+
+    /**
+     * Traverse the children of the given component via the given path of block IDs
+     * and return the component with the last ID from the list.
+     *
+     * @param component
+     * @param blockIds
+     * @returns {null|*}
+     */
+    function findChildViaBlockIdsPath(component, blockIds) {
+        if (blockIds.length === 0) {
+            return component;
+        }
+
+        let result = null;
+
+        component.components().each(function(child) {
+            if (child.attributes['block-id'] === blockIds[0]) {
+                result = findChildViaBlockIdsPath(child, blockIds.slice(1));
+                return false;
+            }
+        });
+
+        component.components().each(function(child) {
+            let childResult = findChildViaBlockIdsPath(child, blockIds);
+            if (childResult !== null) {
+                result = childResult;
+                return false;
+            }
+        });
+
+        return result;
+    }
 
     /**
      * Clone the given component (while preserving all attributes, like IDs).
