@@ -4,7 +4,6 @@ if (isset($page)) {
     $pageUrlParam = '&page=' . e($page->getId());
 }
 
-$languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
 $pageTranslations = $page ? $page->getTranslations() : [];
 ?>
 
@@ -53,7 +52,7 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                     </div>
 
                     <?php
-                    foreach ($languages as $locale):
+                    foreach (phpb_active_languages() as $locale):
                     ?>
                     <h5 class="pt-2"><?= phpb_trans('languages.' . $locale) ?></h5>
                     <div class="pt-2 pl-3 pr-3">

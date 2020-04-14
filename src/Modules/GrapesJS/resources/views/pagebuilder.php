@@ -34,6 +34,7 @@ window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';
+window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page' => $page->getId()]) ?>';
 
 <?php
 $config = require __DIR__ . '/grapesjs/config.php';
@@ -98,8 +99,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     <div id="language-selector">
         <select class="selectpicker" data-width="fit">
             <?php
-            $languages = phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
-            foreach ($languages as $locale):
+            foreach (phpb_active_languages() as $locale):
             ?>
             <option value="<?= e($locale) ?>" <?= phpb_config('general.language') === $locale ? 'selected' : '' ?>><?= phpb_trans('languages')[$locale] ?></option>
             <?php

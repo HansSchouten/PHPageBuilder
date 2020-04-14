@@ -333,6 +333,18 @@ if (! function_exists('phpb_field_value')) {
     }
 }
 
+if (! function_exists('phpb_active_languages')) {
+    /**
+     * Return the list of all active languages.
+     *
+     * @return array
+     */
+    function phpb_active_languages()
+    {
+        return phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
+    }
+}
+
 if (! function_exists('phpb_instance')) {
     /**
      * Return an instance of the given class as defined in config.
