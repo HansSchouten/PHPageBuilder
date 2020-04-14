@@ -251,7 +251,7 @@ class PageBuilder implements PageBuilderContract
         phpb_set_in_editmode();
 
         $blockData = is_array($blockData) ? $blockData : [];
-        $page->setData(['data' => $blockData], true);
+        $page->setData(['data' => $blockData], false);
 
         $renderer = new PageRenderer($this->theme, $page, true);
         $renderer->setLanguage($language);
@@ -271,12 +271,11 @@ class PageBuilder implements PageBuilderContract
         phpb_set_in_editmode();
 
         $blockData = is_array($blockData) ? $blockData : [];
-        $page->setData(['data' => $blockData], true);
+        $page->setData(['data' => $blockData], false);
 
         $renderer = new PageRenderer($this->theme, $page, true);
         $renderer->setLanguage($language);
         echo json_encode([
-            'html' => $renderer->render(),
             'dynamicBlocks' => $renderer->getDynamicBlocks()[$language]
         ]);
     }

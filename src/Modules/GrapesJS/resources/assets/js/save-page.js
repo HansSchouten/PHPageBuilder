@@ -47,7 +47,8 @@ $(document).ready(function() {
                     language: newLanguage
                 },
                 success: function(response) {
-                    console.log(response);
+                    response = JSON.parse(response);
+                    window.dynamicBlocks[newLanguage] = response.dynamicBlocks;
                 },
                 error: function() {
                 }
@@ -224,12 +225,6 @@ $(document).ready(function() {
                 });
                 data.current_block['settings']['attributes'] = attributes;
 
-                // store the original html, used when switching language
-                console.log(component.attributes);
-                if (component.attributes['original-html'] !== undefined) {
-                    data.current_block['html'] = component.attributes['original-html'];
-                }
-
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
                 if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
@@ -238,7 +233,6 @@ $(document).ready(function() {
 
                 // replace this dynamic component by a shortcode with a unique id
                 // and store data.current_block data inside data.blocks with the unique id we just generated
-                console.log(component.attributes);
                 let instanceId = generateId();
                 component.replaceWith({
                     tagName: 'phpb-block',

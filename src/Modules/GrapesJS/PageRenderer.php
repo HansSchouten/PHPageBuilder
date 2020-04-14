@@ -57,8 +57,8 @@ class PageRenderer
         $this->theme = $theme;
         $this->page = $page;
         $this->pageData = $page->getBuilderData();
-        $this->setLanguage(phpb_config('general.language'));
         $this->shortcodeParser = new ShortcodeParser($this);
+        $this->setLanguage(phpb_config('general.language'));
         $this->forPageBuilder = $forPageBuilder;
     }
 
@@ -71,6 +71,7 @@ class PageRenderer
     {
         $this->language = $language;
         $this->pageBlocksData = $this->getPageBlocksData();
+        $this->shortcodeParser->setLanguage($language);
     }
 
     /**

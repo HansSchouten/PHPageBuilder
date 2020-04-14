@@ -356,7 +356,8 @@
             type: "POST",
             url: window.renderBlockUrl,
             data: {
-                data: JSON.stringify(data)
+                data: JSON.stringify(data),
+                language: window.currentLanguage
             },
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
