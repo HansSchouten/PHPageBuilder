@@ -33,6 +33,7 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         saveCurrentTranslationLocally(function() {
+            window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
             callback();
         });
     };
@@ -78,7 +79,6 @@ $(document).ready(function() {
 
             let data = window.pageData;
             data.blocks = window.pageTranslationData;
-            console.log(data); return;
 
             $.ajax({
                 type: "POST",
@@ -204,6 +204,11 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['settings']['attributes'] = attributes;
+
+                // store the original html, used when switching language
+                if (component.attributes['original-html'] !== undefined) {
+                    data.current_block['html'] = component.attributes['original-html'];
+                }
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling

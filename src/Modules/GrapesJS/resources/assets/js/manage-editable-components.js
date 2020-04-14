@@ -196,6 +196,10 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
+        // store html in block, used when switching language
+        let blockSlug = droppedComponent.attributes.attributes['block-slug'];
+        droppedComponent.attributes.attributes['original-html'] = window.themeBlocks[blockSlug].content;
+
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
