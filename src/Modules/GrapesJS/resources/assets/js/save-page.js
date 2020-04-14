@@ -26,14 +26,33 @@ $(document).ready(function() {
 
     /**
      * Switch the pagebuilder to the given language.
-     * This stores the all data of the current language locally for later use.
+     * This stores the all data of the current language locally for later use and renders the given language variant on the server.
      *
      * @param newLanguage
      * @param callback
      */
     window.switchLanguage = function(newLanguage, callback) {
         saveCurrentTranslationLocally(function() {
-            window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
+            //window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
+
+            let data = window.pageData;
+            data.blocks = window.pageTranslationData[window.currentLanguage];
+
+            // render the language variant server-side
+            $.ajax({
+                type: "POST",
+                url: window.renderLanguageVariantUrl,
+                data: {
+                    data: JSON.stringify(data),
+                    language: newLanguage
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function() {
+                }
+            });
+
             callback();
         });
     };
@@ -206,6 +225,7 @@ $(document).ready(function() {
                 data.current_block['settings']['attributes'] = attributes;
 
                 // store the original html, used when switching language
+                console.log(component.attributes);
                 if (component.attributes['original-html'] !== undefined) {
                     data.current_block['html'] = component.attributes['original-html'];
                 }
@@ -218,6 +238,7 @@ $(document).ready(function() {
 
                 // replace this dynamic component by a shortcode with a unique id
                 // and store data.current_block data inside data.blocks with the unique id we just generated
+                console.log(component.attributes);
                 let instanceId = generateId();
                 component.replaceWith({
                     tagName: 'phpb-block',

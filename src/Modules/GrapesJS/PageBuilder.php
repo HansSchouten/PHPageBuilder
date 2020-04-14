@@ -98,10 +98,17 @@ class PageBuilder implements PageBuilderContract
                 }
                 break;
             case 'renderBlock':
-                if (isset($_POST['data'])) {
-                    $this->renderPageBuilderBlock($page, json_decode($_POST['data'], true));
+                if (isset($_POST['language']) && isset($_POST['data']) && in_array($_POST['language'], phpb_active_languages())) {
+                    $this->renderPageBuilderBlock($page, $_POST['language'], json_decode($_POST['data'], true));
                     exit();
                 }
+                break;
+            case 'renderLanguageVariant':
+                if (isset($_POST['language']) && isset($_POST['data']) && in_array($_POST['language'], phpb_active_languages())) {
+                    $this->renderLanguageVariant($page, $_POST['language'], json_decode($_POST['data'], true));
+                    exit();
+                }
+                break;
         }
 
         return false;
@@ -235,10 +242,11 @@ class PageBuilder implements PageBuilderContract
      * Render in context of the given page, the given block with the passed settings, for updating the page builder.
      *
      * @param PageContract $page
+     * @param string $language
      * @param array $blockData
      * @throws Exception
      */
-    public function renderPageBuilderBlock(PageContract $page, $blockData = [])
+    public function renderPageBuilderBlock(PageContract $page, string $language, $blockData = [])
     {
         phpb_set_in_editmode();
 
@@ -246,7 +254,31 @@ class PageBuilder implements PageBuilderContract
         $page->setData(['data' => $blockData], true);
 
         $renderer = new PageRenderer($this->theme, $page, true);
+        $renderer->setLanguage($language);
         echo $renderer->parseShortcodes($blockData['html'], $blockData['blocks']);
+    }
+
+    /**
+     * Render the given page in the given language using the given block data.
+     *
+     * @param PageContract $page
+     * @param string $language
+     * @param array $blockData
+     * @throws Exception
+     */
+    public function renderLanguageVariant(PageContract $page, string $language, $blockData = [])
+    {
+        phpb_set_in_editmode();
+
+        $blockData = is_array($blockData) ? $blockData : [];
+        $page->setData(['data' => $blockData], true);
+
+        $renderer = new PageRenderer($this->theme, $page, true);
+        $renderer->setLanguage($language);
+        echo json_encode([
+            'html' => $renderer->render(),
+            'dynamicBlocks' => $renderer->getDynamicBlocks()[$language]
+        ]);
     }
 
     /**
