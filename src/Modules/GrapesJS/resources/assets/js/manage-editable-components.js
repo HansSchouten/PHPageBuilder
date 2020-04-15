@@ -54,7 +54,6 @@
         // reset GrapesJS editor before loading the new language variant
         window.editor.DomComponents.clear();
         window.editor.DomComponents.componentsById = [];
-        window.editor.CssComposer.clear();
         window.editor.UndoManager.clear();
         window.editor.setComponents(window.initialComponents);
         denyAccessToLayoutElements(editor.getWrapper());
@@ -586,7 +585,7 @@
      * @param component
      */
     function addUniqueClass(component) {
-        // get component identifier class if one is already to the component's html when saving the pagebuilder previously
+        // get component identifier class if one is already added to the component's html when saving the pagebuilder previously
         let componentIdentifier = false;
         component.getClasses().forEach(componentClass => {
             if (componentClass.startsWith('ID') && componentClass.length === 16) {
@@ -597,9 +596,7 @@
         if (component.attributes['style-identifier'] === undefined) {
             component.attributes['style-identifier'] = componentIdentifier ? componentIdentifier : generateId();
         }
-        if (! componentIdentifier) {
-            component.addClass(component.attributes['style-identifier']);
-        }
+        component.addClass(component.attributes['style-identifier']);
     }
 
     /**
