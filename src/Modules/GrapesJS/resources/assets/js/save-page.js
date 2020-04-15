@@ -33,10 +33,8 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         saveCurrentTranslationLocally(function() {
-            //window.dynamicBlocks[newLanguage] = window.pageTranslationData[window.currentLanguage];
-
             let data = window.pageData;
-            data.blocks = window.pageTranslationData[window.currentLanguage];
+            data.blocks = {[newLanguage]: window.pageTranslationData[window.currentLanguage]};
 
             // render the language variant server-side
             $.ajax({

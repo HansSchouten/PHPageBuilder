@@ -102,10 +102,8 @@ class ShortcodeParser
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
             if (phpb_in_editmode()) {
-                $this->renderedBlocks[$this->language][$id] = [
-                    'html' => $blockHtml,
-                    'settings' => $context
-                ];
+                $this->renderedBlocks[$this->language][$id] = $context[$id] ?? [];
+                $this->renderedBlocks[$this->language][$id]['html'] = $blockHtml;
             }
 
             // replace shortcode match with the $blockHtml (note: this replaces only the first match)
