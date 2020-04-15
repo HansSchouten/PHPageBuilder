@@ -101,7 +101,7 @@ class ShortcodeParser
             $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context, $maxDepth);
 
             // store rendered block in a structure used for outputting all dynamic blocks to the page builder
-            if (phpb_in_editmode()) {
+            if (phpb_in_editmode() && strpos($id, 'ID') === 0) {
                 $this->renderedBlocks[$this->language][$id] = $context[$id] ?? [];
                 $this->renderedBlocks[$this->language][$id]['html'] = $blockHtml;
             }

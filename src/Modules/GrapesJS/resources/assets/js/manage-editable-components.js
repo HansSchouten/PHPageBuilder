@@ -48,16 +48,18 @@
      *
      * @param newLanguage
      */
-    function activateLanguage(newLanguage) {
+    window.activateLanguage = function(newLanguage) {
         window.currentLanguage = newLanguage;
 
         // reset GrapesJS editor before loading the new language variant
+        window.editor.select();
         window.editor.DomComponents.clear();
         window.editor.DomComponents.componentsById = [];
         window.editor.UndoManager.clear();
+
+        // load initial non-editable layout components
         window.editor.setComponents(window.initialComponents);
         denyAccessToLayoutElements(editor.getWrapper());
-
         let container = editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
 
@@ -75,7 +77,7 @@
         setTimeout(function() {
             restrictEditAccess(container);
         }, 500);
-    }
+    };
 
     /**
      * Replace phpb-block elements with the server-side rendered version of each dynamic block.
@@ -356,9 +358,6 @@
             },
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
-
-                // remove the existing version of the component (to prevent GrapesJS from changing the ID due to ID collision)
-                delete window.editor.DomComponents.componentsById[blockId];
 
                 // set dynamic block settings for the updated component to the new values
                 window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];

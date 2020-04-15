@@ -17,7 +17,9 @@ $(document).ready(function() {
      */
     $(document).bind("keydown", function(e){
         if(e.ctrlKey && e.which === 83) {
-            window.editor.store(); // text-editor updates are not applied until focus is lost, so force update
+            // text-editor updates are not applied until focus is lost, so force GrapesJS update
+            window.editor.store();
+
             saveAllTranslationsToServer();
             e.preventDefault();
             return false;
@@ -138,6 +140,11 @@ $(document).ready(function() {
      * @param container
      */
     function getDataInStorageFormat(container) {
+        // remove all existing references while cloning GrapesJS components,
+        // this prevents GrapesJS from changing our IDs due to ID collisions
+        let componentReferences = window.editor.DomComponents.componentsById;
+        window.editor.DomComponents.componentsById = [];
+
         // clone the container since we will be replacing components with placeholders without updating the page builder
         container = window.cloneComponent(container);
         // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
@@ -149,6 +156,9 @@ $(document).ready(function() {
         let css = window.editor.getCss();
         let style = window.editor.getStyle();
         let components = JSON.parse(JSON.stringify(container.get('components')));
+
+        // switch back to original GrapesJS component references
+        window.editor.DomComponents.componentsById = componentReferences;
 
         return {
             html: html,
