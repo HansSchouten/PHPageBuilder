@@ -358,6 +358,9 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
+                // remove the existing version of the component (to prevent GrapesJS from changing the ID due to ID collision)
+                delete window.editor.DomComponents.componentsById[blockId];
+
                 // set dynamic block settings for the updated component to the new values
                 window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
