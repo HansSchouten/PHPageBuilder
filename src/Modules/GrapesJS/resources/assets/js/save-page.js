@@ -49,12 +49,12 @@ $(document).ready(function() {
                 success: function(response) {
                     response = JSON.parse(response);
                     window.dynamicBlocks[newLanguage] = response.dynamicBlocks;
+                    callback();
                 },
                 error: function() {
+                    callback();
                 }
             });
-
-            callback();
         });
     };
 
