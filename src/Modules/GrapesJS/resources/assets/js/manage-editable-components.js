@@ -92,6 +92,7 @@
             let id = component.attributes.attributes.id;
             if (window.dynamicBlocks[window.currentLanguage][id] !== undefined && window.dynamicBlocks[window.currentLanguage][id]['html'] !== undefined) {
                 newComponent = component.replaceWith(window.dynamicBlocks[window.currentLanguage][id]['html']);
+                window.dynamicBlocks[window.currentLanguage][id]['html'] = '';
             }
         }
 

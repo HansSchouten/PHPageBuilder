@@ -199,12 +199,18 @@ class PageRenderer
         // remove the already rendered blocks
         $this->shortcodeParser->resetRenderedBlocks();
 
-        // trigger renderBody for each language to build up a structure of rendered versions of each block
+        // create the structure of dynamic blocks for each language
         $dynamicBlocks = [];
         foreach (phpb_active_languages() as $language) {
             $this->setLanguage($language);
-            $this->renderBody();
-            $dynamicBlocks[$language] = $this->shortcodeParser->getRenderedBlocks()[$language] ?? [];
+
+            // for the current language build up a structure of rendered versions and use the stored data for the other languages
+            if ($language === phpb_config('general.language')) {
+                $this->renderBody();
+                $dynamicBlocks[$language] = $this->shortcodeParser->getRenderedBlocks()[$language] ?? [];
+            } else {
+                $dynamicBlocks[$language] = $this->pageBlocksData;
+            }
         }
 
         // revert to initial language
