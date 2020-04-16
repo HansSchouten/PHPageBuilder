@@ -205,11 +205,15 @@ class PageRenderer
             $this->setLanguage($language);
 
             // for the current language build up a structure of rendered versions and use the stored data for the other languages
-            if ($language === phpb_config('general.language')) {
+            if ($language === $initialLanguage) {
                 $this->renderBody();
                 $dynamicBlocks[$language] = $this->shortcodeParser->getRenderedBlocks()[$language] ?? [];
             } else {
                 $dynamicBlocks[$language] = $this->pageBlocksData;
+            }
+
+            if (empty($dynamicBlocks[$language])) {
+                $dynamicBlocks[$language] = null;
             }
         }
 

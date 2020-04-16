@@ -7,6 +7,12 @@
     window.editor.on('load', function(editor) {
         addThemeBlocks();
 
+        window.languages.forEach(language => {
+            if (window.dynamicBlocks[language] === null) {
+                window.dynamicBlocks[language] = {};
+            }
+        });
+
         activateLanguage(window.currentLanguage);
     });
 

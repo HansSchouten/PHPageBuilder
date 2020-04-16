@@ -49,7 +49,7 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     response = JSON.parse(response);
-                    window.dynamicBlocks[newLanguage] = response.dynamicBlocks;
+                    window.dynamicBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
                     callback();
                 },
                 error: function() {
@@ -60,7 +60,7 @@ $(document).ready(function() {
     };
 
     /**
-     * Copy all block settings of the current language from blocks that do not yet exist in the new language.
+     * Copy new blocks of the current language to the new language or remove old blocks from the new language.
      *
      * @param newLanguage
      */
@@ -72,9 +72,16 @@ $(document).ready(function() {
         if (newLanguageBlocks === undefined) {
             newLanguageBlocks = currentLanguageBlocks;
         } else {
+            // copy missing blocks from the current language to the target language
             for (let blockId in currentLanguageBlocks) {
                 if (newLanguageBlocks[blockId] === undefined) {
                     newLanguageBlocks[blockId] = currentLanguageBlocks[blockId];
+                }
+            }
+            // remove blocks from the target language that have been removed in the current language
+            for (let blockId in newLanguageBlocks) {
+                if (currentLanguageBlocks[blockId] === undefined) {
+                    delete newLanguageBlocks[blockId];
                 }
             }
         }
@@ -130,6 +137,8 @@ $(document).ready(function() {
 
             let data = window.pageData;
             data.blocks = window.dynamicBlocks;
+
+            console.log(window.dynamicBlocks);
 
             $.ajax({
                 type: "POST",
