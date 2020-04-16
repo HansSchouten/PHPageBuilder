@@ -121,6 +121,13 @@ $(document).ready(function() {
         saveCurrentTranslationLocally(function() {
             toggleWaiting();
 
+            // update all language variants with the latest data of the current language we just saved locally
+            window.languages.forEach(language => {
+                if (language !== window.currentLanguage) {
+                    applyChangesFromCurrentLanguageToNewLanguage(language);
+                }
+            });
+
             let data = window.pageData;
             data.blocks = window.dynamicBlocks;
 
