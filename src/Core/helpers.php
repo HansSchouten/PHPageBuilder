@@ -341,7 +341,21 @@ if (! function_exists('phpb_active_languages')) {
      */
     function phpb_active_languages()
     {
-        return phpb_instance('setting')::get('languages') ?? [phpb_config('general.language')];
+        $configLanguage = phpb_config('general.language');
+        $languages = phpb_instance('setting')::get('languages') ?? [$configLanguage];
+
+        if (! in_array($configLanguage, $languages)) {
+            return $languages;
+        }
+
+        // sort languages, starting by the configured language
+        $languagesSorted = [$configLanguage];
+        foreach ($languages as $language) {
+            if ($language !== $configLanguage) {
+                $languagesSorted[] = $language;
+            }
+        }
+        return $languagesSorted;
     }
 }
 

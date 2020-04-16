@@ -101,6 +101,9 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     <i class="fa fa-bars"></i>
 </button>
 <div id="sidebar-header">
+    <?php
+    if (sizeof(phpb_active_languages()) > 1):
+    ?>
     <div id="language-selector">
         <select class="selectpicker" data-width="fit">
             <?php
@@ -112,6 +115,9 @@ require __DIR__ . '/grapesjs/trait-manager.php';
             ?>
         </select>
     </div>
+    <?php
+    endif;
+    ?>
 </div>
 
 <div id="sidebar-bottom-buttons">
