@@ -3,7 +3,6 @@ $(document).ready(function() {
     let editorCss = '';
 
     window.pageData = {};
-    window.pageTranslationData = {};
 
     /**
      * Save page on clicking save button.
@@ -35,8 +34,10 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         saveCurrentTranslationLocally(function() {
+            applyChangesFromCurrentLanguageToNewLanguage(newLanguage);
+
             let data = window.pageData;
-            data.blocks = {[newLanguage]: window.pageTranslationData[window.currentLanguage]};
+            data.blocks = {[newLanguage]: window.dynamicBlocks[newLanguage]};
 
             // render the language variant server-side
             $.ajax({
@@ -59,6 +60,29 @@ $(document).ready(function() {
     };
 
     /**
+     * Copy all block settings of the current language from blocks that do not yet exist in the new language.
+     *
+     * @param newLanguage
+     */
+    function applyChangesFromCurrentLanguageToNewLanguage(newLanguage)
+    {
+        let newLanguageBlocks = window.dynamicBlocks[newLanguage];
+        let currentLanguageBlocks = window.dynamicBlocks[window.currentLanguage];
+
+        if (newLanguageBlocks === undefined) {
+            newLanguageBlocks = currentLanguageBlocks;
+        } else {
+            for (let blockId in currentLanguageBlocks) {
+                if (newLanguageBlocks[blockId] === undefined) {
+                    newLanguageBlocks[blockId] = currentLanguageBlocks[blockId];
+                }
+            }
+        }
+
+        window.dynamicBlocks[newLanguage] = newLanguageBlocks;
+    }
+
+    /**
      * Store the all data of the current language locally for later use.
      *
      * @param callback
@@ -79,7 +103,7 @@ $(document).ready(function() {
                 css: data.css,
                 style: data.style,
             };
-            window.pageTranslationData[window.currentLanguage] = data.blocks;
+            window.dynamicBlocks[window.currentLanguage] = data.blocks;
             window.pageComponents = data.components;
 
             toggleWaiting();
@@ -98,7 +122,7 @@ $(document).ready(function() {
             toggleWaiting();
 
             let data = window.pageData;
-            data.blocks = window.pageTranslationData;
+            data.blocks = window.dynamicBlocks;
 
             $.ajax({
                 type: "POST",
@@ -232,6 +256,7 @@ $(document).ready(function() {
                     attributes[trait.get('name')] = trait.getTargetValue();
                 });
                 data.current_block['settings']['attributes'] = attributes;
+                data.current_block['html'] = '';
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
