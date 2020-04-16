@@ -53,6 +53,24 @@ editor.DomComponents.addType('text', {
     }),
 });
 
+editor.DomComponents.addType('row', {
+    model: {
+        defaults: {
+            traits: [],
+            attributes: {},
+        },
+    },
+});
+
+editor.DomComponents.addType('cell', {
+    model: {
+        defaults: {
+            traits: [],
+            attributes: {},
+        },
+    },
+});
+
 editor.DomComponents.addType('default', {
     model: {
         defaults: {
