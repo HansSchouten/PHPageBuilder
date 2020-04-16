@@ -55,6 +55,8 @@ return [
         'page-content' => 'Page contents',
         'toastr-changes-saved' => 'Changes saved',
         'toastr-saving-failed' => 'Error while saving changes',
+        'toastr-component-update-failed' => 'Error while reloading component',
+        'toastr-switching-language-failed' => 'Error while switching language',
         'yes' => 'Yes',
         'no' => 'No',
         'trait-manager' => [

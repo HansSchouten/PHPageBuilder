@@ -82,6 +82,7 @@
         // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
         setTimeout(function() {
             restrictEditAccess(container);
+            window.setWaiting(false);
         }, 500);
     };
 
@@ -384,6 +385,7 @@
             error: function() {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
                 component.attributes['is-updating'] = false;
+                window.toastr.error(window.translations['toastr-component-update-failed']);
             }
         });
     });

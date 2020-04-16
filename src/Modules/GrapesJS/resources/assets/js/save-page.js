@@ -33,6 +33,8 @@ $(document).ready(function() {
      * @param callback
      */
     window.switchLanguage = function(newLanguage, callback) {
+        window.setWaiting(true);
+
         saveCurrentTranslationLocally(function() {
             applyChangesFromCurrentLanguageToNewLanguage(newLanguage);
 
@@ -54,6 +56,7 @@ $(document).ready(function() {
                 },
                 error: function() {
                     callback();
+                    window.toastr.error(window.translations['toastr-switching-language-failed']);
                 }
             });
         });
@@ -95,8 +98,6 @@ $(document).ready(function() {
      * @param callback
      */
     function saveCurrentTranslationLocally(callback) {
-        toggleWaiting();
-
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
         setTimeout(function() {
 
@@ -113,11 +114,9 @@ $(document).ready(function() {
             window.dynamicBlocks[window.currentLanguage] = data.blocks;
             window.pageComponents = data.components;
 
-            toggleWaiting();
             if (callback) {
                 callback();
             }
-
         }, 200);
     }
 
@@ -125,8 +124,9 @@ $(document).ready(function() {
      * Save the data of all translation variants on the server.
      */
     function saveAllTranslationsToServer() {
+        toggleSaving();
+
         saveCurrentTranslationLocally(function() {
-            toggleWaiting();
 
             // update all language variants with the latest data of the current language we just saved locally
             window.languages.forEach(language => {
@@ -138,8 +138,6 @@ $(document).ready(function() {
             let data = window.pageData;
             data.blocks = window.dynamicBlocks;
 
-            console.log(window.dynamicBlocks);
-
             $.ajax({
                 type: "POST",
                 url: $("#save-page").data('url'),
@@ -147,11 +145,11 @@ $(document).ready(function() {
                     data: JSON.stringify(data)
                 },
                 success: function() {
-                    toggleWaiting();
+                    toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
                 },
-                error: function () {
-                    toggleWaiting();
+                error: function() {
+                    toggleSaving();
                     window.toastr.error(window.translations['toastr-saving-failed']);
                 }
             });
@@ -321,9 +319,21 @@ $(document).ready(function() {
     }
 
     /**
+     * Set the page builder waiting status.
+     */
+    window.setWaiting = function(value) {
+        let wrapper = window.editor.DomComponents.getWrapper();
+        if (value) {
+            wrapper.addClass("gjs-waiting");
+        } else {
+            wrapper.removeClass("gjs-waiting");
+        }
+    };
+
+    /**
      * Toggle the save button waiting status.
      */
-    function toggleWaiting() {
+    function toggleSaving() {
         let button = $("#save-page");
         button.blur();
 

@@ -54,7 +54,9 @@ return [
         'page' => 'Pagina',
         'page-content' => 'Pagina inhoud',
         'toastr-changes-saved' => 'Wijzigingen opgeslagen',
-        'toastr-saving-failed' => 'Fout tijdens opslaan van wijzigingen',
+        'toastr-saving-failed' => 'Fout opgetreden bij opslaan van wijzigingen',
+        'toastr-component-update-failed' => 'Fout opgetreden bij het vernieuwen van het blok',
+        'toastr-switching-language-failed' => 'Fout opgetreden bij het wisselen van taal',
         'yes' => 'Ja',
         'no' => 'Nee',
         'trait-manager' => [
