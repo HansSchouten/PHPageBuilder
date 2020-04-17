@@ -167,13 +167,14 @@
      * Component clone handler.
      */
     window.editor.on('component:clone', function(component) {
-        // if the clone is performed by the user, do not copy the style identifier as each instance needs to be styled separately
+        // if the clone is performed by the user, do not copy the block id and style identifier
         if (! isCloningFromScript) {
             if (component.attributes['style-identifier'] !== undefined && component.attributes['style-identifier'] !== '') {
                 component.removeClass(component.attributes['style-identifier']);
                 delete component.attributes['style-identifier'];
                 addUniqueClass(component);
             }
+            component.attributes['block-id'] = component.attributes['block-slug'];
         }
     });
 

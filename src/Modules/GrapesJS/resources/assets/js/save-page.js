@@ -136,6 +136,7 @@ $(document).ready(function() {
             });
 
             let data = window.pageData;
+            data.style = removeOldStyleSelectors(data.css, data.style);
             data.blocks = window.pageBlocks;
 
             $.ajax({
@@ -154,6 +155,22 @@ $(document).ready(function() {
                 }
             });
         });
+    }
+
+    /**
+     * Remove the style selectors that are not present in the given CSS string.
+     */
+    function removeOldStyleSelectors(css, styleComponents) {
+        let updatedStyleComponents = [];
+
+        styleComponents.forEach(styleComponent => {
+            let selector = styleComponent.attributes.selectors.models[0].id;
+            if (css.includes(selector)) {
+                updatedStyleComponents.push(styleComponent);
+            }
+        });
+
+        return updatedStyleComponents;
     }
 
     /**
