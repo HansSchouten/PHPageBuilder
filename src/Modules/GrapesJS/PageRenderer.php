@@ -70,7 +70,7 @@ class PageRenderer
     public function setLanguage($language)
     {
         $this->language = $language;
-        $this->pageBlocksData = $this->getPageBlocksData();
+        $this->pageBlocksData = $this->getStoredPageBlocksData();
         $this->shortcodeParser->setLanguage($language);
     }
 
@@ -86,11 +86,11 @@ class PageRenderer
     }
 
     /**
-     * Return an array with for each block of this page the stored html & settings data.
+     * Return an array with for each block of this page the stored html and settings data.
      *
-     * @return array|mixed
+     * @return array
      */
-    public function getPageBlocksData()
+    public function getStoredPageBlocksData()
     {
         return $this->pageData['blocks'][$this->language] ?? [];
     }
@@ -187,19 +187,19 @@ class PageRenderer
     }
 
     /**
-     * Return this page's dynamic blocks to be loaded into the page edited inside GrapesJS.
+     * Return this page's blocks data to be loaded into the page edited inside GrapesJS.
      *
      * @return array
      * @throws Exception
      */
-    public function getDynamicBlocks()
+    public function getPageBlocksData()
     {
         $initialLanguage = $this->language;
 
         // remove the already rendered blocks
         $this->shortcodeParser->resetRenderedBlocks();
 
-        // create the structure of dynamic blocks for each language
+        // create the structure of page blocks data for each language
         $dynamicBlocks = [];
         foreach (phpb_active_languages() as $language) {
             $this->setLanguage($language);

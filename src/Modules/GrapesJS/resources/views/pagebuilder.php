@@ -36,7 +36,7 @@ window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.themeBlocks = <?= json_encode($blocks) ?>;
 window.blockSettings = <?= json_encode($blockSettings) ?>;
-window.dynamicBlocks = <?= json_encode($pageRenderer->getDynamicBlocks()) ?>;
+window.pageBlocks = <?= json_encode($pageRenderer->getPageBlocksData()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';
 window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page' => $page->getId()]) ?>';

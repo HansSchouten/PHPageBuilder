@@ -276,7 +276,7 @@ class PageBuilder implements PageBuilderContract
         $renderer = new PageRenderer($this->theme, $page, true);
         $renderer->setLanguage($language);
         echo json_encode([
-            'dynamicBlocks' => $renderer->getDynamicBlocks()[$language]
+            'dynamicBlocks' => $renderer->getPageBlocksData()[$language]
         ]);
     }
 

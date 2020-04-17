@@ -39,7 +39,7 @@ $(document).ready(function() {
             applyChangesFromCurrentLanguageToNewLanguage(newLanguage);
 
             let data = window.pageData;
-            data.blocks = {[newLanguage]: window.dynamicBlocks[newLanguage]};
+            data.blocks = {[newLanguage]: window.pageBlocks[newLanguage]};
 
             // render the language variant server-side
             $.ajax({
@@ -51,7 +51,7 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     response = JSON.parse(response);
-                    window.dynamicBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
+                    window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
                     callback();
                 },
                 error: function() {
@@ -69,8 +69,8 @@ $(document).ready(function() {
      */
     function applyChangesFromCurrentLanguageToNewLanguage(newLanguage)
     {
-        let newLanguageBlocks = window.dynamicBlocks[newLanguage];
-        let currentLanguageBlocks = window.dynamicBlocks[window.currentLanguage];
+        let newLanguageBlocks = window.pageBlocks[newLanguage];
+        let currentLanguageBlocks = window.pageBlocks[window.currentLanguage];
 
         if (newLanguageBlocks === undefined) {
             newLanguageBlocks = currentLanguageBlocks;
@@ -89,7 +89,7 @@ $(document).ready(function() {
             }
         }
 
-        window.dynamicBlocks[newLanguage] = newLanguageBlocks;
+        window.pageBlocks[newLanguage] = newLanguageBlocks;
     }
 
     /**
@@ -111,7 +111,7 @@ $(document).ready(function() {
                 css: data.css,
                 style: data.style,
             };
-            window.dynamicBlocks[window.currentLanguage] = data.blocks;
+            window.pageBlocks[window.currentLanguage] = data.blocks;
             window.pageComponents = data.components;
 
             if (callback) {
@@ -136,7 +136,7 @@ $(document).ready(function() {
             });
 
             let data = window.pageData;
-            data.blocks = window.dynamicBlocks;
+            data.blocks = window.pageBlocks;
 
             $.ajax({
                 type: "POST",
@@ -278,7 +278,6 @@ $(document).ready(function() {
                 }
 
                 // replace this dynamic component by a shortcode with a unique id
-                // and store data.current_block data inside data.blocks with the unique id we just generated
                 let instanceId = component.attributes['block-id'];
                 if (! component.attributes['block-id'].startsWith('ID')) {
                     instanceId = generateId();
@@ -291,6 +290,7 @@ $(document).ready(function() {
                     }
                 });
 
+                // store data.current_block data inside data.blocks with the unique id we just generated
                 if (inDynamicBlock) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
                     let currentBlockForParent = {settings: {}, blocks: {}, html: ""};
@@ -301,6 +301,24 @@ $(document).ready(function() {
                     data.blocks[instanceId] = data.current_block;
                     data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
                 }
+            } else if (component.attributes['is-html'] === 'true' && inDynamicBlock === false) {
+                // html blocks outside the context of dynamic blocks should be stored as a block itself (to allow for translations instead of just hard-coding the html)
+
+                // replace this html component by a shortcode with a unique id
+                let instanceId = component.attributes['block-id'];
+                if (! component.attributes['block-id'].startsWith('ID')) {
+                    instanceId = generateId();
+                }
+                component.replaceWith({
+                    tagName: 'phpb-block',
+                    attributes: {
+                        slug: component.attributes['block-slug'],
+                        id: instanceId
+                    }
+                });
+
+                // store the block data globally in the blocks array
+                data.blocks[instanceId] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
             }
         }
 

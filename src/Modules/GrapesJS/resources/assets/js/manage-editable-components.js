@@ -8,8 +8,8 @@
         addThemeBlocks();
 
         window.languages.forEach(language => {
-            if (window.dynamicBlocks[language] === null) {
-                window.dynamicBlocks[language] = {};
+            if (window.pageBlocks[language] === null) {
+                window.pageBlocks[language] = {};
             }
         });
 
@@ -97,9 +97,9 @@
         // if we encounter a dynamic block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
-            if (window.dynamicBlocks[window.currentLanguage][id] !== undefined && window.dynamicBlocks[window.currentLanguage][id]['html'] !== undefined) {
-                newComponent = component.replaceWith(window.dynamicBlocks[window.currentLanguage][id]['html']);
-                window.dynamicBlocks[window.currentLanguage][id]['html'] = '';
+            if (window.pageBlocks[window.currentLanguage][id] !== undefined && window.pageBlocks[window.currentLanguage][id]['html'] !== undefined) {
+                newComponent = component.replaceWith(window.pageBlocks[window.currentLanguage][id]['html']);
+                window.pageBlocks[window.currentLanguage][id]['html'] = '';
             }
         }
 
@@ -222,7 +222,7 @@
             let clone = cloneComponent(component);
 
             // Since component is a <phpb-block> that should be removed and replaced by its children,
-            // the component's parent's child that has the same id as component needs to be replaced.
+            // the component's parent's child that has the id of the <phpb-block> component needs to be replaced.
             let blockRootComponent;
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
@@ -255,7 +255,7 @@
      * @param component
      */
     function getCurrentSettingValues(component) {
-        // Block settings are stored in window.dynamicBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
+        // Block settings are stored in window.pageBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
         // So, we need to find the root of the given component and store all block ids along the way, in order to traverse the dynamicBlocks structure to the settings of the given component.
         // These block ids are only unique in the context of their parent (we can have multiple instances of the same nested block structure), so we call them relative IDs.
         let relativeIds = [];
@@ -274,7 +274,7 @@
         let rootId = rootComponent.attributes['block-id'];
 
         // get the component settings by traversing the dynamicBlocks structure
-        let settings = window.dynamicBlocks[window.currentLanguage][rootId];
+        let settings = window.pageBlocks[window.currentLanguage][rootId];
         relativeIds.reverse().forEach(function(relativeId) {
             if (settings === undefined || settings.blocks === undefined || settings.blocks[relativeId] === undefined) {
                 settings = {};
@@ -368,7 +368,7 @@
                 let blockId = $(blockHtml).attr('block-id');
 
                 // set dynamic block settings for the updated component to the new values
-                window.dynamicBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
+                window.pageBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
                 // replace old component for the rendered html returned by the server
                 component.replaceWith(blockHtml);
