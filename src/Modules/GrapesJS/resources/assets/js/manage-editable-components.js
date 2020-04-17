@@ -335,8 +335,8 @@
             return;
         }
 
-        // Dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
-        // Also keep track of all intermediate block ids, for re-selecting the currently selected component.
+        // dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
+        // also keep track of all intermediate block ids, for re-selecting the currently selected component.
         let relativeIds = [];
         let componentToUpdate = component;
         while (componentToUpdate.parent() &&

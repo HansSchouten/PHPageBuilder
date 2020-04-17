@@ -293,7 +293,7 @@ $(document).ready(function() {
                 // store data.current_block data inside data.blocks with the unique id we just generated
                 if (inDynamicBlock) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
-                    let currentBlockForParent = {settings: {}, blocks: {}, html: ""};
+                    let currentBlockForParent = {settings: {}, blocks: {}, html: "", is_html: false};
                     currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
                     data.current_block = currentBlockForParent;
                 } else {
@@ -303,6 +303,12 @@ $(document).ready(function() {
                 }
             } else if (component.attributes['is-html'] === 'true' && inDynamicBlock === false) {
                 // html blocks outside the context of dynamic blocks should be stored as a block itself (to allow for translations instead of just hard-coding the html)
+
+                // if the block has received styling, store its style-identifier
+                // this will be used as class in a wrapper around the dynamic block to give the block its styling
+                if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
+                    data.current_block['settings']['attributes'] = {'style-identifier': component.attributes['style-identifier']};
+                }
 
                 // replace this html component by a shortcode with a unique id
                 let instanceId = component.attributes['block-id'];
@@ -318,7 +324,8 @@ $(document).ready(function() {
                 });
 
                 // store the block data globally in the blocks array
-                data.blocks[instanceId] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
+                data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
+                data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
             }
         }
 
