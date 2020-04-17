@@ -75,7 +75,7 @@ class BlockRenderer
                 . $html
                 . '</phpb-block>';
         } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
-            // add wrapper div around dynamic blocks, which receives the style identifier class if styling is added to the dynamic block using the pagebuilder
+            // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
             $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">' . $html . '</div>';
         }
         return $html;

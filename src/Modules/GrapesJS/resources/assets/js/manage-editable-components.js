@@ -72,10 +72,10 @@
         // reload pageComponents (with phpb-block elements)
         container.components(window.pageComponents);
 
-        // replace phpb-block elements with the server-side rendered version of each dynamic block.
+        // replace phpb-block elements with the server-side rendered version of each block
         replacePlaceholdersForRenderedBlocks(container);
 
-        // apply dynamic block attributes to the server-side rendered html
+        // apply the stored block settings to the server-side rendered html
         applyBlockAttributesToComponents(container);
 
         // only allow to edit html blocks
@@ -87,14 +87,14 @@
     };
 
     /**
-     * Replace phpb-block elements with the server-side rendered version of each dynamic block.
+     * Replace phpb-block elements with the server-side rendered version of each block.
      *
      * @param component
      */
     function replacePlaceholdersForRenderedBlocks(component) {
         let newComponent = component;
 
-        // if we encounter a dynamic block, replace it with the server-side rendered html
+        // if we encounter a pagebuilder block, replace it with the server-side rendered html
         if (component.get('tagName') === 'phpb-block') {
             let id = component.attributes.attributes.id;
             if (window.pageBlocks[window.currentLanguage][id] !== undefined && window.pageBlocks[window.currentLanguage][id]['html'] !== undefined) {
@@ -227,7 +227,7 @@
             container.components().each(function(componentSibling) {
                 if (componentSibling.cid === component.cid) {
                     // replace the <phpb-block> with the actual component
-                    // the component is wrapped with a div to allow styling dynamic blocks (with only the .style-identifier in the css selector)
+                    // the component is wrapped with a div to allow styling pagebuilder blocks (with only the .style-identifier in the css selector)
                     blockRootComponent = component.replaceWith({tagName: 'div'});
                     clone.components().each(function(componentChild) {
                         blockRootComponent.append(cloneComponent(componentChild));
@@ -256,7 +256,7 @@
      */
     function getCurrentSettingValues(component) {
         // Block settings are stored in window.pageBlocks in a structure starting with each root block (the first ancestor that does not have a dynamic parent itself).
-        // So, we need to find the root of the given component and store all block ids along the way, in order to traverse the dynamicBlocks structure to the settings of the given component.
+        // So, we need to find the root of the given component and store all block ids along the way, in order to traverse the pageBlocks structure to the settings of the given component.
         // These block ids are only unique in the context of their parent (we can have multiple instances of the same nested block structure), so we call them relative IDs.
         let relativeIds = [];
 
@@ -273,7 +273,7 @@
         }
         let rootId = rootComponent.attributes['block-id'];
 
-        // get the component settings by traversing the dynamicBlocks structure
+        // get the component settings by traversing the pageBlocks structure
         let settings = window.pageBlocks[window.currentLanguage][rootId];
         relativeIds.reverse().forEach(function(relativeId) {
             if (settings === undefined || settings.blocks === undefined || settings.blocks[relativeId] === undefined) {
@@ -305,7 +305,7 @@
 
         let settingValues = getCurrentSettingValues(component);
 
-        // set style identifier class to the dynamic block wrapper, if an identifier has been stored during earlier getDataInStorageFormat calls
+        // set style identifier class to the pagebuilder block wrapper, if an identifier has been stored during earlier getDataInStorageFormat calls
         if (settingValues['style-identifier'] !== undefined) {
             component.addClass(settingValues['style-identifier']);
         }
@@ -335,7 +335,7 @@
             return;
         }
 
-        // Dynamic blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
+        // Dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
         // Also keep track of all intermediate block ids, for re-selecting the currently selected component.
         let relativeIds = [];
         let componentToUpdate = component;
@@ -367,7 +367,7 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
-                // set dynamic block settings for the updated component to the new values
+                // set the block settings for the updated component to the new values
                 window.pageBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
                 // replace old component for the rendered html returned by the server

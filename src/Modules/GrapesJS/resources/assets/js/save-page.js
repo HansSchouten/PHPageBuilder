@@ -187,7 +187,7 @@ $(document).ready(function() {
         container = window.cloneComponent(container);
         // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
         editorCss = window.editor.getCss();
-        // replace each dynamic block for a shortcode and phpb-block element and return an array of all dynamic block data
+        // replace each pagebuilder block for a shortcode and phpb-block element and return an array of all page blocks data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
         let html = window.html_beautify(getHtml(container));
@@ -258,7 +258,7 @@ $(document).ready(function() {
             for (let key in childData.blocks) { data.blocks[key] = childData.blocks[key]; }
         });
 
-        // if this component is a dynamic block, do the actual replacement of this component with a placeholder component
+        // if this component is a pagebuilder block, do the actual replacement of this component with a placeholder component
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id

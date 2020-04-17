@@ -77,7 +77,7 @@ class ShortcodeParser
     }
 
     /**
-     * Render all dynamic blocks defined with shortcodes in the given html string.
+     * Render all blocks defined with shortcodes in the given html string.
      *
      * @param string $html
      * @param array $context
@@ -100,7 +100,7 @@ class ShortcodeParser
             $id = $match['attributes']['id'] ?? $slug;
             $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context, $maxDepth);
 
-            // store rendered block in a structure used for outputting all dynamic blocks to the page builder
+            // store rendered block in a structure used for outputting all blocks to the pagebuilder
             if (phpb_in_editmode() && strpos($id, 'ID') === 0) {
                 $this->renderedBlocks[$this->language][$id] = $context[$id] ?? [];
                 $this->renderedBlocks[$this->language][$id]['html'] = $blockHtml;
