@@ -172,8 +172,12 @@ if (! function_exists('phpb_full_url')) {
      */
     function phpb_full_url($relativeUrl)
     {
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        return  $protocol . "://" . $_SERVER['SERVER_NAME'] . $relativeUrl;
+        $baseUrl = phpb_config('general.base_url');
+        if (empty($baseUrl)) {
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+            $baseUrl = $protocol . "://" . $_SERVER['SERVER_NAME'];
+        }
+        return rtrim($baseUrl, '/') . $relativeUrl;
     }
 }
 
