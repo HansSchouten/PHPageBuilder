@@ -230,11 +230,15 @@ class PageBuilder implements PageBuilderContract
      * Render the given page.
      *
      * @param PageContract $page
+     * @param null $language
      * @throws Exception
      */
-    public function renderPage(PageContract $page)
+    public function renderPage(PageContract $page, $language = null)
     {
         $renderer = new PageRenderer($this->theme, $page);
+        if (! is_null($language)) {
+            $renderer->setLanguage($language);
+        }
         echo $renderer->render();
     }
 

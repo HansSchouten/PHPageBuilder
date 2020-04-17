@@ -4,6 +4,7 @@ namespace PHPageBuilder;
 
 use PHPageBuilder\Contracts\AuthContract;
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Contracts\PageTranslationContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
@@ -276,9 +277,10 @@ class PHPageBuilder
         }
 
         // let the page router resolve the current URL
-        $page = $this->router->resolve(urldecode($_SERVER['REQUEST_URI']));
-        if ($page instanceof PageContract) {
-            $this->pageBuilder->renderPage($page);
+        $pageTranslation = $this->router->resolve(urldecode($_SERVER['REQUEST_URI']));
+        if ($pageTranslation instanceof PageTranslationContract) {
+            $page = $pageTranslation->getPage();
+            $this->pageBuilder->renderPage($page, $pageTranslation->locale);
             exit();
         }
     }

@@ -12,4 +12,20 @@ class PageTranslationRepository extends BaseRepository implements PageTranslatio
      * @var string
      */
     protected $table = 'page_translations';
+
+    /**
+     * The class that represents each page translation.
+     *
+     * @var string
+     */
+    protected $class;
+
+    /**
+     * PageTranslationRepository constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->class = phpb_instance('page.translation');
+    }
 }

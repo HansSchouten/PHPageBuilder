@@ -24,8 +24,9 @@ interface PageBuilderContract
      * Render the given page.
      *
      * @param PageContract $page
+     * @param null $language
      */
-    public function renderPage(PageContract $page);
+    public function renderPage(PageContract $page, $language = null);
 
     /**
      * Update the given page with the given data (an array of html blocks)

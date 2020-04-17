@@ -3,6 +3,7 @@
 namespace PHPageBuilder\Modules\Router;
 
 use PHPageBuilder\Contracts\PageContract;
+use PHPageBuilder\Contracts\PageTranslationContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\PageTranslationRepository;
@@ -25,9 +26,9 @@ class DatabasePageRouter implements RouterContract
     protected $routeParameters;
 
     /**
-     * @var array $routeToPageIdMapping
+     * @var array $routeToPageTranslationIdMapping
      */
-    protected $routeToPageIdMapping;
+    protected $routeToPageTranslationIdMapping;
 
     /**
      * DatabasePageRouter constructor.
@@ -37,14 +38,14 @@ class DatabasePageRouter implements RouterContract
         $this->pageRepository = new PageRepository;
         $this->pageTranslationRepository = new PageTranslationRepository;
         $this->routeParameters = [];
-        $this->routeToPageIdMapping = [];
+        $this->routeToPageTranslationIdMapping = [];
     }
 
     /**
      * Return the page from database corresponding to the given URL.
      *
      * @param $url
-     * @return PageContract|null
+     * @return PageTranslationContract|null
      */
     public function resolve($url)
     {
@@ -54,11 +55,11 @@ class DatabasePageRouter implements RouterContract
         $urlSegments = explode('/', $url);
 
         // request all routes and convert each to its segments using / as separator
-        $pageTranslations = $this->pageTranslationRepository->getAll(['page_id', 'route']);
+        $pageTranslations = $this->pageTranslationRepository->getAll(['id', 'route']);
         $routes = [];
         foreach ($pageTranslations as $pageTranslation) {
-            $route = $pageTranslation['route'];
-            $this->routeToPageIdMapping[$route] = $pageTranslation['page_id'];
+            $route = $pageTranslation->route;
+            $this->routeToPageTranslationIdMapping[$route] = $pageTranslation->id;
             $routeSegments = explode('/', $route);
             $routes[] = $routeSegments;
         }
@@ -70,7 +71,7 @@ class DatabasePageRouter implements RouterContract
         foreach ($orderedRoutes as $routeSegments) {
             if ($this->onRoute($urlSegments, $routeSegments)) {
                 $fullRoute = implode('/', $routeSegments);
-                $matchedPage = $this->getMatchedPage($fullRoute, $this->routeToPageIdMapping[$fullRoute]);
+                $matchedPage = $this->getMatchedPage($fullRoute, $this->routeToPageTranslationIdMapping[$fullRoute]);
 
                 if ($matchedPage) {
                     global $phpb_route_parameters;
@@ -126,18 +127,18 @@ class DatabasePageRouter implements RouterContract
     }
 
     /**
-     * Return the full page instance based on the given matched route or page id.
+     * Return the full page translation instance based on the given matched route or page translation id.
      * (this method is helpful when extending a router to perform additional checks after a route has been matched)
      *
-     * @param string $matchedRoute              the matched route
-     * @param string $matchedPageId             the page id corresponding to the matched route
-     * @return PageContract|null
+     * @param string $matchedRoute                  the matched route
+     * @param string $matchedPageTranslationId      the page translation id corresponding to the matched route
+     * @return PageTranslationContract|null
      */
-    public function getMatchedPage(string $matchedRoute, string $matchedPageId)
+    public function getMatchedPage(string $matchedRoute, string $matchedPageTranslationId)
     {
-        $page = $this->pageRepository->findWithId($matchedPageId);
-        if ($page instanceof PageContract) {
-            return $page;
+        $pageTranslation = $this->pageTranslationRepository->findWithId($matchedPageTranslationId);
+        if ($pageTranslation instanceof PageTranslationContract) {
+            return $pageTranslation;
         }
         return null;
     }

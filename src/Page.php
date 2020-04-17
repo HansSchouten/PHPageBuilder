@@ -100,7 +100,7 @@ class Page implements PageContract
             $records = (new PageTranslationRepository)->findWhere('page_id', $this->getId());
             $translations = [];
             foreach ($records as $record) {
-                $translations[$record['locale']] = $record;
+                $translations[$record->locale] = (array) $record;
             }
             $this->translations = $translations;
         }

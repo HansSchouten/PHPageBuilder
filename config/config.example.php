@@ -107,7 +107,10 @@ return [
      |
      */
     'page' => [
-        'class' => PHPageBuilder\Page::class
+        'class' => PHPageBuilder\Page::class,
+        'translation' => [
+            'class' => PHPageBuilder\PageTranslation::class,
+        ]
     ],
 
     /*
