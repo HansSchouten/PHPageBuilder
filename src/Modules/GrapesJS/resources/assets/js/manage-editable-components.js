@@ -164,6 +164,21 @@
 
 
     /**
+     * Component clone handler.
+     */
+    window.editor.on('component:clone', function(component) {
+        // if the clone is performed by the user, do not copy the style identifier as each instance needs to be styled separately
+        if (! isCloningFromScript) {
+            if (component.attributes['style-identifier'] !== undefined && component.attributes['style-identifier'] !== '') {
+                component.removeClass(component.attributes['style-identifier']);
+                delete component.attributes['style-identifier'];
+                addUniqueClass(component);
+            }
+        }
+    });
+
+
+    /**
      * Return whether the given component contains a CSS background, that should be editable.
      *
      * @param component
@@ -305,7 +320,7 @@
 
         let settingValues = getCurrentSettingValues(component);
 
-        // set style identifier class to the pagebuilder block wrapper, if an identifier has been stored during earlier getDataInStorageFormat calls
+        // set style identifier class to the block wrapper, if an identifier has been stored during earlier getDataInStorageFormat calls
         if (settingValues['style-identifier'] !== undefined) {
             component.addClass(settingValues['style-identifier']);
         }
@@ -428,9 +443,14 @@
      *
      * @param component
      */
+    let isCloningFromScript = false;
     window.cloneComponent = function(component) {
+        isCloningFromScript = true;
+
         let clone = component.clone();
         deepCopyAttributes(component, clone);
+
+        isCloningFromScript = false;
         return clone;
     };
 
