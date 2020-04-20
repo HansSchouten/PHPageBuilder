@@ -277,9 +277,10 @@
         // These block ids are only unique in the context of their parent (we can have multiple instances of the same nested block structure), so we call them relative IDs.
         let relativeIds = [];
 
-        // get the root component of the given component (its first ancestor that does not have a dynamic parent itself)
+        // get the root component of the given component (its first ancestor that does not have a dynamic parent itself or the block that is inside a blocks container)
         let rootComponent = component;
         while (rootComponent.parent() &&
+            rootComponent.parent().attributes.attributes['phpb-blocks-container'] === undefined &&
             rootComponent.parent().attributes['is-html'] !== 'true' &&
             rootComponent.parent().attributes.attributes['phpb-content-container'] === undefined
         ) {
@@ -352,11 +353,13 @@
             return;
         }
 
-        // dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks, so we need to update the closest parent which does not have a dynamic parent itself.
+        // dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks,
+        // so we need to update the closest parent which does not have a dynamic parent itself or the block that is inside a blocks container.
         // also keep track of all intermediate block ids, for re-selecting the currently selected component.
         let relativeIds = [];
         let componentToUpdate = component;
         while (componentToUpdate.parent() &&
+            componentToUpdate.parent().attributes.attributes['phpb-blocks-container'] === undefined &&
             componentToUpdate.parent().attributes['is-html'] !== 'true' &&
             componentToUpdate.parent().attributes.attributes['phpb-content-container'] === undefined
         ) {
@@ -366,8 +369,6 @@
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
-
-        console.log(component.attributes);
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
