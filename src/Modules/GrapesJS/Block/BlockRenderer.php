@@ -74,7 +74,7 @@ class BlockRenderer
             $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html
                 . '</phpb-block>';
-        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
+        } elseif (isset($blockData['settings']['attributes']['style-identifier'])) {
             // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
             $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">' . $html . '</div>';
         }

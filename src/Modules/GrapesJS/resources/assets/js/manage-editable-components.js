@@ -245,6 +245,7 @@
                     // replace the <phpb-block> with the actual component
                     // the component is wrapped with a div to allow styling pagebuilder blocks (with only the .style-identifier in the css selector)
                     blockRootComponent = component.replaceWith({tagName: 'div'});
+                    blockRootComponent.attributes['is-style-wrapper'] = true;
                     clone.components().each(function(componentChild) {
                         blockRootComponent.append(cloneComponent(componentChild));
                     });
@@ -365,6 +366,8 @@
             componentToUpdate = componentToUpdate.parent();
         }
         component = componentToUpdate;
+
+        console.log(component.attributes);
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');

@@ -246,6 +246,9 @@ $(document).ready(function() {
      * @param component
      */
     function getComponentHtml(component) {
+        if (component.attributes['is-style-wrapper'] !== undefined) {
+            return getContainerHtml(component);
+        }
         let htmlDom = $("<container>" + component.toHTML() + "</container>");
         // replace phpb-block elements with shortcode
         htmlDom.find('phpb-block').each(function() {
