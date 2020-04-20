@@ -62,7 +62,7 @@ class ShortcodeParser
      * @return mixed|string
      * @throws Exception
      */
-    public function doShortcodes($html, array $context = [], $maxDepth = 15)
+    public function doShortcodes($html, array $context = [], $maxDepth = 25)
     {
         if ($maxDepth === 0) {
             throw new Exception("Maximum doShortcodes depth has been reached, "

@@ -279,7 +279,7 @@ $(document).ready(function() {
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
+                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(getHtml(component)), is_html: true};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
                 let attributes = {};
@@ -341,7 +341,7 @@ $(document).ready(function() {
                 });
 
                 // store the block data globally in the blocks array
-                data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(component.toHTML()), is_html: true};
+                data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getHtml(component)), is_html: true};
                 data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
             }
         }
