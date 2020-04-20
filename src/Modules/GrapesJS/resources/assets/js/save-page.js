@@ -207,7 +207,7 @@ $(document).ready(function() {
         // replace each pagebuilder block for a shortcode and phpb-block element and return an array of all page blocks data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
-        let html = window.html_beautify(getHtml(container));
+        let html = window.html_beautify(getContainerHtml(container));
         let css = window.editor.getCss();
         let style = window.editor.getStyle();
         let components = JSON.parse(JSON.stringify(container.get('components')));
@@ -229,10 +229,24 @@ $(document).ready(function() {
      *
      * @param container
      */
-    function getHtml(container) {
+    function getContainerHtml(container) {
         let html = '';
         container.get('components').forEach(component => html += component.toHTML());
         let htmlDom = $("<container>" + html + "</container>");
+        // replace phpb-block elements with shortcode
+        htmlDom.find('phpb-block').each(function() {
+            $(this).replaceWith('[block slug="' + $(this).attr('slug') + '" id="' + $(this).attr('id') + '"]');
+        });
+        return htmlDom.html();
+    }
+
+    /**
+     * Return the html representation of the given component.
+     *
+     * @param component
+     */
+    function getComponentHtml(component) {
+        let htmlDom = $("<container>" + component.toHTML() + "</container>");
         // replace phpb-block elements with shortcode
         htmlDom.find('phpb-block').each(function() {
             $(this).replaceWith('[block slug="' + $(this).attr('slug') + '" id="' + $(this).attr('id') + '"]');
@@ -279,7 +293,7 @@ $(document).ready(function() {
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
                 // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
-                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(getHtml(component)), is_html: true};
+                data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
                 let attributes = {};
@@ -341,7 +355,7 @@ $(document).ready(function() {
                 });
 
                 // store the block data globally in the blocks array
-                data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getHtml(component)), is_html: true};
+                data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
                 data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
             }
         }
