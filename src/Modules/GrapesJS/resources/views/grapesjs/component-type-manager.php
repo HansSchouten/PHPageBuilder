@@ -39,6 +39,12 @@ editor.DomComponents.addType('link', {
 
 const textType = editor.DomComponents.getType('text');
 editor.DomComponents.addType('text', {
+    isComponent: el => {
+        if (el.firstChild && el.firstChild.nodeType === 3) {
+            return true;
+        }
+        return el.nodeType === 3;
+    },
     model: {
         defaults: {
             traits: [],
