@@ -249,7 +249,16 @@ $(document).ready(function() {
         if (component.attributes['is-style-wrapper'] !== undefined) {
             return getContainerHtml(component);
         }
-        let htmlDom = $("<container>" + component.toHTML() + "</container>");
+
+        let htmlDom;
+        let html = component.toHTML();
+        let styleIdentifier = component.attributes['style-identifier'];
+        if (styleIdentifier && html.includes(styleIdentifier)) {
+            htmlDom = $(html);
+        } else {
+            htmlDom = $("<container>" + component.toHTML() + "</container>");
+        }
+
         // replace phpb-block elements with shortcode
         htmlDom.find('phpb-block').each(function() {
             $(this).replaceWith('[block slug="' + $(this).attr('slug') + '" id="' + $(this).attr('id') + '"]');
@@ -356,6 +365,8 @@ $(document).ready(function() {
                         id: instanceId
                     }
                 });
+
+                console.log(window.html_beautify(getComponentHtml(component)));
 
                 // store the block data globally in the blocks array
                 data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
