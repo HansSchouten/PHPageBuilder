@@ -237,20 +237,38 @@
             let container = component.parent();
             let clone = cloneComponent(component);
 
-            // Since component is a <phpb-block> that should be removed and replaced by its children,
-            // the component's parent's child that has the id of the <phpb-block> component needs to be replaced.
+            // since component is a <phpb-block> that should be removed and replaced by its children,
+            // the component's parent's child that has the id of the <phpb-block> component needs to be replaced
             let blockRootComponent;
-            container.components().each(function(componentSibling) {
-                if (componentSibling.cid === component.cid) {
-                    // replace the <phpb-block> with the actual component
-                    // the component is wrapped with a div to allow styling pagebuilder blocks (with only the .style-identifier in the css selector)
-                    blockRootComponent = component.replaceWith({tagName: 'div'});
-                    blockRootComponent.attributes['is-style-wrapper'] = true;
-                    clone.components().each(function(componentChild) {
-                        blockRootComponent.append(cloneComponent(componentChild));
-                    });
-                }
-            });
+            if (component.attributes['is-html'] === 'false') {
+                container.components().each(function(componentSibling) {
+                    if (componentSibling.cid === component.cid) {
+                        // replace the <phpb-block> by the actual component
+                        // the component is wrapped with a div to allow block styling (via a unique .style-identifier selector)
+                        blockRootComponent = component.replaceWith({tagName: 'div'});
+                        blockRootComponent.attributes['is-style-wrapper'] = true;
+                        clone.components().each(function(componentChild) {
+                            blockRootComponent.append(cloneComponent(componentChild));
+                        });
+                    }
+                });
+            } else {
+                container.components().each(function(componentSibling) {
+                    if (componentSibling.cid === component.cid) {
+                        // if the <phpb-block> has one direct child, replace it by its only child
+                        // else, replace it by a wrapper div to allow block styling (via a unique .style-identifier selector)
+                        if (clone.components().length === 1) {
+                            blockRootComponent = component.replaceWith(clone.components().models[0]);
+                        } else {
+                            blockRootComponent = component.replaceWith({tagName: 'div'});
+                            blockRootComponent.attributes['is-style-wrapper'] = true;
+                            clone.components().each(function(componentChild) {
+                                blockRootComponent.append(cloneComponent(componentChild));
+                            });
+                        }
+                    }
+                });
+            }
             component.remove();
 
             copyAttributes(clone, blockRootComponent, true, false);
@@ -551,9 +569,10 @@
 
         // set editable access based on tags, styling or html class attribute
         if (allowEditableComponents) {
-            let madeEditable = allowEditBasedOnComponentAttributes(component);
+            allowEditBasedOnComponentAttributes(component);
+
             // do not allow editable components within text-editable components
-            if (madeEditable && component.attributes.type === 'text') {
+            if (component.attributes['made-text-editable']) {
                 allowEditableComponents = false;
             }
         }
@@ -571,6 +590,7 @@
      */
     function allowEditBasedOnComponentAttributes(component) {
         let htmlTag = component.get('tagName');
+
         let textEditableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
@@ -588,6 +608,7 @@
 
         if (textEditableTags.includes(htmlTag) || 'phpb-editable' in component.attributes.attributes) {
             settings.editable = true;
+            component.attributes['made-text-editable'] = true;
         }
 
         if (componentHasBackground(component)) {
@@ -607,9 +628,7 @@
             if (settings.stylable !== undefined && settings.stylable) {
                 addUniqueClass(component);
             }
-            return true;
         }
-        return false;
     }
 
     /**

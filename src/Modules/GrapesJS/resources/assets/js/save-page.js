@@ -246,19 +246,7 @@ $(document).ready(function() {
      * @param component
      */
     function getComponentHtml(component) {
-        if (component.attributes['is-style-wrapper'] !== undefined) {
-            return getContainerHtml(component);
-        }
-
-        let htmlDom;
-        let html = component.toHTML();
-        let styleIdentifier = component.attributes['style-identifier'];
-        if (styleIdentifier && html.includes(styleIdentifier)) {
-            htmlDom = $(html);
-        } else {
-            htmlDom = $("<container>" + component.toHTML() + "</container>");
-        }
-
+        let htmlDom = $("<container>" + component.toHTML() + "</container>");
         // replace phpb-block elements with shortcode
         htmlDom.find('phpb-block').each(function() {
             $(this).replaceWith('[block slug="' + $(this).attr('slug') + '" id="' + $(this).attr('id') + '"]');
