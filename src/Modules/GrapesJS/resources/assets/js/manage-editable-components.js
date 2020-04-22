@@ -240,7 +240,7 @@
             // since component is a <phpb-block> that should be removed and replaced by its children,
             // the component's parent's child that has the id of the <phpb-block> component needs to be replaced
             let blockRootComponent;
-            if (component.attributes['is-html'] === 'false') {
+            if (component.attributes.attributes['is-html'] === 'false') {
                 container.components().each(function(componentSibling) {
                     if (componentSibling.cid === component.cid) {
                         // replace the <phpb-block> by the actual component
