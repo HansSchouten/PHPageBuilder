@@ -354,8 +354,6 @@ $(document).ready(function() {
                     }
                 });
 
-                console.log(window.html_beautify(getComponentHtml(component)));
-
                 // store the block data globally in the blocks array
                 data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
                 data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};

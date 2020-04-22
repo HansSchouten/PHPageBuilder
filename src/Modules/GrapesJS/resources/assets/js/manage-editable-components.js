@@ -571,14 +571,24 @@
         if (allowEditableComponents) {
             allowEditBasedOnComponentAttributes(component);
 
-            // do not allow editable components within text-editable components
+            // do make all children text editable inside editable components
             if (component.attributes['made-text-editable']) {
-                allowEditableComponents = false;
+                component.get('components').each(component => makeTextEditable(component));
+                return;
             }
         }
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditableComponents));
+    }
+
+    function makeTextEditable(component) {
+        component.set({
+            editable: true,
+            hoverable: false,
+            selectable: false
+        });
+        component.get('components').each(component => makeTextEditable(component));
     }
 
     /**
