@@ -571,24 +571,18 @@
         if (allowEditableComponents) {
             allowEditBasedOnComponentAttributes(component);
 
-            // do make all children text editable inside editable components
+            // if the component is made text-editable, re-add the raw html contents
+            // to ensure the text editor does not deal with elements with attributes added by GrapesJS
             if (component.attributes['made-text-editable']) {
-                component.get('components').each(component => makeTextEditable(component));
-                return;
+                let htmlIncludingComponent = component.toHTML();
+                let html = $($.parseHTML(htmlIncludingComponent)).html();
+                component.components(html);
+                allowEditableComponents = false;
             }
         }
 
         // apply edit restrictions to child components
         component.get('components').each(component => restrictEditAccess(component, directlyInsideDynamicBlock, allowEditableComponents));
-    }
-
-    function makeTextEditable(component) {
-        component.set({
-            editable: true,
-            hoverable: false,
-            selectable: false
-        });
-        component.get('components').each(component => makeTextEditable(component));
     }
 
     /**
