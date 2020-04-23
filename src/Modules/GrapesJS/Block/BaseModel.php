@@ -33,7 +33,12 @@ class BaseModel
         $this->block = $block;
         $this->data = is_array($data) ? $data : [];
         $this->forPageBuilder = $forPageBuilder;
-        $this->init();
+
+        if (phpb_in_editmode() && method_exists($this, 'initEdit')) {
+            $this->initEdit();
+        } else {
+            $this->init();
+        }
     }
 
     /**
