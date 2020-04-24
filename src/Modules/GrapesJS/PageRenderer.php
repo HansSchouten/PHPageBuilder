@@ -215,6 +215,7 @@ class PageRenderer
             if ($language === $initialLanguage) {
                 $this->renderBody();
                 $pageBlocks[$language] = $this->shortcodeParser->getRenderedBlocks()[$language] ?? [];
+                $pageBlocks[$language]['editorContent'] = $this->pageBlocksData['editorContent'] ?? null;
             } else {
                 $pageBlocks[$language] = $this->pageBlocksData;
             }

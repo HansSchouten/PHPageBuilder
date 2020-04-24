@@ -11,6 +11,9 @@
             if (window.pageBlocks[language] === null) {
                 window.pageBlocks[language] = {};
             }
+            if (window.pageBlocks[language].editorContent === null) {
+                window.pageBlocks[language].editorContent = {};
+            }
         });
 
         activateLanguage(window.currentLanguage);
@@ -574,11 +577,21 @@
             // if the component is made text-editable, re-add the raw html contents
             // to ensure the text editor does not deal with elements with attributes added by GrapesJS
             if (component.attributes['made-text-editable'] === 'true') {
+
+                if (window.pageBlocks[window.currentLanguage].editorContent !== undefined &&
+                    component.attributes.attributes['data-editor-ref'] !== undefined &&
+                    window.pageBlocks[window.currentLanguage].editorContent[component.attributes.attributes['data-editor-ref']] !== undefined) {
+                    let innerHtml = window.pageBlocks[window.currentLanguage].editorContent[component.attributes.attributes['data-editor-ref']];
+                    component.components(innerHtml);
+                    component.attributes.content = '';
+                    return;
+                }
                 // on dropping a new block, content is set but needs to be replaced
                 if (component.attributes.content !== '') {
                     let innerHtml = $($.parseHTML(component.toHTML())).html();
                     component.attributes.content = '';
                     component.components(innerHtml);
+                    component.attributes.attributes['data-editor-ref'] = generateId();
                 }
 
                 allowEditableComponents = false;

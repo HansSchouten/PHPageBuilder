@@ -71,6 +71,9 @@ $(document).ready(function() {
     {
         let newLanguageBlocks = window.pageBlocks[newLanguage];
         let currentLanguageBlocks = window.pageBlocks[window.currentLanguage];
+        if (newLanguageBlocks.editorContent === undefined) {
+            newLanguageBlocks.editorContent = {};
+        }
 
         if (newLanguageBlocks === undefined) {
             newLanguageBlocks = currentLanguageBlocks;
@@ -85,6 +88,19 @@ $(document).ready(function() {
             for (let blockId in newLanguageBlocks) {
                 if (currentLanguageBlocks[blockId] === undefined) {
                     delete newLanguageBlocks[blockId];
+                }
+            }
+
+            // copy missing editor content from the current language to the target language
+            for (let blockId in currentLanguageBlocks.editorContent) {
+                if (newLanguageBlocks.editorContent[blockId] === undefined) {
+                    newLanguageBlocks.editorContent[blockId] = currentLanguageBlocks.editorContent[blockId];
+                }
+            }
+            // remove editor content from the target language that have been removed in the current language
+            for (let blockId in newLanguageBlocks.editorContent) {
+                if (currentLanguageBlocks.editorContent[blockId] === undefined) {
+                    delete newLanguageBlocks.editorContent[blockId];
                 }
             }
         }
@@ -205,7 +221,9 @@ $(document).ready(function() {
         // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
         editorCss = window.editor.getCss();
         // replace each pagebuilder block for a shortcode and phpb-block element and return an array of all page blocks data
-        let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
+        let blocksData = replaceDynamicBlocksWithPlaceholders(container);
+        blocksData.blocks['editorContent'] = blocksData.editorContent;
+        blocksData = blocksData.blocks;
 
         let html = window.html_beautify(getContainerHtml(container));
         let css = window.editor.getCss();
@@ -265,7 +283,8 @@ $(document).ready(function() {
         // data structure to be filled with the data of nested blocks via recursive calls
         let data = {
             current_block: {settings: {}, blocks: {}, html: "", is_html: false},
-            blocks: {}
+            blocks: {},
+            editorContent: {}
         };
 
         // update variables for passing context to the recursive calls on child components
@@ -287,6 +306,7 @@ $(document).ready(function() {
             // update data object with child data
             for (let key in childData.current_block.blocks) { data.current_block.blocks[key] = childData.current_block.blocks[key]; }
             for (let key in childData.blocks) { data.blocks[key] = childData.blocks[key]; }
+            for (let key in childData.editorContent) { data.editorContent[key] = childData.editorContent[key]; }
         });
 
         // if this component is a pagebuilder block, do the actual replacement of this component with a placeholder component
@@ -357,6 +377,11 @@ $(document).ready(function() {
                 // store the block data globally in the blocks array
                 data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
                 data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
+            }
+        } else {
+            if (component.attributes['made-text-editable'] === 'true' && component.attributes.attributes['data-editor-ref'] !== undefined) {
+                let innerHtml = $($.parseHTML(component.toHTML())).html();
+                data.editorContent[component.attributes.attributes['data-editor-ref']] = innerHtml;
             }
         }
 
