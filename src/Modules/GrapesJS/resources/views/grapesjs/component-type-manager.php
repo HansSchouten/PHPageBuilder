@@ -53,6 +53,28 @@ editor.DomComponents.addType('text', {
     }),
 });
 
+/**
+ * The raw-content type does not transform child elements into GrapesJS components.
+ * This is important to prevent the RTE editor from dealing with html elements modified by GrapesJS (for instance removed inline styling).
+ * Source: https://github.com/artf/grapesjs/issues/774#issuecomment-358963099
+ */
+editor.DomComponents.addType('raw-content', {
+    model: textType.model.extend({
+        },{
+            isComponent: function(el) {
+                if (el.hasAttribute && el.hasAttribute('data-raw-content')) {
+                    return {
+                        type: 'raw-content',
+                        content: el.innerHTML,
+                        components: [] // avoid parsing children
+                    };
+                }
+            }
+        }
+    ),
+    view: textType.view
+});
+
 editor.DomComponents.addType('row', {
     model: {
         defaults: {
