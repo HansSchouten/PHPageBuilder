@@ -573,10 +573,14 @@
 
             // if the component is made text-editable, re-add the raw html contents
             // to ensure the text editor does not deal with elements with attributes added by GrapesJS
-            if (component.attributes['made-text-editable']) {
-                let htmlIncludingComponent = component.toHTML();
-                let html = $($.parseHTML(htmlIncludingComponent)).html();
-                component.components(html);
+            if (component.attributes['made-text-editable'] === 'true') {
+                // on dropping a new block, content is set but needs to be replaced
+                if (component.attributes.content !== '') {
+                    let innerHtml = $($.parseHTML(component.toHTML())).html();
+                    component.attributes.content = '';
+                    component.components(innerHtml);
+                }
+
                 allowEditableComponents = false;
             }
         }
@@ -612,7 +616,7 @@
 
         if (textEditableTags.includes(htmlTag) || 'phpb-editable' in component.attributes.attributes) {
             settings.editable = true;
-            component.attributes['made-text-editable'] = true;
+            component.attributes['made-text-editable'] = 'true';
         }
 
         if (componentHasBackground(component)) {
