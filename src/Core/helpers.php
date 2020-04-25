@@ -208,6 +208,20 @@ if (! function_exists('phpb_url')) {
     }
 }
 
+if (! function_exists('phpb_current_url')) {
+    /**
+     * Give the current URL relative to the base directory (the index.php entry point).
+     *
+     * @return string
+     */
+    function phpb_current_url()
+    {
+        $relativeUrlWithSubfolders = urldecode($_SERVER['REQUEST_URI']);
+        $baseDirectory = rtrim($_SERVER['PHP_SELF'], 'index.php');
+        return '/' . ltrim($relativeUrlWithSubfolders, $baseDirectory);
+    }
+}
+
 if (! function_exists('phpb_in_module')) {
     /**
      * Return whether we are currently accessing the given module.
@@ -218,7 +232,7 @@ if (! function_exists('phpb_in_module')) {
     function phpb_in_module($module)
     {
         $url = phpb_url($module, [], false);
-        $currentUrl = explode('?', urldecode($_SERVER['REQUEST_URI']), 2)[0];
+        $currentUrl = explode('?', phpb_current_url(), 2)[0];
         return $currentUrl === $url;
     }
 }
@@ -234,7 +248,7 @@ if (! function_exists('phpb_on_url')) {
     function phpb_on_url($module, array $parameters = [])
     {
         $url = phpb_url($module, $parameters, false);
-        return urldecode($_SERVER['REQUEST_URI']) === $url;
+        return phpb_current_url() === $url;
     }
 }
 
