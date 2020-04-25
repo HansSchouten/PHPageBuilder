@@ -13,21 +13,21 @@ class Auth implements AuthContract
      */
     public function handleRequest($action)
     {
-        if (phpb_in_module('auth') && $action === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
-            if ($_POST['username'] === phpb_config('auth.username') && $_POST['password'] === phpb_config('auth.password')) {
-                $_SESSION['phpb_logged_in'] = true;
+        if (phpb_in_module('auth')) {
+            if ($action === 'login' && isset($_POST['username']) && isset($_POST['password'])) {
+                if ($_POST['username'] === phpb_config('auth.username') && $_POST['password'] === phpb_config('auth.password')) {
+                    $_SESSION['phpb_logged_in'] = true;
+                    phpb_redirect(phpb_url('website_manager'));
+                } else {
+                    phpb_redirect(phpb_url('website_manager'), [
+                        'message-type' => 'warning',
+                        'message' => phpb_trans('auth.invalid-credentials')
+                    ]);
+                }
+            } elseif ($action === 'logout') {
+                unset($_SESSION['phpb_logged_in']);
                 phpb_redirect(phpb_url('website_manager'));
-            } else {
-                phpb_redirect(phpb_url('website_manager'), [
-                    'message-type' => 'warning',
-                    'message' => phpb_trans('auth.invalid-credentials')
-                ]);
             }
-        }
-
-        if (phpb_in_module('auth') && $action === 'logout') {
-            unset($_SESSION['phpb_logged_in']);
-            phpb_redirect(phpb_url('website_manager'));
         }
     }
 

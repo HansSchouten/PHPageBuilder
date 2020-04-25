@@ -181,7 +181,7 @@ if (! function_exists('phpb_full_url')) {
         if (empty($baseUrl)) {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
             $baseUrl = $protocol . "://" . $_SERVER['SERVER_NAME'];
-            $baseDirectory = rtrim($_SERVER['PHP_SELF'], 'index.php');
+            $baseDirectory = dirname($_SERVER['PHP_SELF']);
             $baseUrl = $baseUrl . $baseDirectory;
         }
         return rtrim($baseUrl, '/') . $relativeUrl;
@@ -225,7 +225,7 @@ if (! function_exists('phpb_current_url')) {
     {
         $relativeUrlWithSubfolders = urldecode($_SERVER['REQUEST_URI']);
         $baseDirectory = rtrim($_SERVER['PHP_SELF'], 'index.php');
-        return '/' . ltrim($relativeUrlWithSubfolders, $baseDirectory);
+        return '/' . substr($relativeUrlWithSubfolders, strlen($baseDirectory));
     }
 }
 
