@@ -37,7 +37,7 @@ if (! function_exists('phpb_asset')) {
      */
     function phpb_asset($path)
     {
-        return phpb_config('general.assets_url') . '/' . $path;
+        return phpb_full_url(phpb_config('general.assets_url') . '/' . $path);
     }
 }
 
@@ -172,10 +172,17 @@ if (! function_exists('phpb_full_url')) {
      */
     function phpb_full_url($relativeUrl)
     {
+        // if the URL is already a full URL, do not alter the URL
+        if (strpos($relativeUrl, 'http://') === 0 || strpos($relativeUrl, 'https://') === 0) {
+            return $relativeUrl;
+        }
+
         $baseUrl = phpb_config('general.base_url');
         if (empty($baseUrl)) {
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
             $baseUrl = $protocol . "://" . $_SERVER['SERVER_NAME'];
+            $baseDirectory = rtrim($_SERVER['PHP_SELF'], 'index.php');
+            $baseUrl = $baseUrl . $baseDirectory;
         }
         return rtrim($baseUrl, '/') . $relativeUrl;
     }
