@@ -9,8 +9,8 @@ use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
-use PHPageBuilder\Core\DB;
 use PHPageBuilder\Repositories\UploadRepository;
+use PHPageBuilder\Core\DB;
 
 class PHPageBuilder
 {
@@ -226,6 +226,7 @@ class PHPageBuilder
      * Process the current GET or POST request and redirect or render the requested page.
      *
      * @param string|null $action
+     * @return bool
      */
     public function handleRequest($action = null)
     {
@@ -255,13 +256,17 @@ class PHPageBuilder
         }
 
         // handle all requests that do not need authentication
-        $this->handlePublicRequest();
+        if ($this->handlePublicRequest()) {
+            return true;
+        }
 
         die('Page not found');
     }
 
     /**
      * Handle public requests, allowed without any authentication.
+     *
+     * @return bool
      */
     public function handlePublicRequest()
     {
@@ -281,8 +286,9 @@ class PHPageBuilder
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
             $this->pageBuilder->renderPage($page, $pageTranslation->locale);
-            exit();
+            return true;
         }
+        return false;
     }
 
     /**
