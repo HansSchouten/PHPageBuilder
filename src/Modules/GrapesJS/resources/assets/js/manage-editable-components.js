@@ -364,10 +364,12 @@
      * On updating an attribute (block setting from the settings side panel), refresh dynamic block via Ajax.
      */
     window.editor.on('component:update', function(component) {
-        if (window.isLoaded !== true || component.attributes['is-updating'] || component.changed['attributes'] === undefined) {
-            return;
-        }
-        if ($(".gjs-frame").contents().find("#" + component.ccid).length === 0) {
+        if (window.isLoaded !== true ||
+            component.attributes['block-slug'] === undefined ||
+            component.attributes['is-updating'] ||
+            component.changed['attributes'] === undefined ||
+            $(".gjs-frame").contents().find("#" + component.ccid).length === 0
+        ) {
             return;
         }
 
@@ -596,9 +598,11 @@
         let textEditableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
-            'img','button',
-            'p','small','b','strong','i','em',
+            'p','small','b','strong','i','em','button',
             'ul','li','th','td'
+        ];
+        let otherEditableTags = [
+            'a','img'
         ];
 
         let settings = {};
@@ -611,6 +615,8 @@
         if (textEditableTags.includes(htmlTag) || 'phpb-editable' in component.attributes.attributes) {
             settings.editable = true;
             component.attributes['made-text-editable'] = 'true';
+        } else if (otherEditableTags.includes(htmlTag)) {
+            settings.editable = true;
         }
 
         if (componentHasBackground(component)) {
