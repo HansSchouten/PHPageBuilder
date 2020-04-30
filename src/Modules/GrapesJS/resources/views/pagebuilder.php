@@ -39,6 +39,7 @@ window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.pageBlocks = <?= json_encode($pageRenderer->getPageBlocksData()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';
+window.injectionScriptUrl = '<?= phpb_asset('pagebuilder/page-injection.js') ?>';
 window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page' => $page->getId()]) ?>';
 
 <?php
@@ -80,9 +81,6 @@ window.grapesJSTranslations = {
 window.initGrapesJS = function() {
     window.editor = window.grapesjs.init(config);
     window.editor.I18n.addMessages(window.grapesJSTranslations);
-
-    // set the non-editable page layout components and the phpb-content-container in which all editable components will be loaded
-    editor.setComponents(window.initialComponents);
 
     // load the default or earlier saved page css components
     editor.setStyle(window.initialStyle);

@@ -78,6 +78,12 @@
         // apply the stored block settings to the server-side rendered html
         applyBlockAttributesToComponents(container);
 
+        // inject a script for communicating between the page to edit and the page builder
+        let scriptTag = document.createElement("script");
+        scriptTag.type = "text/javascript";
+        scriptTag.src = window.injectionScriptUrl;
+        window.editor.Canvas.getDocument().body.appendChild(scriptTag);
+
         // only allow to edit html blocks
         // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
         setTimeout(function() {

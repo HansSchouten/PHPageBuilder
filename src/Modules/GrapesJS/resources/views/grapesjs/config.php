@@ -4,6 +4,7 @@ return [
     'container' => '#gjs',
     'noticeOnUnload' => false,
     'avoidInlineStyle' => true,
+    'allowScripts' => true,
     'storageManager' => [
         'type' => 'remote',
         'autoload' => false,
@@ -78,10 +79,6 @@ return [
         'styles' => [
             phpb_asset('pagebuilder/page-injection.css'),
         ],
-        'scripts' => [
-            'https://code.jquery.com/jquery-3.4.1.min.js',
-            phpb_asset('pagebuilder/page-injection.js'),
-        ]
     ],
     'plugins' => ['grapesjs-touch', 'gjs-plugin-ckeditor'],
     'pluginsOpts' => [
