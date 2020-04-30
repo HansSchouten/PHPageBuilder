@@ -72,13 +72,28 @@ class BlockRenderer
         if ($this->forPageBuilder) {
             $id = $id ?? $themeBlock->getSlug();
             $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
-                . $html
+                . $html . $this->renderBuilderScript($themeBlock)
                 . '</phpb-block>';
         } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
             // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
             $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">' . $html . '</div>';
         }
         return $html;
+    }
+
+    /**
+     * Render the pagebuilder script of the given block.
+     *
+     * @param ThemeBlock $themeBlock
+     * @return false|string
+     */
+    public function renderBuilderScript(ThemeBlock $themeBlock)
+    {
+        $builderScriptFilePath = $themeBlock->getBuilderScriptFile();
+        if ($builderScriptFilePath) {
+            return file_get_contents($builderScriptFilePath);
+        }
+        return '';
     }
 
     /**

@@ -144,6 +144,24 @@ class ThemeBlock
     }
 
     /**
+     * Return the pagebuilder script file of this theme block.
+     * This script can be used to assist correct rendering of the block in the pagebuilder.
+     *
+     * @return string|null
+     */
+    public function getBuilderScriptFile()
+    {
+        if (file_exists($this->getFolder() . '/builder-script.php')) {
+            return $this->getFolder() . '/builder-script.php';
+        } elseif (file_exists($this->getFolder() . '/builder-script.html')) {
+            return $this->getFolder() . '/builder-script.html';
+        } elseif (file_exists($this->getFolder() . '/builder-script.js')) {
+            return $this->getFolder() . '/builder-script.js';
+        }
+        return null;
+    }
+
+    /**
      * Return the file path of the thumbnail of this block.
      *
      * @return string
