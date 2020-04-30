@@ -602,7 +602,7 @@
             'ul','li','th','td'
         ];
         let otherEditableTags = [
-            'a','img'
+            'img'
         ];
 
         let settings = {};
