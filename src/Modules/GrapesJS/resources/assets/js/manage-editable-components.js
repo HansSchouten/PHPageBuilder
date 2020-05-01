@@ -1,7 +1,5 @@
 (function() {
 
-    let customBuilderScripts = {};
-
     /**
      * After loading the initial content of the page builder, restrict access to all layout components.
      * Only blocks and components inside the element with phpb-content-container attribute are editable.
@@ -68,7 +66,7 @@
         // load initial non-editable layout components
         window.editor.setComponents(window.initialComponents);
         denyAccessToLayoutElements(editor.getWrapper());
-        let container = editor.getWrapper().find("[phpb-content-container]")[0];
+        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
         container.set('custom-name', window.translations['page-content']);
 
         // reload pageComponents (with phpb-block elements)
@@ -90,8 +88,7 @@
         // (after a small delay since some styles are not immediately applied and accessible via getComputedStyle)
         setTimeout(function() {
             restrictEditAccess(container);
-            runScriptsOfComponentAndChildren(container);
-
+            window.runScriptsOfComponentAndChildren(container);
             window.setWaiting(false);
         }, 500);
     };
@@ -179,12 +176,19 @@
     window.editor.on('component:clone', function(component) {
         // if the clone is performed by the user, do not copy the block id and style identifier
         if (! isCloningFromScript) {
+            let originalComponent = window.editor.getWrapper().find('.' + component.attributes['style-identifier'])[0];
+
             if (component.attributes['style-identifier'] !== undefined && component.attributes['style-identifier'] !== '') {
                 component.removeClass(component.attributes['style-identifier']);
                 delete component.attributes['style-identifier'];
                 addUniqueClass(component);
             }
             component.attributes['block-id'] = component.attributes['block-slug'];
+
+            // pass a reference of the scripts of the original component to run on the cloned component
+            if (originalComponent && window.customBuilderScripts[originalComponent.attributes['block-id']] !== undefined) {
+                component.attributes['run-builder-script'] = originalComponent.attributes['block-id'];
+            }
         }
     });
 
@@ -224,57 +228,6 @@
     }
 
     /**
-     * On instantiating the component model (before it is mounted in the canvas).
-     */
-    window.editor.on('component:create', component => {
-        // extract the script tag of the given component (if it has one)
-        if (component.components().length) {
-            let lastChild = component.components().models[component.components().length - 1];
-            if (lastChild.attributes.type === 'script') {
-                let blockId = component.attributes.attributes['block-id'];
-                customBuilderScripts[blockId] = lastChild.toHTML();
-                lastChild.remove();
-            }
-        }
-    });
-
-    /**
-     * Run the custom builder scripts of the given component and of all child components.
-     *
-     * @param component
-     */
-    function runScriptsOfComponentAndChildren(component) {
-        runComponentScript(component);
-        component.components().each(function(child) {
-            runScriptsOfComponentAndChildren(child);
-        });
-    }
-
-    /**
-     * Run the custom builder scripts of the given component.
-     *
-     * @param component
-     */
-    function runComponentScript(component) {
-        let blockId = component.attributes['block-id'];
-        if (customBuilderScripts[blockId] !== undefined) {
-            let styleIdentifier = component.attributes["style-identifier"];
-            let $scriptTag = $("<container>").append(customBuilderScripts[blockId]);
-            // prepend $block variable which allows scripts to be executed on this exact block instance
-            $scriptTag.find('script').prepend('let $block = $(".' + styleIdentifier + '");');
-            // wrap the script contents in a self-invoking function (to add a scope avoiding variable name collisions)
-            $scriptTag.find('script').prepend('(function(){');
-            $scriptTag.find('script').append('})();');
-
-            // execute the script in the page that is being edited
-            let scriptTag = document.createElement("script");
-            scriptTag.type = "text/javascript";
-            scriptTag.innerHTML = $scriptTag.find('script').html();
-            window.editor.Canvas.getDocument().body.appendChild(scriptTag);
-        }
-    }
-
-    /**
      * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
      * from the server and restrict edit access to editable components.
      */
@@ -293,11 +246,12 @@
         // so we need to find the dropped component again in the context of its parent
         parent.components().each(function(child) {
             if (child.attributes['dropped-component-id'] === draggedBlockId) {
+                delete child.attributes['dropped-component-id'];
                 droppedComponent = child;
             }
         });
 
-        runScriptsOfComponentAndChildren(droppedComponent);
+        window.runScriptsOfComponentAndChildren(droppedComponent);
     });
 
     /**
