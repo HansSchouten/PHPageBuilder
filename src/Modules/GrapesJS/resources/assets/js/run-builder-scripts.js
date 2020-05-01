@@ -61,8 +61,6 @@
             $scriptTag.find('script').prepend('(function(){');
             $scriptTag.find('script').append('})();');
 
-            console.log($scriptTag.html());
-
             // execute the script in the page that is being edited
             let scriptTag = document.createElement("script");
             scriptTag.type = "text/javascript";

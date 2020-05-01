@@ -444,11 +444,14 @@
                 applyBlockAttributesToComponents(container);
                 restrictEditAccess(container, false, false);
 
+                // run builder scripts of the replaced component and all its children
+                let replacedComponent = findChildViaBlockIdsPath(container, [blockId]);
+                runScriptsOfComponentAndChildren(replacedComponent);
+
                 // select the component that was selected before the ajax call
                 relativeIds.push(blockId);
-                let newComponent = findChildViaBlockIdsPath(container, relativeIds.reverse());
-
-                window.editor.select(newComponent);
+                let componentToSelect = findChildViaBlockIdsPath(container, relativeIds.reverse());
+                window.editor.select(componentToSelect);
             },
             error: function() {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
