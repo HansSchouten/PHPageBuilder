@@ -1,5 +1,7 @@
 (function() {
 
+    let customBuilderScripts = {};
+
     /**
      * After loading the initial content of the page builder, restrict access to all layout components.
      * Only blocks and components inside the element with phpb-content-container attribute are editable.
@@ -84,10 +86,12 @@
         scriptTag.src = window.injectionScriptUrl;
         window.editor.Canvas.getDocument().body.appendChild(scriptTag);
 
-        // only allow to edit html blocks
-        // (apply after delay, since some styles are not immediately applied and accessible via getComputedStyle)
+        // only allow editing html blocks
+        // (after a small delay since some styles are not immediately applied and accessible via getComputedStyle)
         setTimeout(function() {
             restrictEditAccess(container);
+            runScriptsOfComponentAndChildren(container);
+
             window.setWaiting(false);
         }, 500);
     };
@@ -220,6 +224,57 @@
     }
 
     /**
+     * On instantiating the component model (before it is mounted in the canvas).
+     */
+    window.editor.on('component:create', component => {
+        // extract the script tag of the given component (if it has one)
+        if (component.components().length) {
+            let lastChild = component.components().models[component.components().length - 1];
+            if (lastChild.attributes.type === 'script') {
+                let blockId = component.attributes.attributes['block-id'];
+                customBuilderScripts[blockId] = lastChild.toHTML();
+                lastChild.remove();
+            }
+        }
+    });
+
+    /**
+     * Run the custom builder scripts of the given component and of all child components.
+     *
+     * @param component
+     */
+    function runScriptsOfComponentAndChildren(component) {
+        runComponentScript(component);
+        component.components().each(function(child) {
+            runScriptsOfComponentAndChildren(child);
+        });
+    }
+
+    /**
+     * Run the custom builder scripts of the given component.
+     *
+     * @param component
+     */
+    function runComponentScript(component) {
+        let blockId = component.attributes['block-id'];
+        if (customBuilderScripts[blockId] !== undefined) {
+            let styleIdentifier = component.attributes["style-identifier"];
+            let $scriptTag = $("<container>").append(customBuilderScripts[blockId]);
+            // prepend $block variable which allows scripts to be executed on this exact block instance
+            $scriptTag.find('script').prepend('let $block = $(".' + styleIdentifier + '");');
+            // wrap the script contents in a self-invoking function (to add a scope avoiding variable name collisions)
+            $scriptTag.find('script').prepend('(function(){');
+            $scriptTag.find('script').append('})();');
+
+            // execute the script in the page that is being edited
+            let scriptTag = document.createElement("script");
+            scriptTag.type = "text/javascript";
+            scriptTag.innerHTML = $scriptTag.find('script').html();
+            window.editor.Canvas.getDocument().body.appendChild(scriptTag);
+        }
+    }
+
+    /**
      * On dropping a component on the canvas, apply attributes of the container phpb-block element with configuration passed
      * from the server and restrict edit access to editable components.
      */
@@ -227,9 +282,22 @@
         // ensure component drop was successful
         if (! droppedComponent) return;
 
+        let draggedBlockId = generateId();
+        droppedComponent.attributes.attributes['dropped-component-id'] = draggedBlockId;
+
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
         restrictEditAccess(parent);
+
+        // at this point droppedComponent is replaced in the DOM by the actual component (without the phpb-block element),
+        // so we need to find the dropped component again in the context of its parent
+        parent.components().each(function(child) {
+            if (child.attributes['dropped-component-id'] === draggedBlockId) {
+                droppedComponent = child;
+            }
+        });
+
+        runScriptsOfComponentAndChildren(droppedComponent);
     });
 
     /**
