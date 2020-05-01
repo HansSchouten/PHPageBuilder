@@ -97,6 +97,8 @@ class BlockRenderer
                 require $builderScriptFilePath;
                 $html = ob_get_contents();
                 ob_end_clean();
+            } elseif (pathinfo($builderScriptFilePath)['extension'] === 'js') {
+                $html = '<script type="text/javascript">' . file_get_contents($builderScriptFilePath) . '</script>';
             } else {
                 $html = file_get_contents($builderScriptFilePath);
             }
