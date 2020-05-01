@@ -283,17 +283,11 @@
             } else {
                 container.components().each(function(componentSibling) {
                     if (componentSibling.cid === component.cid) {
-                        // if the <phpb-block> has one direct child, replace it by its only child
-                        // else, replace it by a wrapper div to allow block styling (via a unique .style-identifier selector)
-                        if (clone.components().length === 1) {
-                            blockRootComponent = component.replaceWith(clone.components().models[0].clone());
-                        } else {
-                            blockRootComponent = component.replaceWith({tagName: 'div'});
-                            blockRootComponent.attributes['is-style-wrapper'] = true;
-                            clone.components().each(function(componentChild) {
-                                blockRootComponent.append(cloneComponent(componentChild));
-                            });
-                        }
+                        blockRootComponent = component.replaceWith({tagName: 'div'});
+                        blockRootComponent.attributes['is-style-wrapper'] = true;
+                        clone.components().each(function(componentChild) {
+                            blockRootComponent.append(cloneComponent(componentChild));
+                        });
                     }
                 });
             }
