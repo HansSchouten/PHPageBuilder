@@ -89,11 +89,19 @@ class BlockRenderer
      */
     public function renderBuilderScript(ThemeBlock $themeBlock)
     {
+        $html = '';
         $builderScriptFilePath = $themeBlock->getBuilderScriptFile();
         if ($builderScriptFilePath) {
-            return file_get_contents($builderScriptFilePath);
+            if (pathinfo($builderScriptFilePath)['extension'] === 'php') {
+                ob_start();
+                require $builderScriptFilePath;
+                $html = ob_get_contents();
+                ob_end_clean();
+            } else {
+                $html = file_get_contents($builderScriptFilePath);
+            }
         }
-        return '';
+        return $html;
     }
 
     /**
