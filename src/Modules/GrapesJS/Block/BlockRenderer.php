@@ -115,6 +115,16 @@ class BlockRenderer
      */
     protected function renderHtmlBlock(ThemeBlock $themeBlock, $blockData)
     {
+        if ($themeBlock->getControllerFile()) {
+            require_once $themeBlock->getControllerFile();
+            $controllerClass = $themeBlock->getControllerClass();
+            $controller = new $controllerClass;
+
+            $model = new BaseModel($themeBlock, $blockData, $this->forPageBuilder);
+            $controller->init($model, $this->forPageBuilder);
+            $controller->handleRequest();
+        }
+
         if (isset($blockData['html'])) {
             $html = $blockData['html'];
         } else {
