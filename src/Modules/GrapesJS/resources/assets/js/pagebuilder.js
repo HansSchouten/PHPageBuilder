@@ -58,9 +58,11 @@ window.addEventListener("message", onMessage, false);
 function onMessage(event) {
     // if the page is loaded, remove loading element
     if (event.data === 'page-loaded') {
-        $("#phpb-loading").addClass('loaded');
-        addBlockSearch();
-        window.isLoaded = true;
+        setTimeout(function() {
+            $("#phpb-loading").addClass('loaded');
+            addBlockSearch();
+            window.isLoaded = true;
+        }, 500);
     } else if(event.data === 'touch-start') {
         window.touchStart();
     }
