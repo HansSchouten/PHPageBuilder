@@ -1,10 +1,9 @@
 (function() {
 
     /**
-     * After loading the initial content of the page builder, restrict access to all layout components.
-     * Only blocks and components inside the element with phpb-content-container attribute are editable.
+     * After loading GrapesJS, add all theme blocks and activate the editable blocks in the main language.
      */
-    window.editor.on('load', function(editor) {
+    function afterGrapesJSLoaded() {
         addThemeBlocks();
 
         window.languages.forEach(language => {
@@ -14,7 +13,7 @@
         });
 
         activateLanguage(window.currentLanguage);
-    });
+    }
 
     /**
      * Add all theme blocks to GrapesJS blocks manager.
@@ -723,5 +722,17 @@
         return 'ID' + (Date.now().toString(36)
             + Math.random().toString(36).substr(2, 5) + counter++).toUpperCase();
     }
+
+    /**
+     * Wait for GrapesJS to be fully loaded before trying to load the components in the page builder.
+     */
+    function waitForGrapesToLoad() {
+        if (window.grapesJSLoaded) {
+            afterGrapesJSLoaded();
+        } else {
+            setTimeout(waitForGrapesToLoad, 100);
+        }
+    }
+    waitForGrapesToLoad();
 
 })();

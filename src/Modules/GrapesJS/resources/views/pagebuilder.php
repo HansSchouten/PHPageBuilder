@@ -78,14 +78,15 @@ window.grapesJSTranslations = {
     }
 };
 
-window.initGrapesJS = function() {
-    window.editor = window.grapesjs.init(config);
-    window.editor.I18n.addMessages(window.grapesJSTranslations);
+window.grapesJSLoaded = false;
+window.editor = window.grapesjs.init(config);
+window.editor.on('load', function(editor) {
+    window.grapesJSLoaded = true;
+});
+window.editor.I18n.addMessages(window.grapesJSTranslations);
 
-    // load the default or earlier saved page css components
-    editor.setStyle(window.initialStyle);
-};
-initGrapesJS();
+// load the default or earlier saved page css components
+editor.setStyle(window.initialStyle);
 </script>
 
 <?php
