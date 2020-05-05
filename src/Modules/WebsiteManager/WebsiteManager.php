@@ -170,4 +170,13 @@ class WebsiteManager implements WebsiteManagerContract
         $viewFile = 'block-thumbs';
         require __DIR__ . '/resources/layouts/master.php';
     }
+
+    /**
+     * Render the website manager welcome page for installations without a homepage.
+     */
+    public function renderWelcomePage()
+    {
+        $viewFile = 'welcome';
+        require __DIR__ . '/resources/layouts/empty.php';
+    }
 }

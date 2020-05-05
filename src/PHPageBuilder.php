@@ -260,6 +260,11 @@ class PHPageBuilder
             return true;
         }
 
+        if (phpb_current_relative_url() === '/') {
+            $this->websiteManager->renderWelcomePage();
+            return true;
+        }
+
         die('Page not found');
     }
 
