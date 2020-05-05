@@ -165,26 +165,20 @@ if (! function_exists('phpb_trans')) {
 
 if (! function_exists('phpb_full_url')) {
     /**
-     * Give the full URL of a given relative URL.
+     * Give the full URL of a given URL which is relative to the base URL.
      *
-     * @param string $relativeUrl
+     * @param string $urlRelativeToBaseUrl
      * @return string
      */
-    function phpb_full_url($relativeUrl)
+    function phpb_full_url($urlRelativeToBaseUrl)
     {
         // if the URL is already a full URL, do not alter the URL
-        if (strpos($relativeUrl, 'http://') === 0 || strpos($relativeUrl, 'https://') === 0) {
-            return $relativeUrl;
+        if (strpos($urlRelativeToBaseUrl, 'http://') === 0 || strpos($urlRelativeToBaseUrl, 'https://') === 0) {
+            return $urlRelativeToBaseUrl;
         }
 
         $baseUrl = phpb_config('general.base_url');
-        if (empty($baseUrl)) {
-            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-            $baseUrl = $protocol . "://" . $_SERVER['SERVER_NAME'];
-            $baseDirectory = dirname($_SERVER['PHP_SELF']);
-            $baseUrl = $baseUrl . $baseDirectory;
-        }
-        return rtrim($baseUrl, '/') . $relativeUrl;
+        return rtrim($baseUrl, '/') . $urlRelativeToBaseUrl;
     }
 }
 
@@ -215,17 +209,37 @@ if (! function_exists('phpb_url')) {
     }
 }
 
-if (! function_exists('phpb_current_url')) {
+if (! function_exists('phpb_current_full_url')) {
     /**
-     * Give the current URL relative to the base directory (the index.php entry point).
+     * Give the current full URL.
      *
      * @return string
      */
-    function phpb_current_url()
+    function phpb_current_full_url()
     {
-        $relativeUrlWithSubfolders = urldecode($_SERVER['REQUEST_URI']);
-        $baseDirectory = rtrim($_SERVER['PHP_SELF'], 'index.php');
-        return '/' . substr($relativeUrlWithSubfolders, strlen($baseDirectory));
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+        $currentFullUrl = $protocol . "://" . $_SERVER['SERVER_NAME'] . urldecode($_SERVER['REQUEST_URI']);
+        $currentFullUrl = rtrim($currentFullUrl, '/' . DIRECTORY_SEPARATOR);
+        return $currentFullUrl;
+    }
+}
+
+if (! function_exists('phpb_current_relative_url')) {
+    /**
+     * Give the current URL relative to the base directory (the website's index.php entry point).
+     * This omits any parent directories from the URL in which the project is installed.
+     *
+     * @return string
+     */
+    function phpb_current_relative_url()
+    {
+        $baseUrl = phpb_config('general.base_url');
+        $baseUrl = rtrim($baseUrl, '/'. DIRECTORY_SEPARATOR);
+
+        $currentFullUrl = phpb_current_full_url();
+        $relativeUrl = substr($currentFullUrl, strlen($baseUrl));
+        $relativeUrl = ltrim($relativeUrl, '/'. DIRECTORY_SEPARATOR);
+        return '/' . $relativeUrl;
     }
 }
 
@@ -239,7 +253,7 @@ if (! function_exists('phpb_in_module')) {
     function phpb_in_module($module)
     {
         $url = phpb_url($module, [], false);
-        $currentUrl = explode('?', phpb_current_url(), 2)[0];
+        $currentUrl = explode('?', phpb_current_relative_url(), 2)[0];
         return $currentUrl === $url;
     }
 }
@@ -255,7 +269,7 @@ if (! function_exists('phpb_on_url')) {
     function phpb_on_url($module, array $parameters = [])
     {
         $url = phpb_url($module, $parameters, false);
-        return phpb_current_url() === $url;
+        return phpb_current_relative_url() === $url;
     }
 }
 

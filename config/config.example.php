@@ -10,7 +10,7 @@ return [
      |
      */
     'general' => [
-        //'base_url' => 'http://localhost',
+        'base_url' => 'http://localhost',
         'language' => 'en',
         'assets_url' => '/assets',
         'uploads_url' => '/uploads'
