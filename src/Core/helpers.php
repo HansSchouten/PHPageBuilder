@@ -243,6 +243,28 @@ if (! function_exists('phpb_current_relative_url')) {
     }
 }
 
+if (! function_exists('phpb_current_language')) {
+    /**
+     * Give the current language based on the current URL.
+     *
+     * @return string
+     */
+    function phpb_current_language()
+    {
+        $urlComponents = explode('/', phpb_current_relative_url());
+        // remove empty values and reset array key numbering
+        $urlComponents = array_values(array_filter($urlComponents));
+        if (! empty($urlComponents)) {
+            foreach (phpb_active_languages() as $locale) {
+                if ($urlComponents[0] === $locale) {
+                    return $locale;
+                }
+            }
+        }
+        return phpb_config('general.language');
+    }
+}
+
 if (! function_exists('phpb_in_module')) {
     /**
      * Return whether we are currently accessing the given module.
