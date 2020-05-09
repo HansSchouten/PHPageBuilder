@@ -629,7 +629,7 @@
         let textEditableTags = [
             //'div','span', // needed for editable bootstrap alert, but cannot be used since divs (block containers) then cannot be removed
             'h1','h2','h3','h4','h5','h6','h7',
-            'p','small','b','strong','i','em','button',
+            'p','small','b','strong','i','em','label','button',
             'ul','li','th','td'
         ];
         let otherEditableTags = [
