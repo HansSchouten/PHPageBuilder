@@ -11,7 +11,7 @@
         let scriptTag = document.createElement("script");
         scriptTag.type = "text/javascript";
         scriptTag.src = window.injectionScriptUrl;
-        let fullScript = scriptTag.outerHTML + '<script>' + startFirstScript.toString() + 'startFirstScript()</script>';
+        let fullScript = scriptTag.outerHTML + '<script>' + startFirstScript.toString() + startFirstScript.name + '()</script>';
         window.initialComponents = window.initialComponents.replace('</body>', fullScript + '</body>');
 
         window.languages.forEach(language => {
