@@ -7,11 +7,12 @@
         addThemeBlocks();
 
         // add page injection script with page-loaded event to the end of the body tag of initialComponents,
-        // which contains the html structure of the used layout file
+        // which contains the html structure of the used layout file. And add script that starts all external scripts
         let scriptTag = document.createElement("script");
         scriptTag.type = "text/javascript";
         scriptTag.src = window.injectionScriptUrl;
-        window.initialComponents = window.initialComponents.replace('</body>', scriptTag.outerHTML + '</body>');
+        let fullScript = scriptTag.outerHTML + '<script>' + startFirstScript.toString() + 'startFirstScript()</script>';
+        window.initialComponents = window.initialComponents.replace('</body>', fullScript + '</body>');
 
         window.languages.forEach(language => {
             if (window.pageBlocks[language] === null) {
@@ -20,6 +21,30 @@
         });
 
         activateLanguage(window.currentLanguage);
+    }
+
+    /**
+     * GrapesJS wraps each external script with a start[number]Start() method,
+     * which needs to be called on switching language.
+     */
+    function startFirstScript() {
+        let scriptTags = document.querySelectorAll("script");
+        for (let i = 0; i < scriptTags.length; i++) {
+            let node = scriptTags[i];
+            if (node.innerHTML.startsWith('var script')) {
+                let beforeEquals = node.innerHTML.split('=')[0];
+                let scriptNumber = parseInt(beforeEquals.replace('var script', ''));
+                if (Number.isInteger(scriptNumber)) {
+                    let startScriptMethodName = 'script' + scriptNumber + 'Start';
+                    if (typeof window[startScriptMethodName] === 'function') {
+                        if (scriptNumber !== 0) {
+                            window[startScriptMethodName]();
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -69,6 +94,11 @@
         window.editor.DomComponents.componentsById = [];
         window.editor.UndoManager.clear();
 
+        // remove any script tags from previous languages
+        window.editor.Canvas.getDocument().querySelectorAll("script").forEach(function(node) {
+            node.remove();
+        });
+
         // load initial non-editable layout components
         window.editor.setComponents(window.initialComponents);
         denyAccessToLayoutElements(editor.getWrapper());
@@ -83,15 +113,14 @@
 
         // apply the stored block settings to the server-side rendered html
         applyBlockAttributesToComponents(container);
-
-        // only allow editing html blocks
-        // (after a small delay since some styles are not immediately applied and accessible via getComputedStyle)
-        setTimeout(function() {
-            restrictEditAccess(container);
-            window.runScriptsOfComponentAndChildren(container);
-            window.setWaiting(false);
-        }, 500);
     };
+
+    $(window).on('pagebuilder-page-loaded', function(event) {
+        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
+        restrictEditAccess(container);
+        window.runScriptsOfComponentAndChildren(container);
+        window.setWaiting(false);
+    });
 
     /**
      * Replace phpb-block elements with the server-side rendered version of each block.
