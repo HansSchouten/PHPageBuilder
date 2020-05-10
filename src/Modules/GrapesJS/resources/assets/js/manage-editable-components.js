@@ -6,6 +6,13 @@
     function afterGrapesJSLoaded() {
         addThemeBlocks();
 
+        // add page injection script with page-loaded event to the end of the body tag of initialComponents,
+        // which contains the html structure of the used layout file
+        let scriptTag = document.createElement("script");
+        scriptTag.type = "text/javascript";
+        scriptTag.src = window.injectionScriptUrl;
+        window.initialComponents = window.initialComponents.replace('</body>', scriptTag.outerHTML + '</body>');
+
         window.languages.forEach(language => {
             if (window.pageBlocks[language] === null) {
                 window.pageBlocks[language] = {};
@@ -76,12 +83,6 @@
 
         // apply the stored block settings to the server-side rendered html
         applyBlockAttributesToComponents(container);
-
-        // inject a script for communicating between the page to edit and the page builder
-        let scriptTag = document.createElement("script");
-        scriptTag.type = "text/javascript";
-        scriptTag.src = window.injectionScriptUrl;
-        window.editor.Canvas.getDocument().body.appendChild(scriptTag);
 
         // only allow editing html blocks
         // (after a small delay since some styles are not immediately applied and accessible via getComputedStyle)
