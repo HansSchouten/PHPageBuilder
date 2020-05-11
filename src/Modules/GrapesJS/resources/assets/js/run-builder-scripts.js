@@ -56,6 +56,7 @@
             let styleIdentifier = component.attributes["style-identifier"];
             let $scriptTag = $("<container>").append(window.customBuilderScripts[blockId]);
             // prepend block and blockSelector variables allowing the script to refer to this exact block instance
+            $scriptTag.find('script').prepend('let inPageBuilder = true;');
             $scriptTag.find('script').prepend('let blockSelector = ".' + styleIdentifier + '";');
             $scriptTag.find('script').prepend('let block = document.getElementsByClassName("' + styleIdentifier + '")[0];');
             // wrap the script contents in a self-invoking function (to add a scope avoiding variable name collisions)

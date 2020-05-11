@@ -165,6 +165,7 @@ class BlockRenderer
         $scriptId = 'script' . rand(0, 10000000000);
         $html = '<script type="text/javascript" class="' . $scriptId . '">';
         $html .= 'document.getElementsByClassName("' . $scriptId . '")[0].addEventListener("run-script", function() {';
+        $html .= 'let inPageBuilder = false;';
         $html .= 'let block = document.getElementsByClassName("' . $scriptId . '")[0].previousSibling;';
         $html .= 'let blockSelector = "." + block.className;';
         $html .= $script;
