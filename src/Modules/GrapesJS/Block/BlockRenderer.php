@@ -74,9 +74,15 @@ class BlockRenderer
             $html = '<phpb-block block-slug="' . e($themeBlock->getSlug()) . '" block-id="' . e($id) . '" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html . $this->renderBuilderScript($themeBlock)
                 . '</phpb-block>';
-        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
-            // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
-            $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">' . $html . '</div>';
+        } else {
+            if (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
+                // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
+                $html = '<div class="' . e($blockData['settings']['attributes']['style-identifier']) . '">'
+                    . $html . $this->renderScript($themeBlock)
+                    . '</div>';
+            } else {
+                $html .= $this->renderScript($themeBlock);
+            }
         }
         return $html;
     }
@@ -89,20 +95,66 @@ class BlockRenderer
      */
     public function renderBuilderScript(ThemeBlock $themeBlock)
     {
-        $html = '';
         $builderScriptFilePath = $themeBlock->getBuilderScriptFile();
         if ($builderScriptFilePath) {
             if (pathinfo($builderScriptFilePath)['extension'] === 'php') {
                 ob_start();
                 require $builderScriptFilePath;
-                $html = ob_get_contents();
+                $scriptHtmlString = ob_get_contents();
                 ob_end_clean();
-            } elseif (pathinfo($builderScriptFilePath)['extension'] === 'js') {
-                $html = '<script type="text/javascript">' . file_get_contents($builderScriptFilePath) . '</script>';
             } else {
-                $html = file_get_contents($builderScriptFilePath);
+                $scriptHtmlString = file_get_contents($builderScriptFilePath);
             }
+            return $this->wrapScriptWithScopeAndContextData($scriptHtmlString);
         }
+        // if no builder script was specified, fallback to using the general script (if provided)
+        return $this->renderScript($themeBlock);
+    }
+
+    /**
+     * Render the script of the given block for rendering the block on a publicly accessible web page.
+     *
+     * @param ThemeBlock $themeBlock
+     * @return false|string
+     */
+    public function renderScript(ThemeBlock $themeBlock)
+    {
+        $scriptFilePath = $themeBlock->getScriptFile();
+        if ($scriptFilePath) {
+            if (pathinfo($scriptFilePath)['extension'] === 'php') {
+                ob_start();
+                require $scriptFilePath;
+                $scriptHtmlString = ob_get_contents();
+                ob_end_clean();
+            } else {
+                $scriptHtmlString = file_get_contents($scriptFilePath);
+            }
+            return $this->wrapScriptWithScopeAndContextData($scriptHtmlString);
+        }
+        return '';
+    }
+
+    /**
+     * Wrap the given javascript or (HTML string with script tag) with a script tag that has a unique id,
+     * scope around the script and context data giving the script access to the exact block instance in the DOM.
+     *
+     * @param $scriptHtmlString
+     * @return string
+     */
+    protected function wrapScriptWithScopeAndContextData($scriptHtmlString)
+    {
+        // strip any existing <script> tags, present if the script came from a .html or .php file
+        $script = str_replace('<script>', '', str_replace('</script>', '', $scriptHtmlString));
+
+        $scriptId = 'script' . rand(0, 10000000000);
+        $html = '<script type="text/javascript" id="' . $scriptId . '">';
+        $html .= 'document.getElementById("' . $scriptId . '").addEventListener("run-script", function() {';
+        $html .= 'let scriptId = "' . $scriptId . '";';
+        $html .= 'let block = document.getElementById("' . $scriptId . '").previousSibling;';
+        $html .= 'let blockSelector = "." + block.className;';
+        $html .= $script;
+        $html .= '});';
+        $html .= '</script>';
         return $html;
     }
 

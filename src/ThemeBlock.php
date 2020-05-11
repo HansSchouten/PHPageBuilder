@@ -158,6 +158,24 @@ class ThemeBlock
         } elseif (file_exists($this->getFolder() . '/builder-script.js')) {
             return $this->getFolder() . '/builder-script.js';
         }
+        return $this->getScriptFile();
+    }
+
+    /**
+     * Return the script file of this theme block.
+     * This script can be used to assist correct rendering of the block when used on a publicly accessed web page.
+     *
+     * @return string|null
+     */
+    public function getScriptFile()
+    {
+        if (file_exists($this->getFolder() . '/script.php')) {
+            return $this->getFolder() . '/script.php';
+        } elseif (file_exists($this->getFolder() . '/script.html')) {
+            return $this->getFolder() . '/script.html';
+        } elseif (file_exists($this->getFolder() . '/script.js')) {
+            return $this->getFolder() . '/script.js';
+        }
         return null;
     }
 
