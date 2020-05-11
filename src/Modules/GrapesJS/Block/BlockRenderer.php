@@ -91,7 +91,7 @@ class BlockRenderer
      * Render the pagebuilder script of the given block.
      *
      * @param ThemeBlock $themeBlock
-     * @return false|string
+     * @return string
      */
     public function renderBuilderScript(ThemeBlock $themeBlock)
     {
@@ -105,19 +105,20 @@ class BlockRenderer
             } else {
                 $scriptHtmlString = file_get_contents($builderScriptFilePath);
             }
-            return $this->wrapScriptWithScopeAndContextData($scriptHtmlString);
+            return '<script>' . $this->removeWrappedScriptTags($scriptHtmlString) . '</script>';
         }
         // if no builder script was specified, fallback to using the general script (if provided)
-        return $this->renderScript($themeBlock);
+        return $this->renderScript($themeBlock, true);
     }
 
     /**
      * Render the script of the given block for rendering the block on a publicly accessible web page.
      *
      * @param ThemeBlock $themeBlock
-     * @return false|string
+     * @param bool $forPageBuilder
+     * @return string
      */
-    public function renderScript(ThemeBlock $themeBlock)
+    public function renderScript(ThemeBlock $themeBlock, bool $forPageBuilder = false)
     {
         $scriptFilePath = $themeBlock->getScriptFile();
         if ($scriptFilePath) {
@@ -129,28 +130,42 @@ class BlockRenderer
             } else {
                 $scriptHtmlString = file_get_contents($scriptFilePath);
             }
-            return $this->wrapScriptWithScopeAndContextData($scriptHtmlString);
+
+            $script = $this->removeWrappedScriptTags($scriptHtmlString);
+            if ($forPageBuilder) {
+                return '<script>' . $script . '</script>';
+            } else {
+                return $this->wrapScriptWithScopeAndContextData($script);
+            }
         }
         return '';
     }
 
     /**
-     * Wrap the given javascript or (HTML string with script tag) with a script tag that has a unique id,
-     * scope around the script and context data giving the script access to the exact block instance in the DOM.
+     * Remove script tags wrapped around to given JavaScript string, if they are present.
+     * This is necessary if the script is coming from a .html or .php file.
      *
      * @param $scriptHtmlString
      * @return string
      */
-    protected function wrapScriptWithScopeAndContextData($scriptHtmlString)
+    protected function removeWrappedScriptTags($scriptHtmlString)
     {
-        // strip any existing <script> tags, present if the script came from a .html or .php file
-        $script = str_replace('<script>', '', str_replace('</script>', '', $scriptHtmlString));
+        return str_replace('<script>', '', str_replace('</script>', '', $scriptHtmlString));
+    }
 
+    /**
+     * Wrap the given javascript with a script tag that has a unique id,
+     * add a scope around the script and add context data giving the script access to the exact block instance in the DOM.
+     *
+     * @param $script
+     * @return string
+     */
+    protected function wrapScriptWithScopeAndContextData($script)
+    {
         $scriptId = 'script' . rand(0, 10000000000);
-        $html = '<script type="text/javascript" id="' . $scriptId . '">';
-        $html .= 'document.getElementById("' . $scriptId . '").addEventListener("run-script", function() {';
-        $html .= 'let scriptId = "' . $scriptId . '";';
-        $html .= 'let block = document.getElementById("' . $scriptId . '").previousSibling;';
+        $html = '<script type="text/javascript" class="' . $scriptId . '">';
+        $html .= 'document.getElementsByClassName("' . $scriptId . '")[0].addEventListener("run-script", function() {';
+        $html .= 'let block = document.getElementsByClassName("' . $scriptId . '")[0].previousSibling;';
         $html .= 'let blockSelector = "." + block.className;';
         $html .= $script;
         $html .= '});';
