@@ -638,7 +638,13 @@
             // to ensure the text editor does not deal with elements with attributes added by GrapesJS
             if (component.attributes['made-text-editable'] === 'true') {
                 component.attributes.attributes['data-raw-content'] = 'true';
-                allowEditableComponents = false;
+
+                // refresh the current component to switch its component type to raw-content.
+                // This disables GrapesJS parsing of any child elements, which avoids CKEditor having to deal with GrapesJS html attributes
+                let newComponent = component.replaceWith(component.toHTML());
+                disableAllEditFunctionality(newComponent);
+                newComponent.set({editable: true});
+                return;
             }
         }
 
