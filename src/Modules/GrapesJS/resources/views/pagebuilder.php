@@ -26,10 +26,9 @@ CKEDITOR.dtd.$editable.button = 1;
 CKEDITOR.dtd.$editable.strong = 1;
 CKEDITOR.dtd.$editable.small = 1;
 CKEDITOR.dtd.$editable.span = 1;
+CKEDITOR.dtd.$editable.ol = 1;
 CKEDITOR.dtd.$editable.ul = 1;
-CKEDITOR.dtd.$editable.li = 1;
-CKEDITOR.dtd.$editable.td = 1;
-CKEDITOR.dtd.$editable.th = 1;
+CKEDITOR.dtd.$editable.table = 1;
 
 window.currentLanguage = <?= json_encode(phpb_config('general.language')) ?>;
 window.languages = <?= json_encode(phpb_active_languages()) ?>;

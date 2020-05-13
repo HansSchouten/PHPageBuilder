@@ -62,7 +62,7 @@ editor.DomComponents.addType('raw-content', {
     model: textType.model.extend({
         },{
             isComponent: function(el) {
-                if (el.hasAttribute && el.hasAttribute('data-raw-content')) {
+                if (el.hasAttribute && (el.hasAttribute('data-raw-content') || el.hasAttribute('phpb-editable'))) {
                     return {
                         type: 'raw-content',
                         content: el.innerHTML,
