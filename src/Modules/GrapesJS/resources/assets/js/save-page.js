@@ -332,7 +332,7 @@ $(document).ready(function() {
                     data.blocks[instanceId] = data.current_block;
                     data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
                 }
-            } else if (component.attributes['is-html'] === 'true' && inDynamicBlock === false) {
+            } else if (component.attributes['is-html'] === 'true' && (inDynamicBlock === false || inHtmlBlockInDynamicBlock)) {
                 // html blocks outside the context of dynamic blocks should be stored as a block itself (to allow for translations instead of just hard-coding the html)
 
                 // if the block has received styling, store its style-identifier
