@@ -103,7 +103,7 @@ $(document).ready(function() {
 
             // get the page content container (so skip all layout blocks) and prepare data for being stored
             let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-            let data = getDataInStorageFormat(container);
+            let data = getContainerContentInStorageFormat(container);
 
             window.pageData = {
                 html: data.html,
@@ -179,14 +179,14 @@ $(document).ready(function() {
      * @param component
      */
     window.getComponentDataInStorageFormat = function(component) {
-        // clone component's parent to enable us removing all component's siblings
+        // clone component's parent, enabling us to temporarily remove all component's siblings without updating the pagebuilder
         let container = window.cloneComponent(component.parent());
 
         // remove all component's siblings since we only want to return the given component in storage format
         container.get('components').reset();
         container.append(component);
 
-        return getDataInStorageFormat(container);
+        return getContainerContentInStorageFormat(container);
     };
 
     /**
@@ -194,13 +194,13 @@ $(document).ready(function() {
      *
      * @param container
      */
-    function getDataInStorageFormat(container) {
+    function getContainerContentInStorageFormat(container) {
         // remove all existing references while cloning GrapesJS components,
         // this prevents GrapesJS from changing our IDs due to ID collisions
         let componentReferences = window.editor.DomComponents.componentsById;
         window.editor.DomComponents.componentsById = [];
 
-        // clone the container since we will be replacing components with placeholders without updating the page builder
+        // we need to clone the container, since we will be replacing components with placeholders and we don't want to update the page builder
         container = window.cloneComponent(container);
         // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
         editorCss = window.editor.getCss();
@@ -289,6 +289,11 @@ $(document).ready(function() {
             for (let key in childData.blocks) { data.blocks[key] = childData.blocks[key]; }
         });
 
+        // if the method is called with a cloned container (which does not have a parent), this top-level component does not need any changes
+        if (! component.parent()) {
+            return data;
+        }
+
         // if this component is a pagebuilder block, do the actual replacement of this component with a placeholder component
         if (component.attributes['block-id'] !== undefined) {
             if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
@@ -346,6 +351,7 @@ $(document).ready(function() {
                 if (! component.attributes['block-id'].startsWith('ID')) {
                     instanceId = generateId();
                 }
+
                 component.replaceWith({
                     tagName: 'phpb-block',
                     attributes: {
