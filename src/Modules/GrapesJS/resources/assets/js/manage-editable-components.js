@@ -586,7 +586,6 @@
      */
     function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditableComponents = true) {
         disableAllEditFunctionality(component);
-        console.log(component.attributes);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
             // the content container of the current page can receive other components
@@ -631,6 +630,12 @@
             component.set(permissions);
         }
 
+        // for raw content components, set editable to true and ignore processing editability for any child component
+        if (component.attributes.attributes['data-raw-content'] !== undefined) {
+            component.set({editable: true});
+            return;
+        }
+
         // set editable access based on tags, styling or html class attribute
         if (allowEditableComponents) {
             allowEditBasedOnComponentAttributes(component);
@@ -640,11 +645,15 @@
             if (component.attributes['made-text-editable'] === 'true') {
                 component.attributes.attributes['data-raw-content'] = 'true';
 
-                // refresh the current component to switch its component type to raw-content.
-                // This disables GrapesJS parsing of any child elements, which avoids CKEditor having to deal with GrapesJS html attributes
+                // refresh the current component in order to switch its component type to raw-content.
+                // this disables GrapesJS parsing of any child elements, avoiding that any GrapesJS specific html attributes are added
                 let newComponent = component.replaceWith(component.toHTML());
-                disableAllEditFunctionality(newComponent);
-                newComponent.set({editable: true});
+                // copy important attributes from the original component to the refreshed component
+                ['block-id', 'block-slug', 'is-html', 'style-identifier'].forEach(attribute => {
+                    newComponent.attributes[attribute] = component.attributes[attribute];
+                });
+                // apply block/component edit restrictions to the new raw-content type version of the component
+                restrictEditAccess(newComponent);
                 return;
             }
         }
