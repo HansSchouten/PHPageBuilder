@@ -367,9 +367,15 @@ class PHPageBuilder
 
         // only allow specific extensions
         $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
-        if (! in_array($ext, ['js', 'css', 'png'])) die('Asset not found');
+        if (! in_array($ext, ['js', 'css', 'jpg', 'png'])) die('Asset not found');
 
-        header('Content-Type: text/' . $ext);
+        $contentTypes = [
+            'js' => 'application/javascript; charset=utf-8',
+            'css' => 'text/css; charset=utf-8',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg'
+        ];
+        header('Content-Type: ' . $contentTypes[$ext]);
         header('Content-Disposition: inline; filename="' . basename($requestedFile) . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
