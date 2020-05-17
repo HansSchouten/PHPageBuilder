@@ -269,7 +269,6 @@
 
         let parent = droppedComponent.parent();
         applyBlockAttributesToComponents(droppedComponent);
-        restrictEditAccess(parent);
 
         // at this point droppedComponent is replaced in the DOM by the actual component (without the phpb-block element),
         // so we need to find the dropped component again in the context of its parent
@@ -279,6 +278,7 @@
                 droppedComponent = child;
             }
         });
+        restrictEditAccess(droppedComponent);
 
         window.runScriptsOfComponentAndChildren(droppedComponent);
     });
@@ -586,6 +586,7 @@
      */
     function restrictEditAccess(component, directlyInsideDynamicBlock = false, allowEditableComponents = true) {
         disableAllEditFunctionality(component);
+        console.log(component.attributes);
 
         if (component.attributes.attributes['phpb-content-container'] !== undefined) {
             // the content container of the current page can receive other components
