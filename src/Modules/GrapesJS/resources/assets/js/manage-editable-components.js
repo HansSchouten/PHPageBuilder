@@ -706,6 +706,7 @@
             settings.hoverable = true;
             settings.selectable = true;
             settings.stylable = true;
+            settings.removable = true;
         }
 
         if (! $.isEmptyObject(settings)) {
