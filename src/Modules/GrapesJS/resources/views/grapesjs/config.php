@@ -86,12 +86,11 @@ return [
             'position' => 'left',
             'options' => [
                 'startupFocus' => true,
-                'extraAllowedContent' => '*(*);*[*]', // Allows any class and any inline style
-                'allowedContent' => true, // Disable auto-formatting, class removing, etc.
+                'extraAllowedContent' => '*(*);*[*]', // allows classes and inline styles
                 'enterMode' => 'CKEDITOR.ENTER_BR',
-                'extraPlugins' => 'sharedspace, justify, colorbutton, panelbutton, font',
+                'extraPlugins' => 'sharedspace, justify, colorbutton, panelbutton',
                 'toolbar' => [
-                    ['name' => 'styles', 'items' => ['Font', 'FontSize']],
+                    ['name' => 'styles', 'items' => ['FontSize']],
                     ['Bold', 'Italic', 'Underline', 'Strike'],
                     ['name' => 'links', 'items' => ['Link', 'Unlink']],
                     ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
