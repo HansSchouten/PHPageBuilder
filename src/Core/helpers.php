@@ -218,7 +218,8 @@ if (! function_exists('phpb_current_full_url')) {
     function phpb_current_full_url()
     {
         $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        $currentFullUrl = $protocol . "://" . $_SERVER['SERVER_NAME'] . urldecode($_SERVER['REQUEST_URI']);
+        $port =  empty($_SERVER['SERVER_PORT']) ? '' : ':' . $_SERVER['SERVER_PORT'];
+        $currentFullUrl = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . urldecode($_SERVER['REQUEST_URI']);
         $currentFullUrl = rtrim($currentFullUrl, '/' . DIRECTORY_SEPARATOR);
         return $currentFullUrl;
     }
