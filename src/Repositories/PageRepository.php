@@ -91,8 +91,8 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
     {
         $activeLanguages = phpb_active_languages();
         foreach (['title', 'route'] as $field) {
-            foreach ($activeLanguages as $locale) {
-                if (! isset($data[$field][$locale])) {
+            foreach ($activeLanguages as $languageCode => $languageTranslation) {
+                if (! isset($data[$field][$languageCode])) {
                     return false;
                 }
             }
@@ -100,12 +100,12 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
 
         $pageTranslationRepository = new PageTranslationRepository;
         $pageTranslationRepository->destroyWhere('page_id', $page->getId());
-        foreach ($activeLanguages as $locale) {
+        foreach ($activeLanguages as $languageCode => $languageTranslation) {
             $pageTranslationRepository->create([
                 'page_id' => $page->getId(),
-                'locale' => $locale,
-                'title' => $data['title'][$locale],
-                'route' => $data['route'][$locale],
+                'locale' => $languageCode,
+                'title' => $data['title'][$languageCode],
+                'route' => $data['route'][$languageCode],
             ]);
         }
 

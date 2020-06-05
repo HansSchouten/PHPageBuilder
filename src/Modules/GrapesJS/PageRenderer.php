@@ -208,19 +208,19 @@ class PageRenderer
 
         // create the structure of page blocks data for each language
         $pageBlocks = [];
-        foreach (phpb_active_languages() as $language) {
-            $this->setLanguage($language);
+        foreach (phpb_active_languages() as $languageCode => $languageTranslation) {
+            $this->setLanguage($languageCode);
 
             // for the current language build up a structure of rendered versions and use the stored data for the other languages
-            if ($language === $initialLanguage) {
+            if ($languageCode === $initialLanguage) {
                 $this->renderBody();
-                $pageBlocks[$language] = $this->shortcodeParser->getRenderedBlocks()[$language] ?? [];
+                $pageBlocks[$languageCode] = $this->shortcodeParser->getRenderedBlocks()[$languageCode] ?? [];
             } else {
-                $pageBlocks[$language] = $this->pageBlocksData;
+                $pageBlocks[$languageCode] = $this->pageBlocksData;
             }
 
-            if (empty($pageBlocks[$language])) {
-                $pageBlocks[$language] = null;
+            if (empty($pageBlocks[$languageCode])) {
+                $pageBlocks[$languageCode] = null;
             }
         }
 

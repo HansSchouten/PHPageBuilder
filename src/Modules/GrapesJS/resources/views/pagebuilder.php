@@ -106,9 +106,9 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     <div id="language-selector">
         <select class="selectpicker" data-width="fit">
             <?php
-            foreach (phpb_active_languages() as $locale):
+            foreach (phpb_active_languages() as $languageCode => $languageTranslation):
             ?>
-            <option value="<?= e($locale) ?>" <?= phpb_config('general.language') === $locale ? 'selected' : '' ?>><?= phpb_trans('languages')[$locale] ?></option>
+            <option value="<?= e($languageCode) ?>" <?= phpb_config('general.language') === $languageCode ? 'selected' : '' ?>><?= e($languageTranslation) ?></option>
             <?php
             endforeach;
             ?>

@@ -98,13 +98,13 @@ class PageBuilder implements PageBuilderContract
                 }
                 break;
             case 'renderBlock':
-                if (isset($_POST['language']) && isset($_POST['data']) && in_array($_POST['language'], phpb_active_languages())) {
+                if (isset($_POST['language']) && isset($_POST['data']) && isset(phpb_active_languages()[$_POST['language']])) {
                     $this->renderPageBuilderBlock($page, $_POST['language'], json_decode($_POST['data'], true));
                     exit();
                 }
                 break;
             case 'renderLanguageVariant':
-                if (isset($_POST['language']) && isset($_POST['data']) && in_array($_POST['language'], phpb_active_languages())) {
+                if (isset($_POST['language']) && isset($_POST['data']) && isset(phpb_active_languages()[$_POST['language']])) {
                     $this->renderLanguageVariant($page, $_POST['language'], json_decode($_POST['data'], true));
                     exit();
                 }

@@ -52,18 +52,18 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                     </div>
 
                     <?php
-                    foreach (phpb_active_languages() as $locale):
+                    foreach (phpb_active_languages() as $languageCode => $languageTranslation):
                     ?>
-                    <h5 class="pt-2"><?= phpb_trans('languages.' . $locale) ?></h5>
+                    <h5 class="pt-2"><?= phpb_trans('languages.' . $languageCode) ?></h5>
                     <div class="pt-2 pl-3 pr-3">
                         <div class="form-group required">
                             <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                            <input type="text" class="form-control" id="page-title" name="title[<?= e($locale) ?>]" value="<?= e($pageTranslations[$locale]['title'] ?? '') ?>" required>
+                            <input type="text" class="form-control" id="page-title" name="title[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['title'] ?? '') ?>" required>
                         </div>
 
                         <div class="form-group required">
                             <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                            <input type="text" class="form-control" id="route" name="route[<?= e($locale) ?>]" value="<?= e($pageTranslations[$locale]['route'] ?? '') ?>" required>
+                            <input type="text" class="form-control" id="route" name="route[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['route'] ?? '') ?>" required>
                         </div>
                     </div>
                     <?php

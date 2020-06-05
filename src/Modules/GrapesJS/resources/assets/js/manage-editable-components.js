@@ -14,9 +14,9 @@
         let fullScript = scriptTag.outerHTML + '<script>' + startFirstScript.toString() + startFirstScript.name + '()</script>';
         window.initialComponents = window.initialComponents.replace('</body>', fullScript + '</body>');
 
-        window.languages.forEach(language => {
-            if (window.pageBlocks[language] === null) {
-                window.pageBlocks[language] = {};
+        $.each(window.languages, (languageCode, languageTranslation) => {
+            if (window.pageBlocks[languageCode] === null) {
+                window.pageBlocks[languageCode] = {};
             }
         });
 

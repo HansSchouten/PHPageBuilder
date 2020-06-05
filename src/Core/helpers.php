@@ -259,9 +259,9 @@ if (! function_exists('phpb_current_language')) {
         // remove empty values and reset array key numbering
         $urlComponents = array_values(array_filter($urlComponents));
         if (! empty($urlComponents)) {
-            foreach (phpb_active_languages() as $locale) {
-                if ($urlComponents[0] === $locale) {
-                    return $locale;
+            foreach (phpb_active_languages() as $languageCode => $languageTranslation) {
+                if ($urlComponents[0] === $languageCode) {
+                    return $languageCode;
                 }
             }
         }
@@ -406,18 +406,27 @@ if (! function_exists('phpb_active_languages')) {
      */
     function phpb_active_languages()
     {
-        $configLanguage = phpb_config('general.language');
-        $languages = phpb_instance('setting')::get('languages') ?? [$configLanguage];
+        $configLanguageCode = phpb_config('general.language');
+        $languages = phpb_instance('setting')::get('languages') ?? [$configLanguageCode];
 
-        if (! in_array($configLanguage, $languages)) {
+        // if the array has numeric indices (which is the default), create a languageCode => languageTranslation structure
+        $newLanguagesStructure = [];
+        if (array_values($languages) === $languages) {
+            foreach ($languages as $languageCode) {
+                $newLanguagesStructure[$languageCode] = phpb_trans('languages')[$languageCode];
+            }
+        }
+        $languages = $newLanguagesStructure;
+
+        if (! isset($languages[$configLanguageCode])) {
             return $languages;
         }
 
         // sort languages, starting by the configured language
-        $languagesSorted = [$configLanguage];
-        foreach ($languages as $language) {
-            if ($language !== $configLanguage) {
-                $languagesSorted[] = $language;
+        $languagesSorted[$configLanguageCode] = $languages[$configLanguageCode];
+        foreach ($languages as $languageCode => $languageTranslation) {
+            if ($languageCode !== $configLanguageCode) {
+                $languagesSorted[$languageCode] = $languageTranslation;
             }
         }
         return $languagesSorted;

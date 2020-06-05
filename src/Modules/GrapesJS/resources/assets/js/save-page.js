@@ -129,9 +129,9 @@ $(document).ready(function() {
         saveCurrentTranslationLocally(function() {
 
             // update all language variants with the latest data of the current language we just saved locally
-            window.languages.forEach(language => {
-                if (language !== window.currentLanguage) {
-                    applyChangesFromCurrentLanguageToNewLanguage(language);
+            $.each(window.languages, (languageCode, languageTranslation) => {
+                if (languageCode !== window.currentLanguage) {
+                    applyChangesFromCurrentLanguageToNewLanguage(languageCode);
                 }
             });
 
