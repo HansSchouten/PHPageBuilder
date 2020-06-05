@@ -410,13 +410,13 @@ if (! function_exists('phpb_active_languages')) {
         $languages = phpb_instance('setting')::get('languages') ?? [$configLanguageCode];
 
         // if the array has numeric indices (which is the default), create a languageCode => languageTranslation structure
-        $newLanguagesStructure = [];
         if (array_values($languages) === $languages) {
+            $newLanguagesStructure = [];
             foreach ($languages as $languageCode) {
                 $newLanguagesStructure[$languageCode] = phpb_trans('languages')[$languageCode];
             }
+            $languages = $newLanguagesStructure;
         }
-        $languages = $newLanguagesStructure;
 
         if (! isset($languages[$configLanguageCode])) {
             return $languages;
