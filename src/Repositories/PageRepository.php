@@ -14,7 +14,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      *
      * @var string
      */
-    protected $table = 'pages';
+    protected $table;
 
     /**
      * The class that represents each page.
@@ -28,6 +28,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      */
     public function __construct()
     {
+        $this->table = empty(phpb_config('page.table')) ? 'pages' : phpb_config('page.table');
         parent::__construct();
         $this->class = phpb_instance('page');
     }
