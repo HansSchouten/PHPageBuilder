@@ -199,7 +199,7 @@ class PageBuilder implements PageBuilderContract
 
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $pageRenderer = new PageRenderer($this->theme, $page, true);
+        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
 
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
@@ -235,7 +235,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPage(PageContract $page, $language = null)
     {
-        $renderer = new PageRenderer($this->theme, $page);
+        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
         if (! is_null($language)) {
             $renderer->setLanguage($language);
         }
@@ -257,7 +257,7 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $renderer = new PageRenderer($this->theme, $page, true);
+        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
         $renderer->setLanguage($language);
         echo $renderer->parseShortcodes($blockData['html'], $blockData['blocks']);
     }
@@ -277,7 +277,7 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $renderer = new PageRenderer($this->theme, $page, true);
+        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
         $renderer->setLanguage($language);
         echo json_encode([
             'dynamicBlocks' => $renderer->getPageBlocksData()[$language]

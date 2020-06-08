@@ -140,7 +140,7 @@ class ThumbGenerator
             ]
         ]);
 
-        $renderer = new PageRenderer($this->theme, $page);
+        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
         echo $renderer->render();
 
         $blockSlug = $block->getSlug();

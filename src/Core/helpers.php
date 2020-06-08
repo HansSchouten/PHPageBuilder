@@ -435,7 +435,7 @@ if (! function_exists('phpb_active_languages')) {
 
 if (! function_exists('phpb_instance')) {
     /**
-     * Return an instance of the given class as defined in config.
+     * Return an instance of the given class as defined in config, or with the given namespace (which is potentially overridden and mapped to an alternative namespace).
      *
      * @param string $name          the name of the config main section in which the class path is defined
      * @param array $params
@@ -446,6 +446,13 @@ if (! function_exists('phpb_instance')) {
         if (phpb_config($name . '.class')) {
             $className = phpb_config($name . '.class');
             return new $className(...$params);
+        }
+        if (class_exists($name)) {
+            if (phpb_config('class_replacements.' . $name)) {
+                $replacement = phpb_config('class_replacements.' . $name);
+                return new $replacement(...$params);
+            }
+            return new $name(...$params);
         }
         return null;
     }

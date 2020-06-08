@@ -142,4 +142,17 @@ return [
     'router' => [
         'class' => PHPageBuilder\Modules\Router\DatabasePageRouter::class
     ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Class replacements
+     |--------------------------------------------------------------------------
+     |
+     | Allows mapping a class namespace to an alternative namespace,
+     | useful for replacing implementations of specific pagebuilder classes.
+     | Example: 'PHPageBuilder\UploadedFile' => 'Alternative\UploadedFile'
+     |
+     */
+    'class_replacements' => [
+    ],
 ];
