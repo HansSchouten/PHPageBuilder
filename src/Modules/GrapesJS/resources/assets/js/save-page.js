@@ -164,9 +164,11 @@ $(document).ready(function() {
         let updatedStyleComponents = [];
 
         styleComponents.forEach(styleComponent => {
-            let selector = styleComponent.attributes.selectors.models[0].id;
-            if (css.includes(selector)) {
-                updatedStyleComponents.push(styleComponent);
+            if (styleComponent.attributes.selectors.models.length) {
+                let selector = styleComponent.attributes.selectors.models[0].id;
+                if (css.includes(selector)) {
+                    updatedStyleComponents.push(styleComponent);
+                }
             }
         });
 

@@ -150,7 +150,8 @@ return [
      |
      | Allows mapping a class namespace to an alternative namespace,
      | useful for replacing implementations of specific pagebuilder classes.
-     | Example: 'PHPageBuilder\UploadedFile' => 'Alternative\UploadedFile'
+     | Example: PHPageBuilder\UploadedFile::class => Alternative\UploadedFile::class
+     | Important: when overriding a class always extend the original class.
      |
      */
     'class_replacements' => [
