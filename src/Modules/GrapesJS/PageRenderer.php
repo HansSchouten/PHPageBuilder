@@ -77,12 +77,13 @@ class PageRenderer
     /**
      * Return the absolute path to the layout view of this page.
      *
-     * @return string
+     * @return string|null
      */
     public function getPageLayoutPath()
     {
         $layout = basename($this->page->getLayout());
-        return $this->theme->getFolder() . '/layouts/' . $layout . '/view.php';
+        $layoutPath = $this->theme->getFolder() . '/layouts/' . $layout . '/view.php';
+        return file_exists($layoutPath) ? $layoutPath : null;
     }
 
     /**
@@ -112,10 +113,15 @@ class PageRenderer
             $body = $this->renderBody();
         }
 
-        ob_start();
-        require $this->getPageLayoutPath();
-        $pageHtml = ob_get_contents();
-        ob_end_clean();
+        $layoutPath = $this->getPageLayoutPath();
+        if ($layoutPath) {
+            ob_start();
+            require $layoutPath;
+            $pageHtml = ob_get_contents();
+            ob_end_clean();
+        } else {
+            $pageHtml = $body;
+        }
 
         // parse any shortcodes present in the page layout
         $pageHtml = $this->parseShortcodes($pageHtml);
