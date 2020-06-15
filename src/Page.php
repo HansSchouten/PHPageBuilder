@@ -97,7 +97,7 @@ class Page implements PageContract
     public function getTranslations()
     {
         if (is_null($this->translations)) {
-            $records = (new PageTranslationRepository)->findWhere('page_id', $this->getId());
+            $records = (new PageTranslationRepository)->findWhere(phpb_config('page.translation.foreign_key'), $this->getId());
             $translations = [];
             foreach ($records as $record) {
                 $translations[$record->locale] = (array) $record;

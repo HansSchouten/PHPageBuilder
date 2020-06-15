@@ -100,10 +100,10 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
         }
 
         $pageTranslationRepository = new PageTranslationRepository;
-        $pageTranslationRepository->destroyWhere('page_id', $page->getId());
+        $pageTranslationRepository->destroyWhere(phpb_config('page.translation.foreign_key'), $page->getId());
         foreach ($activeLanguages as $languageCode => $languageTranslation) {
             $pageTranslationRepository->create([
-                'page_id' => $page->getId(),
+                phpb_config('page.translation.foreign_key') => $page->getId(),
                 'locale' => $languageCode,
                 'title' => $data['title'][$languageCode],
                 'route' => $data['route'][$languageCode],

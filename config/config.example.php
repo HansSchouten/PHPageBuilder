@@ -112,6 +112,7 @@ return [
         'translation' => [
             'class' => PHPageBuilder\PageTranslation::class,
             'table' => 'page_translations',
+            'foreign_key' => 'page_id',
         ]
     ],
 
