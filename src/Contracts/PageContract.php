@@ -13,6 +13,13 @@ interface PageContract
     public function setData($data, $fullOverwrite = true);
 
     /**
+     * Set the translation data of this page.
+     *
+     * @param array|null $translationData
+     */
+    public function setTranslations($translationData);
+
+    /**
      * Return all data stored for this page (page builder data and other data set via setData).
      *
      * @return array|null

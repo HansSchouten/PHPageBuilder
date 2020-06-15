@@ -40,6 +40,16 @@ class Page implements PageContract
     }
 
     /**
+     * Set the translation data of this page.
+     *
+     * @param $translationData
+     */
+    public function setTranslations($translationData)
+    {
+        $this->translations = $translationData;
+    }
+
+    /**
      * Return all data stored for this page (page builder data and other data set via setData).
      *
      * @return array|null
