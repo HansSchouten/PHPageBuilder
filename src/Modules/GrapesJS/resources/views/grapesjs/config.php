@@ -22,7 +22,16 @@ return [
             'id' => 'position',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.position'),
             'open' => true,
-            'buildProps' => ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin']
+            'buildProps' => ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin', 'text-align'],
+            'properties' => [[
+                'property' => 'text-align',
+                'list' => [
+                    ['value' => 'left', 'className' => 'fa fa-align-left'],
+                    ['value' => 'center', 'className' => 'fa fa-align-center'],
+                    ['value' => 'right', 'className' => 'fa fa-align-right'],
+                    ['value' => 'justify', 'className' => 'fa fa-align-justify'],
+                ],
+            ]]
         ], [
             'id' => 'background',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.background'),

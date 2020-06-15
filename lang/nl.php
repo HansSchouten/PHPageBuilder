@@ -105,6 +105,9 @@ return [
                             'margin-bottom' => 'Buitenrand onder',
                             'margin-left' => 'Buitenrand links'
                         ]
+                    ],
+                    'text-align' => [
+                        'name' => 'Uitlijning'
                     ]
                 ],
                 'background' => [

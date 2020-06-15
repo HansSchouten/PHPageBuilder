@@ -105,6 +105,9 @@ return [
                             'margin-bottom' => 'Margin bottom',
                             'margin-left' => 'Margin left'
                         ]
+                    ],
+                    'text-align' => [
+                        'name' => 'Text align'
                     ]
                 ],
                 'background' => [
