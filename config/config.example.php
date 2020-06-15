@@ -111,6 +111,7 @@ return [
         'table' => 'pages',
         'translation' => [
             'class' => PHPageBuilder\PageTranslation::class,
+            'table' => 'page_translations',
         ]
     ],
 

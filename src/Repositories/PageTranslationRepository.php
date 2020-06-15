@@ -7,11 +7,11 @@ use PHPageBuilder\Contracts\PageTranslationRepositoryContract;
 class PageTranslationRepository extends BaseRepository implements PageTranslationRepositoryContract
 {
     /**
-     * The pages database table.
+     * The page translations database table.
      *
      * @var string
      */
-    protected $table = 'page_translations';
+    protected $table;
 
     /**
      * The class that represents each page translation.
@@ -25,6 +25,7 @@ class PageTranslationRepository extends BaseRepository implements PageTranslatio
      */
     public function __construct()
     {
+        $this->table = empty(phpb_config('page.translation.table')) ? 'page_translations' : phpb_config('page.translation.table');
         parent::__construct();
         $this->class = phpb_instance('page.translation');
     }
