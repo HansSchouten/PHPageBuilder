@@ -88,12 +88,26 @@ return [
                 'startupFocus' => true,
                 'extraAllowedContent' => '*(*);*[*]', // allows classes and inline styles
                 'enterMode' => 'CKEDITOR.ENTER_BR',
-                'extraPlugins' => 'sharedspace, justify, colorbutton, panelbutton',
+                'extraPlugins' => 'sharedspace,justify,colorbutton,font',
                 'toolbar' => [
-                    ['name' => 'styles', 'items' => ['FontSize']],
-                    ['Bold', 'Italic', 'Underline', 'Strike'],
-                    ['name' => 'links', 'items' => ['Link', 'Unlink']],
-                    ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
+                    ['Bold', 'Italic', 'Underline', 'Strike', 'Undo', 'Redo'],
+                    [
+                        'name' => 'links',
+                        'items' => ['Link', 'Unlink']
+                    ],
+                    [
+                        'name' => 'styles',
+                        'items' => ['FontSize']
+                    ],
+                    [
+                        'name' => 'paragraph',
+                        'groups' => ['list', 'indent', 'blocks', 'align'],
+                        'items' => ['NumberedList', 'BulletedList', 'Blockquote', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
+                    ],
+                    [
+                        'name' => 'colors',
+                        'items' => ['TextColor', 'BGColor']
+                    ],
                 ],
             ]
         ]

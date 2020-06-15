@@ -81,12 +81,6 @@ $(document).ready(function() {
                     newLanguageBlocks[blockId] = currentLanguageBlocks[blockId];
                 }
             }
-            // remove blocks from the target language that have been removed in the current language
-            for (let blockId in newLanguageBlocks) {
-                if (currentLanguageBlocks[blockId] === undefined) {
-                    delete newLanguageBlocks[blockId];
-                }
-            }
         }
 
         window.pageBlocks[newLanguage] = newLanguageBlocks;
