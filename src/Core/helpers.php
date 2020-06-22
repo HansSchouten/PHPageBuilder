@@ -133,15 +133,16 @@ if (! function_exists('phpb_trans')) {
      * Return the translation of the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
+     * @param array $parameters
      * @return string
      */
-    function phpb_trans($key)
+    function phpb_trans($key, $parameters = [])
     {
         global $phpb_translations;
 
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
-            return $phpb_translations[$key] ?? '';
+            return phpb_replace_placeholders($phpb_translations[$key] ?? '', $parameters);
         }
 
         // if dot notation is used, traverse translations string
@@ -157,11 +158,32 @@ if (! function_exists('phpb_trans')) {
 
         // if the remaining sub array is a non-empty string/array, return this translation or translations structure
         if (! empty($subArray)) {
+            if (is_string($subArray)) {
+                return phpb_replace_placeholders($subArray, $parameters);
+            }
             return $subArray;
         }
         return '';
     }
 }
+
+if (! function_exists('phpb_replace_placeholders')) {
+    /**
+     * Replace in the given string the given parameter placeholders with corresponding values.
+     *
+     * @param $string
+     * @param array $parameters
+     * @return string
+     */
+    function phpb_replace_placeholders($string, $parameters = [])
+    {
+        foreach ($parameters as $placeholder => $value) {
+            $string = str_replace(':' . $placeholder, $value, $string);
+        }
+        return $string;
+    }
+}
+
 
 if (! function_exists('phpb_full_url')) {
     /**
