@@ -87,11 +87,22 @@ class PHPageBuilder
      * Load translations of the given language into a global variable.
      *
      * @param $language
+     * @return array
      */
     public function loadTranslations($language)
     {
         global $phpb_translations;
         $phpb_translations = require __DIR__ . '/../lang/' . $language . '.php';
+
+        // load default and current language translations of the current theme
+        $themeTranslationsFolder = phpb_config('theme.folder') . '/' . phpb_config('theme.active_theme') . '/translations';
+        if (file_exists($themeTranslationsFolder . '/en.php')) {
+            $phpb_translations = array_merge($phpb_translations, require $themeTranslationsFolder . '/en.php');
+        }
+        if (file_exists($themeTranslationsFolder . '/' . $language . '.php')) {
+            $phpb_translations = array_merge($phpb_translations, require $themeTranslationsFolder . '/' . $language . '.php');
+        }
+        return $phpb_translations;
     }
 
 
