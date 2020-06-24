@@ -95,7 +95,8 @@ return [
             'position' => 'left',
             'options' => [
                 'startupFocus' => true,
-                'extraAllowedContent' => '*(*);*[*]', // allows classes and inline styles
+                'allowedContent' => true,
+                //'extraAllowedContent' => '*(*);*[*];ul ol li span', // allows classes, inline styles and certain elements
                 'enterMode' => 'CKEDITOR.ENTER_BR',
                 'extraPlugins' => 'sharedspace,justify,colorbutton,font',
                 'toolbar' => [
