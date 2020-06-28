@@ -49,6 +49,16 @@ class ThemeLayout
     }
 
     /**
+     * Return the view file of this theme layout.
+     *
+     * @return string
+     */
+    public function getViewFile()
+    {
+        return $this->getFolder() . '/view.php';
+    }
+
+    /**
      * Return the slug identifying this type of layout.
      *
      * @return string
