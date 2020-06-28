@@ -594,6 +594,15 @@
                 hoverable: true,
             });
         } else if (component.attributes['block-slug'] !== undefined) {
+            // change visibility of child elements that depend on whether this block is editable
+            component.find('[phpb-hide-if-not-editable]').forEach((element) => {
+                if (allowEditableComponents) {
+                    element.addClass('editable');
+                } else {
+                    element.removeClass('editable');
+                }
+            });
+
             // we just entered a new block, set default permissions
             let permissions = {
                 selectable: true,

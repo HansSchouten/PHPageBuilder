@@ -8,6 +8,9 @@ form {
 [data-cursor="text"] {
   cursor: text;
 }
+[phpb-hide-if-not-editable]:not(.editable) {
+  display: none;
+}
 
 [data-gjs-type].gjs-comp-selected {
   outline: 2px solid #3b97e3 !important;
