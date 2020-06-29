@@ -80,7 +80,7 @@ class PHPageBuilder
         $this->router = phpb_instance('router');
 
         // load translations of the configured language
-        $this->loadTranslations(phpb_config('general.language'));
+        $this->loadTranslations(phpb_current_language());
     }
 
     /**
