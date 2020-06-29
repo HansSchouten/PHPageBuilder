@@ -3,7 +3,7 @@ html, body {
     padding: 0;
     margin: 0;
 }
-/* hide placeholder elements */
+/* hide block placeholders */
 [phpb-hide-if-not-editable] {
     display:none;
 }
