@@ -64,6 +64,13 @@ interface PageContract
     public function getTranslation(string $setting, $locale = null);
 
     /**
+     * Return the translated settings of this page.
+     *
+     * @return array
+     */
+    public function getTranslations();
+
+    /**
      * Return the route of this page, in the current or in the given language.
      *
      * @param string|null $locale
