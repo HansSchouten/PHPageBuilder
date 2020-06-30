@@ -139,7 +139,11 @@ class Page implements PageContract
      */
     public function getRoute($locale = null)
     {
-        return $this->getTranslation('route', $locale);
+        $routeTranslation = $this->getTranslation('route', $locale);
+        foreach (phpb_route_parameters() as $routeParameter => $value) {
+            $routeTranslation = str_replace('{' . $routeParameter . '}', $value, $routeTranslation);
+        }
+        return $routeTranslation;
     }
 
     /**
