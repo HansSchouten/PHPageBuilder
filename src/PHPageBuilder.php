@@ -79,7 +79,7 @@ class PHPageBuilder
         $this->theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
         $this->router = phpb_instance('router');
 
-        // load translations of the configured language
+        // load translations in the language that is currently active
         $this->loadTranslations(phpb_current_language());
     }
 
