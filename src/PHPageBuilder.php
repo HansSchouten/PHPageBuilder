@@ -92,7 +92,12 @@ class PHPageBuilder
     public function loadTranslations($language)
     {
         global $phpb_translations;
-        $phpb_translations = require __DIR__ . '/../lang/' . $language . '.php';
+
+        $phpbLanguageFile = __DIR__ . '/../lang/' . $language . '.php';
+        if (! file_exists($phpbLanguageFile)) {
+            $phpbLanguageFile = __DIR__ . '/../lang/en.php';
+        }
+        $phpb_translations = require $phpbLanguageFile;
 
         // load default and current language translations of the current theme
         $themeTranslationsFolder = phpb_config('theme.folder') . '/' . phpb_config('theme.active_theme') . '/translations';
