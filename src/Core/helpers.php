@@ -435,7 +435,7 @@ if (! function_exists('phpb_active_languages')) {
         if (array_values($languages) === $languages) {
             $newLanguagesStructure = [];
             foreach ($languages as $languageCode) {
-                $newLanguagesStructure[$languageCode] = phpb_trans('languages')[$languageCode];
+                $newLanguagesStructure[$languageCode] = phpb_trans('languages')[$languageCode] ?? [];
             }
             $languages = $newLanguagesStructure;
         }
