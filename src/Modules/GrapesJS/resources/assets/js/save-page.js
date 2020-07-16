@@ -67,8 +67,7 @@ $(document).ready(function() {
      *
      * @param newLanguage
      */
-    function applyChangesFromCurrentLanguageToNewLanguage(newLanguage)
-    {
+    function applyChangesFromCurrentLanguageToNewLanguage(newLanguage) {
         let newLanguageBlocks = window.pageBlocks[newLanguage];
         let currentLanguageBlocks = window.pageBlocks[window.currentLanguage];
 
@@ -81,6 +80,17 @@ $(document).ready(function() {
                     newLanguageBlocks[blockId] = currentLanguageBlocks[blockId];
                 }
             }
+        }
+
+        // copy the content of blocks containers of the current language to the blocks containers of the new language
+        for (let blockId in currentLanguageBlocks) {
+            let $currentLanguageBlockHtmlDom = $("<container>" + currentLanguageBlocks[blockId]['html'] + "</container>");
+            let $newLanguageBlockHtmlDom = $("<container>" + newLanguageBlocks[blockId]['html'] + "</container>");
+            $currentLanguageBlockHtmlDom.find("[phpb-blocks-container]").each(function(index) {
+                let currentLanguageBlockContainerHtml = $(this).html();
+                $newLanguageBlockHtmlDom.find("[phpb-blocks-container]").eq(index).html(currentLanguageBlockContainerHtml);
+            });
+            newLanguageBlocks[blockId]['html'] = $newLanguageBlockHtmlDom.html();
         }
 
         window.pageBlocks[newLanguage] = newLanguageBlocks;
