@@ -133,16 +133,17 @@ class PageRenderer
      * Return the page body for display on the website.
      * The body contains all blocks which are put into the selected layout.
      *
+     * @param int $mainContainerIndex
      * @return string
      * @throws Exception
      */
-    public function renderBody()
+    public function renderBody($mainContainerIndex = 0)
     {
         $html = '';
         $data = $this->pageData;
 
         if (isset($data['html']) && is_array($data['html'])) {
-            $html = $this->parseShortcodes($data['html'][0]);
+            $html = $this->parseShortcodes($data['html'][$mainContainerIndex]);
             // render html for each content container, to ensure all rendered blocks are accessible in the pagebuilder
             if (phpb_in_editmode()) {
                 foreach ($data['html'] as $contentContainerHtml) {
