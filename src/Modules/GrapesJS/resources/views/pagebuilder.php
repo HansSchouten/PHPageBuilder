@@ -33,7 +33,7 @@ CKEDITOR.dtd.$editable.table = 1;
 window.currentLanguage = <?= json_encode(phpb_config('general.language')) ?>;
 window.languages = <?= json_encode(phpb_active_languages()) ?>;
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
-window.pageComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
+window.contentContainerComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.themeBlocks = <?= json_encode($blocks) ?>;
 window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.pageBlocks = <?= json_encode($pageRenderer->getPageBlocksData()) ?>;

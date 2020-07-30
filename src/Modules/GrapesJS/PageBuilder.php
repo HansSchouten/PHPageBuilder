@@ -326,10 +326,12 @@ class PageBuilder implements PageBuilderContract
     public function getPageComponents(PageContract $page)
     {
         $data = $page->getBuilderData();
-        if (isset($data['components'])) {
-            return $data['components'];
+        $components = $data['components'] ?? [0 => []];
+        // backwards compatibility, components are now stored for each main container (@todo: remove this at the first mayor version)
+        if (isset($components[0]) && ! empty($components[0]) && ! isset($components[0][0])) {
+            $components = [0 => $components];
         }
-        return [];
+        return $components;
     }
 
     /**

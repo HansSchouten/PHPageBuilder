@@ -104,19 +104,26 @@ $(document).ready(function() {
     function saveCurrentTranslationLocally(callback) {
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
         setTimeout(function() {
-
-            // get the page content container (so skip all layout blocks) and prepare data for being stored
-            let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-            let data = getContainerContentInStorageFormat(container);
-
             window.pageData = {
-                html: data.html,
-                components: data.components,
-                css: data.css,
-                style: data.style,
+                html: [],
+                components: [],
+                css: null,
+                style: null
             };
-            window.pageBlocks[window.currentLanguage] = data.blocks;
-            window.pageComponents = data.components;
+            window.pageBlocks[window.currentLanguage] = [];
+
+            // get the data of each page content container (so skip all layout blocks) and prepare data for being stored
+            window.editor.getWrapper().find("[phpb-content-container]").forEach((container, index) => {
+                let data = getContainerContentInStorageFormat(container);
+
+                window.pageData['css'] = data.css;
+                window.pageData['style'] = data.style;
+                window.pageData['html'][index] = data.html;
+                window.pageData['components'][index] = data.components;
+
+                window.pageBlocks[window.currentLanguage] = {...window.pageBlocks[window.currentLanguage], ...data.blocks};
+                window.contentContainerComponents[index] = data.components;
+            });
 
             if (callback) {
                 callback();

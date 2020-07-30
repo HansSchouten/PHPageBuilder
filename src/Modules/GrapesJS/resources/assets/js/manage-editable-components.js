@@ -102,23 +102,25 @@
         // load initial non-editable layout components
         window.editor.setComponents(window.initialComponents);
         denyAccessToLayoutElements(editor.getWrapper());
-        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-        container.set('custom-name', window.translations['page-content']);
+        window.editor.getWrapper().find("[phpb-content-container]").forEach((container, index) => {
+            container.set('custom-name', window.translations['page-content']);
 
-        // reload pageComponents (with phpb-block elements)
-        container.components(window.pageComponents);
+            // reload components of this content container (adding all root phpb-block elements)
+            container.components(window.contentContainerComponents[index]);
 
-        // replace phpb-block elements with the server-side rendered version of each block
-        replacePlaceholdersForRenderedBlocks(container);
+            // replace phpb-block elements with the server-side rendered version of each block
+            replacePlaceholdersForRenderedBlocks(container);
 
-        // apply the stored block settings to the server-side rendered html
-        applyBlockAttributesToComponents(container);
+            // apply the stored block settings to the server-side rendered html
+            applyBlockAttributesToComponents(container);
+        });
     };
 
     $(window).on('pagebuilder-page-loaded', function(event) {
-        let container = window.editor.getWrapper().find("[phpb-content-container]")[0];
-        restrictEditAccess(container);
-        window.runScriptsOfComponentAndChildren(container);
+        window.editor.getWrapper().find("[phpb-content-container]").forEach(container => {
+            restrictEditAccess(container);
+            window.runScriptsOfComponentAndChildren(container);
+        });
         window.setWaiting(false);
     });
 

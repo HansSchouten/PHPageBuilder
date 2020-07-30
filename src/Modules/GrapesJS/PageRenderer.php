@@ -139,11 +139,22 @@ class PageRenderer
     public function renderBody()
     {
         $html = '';
-
         $data = $this->pageData;
-        if (isset($data['html'])) {
-            $html .= $this->parseShortcodes($data['html']);
+
+        if (isset($data['html']) && is_array($data['html'])) {
+            $html = $this->parseShortcodes($data['html'][0]);
+            // render html for each content container, to ensure all rendered blocks are accessible in the pagebuilder
+            if (phpb_in_editmode()) {
+                foreach ($data['html'] as $contentContainerHtml) {
+                    $this->parseShortcodes($contentContainerHtml);
+                }
+            }
         }
+        // backwards compatibility, html stored for only one layout container (@todo: remove this at the first mayor version)
+        if (isset($data['html']) && is_string($data['html'])) {
+            $html = $this->parseShortcodes($data['html']);
+        }
+
         // include any style changes made via the page builder
         if (isset($data['css'])) {
             $html .= '<style>' . $data['css'] . '</style>';

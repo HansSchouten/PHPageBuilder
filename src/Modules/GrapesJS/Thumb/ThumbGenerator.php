@@ -136,7 +136,9 @@ class ThumbGenerator
         $page->setData([
             'layout' => 'master',
             'data' => [
-                'html' => '[block slug="' . $block->getSlug() . '"]'
+                'html' => [
+                    0 => '[block slug="' . $block->getSlug() . '"]'
+                ]
             ]
         ]);
 
