@@ -188,8 +188,8 @@ class BlockRenderer
             $controllerClass = $themeBlock->getControllerClass();
             $controller = new $controllerClass;
 
-            $model = new BaseModel($themeBlock, $blockData, $this->forPageBuilder);
-            $controller->init($model, $this->forPageBuilder);
+            $model = new BaseModel($themeBlock, $blockData, $this->page, $this->forPageBuilder);
+            $controller->init($model, $this->page, $this->forPageBuilder);
             $controller->handleRequest();
         }
 
@@ -212,12 +212,12 @@ class BlockRenderer
     {
         $blockData = $blockData ?? [];
         $controller = new BaseController;
-        $model = new BaseModel($themeBlock, $blockData, $this->forPageBuilder);
+        $model = new BaseModel($themeBlock, $blockData, $this->page, $this->forPageBuilder);
 
         if ($themeBlock->getModelFile()) {
             require_once $themeBlock->getModelFile();
             $modelClass = $themeBlock->getModelClass();
-            $model = new $modelClass($themeBlock, $blockData, $this->forPageBuilder);
+            $model = new $modelClass($themeBlock, $blockData, $this->page, $this->forPageBuilder);
         }
 
         if ($themeBlock->getControllerFile()) {
@@ -225,7 +225,7 @@ class BlockRenderer
             $controllerClass = $themeBlock->getControllerClass();
             $controller = new $controllerClass;
         }
-        $controller->init($model, $this->forPageBuilder);
+        $controller->init($model, $this->page, $this->forPageBuilder);
         $controller->handleRequest();
 
         // init additional variables that should be accessible in the view

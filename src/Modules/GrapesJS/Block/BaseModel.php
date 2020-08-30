@@ -2,6 +2,7 @@
 
 namespace PHPageBuilder\Modules\GrapesJS\Block;
 
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\ThemeBlock;
 
 class BaseModel
@@ -17,21 +18,28 @@ class BaseModel
     protected $data;
 
     /**
+     * @var PageContract $page
+     */
+    protected $page;
+
+    /**
      * @var bool $forPageBuilder
      */
     protected $forPageBuilder;
 
     /**
-     * Construct a new model instance.
+     * BaseModel constructor.
      *
      * @param ThemeBlock $block
      * @param array $data
+     * @param PageContract|null $page
      * @param bool $forPageBuilder
      */
-    public function __construct(ThemeBlock $block, $data = [], $forPageBuilder = false)
+    public function __construct(ThemeBlock $block, $data = [], PageContract $page = null, $forPageBuilder = false)
     {
         $this->block = $block;
         $this->data = is_array($data) ? $data : [];
+        $this->page = $page;
         $this->forPageBuilder = $forPageBuilder;
 
         if (phpb_in_editmode() && method_exists($this, 'initEdit')) {
