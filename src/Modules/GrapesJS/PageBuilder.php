@@ -121,9 +121,10 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleFileUpload()
     {
+        $publicId = sha1(uniqid(rand(), true));
         $uploader = new Uploader('files');
         $uploader
-            ->file_name(sha1(uniqid(rand(), true)) . '/' . $uploader->file_src_name)
+            ->file_name($publicId . '/' . $uploader->file_src_name)
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
             ->run();
 
@@ -133,7 +134,6 @@ class PageBuilder implements PageBuilderContract
             $originalFile = $uploader->file_src_name;
             $originalMime = $uploader->file_src_mime;
             $serverFile = $uploader->final_file_name;
-            $publicId = explode('.', $serverFile)[0];
 
             $uploadRepository = new UploadRepository;
             $uploadedFile = $uploadRepository->create([

@@ -229,7 +229,7 @@ class Uploader {
      * @throws Exception
      */
     public function run() {
-        // check whether the final name is in shuffle mode
+        // check whether the final name is in random mode
         if ($this->file_name !== true) {
             // preserve file extension if provided
             if (! pathinfo($this->file_name, PATHINFO_EXTENSION)) {
@@ -238,6 +238,7 @@ class Uploader {
                 $file = $this->file_name;
             }
             $path = $this->upload_to . $file;
+            $this->upload_to = dirname($path);
         } else {
             $hash = md5(uniqid(rand(), true));
             $file = $hash . '.' . $this->file_src_name_ext;
