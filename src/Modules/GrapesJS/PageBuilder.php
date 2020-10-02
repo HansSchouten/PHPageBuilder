@@ -123,7 +123,7 @@ class PageBuilder implements PageBuilderContract
     {
         $uploader = new Uploader('files');
         $uploader
-            ->file_name(true)
+            ->file_name(sha1(uniqid(rand(), true)) . '/' . $uploader->file_src_name)
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
             ->run();
 
