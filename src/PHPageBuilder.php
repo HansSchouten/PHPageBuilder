@@ -292,6 +292,8 @@ class PHPageBuilder
     public function handlePublicRequest()
     {
         // if we are on the URL of an upload, return uploaded file
+        // (note: this is a fallback option used if .htaccess does not whitelist direct access to the /uploads folder.
+        // allowing direct /uploads access via .htaccess is preferred since it gives faster loading time)
         if (strpos(phpb_current_relative_url(), phpb_config('general.uploads_url') . '/') === 0) {
             $this->handleUploadedFileRequest();
             die('File not found');
@@ -353,7 +355,9 @@ class PHPageBuilder
         if (! $uploadedFile) die('File not found');
 
         $uploadedFile = $uploadedFile[0];
-        $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
+        $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . $uploadedFile->server_file);
+        // add backwards compatibility for files uploaded in PHPageBuilder v0.12.0, stored as /uploads/{id}.{extension}
+        if (! $serverFile) $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
         if (! $serverFile) die('File not found');
 
         header('Content-Type: ' . $uploadedFile->mime_type);
