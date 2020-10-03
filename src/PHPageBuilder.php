@@ -356,7 +356,7 @@ class PHPageBuilder
 
         $uploadedFile = $uploadedFile[0];
         $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . $uploadedFile->server_file);
-        // add backwards compatibility for files uploaded in PHPageBuilder v0.12.0, stored as /uploads/{id}.{extension}
+        // add backwards compatibility for files uploaded with PHPageBuilder <= v0.12.0, stored as /uploads/{id}.{extension}
         if (! $serverFile) $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
         if (! $serverFile) die('File not found');
 
