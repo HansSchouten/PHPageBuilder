@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('e')) {
+if (! function_exists('phpb_e')) {
     /**
      * Encode HTML special characters in a string.
      *
@@ -8,13 +8,13 @@ if (! function_exists('e')) {
      * @param bool $doubleEncode
      * @return string
      */
-    function e($value, $doubleEncode = true)
+    function phpb_e($value, $doubleEncode = true)
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8', $doubleEncode);
     }
 }
 
-if (! function_exists('encode_or_null')) {
+if (! function_exists('phpb_encode_or_null')) {
     /**
      * Encode HTML special characters in a string, but preserve a null value if the passed input equals null.
      *
@@ -22,9 +22,9 @@ if (! function_exists('encode_or_null')) {
      * @param bool $doubleEncode
      * @return string
      */
-    function encode_or_null($value, $doubleEncode = true)
+    function phpb_encode_or_null($value, $doubleEncode = true)
     {
-        return is_null($value) ? null : e($value, $doubleEncode);
+        return is_null($value) ? null : phpb_e($value, $doubleEncode);
     }
 }
 
@@ -72,7 +72,7 @@ if (! function_exists('phpb_flash')) {
             if (! isset($phpb_flash[$key])) {
                 return false;
             }
-            return $encode ? e($phpb_flash[$key]) : $phpb_flash[$key];
+            return $encode ? phpb_e($phpb_flash[$key]) : $phpb_flash[$key];
         }
 
         // if dot notation is used, traverse config string
@@ -89,7 +89,7 @@ if (! function_exists('phpb_flash')) {
         // if the remaining sub array is a string, return this piece of flash data
         if (is_string($subArray)) {
             if ($encode) {
-                return e($subArray);
+                return phpb_e($subArray);
             }
             return $subArray;
         }
@@ -222,7 +222,7 @@ if (! function_exists('phpb_url')) {
             $url .= '?';
             $pairs = [];
             foreach ($parameters as $key => $value) {
-                $pairs[] = e($key) . '=' . e($value);
+                $pairs[] = phpb_e($key) . '=' . phpb_e($value);
             }
             $url .= implode('&', $pairs);
         }
@@ -407,13 +407,13 @@ if (! function_exists('phpb_field_value')) {
     function phpb_field_value($attribute, $instance = null)
     {
         if (isset($_POST[$attribute])) {
-            return encode_or_null($_POST[$attribute]);
+            return phpb_encode_or_null($_POST[$attribute]);
         }
         if (isset($instance)) {
             if (method_exists($instance, 'get')) {
-                return encode_or_null($instance->get($attribute));
+                return phpb_encode_or_null($instance->get($attribute));
             } else {
-                return encode_or_null($instance->$attribute);
+                return phpb_encode_or_null($instance->$attribute);
             }
         }
         return null;

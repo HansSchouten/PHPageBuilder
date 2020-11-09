@@ -11,18 +11,18 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
     <div class="col-12">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link <?= e($pagesTabActive) ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
+                <a class="nav-link <?= phpb_e($pagesTabActive) ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= e($menusTabActive) ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
+                <a class="nav-link <?= phpb_e($menusTabActive) ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= e($settingsTabActive) ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
+                <a class="nav-link <?= phpb_e($settingsTabActive) ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div id="pages" class="tab-pane <?= e($pagesTabActive) ?>">
+            <div id="pages" class="tab-pane <?= phpb_e($pagesTabActive) ?>">
 
                 <h4><?= phpb_trans('website-manager.pages') ?></h4>
 
@@ -52,13 +52,13 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                                 ?>
                                 <tr>
                                     <td>
-                                        <?= e($page->getName()) ?>
+                                        <?= phpb_e($page->getName()) ?>
                                     </td>
                                     <td>
-                                        <?= e($page->getRoute()) ?>
+                                        <?= phpb_e($page->getRoute()) ?>
                                     </td>
                                     <td class="actions">
-                                        <a href="<?= e($page->getRoute()) ?>" target="_blank" class="btn btn-light btn-sm">
+                                        <a href="<?= phpb_e($page->getRoute()) ?>" target="_blank" class="btn btn-light btn-sm">
                                             <span><?= phpb_trans('website-manager.view') ?></span> <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="<?= phpb_url('pagebuilder', ['page' => $page->getId()]) ?>" class="btn btn-primary btn-sm">
@@ -86,12 +86,12 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                 </a>
 
             </div>
-            <div id="menus" class="tab-pane <?= e($menusTabActive) ?>">
+            <div id="menus" class="tab-pane <?= phpb_e($menusTabActive) ?>">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.menus') ?></h4>
 
             </div>
-            <div id="settings" class="tab-pane <?= e($settingsTabActive) ?>">
+            <div id="settings" class="tab-pane <?= phpb_e($settingsTabActive) ?>">
 
                 <h4 class="mb-3"><?= phpb_trans('website-manager.settings') ?></h4>
 

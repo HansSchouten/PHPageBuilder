@@ -23,7 +23,7 @@ $setting = phpb_instance('setting');
                 <?php
                 foreach (phpb_trans('languages') as $locale => $localeText):
                 ?>
-                <option value="<?= e($locale) ?>" <?= e($setting::has('languages', $locale)) ? 'selected' : '' ?>><?= e($localeText) ?></option>
+                <option value="<?= phpb_e($locale) ?>" <?= phpb_e($setting::has('languages', $locale)) ? 'selected' : '' ?>><?= phpb_e($localeText) ?></option>
                 <?php
                 endforeach;
                 ?>
