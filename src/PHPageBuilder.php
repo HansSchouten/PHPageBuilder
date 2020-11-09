@@ -42,9 +42,9 @@ class PHPageBuilder
     /**
      * PHPageBuilder constructor.
      *
-     * @param array $config         configuration in the format defined in config/config.example.php
+     * @param array|null $config         configuration in the format defined in config/config.example.php
      */
-    public function __construct(array $config)
+    public function __construct($config = [])
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -57,7 +57,7 @@ class PHPageBuilder
             unset($_SESSION['phpb_flash']);
         }
 
-        $this->setConfig($config);
+        $this->setConfig($config ?? []);
 
         // create database connection, if enabled
         if (phpb_config('storage.use_database')) {
