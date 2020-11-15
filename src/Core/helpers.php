@@ -244,7 +244,7 @@ if (! function_exists('phpb_current_full_url')) {
         if (isset($_SERVER['SERVER_PORT']) && ! in_array($_SERVER['SERVER_PORT'], [80, 443])) {
             $port = ":" . $_SERVER['SERVER_PORT'];
         }
-        $currentFullUrl = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . urldecode($_SERVER['REQUEST_URI']);
+         $currentFullUrl = $protocol . "://" . request()->server('SERVER_NAME') . $port . urldecode(request()->server('REQUEST_URI'));
         $currentFullUrl = rtrim($currentFullUrl, '/' . DIRECTORY_SEPARATOR);
         return $currentFullUrl;
     }
