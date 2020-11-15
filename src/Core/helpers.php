@@ -429,7 +429,7 @@ if (! function_exists('phpb_active_languages')) {
     function phpb_active_languages()
     {
         $configLanguageCode = phpb_config('general.language');
-        $languages = phpb_instance('setting')::get('languages') ?? [$configLanguageCode];
+        $languages = [$configLanguageCode];
 
         // if the array has numeric indices (which is the default), create a languageCode => languageTranslation structure
         if (array_values($languages) === $languages) {
