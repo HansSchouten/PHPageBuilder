@@ -288,7 +288,8 @@ $(document).ready(function() {
             if (component.attributes['is-html'] === 'false') {
                 newParentIsDynamic = true;
                 newParentIsHtmlInsideDynamic = false;
-            } else if (parentIsDynamic && component.attributes['is-html'] === 'true') {
+            } else if (parentIsDynamic) {
+                newParentIsDynamic = false;
                 newParentIsHtmlInsideDynamic = true;
             }
         }
@@ -307,52 +308,19 @@ $(document).ready(function() {
             return data;
         }
 
-        // if this component is a pagebuilder block, do the actual replacement of this component with a placeholder component
-        if (component.attributes['block-id'] !== undefined) {
-            if (parentIsDynamic && component.attributes['is-html'] === 'true' && parentIsHtmlInsideDynamic === false) {
+        // if the component is not a block, no replacements need to be done
+        if (component.attributes['block-id'] === undefined) {
+            return data;
+        }
+
+        // do the actual replacement of this component with a placeholder component
+        if (component.attributes['is-html'] === 'true') {
+            if (parentIsDynamic) {
                 // the full html content of html blocks directly inside a dynamic block should be stored in parent context using its block-id,
                 // this is important because a dynamic block defines block ids and this can collide with block ids hardcoded in other dynamic blocks
                 data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
-            } else if (component.attributes['is-html'] === 'false') {
-                // store the attributes set to this block using traits in the settings side panel
-                let attributes = {};
-                component.get('traits').each(function(trait) {
-                    attributes[trait.get('name')] = trait.getTargetValue();
-                });
-                data.current_block['settings']['attributes'] = attributes;
-
-                // if the block has received styling, store its style-identifier
-                // this will be used as class in a wrapper around the dynamic block to give the block its styling
-                if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
-                    data.current_block['settings']['attributes']['style-identifier'] = component.attributes['style-identifier'];
-                }
-
-                // replace this dynamic component by a shortcode with a unique id
-                let instanceId = component.attributes['block-id'];
-                if (! component.attributes['block-id'].startsWith('ID')) {
-                    instanceId = generateId();
-                }
-                component.replaceWith({
-                    tagName: 'phpb-block',
-                    attributes: {
-                        slug: component.attributes['block-slug'],
-                        id: instanceId
-                    }
-                });
-
-                // store data.current_block data inside data.blocks with the unique id we just generated
-                if (parentIsDynamic) {
-                    // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
-                    let currentBlockForParent = {settings: {}, blocks: {}, html: "", is_html: false};
-                    currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
-                    data.current_block = currentBlockForParent;
-                } else {
-                    // in an html block, the block data is globally stored in the blocks array
-                    data.blocks[instanceId] = data.current_block;
-                    data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
-                }
-            } else if (component.attributes['is-html'] === 'true' && (parentIsDynamic === false || parentIsHtmlInsideDynamic)) {
-                // html blocks outside the context of dynamic blocks should be stored as a block itself (to allow for translations instead of just hard-coding the html)
+            } else {
+                // html blocks outside direct context of dynamic blocks should be stored as a block itself
 
                 // if the block has received styling, store its style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
@@ -376,6 +344,44 @@ $(document).ready(function() {
 
                 // store the block data globally in the blocks array
                 data.blocks[instanceId] = {settings: data.current_block['settings'], blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
+                data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
+            }
+        } else {
+            // store the attributes set to this block using traits in the settings side panel
+            let attributes = {};
+            component.get('traits').each(function(trait) {
+                attributes[trait.get('name')] = trait.getTargetValue();
+            });
+            data.current_block['settings']['attributes'] = attributes;
+
+            // if the block has received styling, store its style-identifier
+            // this will be used as class in a wrapper around the dynamic block to give the block its styling
+            if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
+                data.current_block['settings']['attributes']['style-identifier'] = component.attributes['style-identifier'];
+            }
+
+            // replace this dynamic component by a shortcode with a unique id
+            let instanceId = component.attributes['block-id'];
+            if (! component.attributes['block-id'].startsWith('ID')) {
+                instanceId = generateId();
+            }
+            component.replaceWith({
+                tagName: 'phpb-block',
+                attributes: {
+                    slug: component.attributes['block-slug'],
+                    id: instanceId
+                }
+            });
+
+            // store data.current_block data inside data.blocks with the unique id we just generated
+            if (parentIsDynamic) {
+                // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
+                let currentBlockForParent = {settings: {}, blocks: {}, html: "", is_html: false};
+                currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
+                data.current_block = currentBlockForParent;
+            } else {
+                // outside dynamic blocks, the block data is globally stored in the blocks array
+                data.blocks[instanceId] = data.current_block;
                 data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
             }
         }
