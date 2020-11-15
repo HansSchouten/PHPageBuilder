@@ -271,10 +271,10 @@ $(document).ready(function() {
      * Replace all blocks with is-html === false with a <phpb-block> component that contains all block attributes.
      *
      * @param component
-     * @param inDynamicBlock
-     * @param inHtmlBlockInDynamicBlock
+     * @param parentIsDynamic
+     * @param parentIsHtmlInsideDynamic
      */
-    function replaceDynamicBlocksWithPlaceholders(component, inDynamicBlock = false, inHtmlBlockInDynamicBlock = false) {
+    function replaceDynamicBlocksWithPlaceholders(component, parentIsDynamic = false, parentIsHtmlInsideDynamic = false) {
         // data structure to be filled with the data of nested blocks via recursive calls
         let data = {
             current_block: {settings: {}, blocks: {}, html: "", is_html: false},
@@ -282,20 +282,20 @@ $(document).ready(function() {
         };
 
         // update variables for passing context to the recursive calls on child components
-        let newInDynamicBlock = inDynamicBlock;
-        let newInHtmlBlockInDynamicBlock = inHtmlBlockInDynamicBlock;
+        let newParentIsDynamic = parentIsDynamic;
+        let newParentIsHtmlInsideDynamic = parentIsHtmlInsideDynamic;
         if (component.attributes['block-id'] !== undefined) {
             if (component.attributes['is-html'] === 'false') {
-                newInDynamicBlock = true;
-                newInHtmlBlockInDynamicBlock = false;
-            } else if (inDynamicBlock && component.attributes['is-html'] === 'true') {
-                newInHtmlBlockInDynamicBlock = true;
+                newParentIsDynamic = true;
+                newParentIsHtmlInsideDynamic = false;
+            } else if (parentIsDynamic && component.attributes['is-html'] === 'true') {
+                newParentIsHtmlInsideDynamic = true;
             }
         }
 
         // depth-first recursive call for replacing nested blocks (the deepest blocks are handled first)
         component.get('components').forEach(function(childComponent) {
-            let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newInDynamicBlock, newInHtmlBlockInDynamicBlock);
+            let childData = replaceDynamicBlocksWithPlaceholders(childComponent, newParentIsDynamic, newParentIsHtmlInsideDynamic);
 
             // update data object with child data
             for (let key in childData.current_block.blocks) { data.current_block.blocks[key] = childData.current_block.blocks[key]; }
@@ -309,8 +309,9 @@ $(document).ready(function() {
 
         // if this component is a pagebuilder block, do the actual replacement of this component with a placeholder component
         if (component.attributes['block-id'] !== undefined) {
-            if (inDynamicBlock && component.attributes['is-html'] === 'true' && inHtmlBlockInDynamicBlock === false) {
-                // the full html content of html blocks directly inside a dynamic block should be stored using its block-id
+            if (parentIsDynamic && component.attributes['is-html'] === 'true' && parentIsHtmlInsideDynamic === false) {
+                // the full html content of html blocks directly inside a dynamic block should be stored in parent context using its block-id,
+                // this is important because a dynamic block defines block ids and this can collide with block ids hardcoded in other dynamic blocks
                 data.current_block['blocks'][component.attributes['block-id']] = {settings: {}, blocks: {}, html: window.html_beautify(getComponentHtml(component)), is_html: true};
             } else if (component.attributes['is-html'] === 'false') {
                 // store the attributes set to this block using traits in the settings side panel
@@ -340,7 +341,7 @@ $(document).ready(function() {
                 });
 
                 // store data.current_block data inside data.blocks with the unique id we just generated
-                if (inDynamicBlock) {
+                if (parentIsDynamic) {
                     // inside a dynamic block, the block data is passed to the context of its parent block (so current_block is used)
                     let currentBlockForParent = {settings: {}, blocks: {}, html: "", is_html: false};
                     currentBlockForParent['blocks'][component.attributes['block-id']] = data.current_block;
@@ -350,7 +351,7 @@ $(document).ready(function() {
                     data.blocks[instanceId] = data.current_block;
                     data.current_block = {settings: {}, blocks: {}, html: "", is_html: false};
                 }
-            } else if (component.attributes['is-html'] === 'true' && (inDynamicBlock === false || inHtmlBlockInDynamicBlock)) {
+            } else if (component.attributes['is-html'] === 'true' && (parentIsDynamic === false || parentIsHtmlInsideDynamic)) {
                 // html blocks outside the context of dynamic blocks should be stored as a block itself (to allow for translations instead of just hard-coding the html)
 
                 // if the block has received styling, store its style-identifier
