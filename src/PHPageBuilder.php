@@ -46,6 +46,11 @@ class PHPageBuilder
      */
     public function __construct($config = [])
     {
+        // do nothing if no config is provided (e.g. during composer install)
+        if (empty($config)) {
+            return;
+        }
+
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -57,7 +62,7 @@ class PHPageBuilder
             unset($_SESSION['phpb_flash']);
         }
 
-        $this->setConfig($config ?? []);
+        $this->setConfig($config);
 
         // create database connection, if enabled
         if (phpb_config('storage.use_database')) {
