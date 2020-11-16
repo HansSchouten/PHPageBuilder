@@ -48,6 +48,11 @@ class Theme implements ThemeContract
     protected function loadThemeBlocks()
     {
         $this->blocks = [];
+
+        if (! file_exists($this->getFolder() . '/blocks')) {
+            return;
+        }
+
         $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
         foreach ($blocksDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {
