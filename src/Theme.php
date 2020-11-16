@@ -69,6 +69,11 @@ class Theme implements ThemeContract
     protected function loadThemeLayouts()
     {
         $this->layouts = [];
+
+        if (! file_exists($this->getFolder() . '/layouts')) {
+            return;
+        }
+
         $layoutsDirectory = new DirectoryIterator($this->getFolder() . '/layouts');
         foreach ($layoutsDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {
