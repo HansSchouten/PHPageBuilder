@@ -128,6 +128,17 @@ html, body, #gjs {
   }
 }
 
+[phpb-hide-if-not-editable] {
+  background: #fde3c17d;
+  border: 1px dashed #b98e577d;
+  padding: 7px;
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: normal;
+  text-align: center;
+  color: #5e5e5e;
+}
+
 /*   SIDEBAR   */
 
 .gjs-pn-views {
