@@ -8,8 +8,19 @@ form {
 [data-cursor="text"] {
   cursor: text;
 }
-[phpb-hide-if-not-editable]:not(.editable) {
-  display: none;
+[phpb-hide-if-not-editable] {
+  background: #fde3c17d;
+  border: 1px dashed #b98e577d;
+  padding: 7px;
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: normal;
+  text-align: center;
+  color: #5e5e5e;
+
+  &:not(.editable) {
+    display: none;
+  }
 }
 
 [data-gjs-type].gjs-comp-selected {
