@@ -48,6 +48,11 @@ class Theme implements ThemeContract
     protected function loadThemeBlocks()
     {
         $this->blocks = [];
+
+        if (! file_exists($this->getFolder() . '/blocks')) {
+            return;
+        }
+
         $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
         foreach ($blocksDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {
@@ -64,6 +69,11 @@ class Theme implements ThemeContract
     protected function loadThemeLayouts()
     {
         $this->layouts = [];
+
+        if (! file_exists($this->getFolder() . '/layouts')) {
+            return;
+        }
+
         $layoutsDirectory = new DirectoryIterator($this->getFolder() . '/layouts');
         foreach ($layoutsDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {

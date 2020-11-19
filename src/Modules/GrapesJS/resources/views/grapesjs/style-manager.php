@@ -15,15 +15,15 @@ foreach (phpb_trans('pagebuilder.style-manager.properties') as $sector => $secto
             for ($i = 0; $i < sizeof($data['properties'] ?? []); $i++) {
                 $translation = $data['properties'][array_keys($data['properties'])[$i]];
 ?>
-window.editor.StyleManager.getProperty('<?= e($sector) ?>', '<?= e($property) ?>').attributes.properties.models[<?= $i ?>].attributes.name = '<?= e($translation) ?>';
+window.editor.StyleManager.getProperty('<?= phpb_e($sector) ?>', '<?= phpb_e($property) ?>').attributes.properties.models[<?= $i ?>].attributes.name = '<?= phpb_e($translation) ?>';
 <?php
             }
 ?>
-window.editor.StyleManager.getProperty('<?= e($sector) ?>', '<?= e($property) ?>').set({ name: '<?= e($data['name']) ?>' });
+window.editor.StyleManager.getProperty('<?= phpb_e($sector) ?>', '<?= phpb_e($property) ?>').set({ name: '<?= phpb_e($data['name']) ?>' });
 <?php
         } else {
 ?>
-window.editor.StyleManager.getProperty('<?= e($sector) ?>', '<?= e($property) ?>').set({ name: '<?= e($data) ?>' });
+window.editor.StyleManager.getProperty('<?= phpb_e($sector) ?>', '<?= phpb_e($property) ?>').set({ name: '<?= phpb_e($data) ?>' });
 <?php
         }
     }

@@ -42,10 +42,15 @@ class PHPageBuilder
     /**
      * PHPageBuilder constructor.
      *
-     * @param array $config         configuration in the format defined in config/config.example.php
+     * @param array|null $config         configuration in the format defined in config/config.example.php
      */
-    public function __construct(array $config)
+    public function __construct($config = [])
     {
+        // do nothing if no config is provided (e.g. during composer install)
+        if (empty($config)) {
+            return;
+        }
+
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }

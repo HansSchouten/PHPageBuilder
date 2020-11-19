@@ -71,7 +71,7 @@ class BaseModel
             $value = $this->data['settings']['attributes'][$setting];
         }
 
-        return $allowHtml ? $value : e($value);
+        return $allowHtml ? $value : phpb_e($value);
     }
 
     /**

@@ -93,7 +93,7 @@ class PageRenderer
      */
     public function getStoredPageBlocksData()
     {
-        return $this->pageData['blocks'][$this->language] ?? [];
+        return $this->pageData['blocks'][$this->language] ?? $this->pageData['blocks'] ?? [];
     }
 
     /**
@@ -179,9 +179,7 @@ class PageRenderer
     {
         $themeBlock = new ThemeBlock($this->theme, $slug);
         $id = $id ?? $themeBlock->getSlug();
-
-        $context = $context ?? $this->pageBlocksData;
-        $context = $context[$id] ?? [];
+        $context = $context[$id] ?? $this->pageBlocksData[$id] ?? [];
 
         $blockRenderer = new BlockRenderer($this->theme, $this->page, $this->forPageBuilder);
         $renderedBlock = $blockRenderer->render($themeBlock, $context ?? [], $id);

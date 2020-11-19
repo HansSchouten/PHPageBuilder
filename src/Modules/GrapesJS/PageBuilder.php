@@ -205,7 +205,7 @@ class PageBuilder implements PageBuilderContract
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
-            $slug = e($themeBlock->getSlug());
+            $slug = phpb_e($themeBlock->getSlug());
             $adapter = new BlockAdapter($pageRenderer, $themeBlock);
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
 
@@ -309,8 +309,8 @@ class PageBuilder implements PageBuilderContract
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll() as $page) {
             $pages[] = [
-                e($page->getName()),
-                e($page->getId())
+                phpb_e($page->getName()),
+                phpb_e($page->getId())
             ];
         }
 

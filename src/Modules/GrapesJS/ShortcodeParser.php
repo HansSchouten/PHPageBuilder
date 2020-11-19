@@ -162,7 +162,7 @@ class ShortcodeParser
         }
 
         foreach ($matches as $match) {
-            $themeUrl = phpb_config('theme.folder_url') . '/' . e(phpb_config('theme.active_theme'));
+            $themeUrl = phpb_config('theme.folder_url') . '/' . phpb_e(phpb_config('theme.active_theme'));
             $html = str_replace($match['shortcode'], $themeUrl, $html);
         }
 

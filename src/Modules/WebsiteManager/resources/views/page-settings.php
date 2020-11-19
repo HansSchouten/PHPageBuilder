@@ -1,7 +1,7 @@
 <?php
 $pageUrlParam = '';
 if (isset($page)) {
-    $pageUrlParam = '&page=' . e($page->getId());
+    $pageUrlParam = '&page=' . phpb_e($page->getId());
 }
 
 $pageTranslations = $page ? $page->getTranslations() : [];
@@ -42,9 +42,9 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                             $value = phpb_field_value('layout', $page);
                             foreach ($theme->getThemeLayouts() as $layout):
                                 if ($layout->getSlug() === $value):
-                                    echo '<option value="' . e($layout->getSlug()) . '" selected>' . e($layout->getTitle()) . '</option>';
+                                    echo '<option value="' . phpb_e($layout->getSlug()) . '" selected>' . phpb_e($layout->getTitle()) . '</option>';
                                 else:
-                                    echo '<option value="' . e($layout->getSlug()) . '">' . e($layout->getTitle()) . '</option>';
+                                    echo '<option value="' . phpb_e($layout->getSlug()) . '">' . phpb_e($layout->getTitle()) . '</option>';
                                 endif;
                             endforeach;
                             ?>
@@ -58,12 +58,12 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                     <div class="pt-2 pl-3 pr-3">
                         <div class="form-group required">
                             <label for="page-title"><?= phpb_trans('website-manager.page-title') ?></label>
-                            <input type="text" class="form-control" id="page-title" name="title[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['title'] ?? '') ?>" required>
+                            <input type="text" class="form-control" id="page-title" name="title[<?= phpb_e($languageCode) ?>]" value="<?= phpb_e($pageTranslations[$languageCode]['title'] ?? '') ?>" required>
                         </div>
 
                         <div class="form-group required">
                             <label for="route"><?= phpb_trans('website-manager.route') ?></label>
-                            <input type="text" class="form-control" id="route" name="route[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['route'] ?? '') ?>" required>
+                            <input type="text" class="form-control" id="route" name="route[<?= phpb_e($languageCode) ?>]" value="<?= phpb_e($pageTranslations[$languageCode]['route'] ?? '') ?>" required>
                         </div>
                     </div>
                     <?php
