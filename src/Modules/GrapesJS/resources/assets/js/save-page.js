@@ -74,6 +74,8 @@ $(document).ready(function() {
         if (newLanguageBlocks === undefined) {
             newLanguageBlocks = currentLanguageBlocks;
         } else {
+            updateChildBlocks(currentLanguageBlocks, newLanguageBlocks);
+
             // copy missing blocks from the current language to the target language
             for (let blockId in currentLanguageBlocks) {
                 if (newLanguageBlocks[blockId] === undefined) {
@@ -94,6 +96,35 @@ $(document).ready(function() {
         }
 
         window.pageBlocks[newLanguage] = newLanguageBlocks;
+    }
+
+    /**
+     * Replace phpb-blocks-container html snippets if a block of the current language already exists in the target language.
+     * This ensures all child blocks are present for all languages and they remain in the same order
+     */
+    function updateChildBlocks(currentLanguageBlocks, newLanguageBlocks) {
+        for (let blockId in currentLanguageBlocks) {
+            // skip if the parent block does not yet exist in the target language
+            if (newLanguageBlocks[blockId] === undefined) {
+                continue;
+            }
+
+            for (let subBlockId in currentLanguageBlocks[blockId].blocks) {
+                let updatedSubBlock = currentLanguageBlocks[blockId].blocks[subBlockId];
+                let oldSubBlock = newLanguageBlocks[blockId].blocks[subBlockId];
+
+                let updatedSubBlockMatches = updatedSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
+                let oldSubBlockMatches = oldSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
+                if (! updatedSubBlockMatches || ! oldSubBlockMatches) {
+                    continue;
+                }
+
+                for (let i = 0; i < updatedSubBlockMatches.length; i++) {
+                    newLanguageBlocks[blockId].blocks[subBlockId].html =
+                        newLanguageBlocks[blockId].blocks[subBlockId].html.replace(oldSubBlockMatches[i], updatedSubBlockMatches[i]);
+                }
+            }
+        }
     }
 
     /**
