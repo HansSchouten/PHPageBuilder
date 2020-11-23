@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-    let editorCss = '';
-
     window.pageData = {};
 
     /**
@@ -74,7 +72,7 @@ $(document).ready(function() {
         if (newLanguageBlocks === undefined) {
             newLanguageBlocks = currentLanguageBlocks;
         } else {
-            updateChildBlocks(currentLanguageBlocks, newLanguageBlocks);
+            updateNestedBlocks(currentLanguageBlocks, newLanguageBlocks);
 
             // copy missing blocks from the current language to the target language
             for (let blockId in currentLanguageBlocks) {
@@ -102,7 +100,7 @@ $(document).ready(function() {
      * Replace phpb-blocks-container html snippets if a block of the current language already exists in the target language.
      * This ensures all child blocks are present for all languages and they remain in the same order
      */
-    function updateChildBlocks(currentLanguageBlocks, newLanguageBlocks) {
+    function updateNestedBlocks(currentLanguageBlocks, newLanguageBlocks) {
         for (let blockId in currentLanguageBlocks) {
             // skip if the parent block does not yet exist in the target language
             if (newLanguageBlocks[blockId] === undefined) {
@@ -246,8 +244,6 @@ $(document).ready(function() {
 
         // we need to clone the container, since we will be replacing components with placeholders and we don't want to update the page builder
         container = window.cloneComponent(container);
-        // save editor css, used in replaceDynamicBlocksWithPlaceholders to check whether a component has received styling
-        editorCss = window.editor.getCss();
         // replace each pagebuilder block for a shortcode and phpb-block element and return an array of all page blocks data
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
@@ -353,9 +349,9 @@ $(document).ready(function() {
             } else {
                 // html blocks outside direct context of dynamic blocks should be stored as a block itself
 
-                // if the block has received styling, store its style-identifier
+                // store the block's style-identifier
                 // this will be used as class in a wrapper around the dynamic block to give the block its styling
-                if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
+                if (component.attributes['style-identifier'] !== undefined) {
                     data.current_block['settings']['attributes'] = {'style-identifier': component.attributes['style-identifier']};
                 }
 
@@ -385,9 +381,9 @@ $(document).ready(function() {
             });
             data.current_block['settings']['attributes'] = attributes;
 
-            // if the block has received styling, store its style-identifier
+            // store the block's style-identifier
             // this will be used as class in a wrapper around the dynamic block to give the block its styling
-            if (component.attributes['style-identifier'] !== undefined && editorCss.includes(component.attributes['style-identifier'])) {
+            if (component.attributes['style-identifier'] !== undefined) {
                 data.current_block['settings']['attributes']['style-identifier'] = component.attributes['style-identifier'];
             }
 
