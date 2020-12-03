@@ -6,14 +6,20 @@ $(document).on("input", "#block-search input", function() {
         let atLeastOneMatch = false;
 
         $(this).find(".gjs-block").each(function() {
-            let label = $(this).text().toLowerCase();
-            if (label.includes(term)) {
+            if (! $(this).data('original-html')) {
+                $(this).data('original-html', $(this).html());
+            }
+
+            let label = $(this).text();
+            if (label.toLowerCase().includes(term)) {
                 $(this).removeClass("d-none");
                 atLeastOneMatch = true;
 
                 let regEx = new RegExp('(' + term + ')', "gi");
+                let highlightedText = label.replace(regEx, '<b>$1</b>');
+
                 $(this).find(".gjs-block-label").html(
-                    $(this).text().replace(regEx, '<b>$1</b>')
+                    $(this).data('original-html').replace(label.trim(), highlightedText)
                 );
             } else {
                 $(this).addClass("d-none");
