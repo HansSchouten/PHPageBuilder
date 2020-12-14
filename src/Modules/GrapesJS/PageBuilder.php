@@ -145,6 +145,7 @@ class PageBuilder implements PageBuilderContract
 
             echo json_encode([
                 'data' => [
+                    'public_id' => $publicId,
                     'src' => $uploadedFile->getUrl(),
                     'type' => 'image'
                 ]
