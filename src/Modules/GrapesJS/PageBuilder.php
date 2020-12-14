@@ -171,15 +171,15 @@ class PageBuilder implements PageBuilderContract
         $uploadedFile = $uploadedFileResult[0];
         $uploadRepository->destroy($uploadedFile->id);
 
-        $serverFilePath = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
-        if (! $serverFilePath) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'File not found'
-            ]);
-            exit();
+        $serverFilePath = realpath(phpb_config('storage.uploads_folder') . '/' . $uploadedFile->server_file);
+        if ($serverFilePath) {
+            unlink($serverFilePath);
         }
-        unlink($serverFilePath);
+
+        $parentDirectory = realpath(phpb_config('storage.uploads_folder') . '/' . dirname($uploadedFile->server_file));
+        if ($parentDirectory && dirname($uploadedFile->server_file) !== '.') {
+            rmdir($parentDirectory);
+        }
 
         echo json_encode([
             'success' => true
