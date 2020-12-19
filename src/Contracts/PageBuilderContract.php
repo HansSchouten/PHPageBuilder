@@ -25,8 +25,9 @@ interface PageBuilderContract
      *
      * @param PageContract $page
      * @param null $language
+     * @return string
      */
-    public function renderPage(PageContract $page, $language = null);
+    public function renderPage(PageContract $page, $language = null): string;
 
     /**
      * Update the given page with the given data (an array of html blocks)

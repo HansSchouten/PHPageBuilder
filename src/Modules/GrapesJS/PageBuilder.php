@@ -232,15 +232,15 @@ class PageBuilder implements PageBuilderContract
      *
      * @param PageContract $page
      * @param null $language
-     * @throws Exception
+     * @return string
      */
-    public function renderPage(PageContract $page, $language = null)
+    public function renderPage(PageContract $page, $language = null): string
     {
         $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
         if (! is_null($language)) {
             $renderer->setLanguage($language);
         }
-        echo $renderer->render();
+        return $renderer->render();
     }
 
     /**

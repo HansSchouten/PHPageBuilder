@@ -313,7 +313,7 @@ class PHPageBuilder
         $pageTranslation = $this->router->resolve(phpb_current_relative_url());
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
-            $this->pageBuilder->renderPage($page, $pageTranslation->locale);
+            echo $this->pageBuilder->renderPage($page, $pageTranslation->locale);
             return true;
         }
         return false;
