@@ -37,9 +37,6 @@ class Theme implements ThemeContract
     {
         $this->config = $config;
         $this->themeSlug = $themeSlug;
-
-        $this->loadThemeBlocks();
-        $this->loadThemeLayouts();
     }
 
     /**
@@ -91,6 +88,7 @@ class Theme implements ThemeContract
      */
     public function getThemeBlocks()
     {
+        $this->loadThemeBlocks();
         return $this->blocks;
     }
 
@@ -101,6 +99,7 @@ class Theme implements ThemeContract
      */
     public function getThemeLayouts()
     {
+        $this->loadThemeLayouts();
         return $this->layouts;
     }
 
