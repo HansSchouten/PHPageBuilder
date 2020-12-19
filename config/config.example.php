@@ -118,6 +118,21 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Caching settings
+     |--------------------------------------------------------------------------
+     |
+     | Faster load time by skipping block parsing if the page has been requested before.
+     | A page will be cached, except if it contains a block with caching set to false.
+     | This can be used to prevent caching pages with content that varies per page load.
+     | The cached html is removed if the page is saved again in the page builder.
+     |
+     */
+    'caching' => [
+        'enabled' => false
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | Theme settings
      |--------------------------------------------------------------------------
      |

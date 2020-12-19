@@ -20,6 +20,11 @@ class PageBuilder implements PageBuilderContract
     protected $theme;
 
     /**
+     * @var PageRenderer $pageRenderer
+     */
+    protected $pageRenderer;
+
+    /**
      * @var array $scripts
      */
     protected $scripts = [];
@@ -70,7 +75,7 @@ class PageBuilder implements PageBuilderContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
         }
-        if (! ($page instanceof PageContract)) {
+        if (!($page instanceof PageContract)) {
             return false;
         }
 
@@ -200,14 +205,14 @@ class PageBuilder implements PageBuilderContract
 
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
 
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
-            $adapter = new BlockAdapter($pageRenderer, $themeBlock);
+            $adapter = new BlockAdapter($this->pageRenderer, $themeBlock);
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
 
             if ($themeBlock->get('hidden') !== true) {
@@ -236,11 +241,21 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPage(PageContract $page, $language = null): string
     {
-        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
+        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
         if (! is_null($language)) {
-            $renderer->setLanguage($language);
+            $this->pageRenderer->setLanguage($language);
         }
-        return $renderer->render();
+        return $this->pageRenderer->render();
+    }
+
+    /**
+     * Return the PageRenderer instance.
+     *
+     * @return PageRenderer
+     */
+    public function getPageRenderer(): PageRenderer
+    {
+        return $this->pageRenderer;
     }
 
     /**
@@ -258,9 +273,9 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
-        $renderer->setLanguage($language);
-        echo $renderer->parseShortcodes($blockData['html'], $blockData['blocks']);
+        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $this->pageRenderer->setLanguage($language);
+        echo $this->pageRenderer->parseShortcodes($blockData['html'], $blockData['blocks']);
     }
 
     /**
@@ -278,10 +293,10 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $renderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
-        $renderer->setLanguage($language);
+        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $this->pageRenderer->setLanguage($language);
         echo json_encode([
-            'dynamicBlocks' => $renderer->getPageBlocksData()[$language]
+            'dynamicBlocks' => $this->pageRenderer->getPageBlocksData()[$language]
         ]);
     }
 

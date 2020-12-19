@@ -2,6 +2,8 @@
 
 namespace PHPageBuilder\Contracts;
 
+use PHPageBuilder\Modules\GrapesJS\PageRenderer;
+
 interface PageBuilderContract
 {
     /**
@@ -28,6 +30,13 @@ interface PageBuilderContract
      * @return string
      */
     public function renderPage(PageContract $page, $language = null): string;
+
+    /**
+     * Return the PageRenderer instance.
+     *
+     * @return PageRenderer
+     */
+    public function getPageRenderer(): PageRenderer;
 
     /**
      * Update the given page with the given data (an array of html blocks)

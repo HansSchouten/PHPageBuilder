@@ -97,6 +97,17 @@ class PageRenderer
     }
 
     /**
+     * Return whether the previously rendered page can be cached.
+     * I.e. no blocks were encountered with content that varies per page load.
+     *
+     * @return bool
+     */
+    public function renderedPageCanBeCached(): bool
+    {
+        return false;
+    }
+
+    /**
      * Return the rendered version of the page.
      *
      * @return string

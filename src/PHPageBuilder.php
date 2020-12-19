@@ -313,10 +313,27 @@ class PHPageBuilder
         $pageTranslation = $this->router->resolve(phpb_current_relative_url());
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
-            echo $this->pageBuilder->renderPage($page, $pageTranslation->locale);
+            $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
+            if ($this->pageBuilder->getPageRenderer()->renderedPageCanBeCached()) {
+                $this->cacheRenderedPage($page, $renderedContent);
+            }
+            echo $renderedContent;
             return true;
         }
         return false;
+    }
+
+    /**
+     * Cache the contents of the rendered page, if caching is enabled and the current page does not contain non-cacheable blocks.
+     *
+     * @param PageContract $page
+     * @param string $renderedContent
+     */
+    protected function cacheRenderedPage(PageContract $page, string $renderedContent)
+    {
+        if (! phpb_config('caching.enabled')) {
+            return;
+        }
     }
 
     /**
