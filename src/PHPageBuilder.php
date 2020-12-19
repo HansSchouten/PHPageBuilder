@@ -9,6 +9,7 @@ use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Repositories\UploadRepository;
 use PHPageBuilder\Core\DB;
 
@@ -314,9 +315,7 @@ class PHPageBuilder
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
             $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
-            if ($this->pageBuilder->getPageRenderer()->renderedPageCanBeCached()) {
-                $this->cacheRenderedPage($page, $renderedContent);
-            }
+            $this->cacheRenderedPage($page, $renderedContent);
             echo $renderedContent;
             return true;
         }
@@ -331,7 +330,7 @@ class PHPageBuilder
      */
     protected function cacheRenderedPage(PageContract $page, string $renderedContent)
     {
-        if (! phpb_config('caching.enabled')) {
+        if (! phpb_config('caching.enabled') || ! PageRenderer::canBeCached()) {
             return;
         }
     }

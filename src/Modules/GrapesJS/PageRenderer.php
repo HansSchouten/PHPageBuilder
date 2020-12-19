@@ -46,6 +46,11 @@ class PageRenderer
     protected $language;
 
     /**
+     * @var bool $canBeCached
+     */
+    public static $canBeCached;
+
+    /**
      * PageRenderer constructor.
      *
      * @param ThemeContract $theme
@@ -87,6 +92,17 @@ class PageRenderer
     }
 
     /**
+     * Return whether the rendered page can be cached.
+     * I.e. no blocks were encountered with content that varies per page load.
+     *
+     * @return bool
+     */
+    public static function canBeCached(): bool
+    {
+        return static::$canBeCached ?? true;
+    }
+
+    /**
      * Return an array with for each block of this page the stored html and settings data.
      *
      * @return array
@@ -94,17 +110,6 @@ class PageRenderer
     public function getStoredPageBlocksData()
     {
         return $this->pageData['blocks'][$this->language] ?? $this->pageData['blocks'] ?? [];
-    }
-
-    /**
-     * Return whether the previously rendered page can be cached.
-     * I.e. no blocks were encountered with content that varies per page load.
-     *
-     * @return bool
-     */
-    public function renderedPageCanBeCached(): bool
-    {
-        return false;
     }
 
     /**

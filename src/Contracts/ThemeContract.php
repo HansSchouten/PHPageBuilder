@@ -12,6 +12,13 @@ interface ThemeContract
     public function getThemeBlocks();
 
     /**
+     * Return all layouts of this theme.
+     *
+     * @return array        array of ThemeLayout instances
+     */
+    public function getThemeLayouts();
+
+    /**
      * Return the folder of this theme.
      *
      * @return mixed

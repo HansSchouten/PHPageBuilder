@@ -5,6 +5,7 @@ namespace PHPageBuilder;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Block\BaseController;
 use PHPageBuilder\Modules\GrapesJS\Block\BaseModel;
+use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 
 class ThemeBlock
 {
@@ -37,6 +38,9 @@ class ThemeBlock
         $this->config = [];
         if (file_exists($this->getFolder() . '/config.php')) {
             $this->config = require $this->getFolder() . '/config.php';
+        }
+        if (boolval($this->config['cache'] ?? true) === false) {
+            PageRenderer::$canBeCached = false;
         }
     }
 

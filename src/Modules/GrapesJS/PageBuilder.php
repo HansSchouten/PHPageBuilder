@@ -20,11 +20,6 @@ class PageBuilder implements PageBuilderContract
     protected $theme;
 
     /**
-     * @var PageRenderer $pageRenderer
-     */
-    protected $pageRenderer;
-
-    /**
      * @var array $scripts
      */
     protected $scripts = [];
@@ -205,14 +200,14 @@ class PageBuilder implements PageBuilderContract
 
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
 
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
-            $adapter = new BlockAdapter($this->pageRenderer, $themeBlock);
+            $adapter = new BlockAdapter($pageRenderer, $themeBlock);
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
 
             if ($themeBlock->get('hidden') !== true) {
@@ -241,11 +236,11 @@ class PageBuilder implements PageBuilderContract
      */
     public function renderPage(PageContract $page, $language = null): string
     {
-        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
+        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
         if (! is_null($language)) {
-            $this->pageRenderer->setLanguage($language);
+            $pageRenderer->setLanguage($language);
         }
-        return $this->pageRenderer->render();
+        return $pageRenderer->render();
     }
 
     /**
@@ -255,7 +250,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function getPageRenderer(): PageRenderer
     {
-        return $this->pageRenderer;
+        return $pageRenderer;
     }
 
     /**
@@ -273,9 +268,9 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
-        $this->pageRenderer->setLanguage($language);
-        echo $this->pageRenderer->parseShortcodes($blockData['html'], $blockData['blocks']);
+        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $pageRenderer->setLanguage($language);
+        echo $pageRenderer->parseShortcodes($blockData['html'], $blockData['blocks']);
     }
 
     /**
@@ -293,10 +288,10 @@ class PageBuilder implements PageBuilderContract
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
 
-        $this->pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
-        $this->pageRenderer->setLanguage($language);
+        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $pageRenderer->setLanguage($language);
         echo json_encode([
-            'dynamicBlocks' => $this->pageRenderer->getPageBlocksData()[$language]
+            'dynamicBlocks' => $pageRenderer->getPageBlocksData()[$language]
         ]);
     }
 
