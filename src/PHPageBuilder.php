@@ -256,7 +256,8 @@ class PHPageBuilder
         $action = $action ?? $_GET['action'] ?? null;
 
         if (! phpb_config('auth.use_login') || ! phpb_config('website_manager.use_website_manager')) {
-            die('Authentication is disabled, use handlePublicRequest() and handleAuthenticatedRequest()');
+            die('The PHPageBuilder Authentication module is disabled, but no alternative has been implemented (you are still calling the standard handleRequest() method).<br>'
+                . 'Implement a piece of code that checks whether the user is logged in. If logged in, call handleAuthenticatedRequest() or else call handlePublicRequest().');
         }
 
         // handle login and logout requests
@@ -266,7 +267,7 @@ class PHPageBuilder
         if (phpb_in_module('website_manager')) {
             $this->auth->requireAuth();
             $this->websiteManager->handleRequest($route, $action);
-            die('Page not found');
+            die('PHPageBuilder WebsiteManager page not found');
         }
 
         // handle page builder requests
@@ -274,7 +275,7 @@ class PHPageBuilder
             $this->auth->requireAuth();
             phpb_set_in_editmode();
             $this->pageBuilder->handleRequest($route, $action);
-            die('Page not found');
+            die('PHPageBuilder PageBuilder page not found');
         }
 
         // handle all requests that do not need authentication
@@ -287,7 +288,7 @@ class PHPageBuilder
             return true;
         }
 
-        die('Page not found');
+        die('PHPageBuilder page not found. Check your URL: <b>' . phpb_e(phpb_full_url(phpb_current_relative_url())) . '</b>');
     }
 
     /**
