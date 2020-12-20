@@ -313,7 +313,7 @@ class PHPageBuilder
         // try to find page in cache
         $cache = phpb_instance('cache');
         if (phpb_config('cache.enabled')) {
-            $cachedContent = $cache->getCachedUrl(phpb_current_relative_url());
+            $cachedContent = $cache->getForUrl(phpb_current_relative_url());
             if ($cachedContent) {
                 echo $cachedContent;
                 return true;
@@ -325,7 +325,7 @@ class PHPageBuilder
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
             $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
-            $this->cacheRenderedPage($page, $renderedContent);
+            $this->cacheRenderedPage($renderedContent);
             echo $renderedContent;
             return true;
         }
@@ -333,23 +333,18 @@ class PHPageBuilder
     }
 
     /**
-     * Cache the contents of the rendered page, if caching is enabled and the current page does not contain non-cacheable blocks.
+     * Cache the rendered page contents, if caching is enabled and the current page does not contain non-cacheable blocks.
      *
-     * @param PageContract $page
      * @param string $renderedContent
      */
-    protected function cacheRenderedPage(PageContract $page, string $renderedContent)
+    protected function cacheRenderedPage(string $renderedContent)
     {
         if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached()) {
             return;
         }
 
-        $currentPageCacheFolder = phpb_config('cache.folder') . '/' . sha1(phpb_current_relative_url());
-        if (! is_dir($currentPageCacheFolder)) {
-            mkdir($currentPageCacheFolder, 0777, true);
-        }
-
-        file_put_contents($currentPageCacheFolder . '/page.html', $renderedContent);
+        $cache = phpb_instance('cache');
+        $cache->storeForUrl(phpb_current_relative_url(), $renderedContent);
     }
 
     /**
