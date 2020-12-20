@@ -244,16 +244,6 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
-     * Return the PageRenderer instance.
-     *
-     * @return PageRenderer
-     */
-    public function getPageRenderer(): PageRenderer
-    {
-        return $pageRenderer;
-    }
-
-    /**
      * Render in context of the given page, the given block with the passed settings, for updating the page builder.
      *
      * @param PageContract $page
