@@ -118,7 +118,7 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Caching settings
+     | Cache settings
      |--------------------------------------------------------------------------
      |
      | Faster load time by skipping block parsing if the page has been requested before.
@@ -127,9 +127,10 @@ return [
      | The cached html is removed if the page is saved again in the page builder.
      |
      */
-    'caching' => [
-        'enabled' => false,
-        'folder' => __DIR__ . '/cache'
+    'cache' => [
+        'enabled' => true,
+        'folder' => __DIR__ . '/cache',
+        'class' => PHPageBuilder\Cache::class
     ],
 
     /*

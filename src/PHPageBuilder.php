@@ -310,6 +310,16 @@ class PHPageBuilder
             die('Asset not found');
         }
 
+        // try to find page in cache
+        $cache = phpb_instance('cache');
+        if (phpb_config('cache.enabled')) {
+            $cachedContent = $cache->getCachedUrl(phpb_current_relative_url());
+            if ($cachedContent) {
+                echo $cachedContent;
+                return true;
+            }
+        }
+
         // let the page router resolve the current URL
         $pageTranslation = $this->router->resolve(phpb_current_relative_url());
         if ($pageTranslation instanceof PageTranslationContract) {
@@ -330,16 +340,16 @@ class PHPageBuilder
      */
     protected function cacheRenderedPage(PageContract $page, string $renderedContent)
     {
-        if (! phpb_config('caching.enabled') || ! PageRenderer::canBeCached()) {
+        if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached()) {
             return;
         }
 
-        $currentPageCacheFolder = phpb_config('caching.folder') . '/' . sha1(phpb_current_relative_url());
+        $currentPageCacheFolder = phpb_config('cache.folder') . '/' . sha1(phpb_current_relative_url());
         if (! is_dir($currentPageCacheFolder)) {
             mkdir($currentPageCacheFolder, 0777, true);
         }
 
-        file_put_contents($currentPageCacheFolder . '/response.html', $renderedContent);
+        file_put_contents($currentPageCacheFolder . '/page.html', $renderedContent);
     }
 
     /**
