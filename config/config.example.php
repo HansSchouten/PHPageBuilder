@@ -128,7 +128,8 @@ return [
      |
      */
     'caching' => [
-        'enabled' => false
+        'enabled' => false,
+        'folder' => __DIR__ . '/cache'
     ],
 
     /*

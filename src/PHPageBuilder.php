@@ -333,6 +333,13 @@ class PHPageBuilder
         if (! phpb_config('caching.enabled') || ! PageRenderer::canBeCached()) {
             return;
         }
+
+        $currentPageCacheFolder = phpb_config('caching.folder') . '/' . sha1(phpb_current_relative_url());
+        if (! is_dir($currentPageCacheFolder)) {
+            mkdir($currentPageCacheFolder, 0777, true);
+        }
+
+        file_put_contents($currentPageCacheFolder . '/response.html', $renderedContent);
     }
 
     /**
