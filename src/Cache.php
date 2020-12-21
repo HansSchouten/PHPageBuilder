@@ -54,6 +54,9 @@ class Cache implements CacheContract
      */
     public function getPathForUrl(string $relativeUrl, bool $returnRelative = false): string
     {
+        // map empty url to the - root folder
+        $relativeUrl = (empty($relativeUrl) || $relativeUrl === '/') ? '-' : $relativeUrl;
+
         // use a cache path with folders based on the URL segments, to allow partial cache invalidation with a specific prefix
         $relativeUrlWithoutQueryString = explode('?', $relativeUrl)[0];
         $cachePath = phpb_slug($relativeUrlWithoutQueryString, true);
@@ -66,7 +69,11 @@ class Cache implements CacheContract
 
     protected function relativeToFullCachePath(string $relativeCachePath): string
     {
-        return phpb_config('cache.folder') . '/' . $relativeCachePath;
+        $cacheFolder = phpb_config('cache.folder');
+        if (substr($relativeCachePath, 0, 1) !== '/') {
+            $cacheFolder .= '/';
+        }
+        return $cacheFolder . $relativeCachePath;
     }
 
     /**
@@ -87,6 +94,54 @@ class Cache implements CacheContract
         if (is_dir($cachePathWithoutHash) && $numberOfCachedPageVariants >= static::$maxCachedPageVariants) {
             return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Invalidate all variants stored for the given page route (i.e an URL with * and {} placeholders).
+     *
+     * @param string $route
+     */
+    public function invalidate(string $route)
+    {
+        $staticUrlPrefix1 = explode('*', $route)[0];
+        $staticUrlPrefix2 = explode('{', $route)[0];
+
+        $shortestPrefix = $staticUrlPrefix1;
+        if (strlen($staticUrlPrefix2) < strlen($staticUrlPrefix1)) {
+            $shortestPrefix = $staticUrlPrefix2;
+        }
+
+        $cachePathPrefix = dirname($this->getPathForUrl($shortestPrefix));
+        $this->removeDirectoryRecursive($cachePathPrefix);
+    }
+
+    /**
+     * Recursively remove the directory of the given path and all its contents.
+     *
+     * @param $path
+     * @return bool
+     */
+    protected function removeDirectoryRecursive($path) {
+        // prevent removing data outside the cache folder
+        if (strpos($path, '..') !== false || strpos($path, phpb_config('cache.folder')) !== 0) {
+            return false;
+        }
+        if (! is_dir($path)) {
+            return false;
+        }
+
+        $path = substr($path, -1) === '/' ? $path : $path . '/';
+        $files = glob($path . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $this->removeDirectoryRecursive($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($path);
 
         return true;
     }

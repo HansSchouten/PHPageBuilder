@@ -37,4 +37,11 @@ interface CacheContract
      * @return bool
      */
     public function cachePathCanBeUsed(string $cachePath): bool;
+
+    /**
+     * Invalidate all variants stored for the given page route (i.e an URL with * and {} placeholders).
+     *
+     * @param string $route
+     */
+    public function invalidate(string $route);
 }
