@@ -50,6 +50,9 @@ class Cache implements CacheContract
         $relativeUrlWithoutQueryString = explode('?', $relativeUrl)[0];
         $cachePath = phpb_slug($relativeUrlWithoutQueryString, true);
 
-        return phpb_config('cache.folder') . '/' . $cachePath . '/' . sha1($relativeUrl);
+        // suffix the cache path with a hash of the exact relative URL, to prevent returning wrong content due to slug collisions
+        $cachePath .= '/' . sha1($relativeUrl);
+
+        return phpb_config('cache.folder') . '/' . $cachePath;
     }
 }
