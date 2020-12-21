@@ -46,6 +46,10 @@ class Cache implements CacheContract
      */
     public function getFolderForUrl(string $relativeUrl): string
     {
-        return phpb_config('cache.folder') . '/' . sha1($relativeUrl);
+        // use a cache path with folders based on the URL segments, to allow partial cache invalidation with a specific prefix
+        $relativeUrlWithoutQueryString = explode('?', $relativeUrl)[0];
+        $cachePath = phpb_slug($relativeUrlWithoutQueryString, true);
+
+        return phpb_config('cache.folder') . '/' . $cachePath . '/' . sha1($relativeUrl);
     }
 }

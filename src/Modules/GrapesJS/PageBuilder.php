@@ -70,7 +70,7 @@ class PageBuilder implements PageBuilderContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
         }
-        if (!($page instanceof PageContract)) {
+        if (! ($page instanceof PageContract)) {
             return false;
         }
 

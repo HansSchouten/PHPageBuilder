@@ -486,6 +486,24 @@ if (! function_exists('phpb_instance')) {
     }
 }
 
+if (! function_exists('phpb_slug')) {
+    /**
+     * Create a slug (safe URL or path) of the given string.
+     *
+     * @param string $text
+     * @param false $allowSlashes
+     * @return string
+     */
+    function phpb_slug(string $text, $allowSlashes = false)
+    {
+        if ($allowSlashes) {
+            return strtolower(trim(preg_replace('/[^A-Za-z0-9-\/]+/', '-', $text)));
+        } else {
+            return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
+        }
+    }
+}
+
 if (! function_exists('phpb_autoload')) {
     /**
      * Autoload classes from the PHPageBuilder package.
