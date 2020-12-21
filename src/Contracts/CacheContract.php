@@ -21,10 +21,20 @@ interface CacheContract
     public function storeForUrl(string $relativeUrl, string $pageContent);
 
     /**
-     * Return the full cache storage folder path for the given relative URL.
+     * Return the cache storage path for the given relative URL.
      *
      * @param string $relativeUrl
+     * @param bool $returnRelative
      * @return string
      */
-    public function getFolderForUrl(string $relativeUrl): string;
+    public function getPathForUrl(string $relativeUrl, bool $returnRelative = false): string;
+
+    /**
+     * Analyse the given cache path to determine whether it can be to used, without server/disk space issues.
+     * This prevents deep nested cache paths and large numbers of cached pages per path due to query string variations.
+     *
+     * @param string $cachePath
+     * @return bool
+     */
+    public function cachePathCanBeUsed(string $cachePath): bool;
 }
