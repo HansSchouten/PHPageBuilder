@@ -4,7 +4,6 @@ namespace PHPageBuilder\Repositories;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\PageRepositoryContract;
-use PHPageBuilder\Setting;
 use Exception;
 
 class PageRepository extends BaseRepository implements PageRepositoryContract
@@ -73,6 +72,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             }
         }
 
+        $page->invalidateCache();
         $this->replaceTranslations($page, $data);
 
         return parent::update($page, [
@@ -122,6 +122,8 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      */
     public function updatePageData($page, array $data)
     {
+        $page->invalidateCache();
+
         return parent::update($page, [
             'data' => json_encode($data),
         ]);

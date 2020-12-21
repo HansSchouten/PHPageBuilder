@@ -85,4 +85,9 @@ interface PageContract
      * @return mixed|null
      */
     public function get($property);
+
+    /**
+     * Invalidate all cached variants of this page.
+     */
+    public function invalidateCache();
 }

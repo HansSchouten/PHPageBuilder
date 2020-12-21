@@ -164,4 +164,17 @@ class Page implements PageContract
 
         return null;
     }
+
+    /**
+     * Invalidate all cached variants of this page.
+     */
+    public function invalidateCache()
+    {
+        $cache = phpb_instance('cache');
+
+        foreach ($this->getTranslations() as $locale => $translationData) {
+            $languageRoute = $this->getRoute($locale);
+            $cache->invalidate($languageRoute);
+        }
+    }
 }

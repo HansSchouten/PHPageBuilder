@@ -84,7 +84,6 @@ class PageBuilder implements PageBuilderContract
                 if (isset($_POST) && isset($_POST['data'])) {
                     $data = json_decode($_POST['data'], true);
                     $this->updatePage($page, $data);
-                    $this->invalidateCache($page);
                     exit();
                 }
                 break;
@@ -297,21 +296,6 @@ class PageBuilder implements PageBuilderContract
     {
         $pageRepository = new PageRepository;
         return $pageRepository->updatePageData($page, $data);
-    }
-
-    /**
-     * Invalidate all cached variants of the given page.
-     *
-     * @param PageContract $page
-     */
-    public function invalidateCache(PageContract $page)
-    {
-        $cache = phpb_instance('cache');
-
-        foreach ($page->getTranslations() as $locale => $translationData) {
-            $languageRoute = $page->getRoute($locale);
-            $cache->invalidate($languageRoute);
-        }
     }
 
     /**
