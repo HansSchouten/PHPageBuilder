@@ -128,4 +128,17 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             'data' => json_encode($data),
         ]);
     }
+
+    /**
+     * Remove the given page from the database.
+     *
+     * @param $id
+     * @return bool
+     */
+    public function destroy($id)
+    {
+        $this->findWithId($id)->invalidateCache();
+
+        return parent::destroy($id);
+    }
 }
