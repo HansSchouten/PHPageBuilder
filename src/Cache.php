@@ -19,6 +19,15 @@ class Cache implements CacheContract
     {
         $currentPageCacheFolder = $this->getPathForUrl($relativeUrl);
         if (is_dir($currentPageCacheFolder)) {
+
+            if (file_exists($currentPageCacheFolder . '/expiration.txt')) {
+                $expiresAt = file_get_contents($currentPageCacheFolder . '/expiration.txt');
+                if ($expiresAt < time()) {
+                    $this->invalidate($relativeUrl);
+                    return null;
+                }
+            }
+
             return file_get_contents($currentPageCacheFolder . '/page.html');
         }
 
