@@ -30,8 +30,9 @@ class Cache implements CacheContract
      *
      * @param string $relativeUrl
      * @param string $pageContent
+     * @param int $cacheLifetime
      */
-    public function storeForUrl(string $relativeUrl, string $pageContent)
+    public function storeForUrl(string $relativeUrl, string $pageContent, int $cacheLifetime)
     {
         $currentPageCacheFolder = $this->getPathForUrl($relativeUrl, true);
         if (! $this->cachePathCanBeUsed($currentPageCacheFolder)) {
@@ -43,6 +44,7 @@ class Cache implements CacheContract
             mkdir($currentPageCacheFolder, 0777, true);
         }
         file_put_contents($currentPageCacheFolder . '/page.html', $pageContent);
+        file_put_contents($currentPageCacheFolder . '/expiration.txt', time() + (60 * $cacheLifetime));
     }
 
     /**

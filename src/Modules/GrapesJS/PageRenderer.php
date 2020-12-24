@@ -108,7 +108,7 @@ class PageRenderer
     {
         if (! $canBeCached || ($cacheLifetime && intval($cacheLifetime) <= 0)) {
             static::$canBeCached = false;
-        } else {
+        } elseif ($cacheLifetime) {
             static::$cacheLifetime = min(static::$cacheLifetime, intval($cacheLifetime));
         }
     }
@@ -131,7 +131,7 @@ class PageRenderer
      */
     public static function getCacheLifetime(): int
     {
-        if (! static::$canBeCached) {
+        if (! static::canBeCached()) {
             return 0;
         }
         return static::$cacheLifetime;

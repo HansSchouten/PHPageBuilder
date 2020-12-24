@@ -17,8 +17,9 @@ interface CacheContract
      *
      * @param string $relativeUrl
      * @param string $pageContent
+     * @param int $cacheLifetime
      */
-    public function storeForUrl(string $relativeUrl, string $pageContent);
+    public function storeForUrl(string $relativeUrl, string $pageContent, int $cacheLifetime);
 
     /**
      * Return the cache storage path for the given relative URL.

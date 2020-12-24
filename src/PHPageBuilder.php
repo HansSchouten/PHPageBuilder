@@ -345,7 +345,7 @@ class PHPageBuilder
         }
 
         $cache = phpb_instance('cache');
-        $cache->storeForUrl(phpb_current_relative_url(), $renderedContent);
+        $cache->storeForUrl(phpb_current_relative_url(), $renderedContent, PageRenderer::getCacheLifetime());
     }
 
     /**
