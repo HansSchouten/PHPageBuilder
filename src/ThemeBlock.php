@@ -39,9 +39,11 @@ class ThemeBlock
         if (file_exists($this->getFolder() . '/config.php')) {
             $this->config = require $this->getFolder() . '/config.php';
         }
-        if (boolval($this->config['cache'] ?? true) === false) {
-            PageRenderer::$canBeCached = false;
-        }
+
+        PageRenderer::setCanBeCached(
+            boolval($this->config['cache'] ?? true),
+            $this->config['cache_lifetime'] ?? null
+        );
     }
 
     /**

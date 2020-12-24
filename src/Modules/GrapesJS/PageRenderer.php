@@ -51,6 +51,13 @@ class PageRenderer
     public static $canBeCached;
 
     /**
+     * The maximum number of minutes this page should be cached, one week by default.
+     *
+     * @var int $cacheLifetime
+     */
+    public static $cacheLifetime = 7*24*60;
+
+    /**
      * PageRenderer constructor.
      *
      * @param ThemeContract $theme
@@ -92,6 +99,21 @@ class PageRenderer
     }
 
     /**
+     * Set whether the currently rendered page can be cached.
+     *
+     * @param bool $canBeCached
+     * @param string|null $cacheLifetime
+     */
+    public static function setCanBeCached(bool $canBeCached, $cacheLifetime = null)
+    {
+        if (! $canBeCached || ($cacheLifetime && intval($cacheLifetime) <= 0)) {
+            static::$canBeCached = false;
+        } else {
+            static::$cacheLifetime = min(static::$cacheLifetime, intval($cacheLifetime));
+        }
+    }
+
+    /**
      * Return whether the rendered page can be cached.
      * I.e. no blocks were encountered with content that varies per page load.
      *
@@ -100,6 +122,19 @@ class PageRenderer
     public static function canBeCached(): bool
     {
         return static::$canBeCached ?? true;
+    }
+
+    /**
+     * Return the maximum number of minutes the rendered page should be cached.
+     *
+     * @return int
+     */
+    public static function getCacheLifetime(): int
+    {
+        if (! static::$canBeCached) {
+            return 0;
+        }
+        return static::$cacheLifetime;
     }
 
     /**
