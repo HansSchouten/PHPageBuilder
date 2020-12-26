@@ -313,7 +313,7 @@ class PHPageBuilder
 
         // try to find page in cache
         $cache = phpb_instance('cache');
-        if (phpb_config('cache.enabled') && ! isset($_GET['no_cache'])) {
+        if (phpb_config('cache.enabled') && ! isset($_GET['ignore_cache'])) {
             $cachedContent = $cache->getForUrl(phpb_current_relative_url());
             if ($cachedContent) {
                 echo $cachedContent;
@@ -340,7 +340,7 @@ class PHPageBuilder
      */
     protected function cacheRenderedPage(string $renderedContent)
     {
-        if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached()) {
+        if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached() || isset($_GET['dont_cache'])) {
             return;
         }
 
