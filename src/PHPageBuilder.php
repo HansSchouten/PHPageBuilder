@@ -313,7 +313,7 @@ class PHPageBuilder
 
         // try to find page in cache
         $cache = phpb_instance('cache');
-        if (phpb_config('cache.enabled')) {
+        if (phpb_config('cache.enabled') && ! isset($_GET['no_cache'])) {
             $cachedContent = $cache->getForUrl(phpb_current_relative_url());
             if ($cachedContent) {
                 echo $cachedContent;
