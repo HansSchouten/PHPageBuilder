@@ -340,7 +340,7 @@ class PHPageBuilder
      */
     protected function cacheRenderedPage(string $renderedContent)
     {
-        if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached() || isset($_GET['dont_cache'])) {
+        if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached() || isset($_GET['ignore_cache'])) {
             return;
         }
 
