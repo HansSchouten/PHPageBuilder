@@ -313,7 +313,7 @@ class PHPageBuilder
 
         // try to find page in cache
         $cache = phpb_instance('cache');
-        if (phpb_config('cache.enabled') && ! isset($_GET['ignore_cache'])) {
+        if (phpb_config('cache.enabled') && ! isset($_GET['ignore_cache']) && ! isset($_GET['refresh_cache'])) {
             $cachedContent = $cache->getForUrl(phpb_current_relative_url());
             if ($cachedContent) {
                 echo $cachedContent;
@@ -344,8 +344,14 @@ class PHPageBuilder
             return;
         }
 
+        // allow a forced cached page refresh, stored for the current URL but without the refresh parameter
+        $url = phpb_current_relative_url();
+        $url = str_replace('?refresh_cache&', '?', $url);
+        $url = str_replace('?refresh_cache', '', $url);
+        $url = str_replace('&refresh_cache', '', $url);
+
         $cache = phpb_instance('cache');
-        $cache->storeForUrl(phpb_current_relative_url(), $renderedContent, PageRenderer::getCacheLifetime());
+        $cache->storeForUrl($url, $renderedContent, PageRenderer::getCacheLifetime());
     }
 
     /**
