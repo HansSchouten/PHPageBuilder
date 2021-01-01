@@ -128,7 +128,7 @@ return [
      |
      */
     'cache' => [
-        'enabled' => true,
+        'enabled' => false,
         'folder' => __DIR__ . '/cache',
         'class' => PHPageBuilder\Cache::class
     ],
