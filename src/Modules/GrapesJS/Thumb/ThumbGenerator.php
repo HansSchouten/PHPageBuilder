@@ -132,7 +132,7 @@ class ThumbGenerator
             return;
         }
 
-        $page = new Page;
+        $page = phpb_instance('page');
         $page->setData([
             'layout' => 'master',
             'data' => [
