@@ -207,7 +207,7 @@ class PageBuilder implements PageBuilderContract
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
-            $adapter = new BlockAdapter($pageRenderer, $themeBlock);
+            $adapter = phpb_instance(BlockAdapter::class, [$pageRenderer, $themeBlock]);
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
 
             if ($themeBlock->get('hidden') !== true) {
