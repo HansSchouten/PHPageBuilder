@@ -30,8 +30,8 @@ CKEDITOR.dtd.$editable.ol = 1;
 CKEDITOR.dtd.$editable.ul = 1;
 CKEDITOR.dtd.$editable.table = 1;
 
-window.currentLanguage = <?= json_encode(phpb_config('general.language')) ?>;
 window.languages = <?= json_encode(phpb_active_languages()) ?>;
+window.currentLanguage = <?= in_array(phpb_config('general.language'), phpb_active_languages()) ? json_encode(phpb_config('general.language')) : json_encode(array_keys(phpb_active_languages())[0]) ?>;
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.contentContainerComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.themeBlocks = <?= json_encode($blocks) ?>;
