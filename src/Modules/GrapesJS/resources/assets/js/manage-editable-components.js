@@ -357,17 +357,27 @@
 
         // get the root component of the given component (its first ancestor that does not have a dynamic parent itself or the block that is inside a blocks container)
         let rootComponent = component;
+        let hasDynamicAncestor = false;
         while (rootComponent.parent() &&
             rootComponent.parent().attributes.attributes['phpb-blocks-container'] === undefined &&
             rootComponent.parent().attributes['is-html'] !== 'true' &&
             rootComponent.parent().attributes.attributes['phpb-content-container'] === undefined
-        ) {
+            ) {
+            if (rootComponent.parent().attributes['is-html'] === 'false') {
+                hasDynamicAncestor = true;
+            }
             if (rootComponent.attributes['block-id'] !== undefined) {
                 relativeIds.push(rootComponent.attributes['block-id']);
             }
             rootComponent = rootComponent.parent();
         }
-        let rootId = rootComponent.attributes['block-id'];
+
+        let rootId = component.attributes['block-id'];
+        if (hasDynamicAncestor) {
+            rootId = rootComponent.attributes['block-id'];
+        } else {
+            relativeIds = [];
+        }
 
         // get the component settings by traversing the pageBlocks structure
         let settings = window.pageBlocks[window.currentLanguage][rootId];
@@ -437,18 +447,27 @@
         // so we need to update the closest parent which does not have a dynamic parent itself or the block that is inside a blocks container.
         // also keep track of all intermediate block ids, for re-selecting the currently selected component.
         let relativeIds = [];
-        let componentToUpdate = component;
-        while (componentToUpdate.parent() &&
-            componentToUpdate.parent().attributes.attributes['phpb-blocks-container'] === undefined &&
-            componentToUpdate.parent().attributes['is-html'] !== 'true' &&
-            componentToUpdate.parent().attributes.attributes['phpb-content-container'] === undefined
-        ) {
-            if (componentToUpdate.attributes['block-id'] !== undefined) {
-                relativeIds.push(componentToUpdate.attributes['block-id']);
+        let ancestorToUpdate = component;
+        let hasDynamicAncestor = false;
+        while (ancestorToUpdate.parent() &&
+            ancestorToUpdate.parent().attributes.attributes['phpb-blocks-container'] === undefined &&
+            ancestorToUpdate.parent().attributes['is-html'] !== 'true' &&
+            ancestorToUpdate.parent().attributes.attributes['phpb-content-container'] === undefined
+            ) {
+            if (ancestorToUpdate.parent().attributes['is-html'] === 'false') {
+                hasDynamicAncestor = true;
             }
-            componentToUpdate = componentToUpdate.parent();
+            if (ancestorToUpdate.attributes['block-id'] !== undefined) {
+                relativeIds.push(ancestorToUpdate.attributes['block-id']);
+            }
+            ancestorToUpdate = ancestorToUpdate.parent();
         }
-        component = componentToUpdate;
+
+        if (hasDynamicAncestor) {
+            component = ancestorToUpdate;
+        } else {
+            relativeIds = [];
+        }
 
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
