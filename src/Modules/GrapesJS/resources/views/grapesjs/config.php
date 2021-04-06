@@ -6,7 +6,7 @@ return [
     'avoidInlineStyle' => true,
     'allowScripts' => true,
     'storageManager' => [
-        'type' => 'remote',
+        'type' => 'local',
         'autoload' => false,
         'autosave' => false
     ],
