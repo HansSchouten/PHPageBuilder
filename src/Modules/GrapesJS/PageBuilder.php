@@ -124,14 +124,14 @@ class PageBuilder implements PageBuilderContract
         $publicId = sha1(uniqid(rand(), true));
         $uploader = new Uploader('files');
         $uploader
-            ->file_name($publicId . '/' . $uploader->file_src_name)
+            ->file_name($publicId . '/' . str_replace(' ', '-', $uploader->file_src_name))
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
             ->run();
 
         if (! $uploader->was_uploaded) {
             die("Upload error: {$uploader->error}");
         } else {
-            $originalFile = $uploader->file_src_name;
+            $originalFile = str_replace(' ', '-', $uploader->file_src_name);
             $originalMime = $uploader->file_src_mime;
             $serverFile = $uploader->final_file_name;
 
