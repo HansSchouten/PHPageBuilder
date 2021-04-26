@@ -494,6 +494,35 @@ html, body, #gjs {
   }
 }
 
+/*   SIDEBAR BOTTOM DEVICE BUTTONS   */
+
+#sidebar-bottom-device {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  height: 40px;
+  width: 300px;
+  margin: 0;
+  padding: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: #fff;
+  border-top: 1px solid #dbdbdb;
+  border-right: 2px solid #dfe0e1;
+  z-index: 10;
+
+  a {
+    float: right;
+    height: 100%;
+    width: 33.33%;
+    border-left: 1px solid #dfe0e1;
+    border-radius: 0;
+    color: #888;
+    font-size: 15px;
+    padding: 8px 0;
+  }
+}
+
 @import 'fields';
 @import 'style-manager';
 @import 'asset-manager';

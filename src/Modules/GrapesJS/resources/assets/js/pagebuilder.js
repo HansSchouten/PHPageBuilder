@@ -4,6 +4,10 @@ $(document).ready(function() {
     $(".gjs-pn-panels").prepend($("#sidebar-header"));
     $(".gjs-pn-panels").append($("#sidebar-bottom-buttons"));
 
+    $('.btn.set-view').click(function (event) {
+        window.editor.setDevice(event.currentTarget.dataset.view);
+    });
+
     $("#toggle-sidebar").click(function() {
         $("#gjs").toggleClass('sidebar-collapsed');
         triggerEditorResize();

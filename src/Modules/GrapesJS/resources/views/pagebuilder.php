@@ -119,6 +119,21 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     ?>
 </div>
 
+<div id="sidebar-bottom-device">
+    <a id="set-dekstop-view" class="btn set-view" data-view="Desktop">
+        <i class="fa fa-desktop"></i>
+        Desktop
+    </a>
+    <a id="set-tablet-view" class="btn set-view" data-view="Tablet">
+        <i class="fa fa-tablet"></i>
+        Tablet
+    </a>
+    <a id="set-mobile-view" class="btn set-view" data-view="Mobile">
+        <i class="fa fa-mobile"></i>
+        Mobile
+    </a>
+</div>
+
 <div id="sidebar-bottom-buttons">
     <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder', ['action' => 'store', 'page' => $page->getId()]) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
