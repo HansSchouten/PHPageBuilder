@@ -49,6 +49,13 @@ return [
             ['name' => 'nth-of-type(2n)', 'label' => phpb_trans('pagebuilder.selector-manager.state-nth')]
         ],
     ],
+    'deviceManager' => [
+        'devices' => [
+            ['name' => 'Desktop', 'width' => ''],
+            ['name' => 'Tablet', 'width' => '991px'],
+            ['name' => 'Mobile', 'width' => '480px']
+        ]
+    ],
     'traitManager' => [
         'labelPlhText' => '',
         'labelPlhHref' => 'https://website.com'
