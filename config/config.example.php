@@ -175,4 +175,9 @@ return [
      */
     'class_replacements' => [
     ],
+
+    'domains' => [
+        'a.com' => 'master',
+        'b.com' => 'secondary',
+    ]
 ];
