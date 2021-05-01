@@ -2,6 +2,7 @@
 
 namespace PHPageBuilder\Modules\GrapesJS;
 
+use Illuminate\Support\Facades\Storage;
 use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
@@ -11,6 +12,7 @@ use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 use Exception;
+use PHPageBuilder\Theme;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -45,6 +47,45 @@ class PageBuilder implements PageBuilderContract
     public function setTheme(ThemeContract $theme)
     {
         $this->theme = $theme;
+    }
+
+    public function saveAllAsHtml($page)
+    {
+        $pageObj = (new PageRepository)->findWithId($page->getId());
+        $translations = $page->getTranslations();
+        $domains = phpb_config('domains');
+
+        foreach($translations as $transKey => $transVal) {
+            foreach ($domains as $domainKey => $domainValue) {
+                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey);
+            }
+        }
+    }
+
+    public function forceFilePutContents (string $fullPathWithFileName, string $fileContents)
+    {
+        $exploded = explode(DIRECTORY_SEPARATOR,$fullPathWithFileName);
+
+        array_pop($exploded);
+
+        $directoryPathOnly = implode(DIRECTORY_SEPARATOR,$exploded);
+
+        if (!file_exists($directoryPathOnly))
+        {
+            mkdir($directoryPathOnly,0775,true);
+        }
+        file_put_contents($fullPathWithFileName, $fileContents);
+    }
+
+    public function saveAsHtml($page, $currentLanguage, $layout, $domain)
+    {
+        $theme = new Theme(phpb_config('theme'), phpb_config('theme.active_theme'));
+        $page->layout = $layout;
+        $pageRenderer = new PageRenderer($theme, $page);
+        $pageRenderer->setLanguage($currentLanguage);
+        $html = $pageRenderer->render();
+        $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getName() . '.html', $html);
+
     }
 
     /**
@@ -84,6 +125,7 @@ class PageBuilder implements PageBuilderContract
                 if (isset($_POST) && isset($_POST['data'])) {
                     $data = json_decode($_POST['data'], true);
                     $this->updatePage($page, $data);
+                    $this->saveAllAsHtml($page);
                     exit();
                 }
                 break;
