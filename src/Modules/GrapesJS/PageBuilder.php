@@ -84,7 +84,7 @@ class PageBuilder implements PageBuilderContract
         $pageRenderer = new PageRenderer($theme, $page);
         $pageRenderer->setLanguage($currentLanguage);
         $html = $pageRenderer->render();
-        $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getName() . '.html', $html);
+        $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
 
     }
 
