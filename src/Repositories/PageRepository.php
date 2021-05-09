@@ -86,7 +86,6 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      *
      * @param PageContract $page
      * @param array $data
-     * @return bool
      */
     protected function replaceTranslations(PageContract $page, array $data)
     {
@@ -110,7 +109,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             ]);
         }
 
-        return true;
+        return $page;
     }
 
     /**
