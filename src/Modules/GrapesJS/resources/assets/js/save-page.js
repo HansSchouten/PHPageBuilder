@@ -52,11 +52,12 @@ $(document).ready(function() {
                     window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
                     callback();
                 },
-                error: function(e) {
+                error: function(error) {
                     callback();
-                    console.log(e.status);
-                    console.log(e.statusText);
-                    console.log(e.responseJSON);
+                    console.log(error);
+                    let errorMessage = error.statusText + ' ' + error.status;
+                    errorMessage = error.responseJSON.message ? (errorMessage + ': "' + error.responseJSON.message + '"') : errorMessage;
+                    window.toastr.error(errorMessage);
                     window.toastr.error(window.translations['toastr-switching-language-failed']);
                 }
             });
@@ -192,11 +193,12 @@ $(document).ready(function() {
                     toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
                 },
-                error: function(e) {
+                error: function(error) {
                     toggleSaving();
-                    console.log(e.status);
-                    console.log(e.statusText);
-                    console.log(e.responseJSON);
+                    console.log(error);
+                    let errorMessage = error.statusText + ' ' + error.status;
+                    errorMessage = error.responseJSON.message ? (errorMessage + ': "' + error.responseJSON.message + '"') : errorMessage;
+                    window.toastr.error(errorMessage);
                     window.toastr.error(window.translations['toastr-saving-failed']);
                 }
             });
