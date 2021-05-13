@@ -52,8 +52,11 @@ $(document).ready(function() {
                     window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
                     callback();
                 },
-                error: function() {
+                error: function(e) {
                     callback();
+                    console.log(e.status);
+                    console.log(e.statusText);
+                    console.log(e.responseJSON);
                     window.toastr.error(window.translations['toastr-switching-language-failed']);
                 }
             });
@@ -189,8 +192,11 @@ $(document).ready(function() {
                     toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
                 },
-                error: function() {
+                error: function(e) {
                     toggleSaving();
+                    console.log(e.status);
+                    console.log(e.statusText);
+                    console.log(e.responseJSON);
                     window.toastr.error(window.translations['toastr-saving-failed']);
                 }
             });
