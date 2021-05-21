@@ -22,7 +22,7 @@ return [
             'id' => 'position',
             'name' => phpb_trans('pagebuilder.style-manager.sectors.position'),
             'open' => true,
-            'buildProps' => ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'padding', 'margin', 'text-align'],
+            'buildProps' => ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'position', 'top', 'bottom', 'left', 'right', 'padding', 'margin', 'text-align'],
             'properties' => [[
                 'property' => 'text-align',
                 'list' => [
