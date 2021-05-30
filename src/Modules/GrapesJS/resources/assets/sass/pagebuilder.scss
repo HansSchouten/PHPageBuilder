@@ -179,7 +179,7 @@ html, body, #gjs {
   border-right: 2px solid rgb(223, 224, 225);
   padding-top: 89px;
   background: rgb(225, 232, 235);
-  height: calc(100% - #{$sidebar-bottom-buttons-height});
+  height: calc(100% - #{$sidebar-bottom-buttons-height} * 2);
   overflow: hidden;
 
   > div:first-of-type {
