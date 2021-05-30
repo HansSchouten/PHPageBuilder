@@ -141,7 +141,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
         <?= phpb_trans('pagebuilder.save-page') ?>
     </button>
 
-    <a id="view-page" href="<?= phpb_e(phpb_full_url($page->getRoute())) ?>" target="_blank" class="btn">
+    <a id="view-page" href="<?= phpb_e(phpb_full_url(phpb_config('pagebuilder.actions.view') . $page->getRoute())) ?>" target="_blank" class="btn">
         <i class="fa fa-external-link"></i>
         <?= phpb_trans('pagebuilder.view-page') ?>
     </a>
