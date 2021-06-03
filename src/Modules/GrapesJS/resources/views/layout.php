@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="<?= phpb_asset('pagebuilder/app.css') ?>">
     <?= $pageBuilder->customStyle(); ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/grapesjs@0.15.9/dist/grapes.min.js"></script>
+    <!--    Hard coded to use local grapes.min.js -->
+    <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapes.min.js') ?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

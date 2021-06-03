@@ -18,6 +18,9 @@
 <script type="text/javascript" src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.9.min.js') ?>"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
+<!-- TODO: hard coded to add the pagebuilder/grapesjs-component-code-editor.min.js and grapesjs-parser-postcss.min.js-->
+<script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-component-code-editor.min.js') ?>"></script>
+<script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-parser-postcss.min.js') ?>"></script>
 <script type="text/javascript">
 CKEDITOR.dtd.$editable.a = 1;
 CKEDITOR.dtd.$editable.b = 1;

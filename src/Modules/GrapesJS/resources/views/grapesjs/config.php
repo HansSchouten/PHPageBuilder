@@ -86,6 +86,14 @@ return [
                         'command' => 'open-sm',
                         'togglable' => 0,
                         'attributes' => ['title' => phpb_trans('pagebuilder.view-style-manager')],
+                    ],
+                    // TODO: hard coded to add the custom code editor function
+                    [
+                        'id' => 'open-style-button',
+                        'className' => 'fa fa-file-code-o',
+                        'command' => 'open-code',
+                        'togglable' => 0,
+                        'attributes' => ['title' => 'Open Code'],
                     ]
                 ]
             ],
