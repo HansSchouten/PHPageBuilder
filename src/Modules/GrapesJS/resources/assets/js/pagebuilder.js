@@ -24,7 +24,12 @@ $(document).ready(function() {
         $(".gjs-sm-sectors").parent().parent().css('display', 'none');
         $(".gjs-trt-traits").parent().parent().css('display', 'block');
     });
-
+    // TODO: hard code to se the block
+    window.editor.on('run:open-code', function(editor) {
+        $(".gjs-sm-sectors").parent().parent().css('display', 'none');
+        $(".gjs-trt-traits").parent().parent().css('display', 'none');
+    });
+    
     window.editor.on('block:drag:start', function(block) {
         autoCollapseSidebar();
     });

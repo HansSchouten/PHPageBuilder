@@ -11,6 +11,47 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="<?= phpb_asset('pagebuilder/app.css') ?>">
+    <!-- TODO: hard coded css style -->
+    <style>
+        .CodeMirror-code {
+            text-align: left;
+        }
+
+        .code-panel section .codepanel-separator {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 0.6rem;
+            padding-right: 0.6rem;
+        }
+
+        .code-panel section .codepanel-label {
+            margin-top: 5px;
+            line-height: 20px;
+            font-size: 13px;
+            user-select: none;
+            text-transform: uppercase;
+            padding: 5px;
+        }
+
+        .cp-btn-container {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .gjs-btn-prim {
+            color: inherit;
+            background-color: rgba(255,255,255,.1);
+            border-radius: 2px;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cp-btn-container .gjs-btn-prim {
+            margin: 2.5px;
+        }
+    </style>
+    <?= $pageBuilder->customStyle(); ?>
     <?= $pageBuilder->customStyle(); ?>
 
     <!--    Hard coded to use local grapes.min.js -->

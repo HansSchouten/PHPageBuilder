@@ -104,7 +104,7 @@ return [
             phpb_asset('pagebuilder/page-injection.css'),
         ],
     ],
-    'plugins' => ['grapesjs-touch', 'gjs-plugin-ckeditor'],
+    'plugins' => ['grapesjs-touch', 'gjs-plugin-ckeditor', 'grapesjs-component-code-editor', "grapesjs-parser-postcss"],
     'pluginsOpts' => [
         'gjs-plugin-ckeditor' => [
             'position' => 'left',
