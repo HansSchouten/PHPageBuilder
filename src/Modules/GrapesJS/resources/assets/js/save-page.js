@@ -110,6 +110,9 @@ $(document).ready(function() {
             for (let subBlockId in currentLanguageBlocks[blockId].blocks) {
                 let updatedSubBlock = currentLanguageBlocks[blockId].blocks[subBlockId];
                 let oldSubBlock = newLanguageBlocks[blockId].blocks[subBlockId];
+                if (! updatedSubBlock || ! oldSubBlock) {
+                    continue;
+                }
 
                 let updatedSubBlockMatches = updatedSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
                 let oldSubBlockMatches = oldSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
