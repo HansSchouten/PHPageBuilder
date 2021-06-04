@@ -111,7 +111,7 @@ A shortcode can be used to include a block inside another block or into a layout
 To allow dropping blocks into a block in the page builder, a blocks container should be added. To add a blocks container, simply add `[blocks-container]` at the desired location in a block view file. The following html syntax allows dropping blocks inside a bootstrap container element:
 ```html
 <div class="container">
-    [block-container]
+    [blocks-container]
 </div>
 ```
 An alternative method is adding the `phpb-blocks-container` attribute to a html element, as shown in this example:
