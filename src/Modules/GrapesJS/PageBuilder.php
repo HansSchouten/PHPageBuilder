@@ -84,6 +84,7 @@ class PageBuilder implements PageBuilderContract
         $pageRenderer = new PageRenderer($theme, $page);
         $pageRenderer->setLanguage($currentLanguage);
         $html = $pageRenderer->render();
+        // TODO: the root could be changed if it is not served through laravel
         $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
 
     }
