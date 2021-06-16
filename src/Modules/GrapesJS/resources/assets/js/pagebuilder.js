@@ -67,6 +67,16 @@ window.addEventListener("message", onMessage, false);
 function onMessage(event) {
     // if the page is loaded, remove loading element
     if (event.data === 'page-loaded') {
+        editor.BlockManager.getAll().models = editor.BlockManager.getAll().models.sort(function compare(a, b) {
+            if (a.attributes.label < b.attributes.label) {
+                return -1;
+            }
+            if (a.attributes.label > b.attributes.label) {
+                return 1;
+            }
+            return 0;
+        });
+        editor.BlockManager.render();
         $("#phpb-loading").addClass('loaded');
         addBlockSearch();
         window.isLoaded = true;
