@@ -49,35 +49,34 @@ class PageBuilder implements PageBuilderContract
         $this->theme = $theme;
     }
 
-    public function saveAllAsHtml($page)
+    public function saveAllAsHtml($page, $passed_domain)
     {
         $pageObj = (new PageRepository)->findWithId($page->getId());
         $translations = $page->getTranslations();
         $domains = phpb_config('domains');
 
-        foreach($translations as $transKey => $transVal) {
+        foreach ($translations as $transKey => $transVal) {
             foreach ($domains as $domainKey => $domainValue) {
-                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey);
+                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $passed_domain);
             }
         }
     }
 
-    public function forceFilePutContents (string $fullPathWithFileName, string $fileContents)
+    public function forceFilePutContents(string $fullPathWithFileName, string $fileContents)
     {
-        $exploded = explode(DIRECTORY_SEPARATOR,$fullPathWithFileName);
+        $exploded = explode(DIRECTORY_SEPARATOR, $fullPathWithFileName);
 
         array_pop($exploded);
 
-        $directoryPathOnly = implode(DIRECTORY_SEPARATOR,$exploded);
+        $directoryPathOnly = implode(DIRECTORY_SEPARATOR, $exploded);
 
-        if (!file_exists($directoryPathOnly))
-        {
-            mkdir($directoryPathOnly,0775,true);
+        if (!file_exists($directoryPathOnly)) {
+            mkdir($directoryPathOnly, 0775, true);
         }
         file_put_contents($fullPathWithFileName, $fileContents);
     }
 
-    public function saveAsHtml($page, $currentLanguage, $layout, $domain)
+    public function saveAsHtml($page, $currentLanguage, $layout, $domain, $passed_domain)
     {
         $theme = new Theme(phpb_config('theme'), phpb_config('theme.active_theme'));
         $page->layout = $layout;
@@ -85,8 +84,13 @@ class PageBuilder implements PageBuilderContract
         $pageRenderer->setLanguage($currentLanguage);
         $html = $pageRenderer->render();
         // TODO: the root could be changed if it is not served through laravel
-        $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
-
+        if ($passed_domain !== null) {
+            if ($domain === $passed_domain) {
+                $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
+            }
+        } else {
+            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
+        }
     }
 
     /**
@@ -112,7 +116,7 @@ class PageBuilder implements PageBuilderContract
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
         }
-        if (! ($page instanceof PageContract)) {
+        if (!($page instanceof PageContract)) {
             return false;
         }
 
@@ -171,7 +175,7 @@ class PageBuilder implements PageBuilderContract
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
             ->run();
 
-        if (! $uploader->was_uploaded) {
+        if (!$uploader->was_uploaded) {
             die("Upload error: {$uploader->error}");
         } else {
             $originalFile = str_replace(' ', '-', $uploader->file_src_name);
@@ -280,7 +284,7 @@ class PageBuilder implements PageBuilderContract
     public function renderPage(PageContract $page, $language = null): string
     {
         $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page]);
-        if (! is_null($language)) {
+        if (!is_null($language)) {
             $pageRenderer->setLanguage($language);
         }
         return $pageRenderer->render();
@@ -372,7 +376,7 @@ class PageBuilder implements PageBuilderContract
         $data = $page->getBuilderData();
         $components = $data['components'] ?? [0 => []];
         // backwards compatibility, components are now stored for each main container (@todo: remove this at the first mayor version)
-        if (isset($components[0]) && ! empty($components[0]) && ! isset($components[0][0])) {
+        if (isset($components[0]) && !empty($components[0]) && !isset($components[0][0])) {
             $components = [0 => $components];
         }
         return $components;
@@ -401,7 +405,7 @@ class PageBuilder implements PageBuilderContract
      */
     public function customStyle(string $css = null)
     {
-        if (! is_null($css)) {
+        if (!is_null($css)) {
             $this->css = $css;
         }
         return $this->css;
@@ -410,13 +414,13 @@ class PageBuilder implements PageBuilderContract
     /**
      * Get or set custom scripts for customizing behaviour of the page builder.
      *
-     * @param string $location              head|body
+     * @param string $location head|body
      * @param string|null $scripts
      * @return string
      */
     public function customScripts(string $location, string $scripts = null)
     {
-        if (! is_null($scripts)) {
+        if (!is_null($scripts)) {
             $this->scripts[$location] = $scripts;
         }
         return $this->scripts[$location] ?? '';
