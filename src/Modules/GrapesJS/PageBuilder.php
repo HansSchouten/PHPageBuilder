@@ -85,7 +85,7 @@ class PageBuilder implements PageBuilderContract
         $html = $pageRenderer->render();
         // TODO: the root could be changed if it is not served through laravel
         if ($status === true) {
-            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/stag/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '_' . date('Ymdhms') . '.html', $html);
+            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/stag/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '_' . date('Y_m_d_His') . '.html', $html);
             $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/prod/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
         }
         $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/stag/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
