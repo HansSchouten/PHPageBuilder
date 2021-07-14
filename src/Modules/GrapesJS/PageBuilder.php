@@ -49,7 +49,7 @@ class PageBuilder implements PageBuilderContract
         $this->theme = $theme;
     }
 
-    public function saveAllAsHtml($page, $status)
+    public function saveAllAsHtml($page, $passed_domain)
     {
         $pageObj = (new PageRepository)->findWithId($page->getId());
         $translations = $page->getTranslations();
@@ -57,7 +57,7 @@ class PageBuilder implements PageBuilderContract
 
         foreach ($translations as $transKey => $transVal) {
             foreach ($domains as $domainKey => $domainValue) {
-                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $status);
+                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $passed_domain);
             }
         }
     }
@@ -76,7 +76,7 @@ class PageBuilder implements PageBuilderContract
         file_put_contents($fullPathWithFileName, $fileContents);
     }
 
-    public function saveAsHtml($page, $currentLanguage, $layout, $domain, $status)
+    public function saveAsHtml($page, $currentLanguage, $layout, $domain, $passed_domain)
     {
         $theme = new Theme(phpb_config('theme'), phpb_config('theme.active_theme'));
         $page->layout = $layout;
@@ -84,12 +84,9 @@ class PageBuilder implements PageBuilderContract
         $pageRenderer->setLanguage($currentLanguage);
         $html = $pageRenderer->render();
         // TODO: the root could be changed if it is not served through laravel
-        if ($status === true) {
-            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/stag/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '_' . date('Y_m_d_His') . '.html', $html);
-            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/prod/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
+        if ($passed_domain !== null && $domain === $passed_domain) {
+            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
         }
-        $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/stag/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
-
     }
 
     /**
