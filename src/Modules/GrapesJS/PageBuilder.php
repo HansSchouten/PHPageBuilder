@@ -49,7 +49,7 @@ class PageBuilder implements PageBuilderContract
         $this->theme = $theme;
     }
 
-    public function saveAllAsHtml($page, $passed_domain)
+    public function saveAllAsHtml($page, $passed_domain, $status)
     {
         $pageObj = (new PageRepository)->findWithId($page->getId());
         $translations = $page->getTranslations();
@@ -57,7 +57,7 @@ class PageBuilder implements PageBuilderContract
 
         foreach ($translations as $transKey => $transVal) {
             foreach ($domains as $domainKey => $domainValue) {
-                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $passed_domain);
+                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $passed_domain, $status);
             }
         }
     }
@@ -76,7 +76,7 @@ class PageBuilder implements PageBuilderContract
         file_put_contents($fullPathWithFileName, $fileContents);
     }
 
-    public function saveAsHtml($page, $currentLanguage, $layout, $domain, $passed_domain)
+    public function saveAsHtml($page, $currentLanguage, $layout, $domain, $passed_domain, $status)
     {
         $theme = new Theme(phpb_config('theme'), phpb_config('theme.active_theme'));
         $page->layout = $layout;
@@ -85,7 +85,11 @@ class PageBuilder implements PageBuilderContract
         $html = $pageRenderer->render();
         // TODO: the root could be changed if it is not served through laravel
         if ($passed_domain !== null && $domain === $passed_domain) {
-            $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
+            if ($status === true) {
+                $this->forceFilePutContents(phpb_config('folders.staging') . '/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '_' . date('Y_m_d_His') . '.html', $html);
+                $this->forceFilePutContents(phpb_config('folders.production') . '/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
+            }
+            $this->forceFilePutContents(phpb_config('folders.staging') . '/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
         }
     }
 
