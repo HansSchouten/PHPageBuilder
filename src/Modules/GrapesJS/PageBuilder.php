@@ -84,11 +84,7 @@ class PageBuilder implements PageBuilderContract
         $pageRenderer->setLanguage($currentLanguage);
         $html = $pageRenderer->render();
         // TODO: the root could be changed if it is not served through laravel
-        if ($passed_domain !== null) {
-            if ($domain === $passed_domain) {
-                $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
-            }
-        } else {
+        if ($passed_domain !== null && $domain === $passed_domain) {
             $this->forceFilePutContents($_SERVER['DOCUMENT_ROOT'] . '/html/' . $domain . '/' . $currentLanguage . '/' . $page->getRoute() . '.html', $html);
         }
     }
