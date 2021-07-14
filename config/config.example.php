@@ -27,14 +27,14 @@ return [
     'storage' => [
         'use_database' => true,
         'database' => [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => '',
-            'username'  => '',
-            'password'  => '',
-            'charset'   => 'utf8',
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'database' => '',
+            'username' => '',
+            'password' => '',
+            'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
+            'prefix' => '',
         ],
         'uploads_folder' => __DIR__ . '/uploads'
     ],
@@ -180,5 +180,10 @@ return [
     'domains' => [
         'a.com' => 'master',
         'b.com' => 'secondary',
+    ],
+
+    'folders' => [
+        'staging' => 'stag',
+        'production' => 'prod'
     ]
 ];
