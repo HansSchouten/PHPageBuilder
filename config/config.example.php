@@ -183,7 +183,7 @@ return [
     ],
 
     'folders' => [
-        'staging' => 'stag',
-        'production' => 'prod'
+        'staging' => $_SERVER['DOCUMENT_ROOT'] . '/html/stag',
+        'production' => $_SERVER['DOCUMENT_ROOT'] . '/html/prod'
     ]
 ];
