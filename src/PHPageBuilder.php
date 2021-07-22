@@ -326,7 +326,9 @@ class PHPageBuilder
         if ($pageTranslation instanceof PageTranslationContract) {
             $page = $pageTranslation->getPage();
             $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
-            $this->cacheRenderedPage($renderedContent);
+            if (strpos($pageTranslation->route, '/*') === false) {
+                $this->cacheRenderedPage($renderedContent);
+            }
             echo $renderedContent;
             return true;
         }
