@@ -114,7 +114,7 @@ class DatabasePageRouter implements RouterContract
             return 1;
         }
 
-        // routes ending with a  wildcard should be evaluated last (after exact matches or named parameters)
+        // routes ending with a wildcard should be evaluated last (after exact matches or named parameters)
         if (array_slice($route1, -1)[0] === '*') {
             return 1;
         }
