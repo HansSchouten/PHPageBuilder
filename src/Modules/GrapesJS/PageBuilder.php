@@ -51,13 +51,14 @@ class PageBuilder implements PageBuilderContract
 
     public function saveAllAsHtml($page, $passed_domain, $status)
     {
-        $pageObj = (new PageRepository)->findWithId($page->getId());
+        // TODO: not sure if there is any cascade effect, but this seems unnecessary
+        // $pageObj = (new PageRepository)->findWithId($page->getId());
         $translations = $page->getTranslations();
         $domains = phpb_config('domains');
 
         foreach ($translations as $transKey => $transVal) {
             foreach ($domains as $domainKey => $domainValue) {
-                $this->saveAsHtml($pageObj, $transKey, $domainValue, $domainKey, $passed_domain, $status);
+                $this->saveAsHtml($page, $transKey, $domainValue, $domainKey, $passed_domain, $status);
             }
         }
     }
