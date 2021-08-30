@@ -81,6 +81,10 @@ class PageRenderer
      */
     public function setLanguage($language)
     {
+        $supportedLanguages = array_keys($this->pageData['blocks'] ?? []);
+        if (! in_array($language, $supportedLanguages)) {
+            $language = $supportedLanguages[0] ?? $language;
+        }
         $this->language = $language;
         $this->pageBlocksData = $this->getStoredPageBlocksData();
         $this->shortcodeParser->setLanguage($language);
