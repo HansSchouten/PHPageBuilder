@@ -322,9 +322,24 @@ class PHPageBuilder
         }
 
         // let the page router resolve the current URL
-        $pageTranslation = $this->router->resolve(phpb_current_relative_url());
-        if ($pageTranslation instanceof PageTranslationContract) {
+        $page = null;
+        $pageTranslation = $this->resolvePageLanguageVariantFromUrl(phpb_current_relative_url());
+        if ($pageTranslation) {
             $page = $pageTranslation->getPage();
+        }
+        // if the URL cannot be resolved, but the lowercase version of the URL can be resolved, redirect to the lowercase URL
+        if (($page->logic ?? '') === 'page-not-found' && phpb_current_relative_url() !== strtolower(phpb_current_relative_url())) {
+            $pageLowerCaseUrlTranslation = $this->resolvePageLanguageVariantFromUrl(strtolower(phpb_current_relative_url()));
+            if ($pageLowerCaseUrlTranslation) {
+                $pageLowerCaseUrl = $pageLowerCaseUrlTranslation->getPage();
+                if (($pageLowerCaseUrl->logic ?? '') !== 'page-not-found') {
+                    header("Location: " . strtolower(phpb_current_relative_url()));
+                    exit();
+                }
+            }
+        }
+        // render page if resolved
+        if ($page) {
             $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
             if (strpos($pageTranslation->route, '/*') === false) {
                 $this->cacheRenderedPage($renderedContent);
@@ -333,6 +348,21 @@ class PHPageBuilder
             return true;
         }
         return false;
+    }
+
+    /**
+     * Resolve a PageTranslation from the given URL.
+     *
+     * @param $url
+     * @return PageTranslationContract|null
+     */
+    protected function resolvePageLanguageVariantFromUrl($url)
+    {
+        $pageTranslation = $this->router->resolve($url);
+        if ($pageTranslation instanceof PageTranslationContract) {
+            return $pageTranslation;
+        }
+        return null;
     }
 
     /**
