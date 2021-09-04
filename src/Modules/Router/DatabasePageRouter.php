@@ -152,9 +152,13 @@ class DatabasePageRouter implements RouterContract
      */
     protected function onRoute($urlSegments, $routeSegments)
     {
-        $routeParameters = [];
+        // URL does not match if segment counts don't match, except if the route ends with a *
+        if (sizeof($urlSegments) !== sizeof($routeSegments) && end($routeSegments) !== '*') {
+            return false;
+        }
 
         // try matching each route segment with the same level URL segment
+        $routeParameters = [];
         foreach ($routeSegments as $i => $routeSegment) {
             if (! isset($urlSegments[$i])) {
                 return false;
