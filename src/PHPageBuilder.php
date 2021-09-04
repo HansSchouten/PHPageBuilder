@@ -333,6 +333,7 @@ class PHPageBuilder
             if ($pageLowerCaseUrlTranslation) {
                 $pageLowerCaseUrl = $pageLowerCaseUrlTranslation->getPage();
                 if (($pageLowerCaseUrl->logic ?? '') !== 'page-not-found') {
+                    header("HTTP/1.1 301 Moved Permanently");
                     header("Location: " . strtolower(phpb_current_relative_url()));
                     exit();
                 }
