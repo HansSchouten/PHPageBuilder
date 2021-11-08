@@ -21,7 +21,7 @@
      * After mounting the component in the canvas.
      */
     window.editor.on('component:add', function (component) {
-        // run the script that was set when creating this component (for example while an existing component)
+        // run the script that was set when creating this component
         if (component.attributes['run-builder-script'] !== undefined) {
             let originalCustomBuilderScripts = customBuilderScripts;
 
@@ -30,6 +30,16 @@
 
             window.customBuilderScripts = originalCustomBuilderScripts;
             delete component.attributes['run-builder-script'];
+        }
+    });
+
+    /**
+     * On ending a component order drag, re-run builder scripts on newly added HTMl.
+     */
+    window.editor.on('sorter:drag:end', function(event) {
+        let component = event.modelToDrop;
+        if (component && component.attributes && component.attributes['block-id']) {
+            window.runScriptsOfComponentAndChildren(component);
         }
     });
 
