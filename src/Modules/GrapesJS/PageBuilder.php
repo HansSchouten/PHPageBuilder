@@ -122,7 +122,7 @@ class PageBuilder implements PageBuilderContract
     public function handleFileUpload()
     {
         $publicId = sha1(uniqid(rand(), true));
-        $uploader = new Uploader('files');
+        $uploader = phpb_instance(Uploader::class, ['files']);
         $uploader
             ->file_name($publicId . '/' . str_replace(' ', '-', $uploader->file_src_name))
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
