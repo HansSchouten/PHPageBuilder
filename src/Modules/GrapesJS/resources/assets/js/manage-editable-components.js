@@ -264,7 +264,7 @@
      */
     window.editor.on('block:drag:stop', function(droppedComponent) {
         // ensure component drop was successful
-        if (! droppedComponent) return;
+        if (! droppedComponent || ! droppedComponent.attributes || ! droppedComponent.attributes.attributes) return;
 
         let draggedBlockId = generateId();
         droppedComponent.attributes.attributes['dropped-component-id'] = draggedBlockId;
