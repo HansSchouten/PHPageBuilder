@@ -85,7 +85,7 @@ class BlockAdapter
 
         $img = '';
         if (file_exists($this->block->getThumbPath())) {
-            $img = '<div class="block-thumb"><img src="' . phpb_full_url($this->block->getThumbUrl()) . '"></div>';
+            $img = '<div class="block-thumb" style="background-image: url(' . phpb_full_url($this->block->getThumbUrl()) . '); background-size: cover"></div>';
         }
 
         $data = [
