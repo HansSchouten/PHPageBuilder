@@ -17,6 +17,11 @@ editor.DomComponents.addType('link', {
                     name: 'href',
                 },
                 {
+                    type: 'text',
+                    label: 'Title',
+                    name: 'title',
+                },
+                {
                     type: 'select',
                     label: '<?= phpb_trans('pagebuilder.trait-manager.link.target') ?>',
                     name: 'target',
