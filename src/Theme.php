@@ -55,7 +55,19 @@ class Theme implements ThemeContract
             if ($entry->isDir() && ! $entry->isDot()) {
                 $blockSlug = $entry->getFilename();
                 $block = new ThemeBlock($this, $blockSlug);
-                $this->blocks[$blockSlug] = $block;
+
+                $isActive = true;
+                foreach ($block->get('whitelist') ?? [] as $whitelistDomain) {
+                    $isActive = false;
+                    if (strpos(phpb_current_full_url(), $whitelistDomain) !== false) {
+                        $isActive = true;
+                        break;
+                    }
+                }
+
+                if ($isActive) {
+                    $this->blocks[$blockSlug] = $block;
+                }
             }
         }
     }
