@@ -38,6 +38,28 @@ class BlockRenderer
     }
 
     /**
+     * Change this BlockRenderer to render not editable blocks.
+     *
+     * @return $this
+     */
+    public function notEditable()
+    {
+        $this->forPageBuilder = false;
+        return $this;
+    }
+
+    /**
+     * Change this BlockRenderer to render editable blocks.
+     *
+     * @return $this
+     */
+    public function editable()
+    {
+        $this->forPageBuilder = true;
+        return $this;
+    }
+
+    /**
      * Render a theme block with the given slug using the given block data.
      *
      * @param string $blockSlug
