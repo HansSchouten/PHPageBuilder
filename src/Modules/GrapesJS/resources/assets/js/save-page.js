@@ -2,6 +2,15 @@ $(document).ready(function() {
 
     window.pageData = {};
 
+    window.changesOffset = 0;
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        let changesCount = window.editor.getModel().get('changesCount') - window.changesOffset;
+        if (changesCount > 0) {
+            return "Are you sure? There are unsaved changes.";
+        }
+    }
+
     /**
      * Save page on clicking save button.
      */
