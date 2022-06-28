@@ -204,6 +204,10 @@ $(document).ready(function() {
                 success: function() {
                     toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
+
+                    setTimeout(function() {
+                        window.changesOffset = window.editor.getModel().get('changesCount');
+                    }, 250);
                 },
                 error: function(error) {
                     toggleSaving();
