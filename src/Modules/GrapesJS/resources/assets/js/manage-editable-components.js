@@ -122,6 +122,10 @@
             window.runScriptsOfComponentAndChildren(container);
         });
         window.setWaiting(false);
+
+        setTimeout(function() {
+            window.changesOffset = window.editor.getModel().get('changesCount');
+        }, 250);
     });
 
     /**
