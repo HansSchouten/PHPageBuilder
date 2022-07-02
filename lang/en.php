@@ -40,6 +40,7 @@ return [
         'render-thumbs' => 'Render Thumbnails',
     ],
     'pagebuilder' => [
+        'filter-placeholder' => 'Filter',
         'loading-text' => 'Loading pagebuilder..',
         'style-no-element-selected' => 'Select an element to modify the style.',
         'trait-no-element-selected' => 'Select an element to modify any attributes.',
