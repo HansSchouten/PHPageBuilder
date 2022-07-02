@@ -51,7 +51,7 @@ if (! function_exists('phpb_theme_asset')) {
     function phpb_theme_asset($path)
     {
         $themeFolder = phpb_config('theme.folder_url') . '/' . phpb_config('theme.active_theme');
-        return $themeFolder . '/' . $path;
+        return phpb_full_url($themeFolder . '/' . $path);
     }
 }
 
