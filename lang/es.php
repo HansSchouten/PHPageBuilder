@@ -101,10 +101,10 @@ return [
                     'margin' => [
                         'name' => 'Margen',
                         'properties' => [
-                            'margin-top' => 'Margin arriba',
-                            'margin-right' => 'Margin derecho',
-                            'margin-bottom' => 'Margin abajo',
-                            'margin-left' => 'Margin izquierdo'
+                            'margin-top' => 'Margen arriba',
+                            'margin-right' => 'Margen derecho',
+                            'margin-bottom' => 'Margen abajo',
+                            'margin-left' => 'Margen izquierdo'
                         ]
                     ],
                     'text-align' => [
