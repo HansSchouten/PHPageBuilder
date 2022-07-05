@@ -63,7 +63,7 @@ return [
         'trait-manager' => [
             'link' => [
                 'text' => 'Text',
-                'target' => 'Open in new tab?'.
+                'target' => 'Open in new tab?',
                 'tooltip' => 'Tooltip'
             ],
             'no-settings' => 'This block does not have settings.'
