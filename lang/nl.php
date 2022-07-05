@@ -63,7 +63,8 @@ return [
         'trait-manager' => [
             'link' => [
                 'text' => 'Tekst',
-                'target' => 'Open in nieuw tabblad?'
+                'target' => 'Open in nieuw tabblad?',
+                'tooltip' => 'knopinfo'
             ],
             'no-settings' => 'Dit blok heeft geen instellingen.'
         ],
