@@ -63,7 +63,8 @@ return [
         'trait-manager' => [
             'link' => [
                 'text' => 'Texto',
-                'target' => '¿Abrir en otra pestaña?'
+                'target' => '¿Abrir en otra pestaña?',
+                'tooltip' => 'Información'
             ],
             'no-settings' => 'Este bloque no tiene ajustes.'
         ],

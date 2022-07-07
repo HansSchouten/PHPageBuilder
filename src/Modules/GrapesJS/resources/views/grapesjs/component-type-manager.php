@@ -18,7 +18,7 @@ editor.DomComponents.addType('link', {
                 },
                 {
                     type: 'text',
-                    label: 'Title',
+                    label: '<?= phpb_trans('pagebuilder.trait-manager.link.tooltip') ?>',
                     name: 'title',
                 },
                 {
