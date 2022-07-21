@@ -110,7 +110,9 @@ class Page implements PageContract
             $records = (new PageTranslationRepository)->findWhere(phpb_config('page.translation.foreign_key'), $this->getId());
             $translations = [];
             foreach ($records as $record) {
-                $translations[$record->locale] = (array) $record;
+                if (in_array($record->locale, array_keys(phpb_active_languages()))) {
+                    $translations[$record->locale] = (array) $record;
+                }
             }
             $this->translations = $translations;
         }
@@ -128,7 +130,10 @@ class Page implements PageContract
     {
         $translations = $this->getTranslations();
         $locale = $locale ?? phpb_config('general.language');
-        return $translations[$locale][$setting] ?? null;
+        return $translations[$locale][$setting] ??
+            $translations['en'][$setting] ??
+            $translations[array_keys($translations)[0]][$setting] ??
+            null;
     }
 
     /**
