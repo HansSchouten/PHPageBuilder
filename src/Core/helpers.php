@@ -293,7 +293,14 @@ if (! function_exists('phpb_current_language')) {
                 }
             }
         }
-        return phpb_config('general.language');
+        $languageCode = phpb_config('general.language');
+        if (in_array($languageCode, array_keys(phpb_active_languages()))) {
+            return $languageCode;
+        }
+        if (in_array('en', array_keys(phpb_active_languages()))) {
+            return 'en';
+        }
+        return array_keys(phpb_active_languages())[0];
     }
 }
 
