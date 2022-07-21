@@ -139,5 +139,5 @@ require __DIR__ . '/grapesjs/trait-manager.php';
 
 <div id="block-search">
     <i class="fa fa-search"></i>
-    <input type="text" class="form-control" placeholder="Filter">
+    <input type="text" class="form-control" placeholder="<?= phpb_trans('pagebuilder.filter-placeholder') ?>">
 </div>

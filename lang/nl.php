@@ -40,6 +40,7 @@ return [
         'render-thumbs' => 'Blok afbeeldingen genereren',
     ],
     'pagebuilder' => [
+        'filter-placeholder' => 'Filter',
         'loading-text' => 'Bewerkmodus laden..',
         'style-no-element-selected' => 'Selecteer een element om de opmaak aan te passen.',
         'trait-no-element-selected' => 'Selecteer een element om de eigenschappen aan te passen.',
@@ -62,7 +63,8 @@ return [
         'trait-manager' => [
             'link' => [
                 'text' => 'Tekst',
-                'target' => 'Open in nieuw tabblad?'
+                'target' => 'Open in nieuw tabblad?',
+                'tooltip' => 'knopinfo'
             ],
             'no-settings' => 'Dit blok heeft geen instellingen.'
         ],

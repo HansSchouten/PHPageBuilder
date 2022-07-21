@@ -40,6 +40,7 @@ return [
         'render-thumbs' => 'Render Thumbnails',
     ],
     'pagebuilder' => [
+        'filter-placeholder' => 'Filter',
         'loading-text' => 'Loading pagebuilder..',
         'style-no-element-selected' => 'Select an element to modify the style.',
         'trait-no-element-selected' => 'Select an element to modify any attributes.',
@@ -62,7 +63,8 @@ return [
         'trait-manager' => [
             'link' => [
                 'text' => 'Text',
-                'target' => 'Open in new tab?'
+                'target' => 'Open in new tab?',
+                'tooltip' => 'Tooltip'
             ],
             'no-settings' => 'This block does not have settings.'
         ],

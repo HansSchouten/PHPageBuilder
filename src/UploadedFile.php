@@ -9,6 +9,6 @@ class UploadedFile
      */
     public function getUrl()
     {
-        return phpb_config('general.uploads_url') . '/' . $this->public_id . '/' . $this->original_file;
+        return phpb_full_url(phpb_config('general.uploads_url') . '/' . $this->public_id . '/' . $this->original_file);
     }
 }

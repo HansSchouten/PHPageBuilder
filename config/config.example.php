@@ -7,6 +7,8 @@ return [
      |--------------------------------------------------------------------------
      |
      | General settings for configuring the PageBuilder.
+     | If you install phpb with Composer, general.assets_url line must be:
+     | 'assets_url' => '/vendor/hansschouten/phpagebuilder/dist',
      |
      */
     'general' => [
