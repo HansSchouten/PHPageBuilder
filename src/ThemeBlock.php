@@ -63,6 +63,12 @@ class ThemeBlock
      */
     protected function getNamespace()
     {
+        // Return Namespace from Config file if exists;
+        if( phpb_config('theme.namespace') )
+            return phpb_config('theme.namespace');
+
+        // Get namespace from directory structure if not provided:
+
         $themesPath = phpb_config('theme.folder');
         $themesFolderName = basename($themesPath);
         $blockFolder = $this->getFolder();
