@@ -25,15 +25,29 @@ class ThemeBlock
     protected $blockSlug;
 
     /**
+     * @var bool $isExtension
+     * Determines if a block was registered by an extension.
+     */
+    protected $isExtension;
+
+    /**
+     * @var bool $extensionSlug
+     * Custom slug in case of extension.
+     */
+    protected $extensionSlug;
+
+    /**
      * Theme constructor.
      *
      * @param ThemeContract $theme         the theme this block belongs to
      * @param string $blockSlug
      */
-    public function __construct(ThemeContract $theme, string $blockSlug)
+    public function __construct(ThemeContract $theme, string $blockSlug, bool $isExtension = false, string $extensionSlug = null)
     {
         $this->theme = $theme;
         $this->blockSlug = $blockSlug;
+        $this->isExtension = $isExtension;
+        $this->extensionSlug = $extensionSlug;
 
         $this->config = [];
         if (file_exists($this->getFolder() . '/config.php')) {
@@ -53,7 +67,7 @@ class ThemeBlock
      */
     public function getFolder()
     {
-        return $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug);
+        return (!$this->isExtension) ? $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug) : $this->blockSlug;
     }
 
     /**
@@ -214,7 +228,7 @@ class ThemeBlock
      */
     public function getSlug()
     {
-        return $this->blockSlug;
+        return ! $this->isExtension ? $this->blockSlug : $this->extensionSlug;
     }
 
     /**

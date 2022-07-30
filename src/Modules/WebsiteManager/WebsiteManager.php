@@ -4,6 +4,7 @@ namespace PHPageBuilder\Modules\WebsiteManager;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
+use PHPageBuilder\Extensions;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\SettingRepository;
 
@@ -147,7 +148,10 @@ class WebsiteManager implements WebsiteManagerContract
     public function renderPageSettings(PageContract $page = null)
     {
         $action = isset($page) ? 'edit' : 'create';
-        $theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
+        $theme = phpb_instance('theme', [
+            phpb_config('theme'), 
+            phpb_config('theme.active_theme')
+        ]);
 
         $viewFile = 'page-settings';
         require __DIR__ . '/resources/layouts/master.php';

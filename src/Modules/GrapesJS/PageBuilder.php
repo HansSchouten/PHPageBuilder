@@ -11,6 +11,7 @@ use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 use Exception;
+use PHPageBuilder\Extensions;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -34,7 +35,10 @@ class PageBuilder implements PageBuilderContract
      */
     public function __construct()
     {
-        $this->theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
+        $this->theme = phpb_instance('theme', [
+            phpb_config('theme'), 
+            phpb_config('theme.active_theme')
+        ]);
     }
 
     /**

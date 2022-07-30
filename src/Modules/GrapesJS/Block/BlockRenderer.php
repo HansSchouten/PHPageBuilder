@@ -4,6 +4,7 @@ namespace PHPageBuilder\Modules\GrapesJS\Block;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Extensions;
 use PHPageBuilder\ThemeBlock;
 
 class BlockRenderer
@@ -69,7 +70,13 @@ class BlockRenderer
      */
     public function renderWithSlug(string $blockSlug, $blockData = null, $id = null)
     {
-        $block = new ThemeBlock($this->theme, $blockSlug);
+        $block = null;
+
+        if($path = Extensions::getBlock($blockSlug))
+            $block = new ThemeBlock($this->theme, $path, true, $blockSlug);
+        else
+            $block = new ThemeBlock($this->theme, $blockSlug);
+
         return $this->render($block, $blockData, $id);
     }
 
