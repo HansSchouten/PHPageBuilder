@@ -465,7 +465,7 @@ class PHPageBuilder
 
         // only allow specific extensions
         $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
-        if (! in_array($ext, ['js', 'css', 'jpg', 'png'])) die('Asset not found');
+        if (! in_array($ext, ['js', 'css', 'jpg', 'png', 'svg'])) die('Asset not found');
 
         $contentTypes = [
             'js' => 'application/javascript; charset=utf-8',

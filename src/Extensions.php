@@ -14,6 +14,26 @@ class Extensions {
      */
     protected static array $layouts = [];
 
+    protected static array $assets = [
+        'header' => [],
+        'footer' => []
+    ];
+
+    /**
+     * Register an asset.
+     * @param string $src
+     * @param string $type
+     * @param string $location
+     * @param array['$key' => '$value'] $attributes
+     */
+    public static function registerAsset(string $src, string $type, string $location = 'header', array $attributes = []) {
+        self::$assets[$location][] = [
+            'src' => $src,
+            'type' => $type,
+            'attributes' => $attributes
+        ];
+    }
+
     /**
      * Register a single block.
      * @param string $slug
@@ -75,5 +95,19 @@ class Extensions {
      */
     public static function getLayout(string $id) {
         return isset(self::$layouts[$id]) ? self::$layouts[$id] : null;
+    }
+
+    /**
+     * Get all header assets.
+     */
+    public static function getHeaderAssets() {
+        return self::$assets['header'];
+    }
+
+    /**
+     * Get all footer assets.
+     */
+    public static function getFooterAssets() {
+        return self::$assets['footer'];
     }
 }

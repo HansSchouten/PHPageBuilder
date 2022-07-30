@@ -70,12 +70,10 @@ class BlockRenderer
      */
     public function renderWithSlug(string $blockSlug, $blockData = null, $id = null)
     {
-        $block = null;
+        $block = ($path = Extensions::getBlock($blockSlug)) 
+                    ? new ThemeBlock($this->theme, $path, true, $blockSlug) 
+                    : new ThemeBlock($this->theme, $blockSlug);
 
-        if($path = Extensions::getBlock($blockSlug))
-            $block = new ThemeBlock($this->theme, $path, true, $blockSlug);
-        else
-            $block = new ThemeBlock($this->theme, $blockSlug);
 
         return $this->render($block, $blockData, $id);
     }
