@@ -124,6 +124,60 @@ An alternative method is adding the `phpb-blocks-container` attribute to a html 
 </div>
 ```
 
+## Extending PHPageBuilder
+
+PHPageBuilder allows you to create new blocks and layouts for your theme very easily. This is great for building specific websites & templates, however if you use PHPageBuilder in a CMS environment, you probably want to provide Plugins / Modules the ability to create their own blocks without modifying your theme's pre-existing components.
+
+PHPageBuilder allows you to register blocks, layouts and assets (CSS, JS) from Plugins, Composer Packages or through any other environment.
+
+### Adding a New Block
+
+```php
+/**
+ * @param string $slug - A Unique identifier for the block. Prefix author to avoid conflict.
+ * @param string $directoryPath - Path to the directory of the Block.
+ */
+\PHPageBuilder\Extensions::registerBlock($slug, $directoryPath);
+
+// Registering an example block:
+
+\PHPageBuilder\Extensions::registerBlock('foo-navbar', MY_PLUGIN_DIRECTORY . '/blocks/foo-navbar');
+```
+
+### Adding a New Layout
+
+```php
+/**
+ * @param string $slug - A Unique identifier for the layout. Prefix author to avoid conflict.
+ * @param string $directoryPath - Path to the directory of the Layout.
+ */
+\PHPageBuilder\Extensions::registerLayout($slug, $directoryPath);
+
+// Registering an example layout:
+
+\PHPageBuilder\Extensions::registerLayout('foo-master', MY_PLUGIN_DIRECTORY . '/layouts/foo-master');
+```
+
+### Adding Assets (CSS & JS)
+```php
+/**
+ * @param string $src                           - URL of the Asset file.
+ * @param string $type                          - 'style' or 'script' 
+ * @param string $location                      - 'header' or 'footer'
+ * @param array['$key' => '$value'] $attributes - Array of attributes to add to the tag.
+ */
+\PHPageBuilder\Extensions::registerAsset($src, $type, $location, $attributes = []);
+
+// Registering assets:
+
+\PHPageBuilder\Extensions::registerAsset('/assets/bootstrap.css', 'style', 'header');
+\PHPageBuilder\Extensions::registerAsset('/assets/alpine.min.js', 'script', 'header', [
+    'defer' => true
+]);
+```
+
+Blocks & Layouts are created in the same manner as described in [Create A Theme](#create-a-theme), but they aren't limited to any theme directory.
+
 ## Customize PHPageBuilder
 
 PHPagebuilder is build with customization in mind. It comes with an extensive example config file in wich you can easily adapt the pagebuilder to your needs.
