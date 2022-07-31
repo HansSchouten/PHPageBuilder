@@ -136,7 +136,7 @@ if (! function_exists('phpb_trans')) {
      *
      * @param $key
      * @param array $parameters
-     * @return string
+     * @return string|array
      */
     function phpb_trans($key, $parameters = [])
     {

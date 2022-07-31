@@ -77,6 +77,10 @@ class ThemeBlock
      */
     protected function getNamespace()
     {
+        // Return Namespace from the Config file of the Block if it is an extension. Used for Extensions.
+        if( isset( $this->config['namespace'] ) )
+            return $this->config['namespace'];
+
         // Return Namespace from Config file if exists;
         if( phpb_config('theme.namespace') )
             return phpb_config('theme.namespace');
