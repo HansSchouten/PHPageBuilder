@@ -1,5 +1,7 @@
 <?php
 
+use PHPageBuilder\Extensions;
+
 if (! function_exists('phpb_e')) {
     /**
      * Encode HTML special characters in a string.
@@ -134,7 +136,7 @@ if (! function_exists('phpb_trans')) {
      *
      * @param $key
      * @param array $parameters
-     * @return string
+     * @return string|array
      */
     function phpb_trans($key, $parameters = [])
     {
@@ -535,5 +537,23 @@ if (! function_exists('phpb_autoload')) {
 
         // include class files starting in the src directory
         require __DIR__ . '/../' . $fileName;
+    }
+}
+
+if( ! function_exists('phpb_registered_assets_header') ) {
+    function phpb_registered_assets($location = 'header') {
+        $assets = $location == 'header' ? Extensions::getHeaderAssets() : Extensions::getFooterAssets();
+
+        foreach($assets as $asset) {
+            $attributes = '';
+            foreach($asset['attributes'] as $key => $value)
+                $attributes .= ' ' . $key . '="' . $value . '"';
+
+            if($asset['type'] == 'style') { ?>
+                <link rel="stylesheet" href="<?= $asset['src'] ?>" <?= $attributes ?> />
+            <?php } else { ?>
+                <script type="text/javascript" src="<?= $asset['src'] ?>" <?= $attributes ?>></script>
+            <?php }
+        }
     }
 }

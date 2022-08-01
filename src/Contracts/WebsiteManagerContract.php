@@ -28,4 +28,9 @@ interface WebsiteManagerContract
      * Render the website manager menu settings (add/edit menu form).
      */
     public function renderMenuSettings();
+
+    /**
+     * Render the welcome page.
+     */
+    public function renderWelcomePage();
 }

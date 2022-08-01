@@ -54,4 +54,11 @@ interface PageBuilderContract
      * @return string
      */
     public function customScripts(string $location, string $scripts = null);
+
+    /**
+     * Set a theme for the page builder.
+     * 
+     * @param ThemeContract $theme
+     */
+    public function setTheme(ThemeContract $theme);
 }

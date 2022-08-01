@@ -7,6 +7,7 @@ use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Block\BlockRenderer;
 use PHPageBuilder\ThemeBlock;
 use Exception;
+use PHPageBuilder\Extensions;
 
 class PageRenderer
 {
@@ -110,7 +111,12 @@ class PageRenderer
     public function getPageLayoutPath()
     {
         $layout = basename($this->page->getLayout());
+
         $layoutPath = $this->theme->getFolder() . '/layouts/' . $layout . '/view.php';
+
+        if($path = Extensions::getLayout($layout))
+            $layoutPath = $path . '/view.php';
+
         return file_exists($layoutPath) ? $layoutPath : null;
     }
 
@@ -244,7 +250,10 @@ class PageRenderer
      */
     public function renderBlock($slug, $id = null, $context = null, $maxDepth = 25)
     {
-        $themeBlock = new ThemeBlock($this->theme, $slug);
+        $themeBlock = ($blockPath = Extensions::getBlock($slug)) 
+                        ? new ThemeBlock($this->theme, $blockPath, true, $slug) 
+                        : new ThemeBlock($this->theme, $slug);
+
         $id = $id ?? $themeBlock->getSlug();
         $context = $context[$id] ?? $this->pageBlocksData[$id] ?? [];
 

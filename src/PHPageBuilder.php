@@ -82,7 +82,12 @@ class PHPageBuilder
 
         // init the default page builder, active theme and page router
         $this->pageBuilder = phpb_instance('pagebuilder');
-        $this->theme = phpb_instance('theme', [phpb_config('theme'), phpb_config('theme.active_theme')]);
+
+        $this->theme = phpb_instance('theme', [
+            phpb_config('theme'), 
+            phpb_config('theme.active_theme')
+        ]);
+
         $this->router = phpb_instance('router');
 
         // load translations in the language that is currently active
@@ -460,7 +465,7 @@ class PHPageBuilder
 
         // only allow specific extensions
         $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
-        if (! in_array($ext, ['js', 'css', 'jpg', 'png'])) die('Asset not found');
+        if (! in_array($ext, ['js', 'css', 'jpg', 'png', 'svg'])) die('Asset not found');
 
         $contentTypes = [
             'js' => 'application/javascript; charset=utf-8',

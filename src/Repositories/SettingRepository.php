@@ -23,6 +23,7 @@ class SettingRepository extends BaseRepository implements SettingRepositoryContr
     {
         $this->destroyAll();
 
+
         foreach ($data as $key => $value) {
             $isArray = is_array($value);
             if ($isArray) {

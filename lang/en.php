@@ -37,7 +37,7 @@ return [
         'save-settings' => 'Save settings',
         'settings-updated' => 'Settings successfully updated',
         'pagebuilder-block-images' => 'Pagebuilder block thumbnails',
-        'render-thumbs' => 'Render Thumbnails',
+        'render-thumbs' => 'Render Thumbnails'
     ],
     'pagebuilder' => [
         'filter-placeholder' => 'Filter',
