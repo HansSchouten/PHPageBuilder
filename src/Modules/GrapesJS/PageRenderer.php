@@ -111,11 +111,11 @@ class PageRenderer
     public function getPageLayoutPath()
     {
         $layout = basename($this->page->getLayout());
-
         $layoutPath = $this->theme->getFolder() . '/layouts/' . $layout . '/view.php';
 
-        if($path = Extensions::getLayout($layout))
+        if ($path = Extensions::getLayout($layout)) {
             $layoutPath = $path . '/view.php';
+        }
 
         return file_exists($layoutPath) ? $layoutPath : null;
     }

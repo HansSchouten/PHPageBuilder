@@ -51,7 +51,7 @@ class Theme implements ThemeContract
             $block = new ThemeBlock($this, $blockSlug);
 
             $isActive = true;
-            foreach ($block->get('whitelist') ?? [] as $whitelistDomain) {
+            foreach (($block->get('whitelist') ?? []) as $whitelistDomain) {
                 $isActive = false;
                 if (strpos(phpb_current_full_url(), $whitelistDomain) !== false) {
                     $isActive = true;
@@ -74,7 +74,7 @@ class Theme implements ThemeContract
             $block = new ThemeBlock($this, $path, true, $slug);
 
             $isActive = true;
-            foreach ($block->get('whitelist') ?? [] as $whitelistDomain) {
+            foreach (($block->get('whitelist') ?? []) as $whitelistDomain) {
                 $isActive = false;
                 if (strpos(phpb_current_full_url(), $whitelistDomain) !== false) {
                     $isActive = true;
@@ -116,7 +116,7 @@ class Theme implements ThemeContract
     {
         $this->blocks = [];
 
-        if ( file_exists($this->getFolder() . '/blocks') ) {
+        if (file_exists($this->getFolder() . '/blocks')) {
             $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
             foreach ($blocksDirectory as $entry) {
                 $this->attemptBlockRegistration($entry);
