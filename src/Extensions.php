@@ -10,7 +10,7 @@ class Extensions {
     protected static array $blocks  = [];
 
     /**
-     * Layouts that can be added by plugins / composer pckages.
+     * Layouts that can be added by plugins / composer packages.
      */
     protected static array $layouts = [];
 

@@ -540,20 +540,27 @@ if (! function_exists('phpb_autoload')) {
     }
 }
 
-if( ! function_exists('phpb_registered_assets_header') ) {
+if (! function_exists('phpb_registered_assets_header')) {
+    /**
+     * Render all manually registered assets.
+     *
+     * @param $location
+     * @return void
+     */
     function phpb_registered_assets($location = 'header') {
-        $assets = $location == 'header' ? Extensions::getHeaderAssets() : Extensions::getFooterAssets();
+        $assets = ($location === 'header') ? Extensions::getHeaderAssets() : Extensions::getFooterAssets();
 
-        foreach($assets as $asset) {
+        foreach ($assets as $asset) {
             $attributes = '';
-            foreach($asset['attributes'] as $key => $value)
+            foreach ($asset['attributes'] as $key => $value) {
                 $attributes .= ' ' . $key . '="' . $value . '"';
+            }
 
-            if($asset['type'] == 'style') { ?>
-                <link rel="stylesheet" href="<?= $asset['src'] ?>" <?= $attributes ?> />
-            <?php } else { ?>
-                <script type="text/javascript" src="<?= $asset['src'] ?>" <?= $attributes ?>></script>
-            <?php }
+            if ($asset['type'] == 'style') {
+                echo '<link rel="stylesheet" href="' . $asset['src'] . '" ' . $attributes . '/>';
+            } else {
+                echo '<script type="text/javascript" src="' . $asset['src'] . '" ' . $attributes . '></script>';
+            }
         }
     }
 }
