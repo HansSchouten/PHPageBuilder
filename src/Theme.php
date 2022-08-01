@@ -123,7 +123,7 @@ class Theme implements ThemeContract
             }
         }
 
-        foreach( Extensions::getBlocks() as $slug => $path ) {
+        foreach (Extensions::getBlocks() as $slug => $path) {
             $this->attemptExtensionBlockRegistration($slug, $path);
         }
     }
@@ -135,14 +135,14 @@ class Theme implements ThemeContract
     {
         $this->layouts = [];
 
-        if ( file_exists($this->getFolder() . '/layouts') ) {
+        if (file_exists($this->getFolder() . '/layouts')) {
             $layoutsDirectory = new DirectoryIterator($this->getFolder() . '/layouts');
             foreach ($layoutsDirectory as $entry) {
                 $this->attemptLayoutRegistration($entry);
             }
         }
 
-        foreach( Extensions::getLayouts() as $slug => $path ) {
+        foreach (Extensions::getLayouts() as $slug => $path) {
             $this->attemptExtensionLayoutRegistration($slug, $path);
         }
     }

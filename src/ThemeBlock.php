@@ -67,7 +67,7 @@ class ThemeBlock
      */
     public function getFolder()
     {
-        return (!$this->isExtension) ? $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug) : $this->blockSlug;
+        return (! $this->isExtension) ? ($this->theme->getFolder() . '/blocks/' . basename($this->blockSlug)) : $this->blockSlug;
     }
 
     /**
@@ -77,16 +77,17 @@ class ThemeBlock
      */
     protected function getNamespace()
     {
-        // Return Namespace from the Config file of the Block if it is an extension. Used for Extensions.
-        if( isset( $this->config['namespace'] ) )
+        // return Namespace from the Config file of the Block if it is an extension. Used for Extensions.
+        if (isset( $this->config['namespace'])) {
             return $this->config['namespace'];
+        }
 
-        // Return Namespace from Config file if exists;
-        if( phpb_config('theme.namespace') )
+        // return Namespace from Config file if exists;
+        if (phpb_config('theme.namespace')) {
             return phpb_config('theme.namespace');
+        }
 
-        // Get namespace from directory structure if not provided:
-
+        // get namespace from directory structure if not provided:
         $themesPath = phpb_config('theme.folder');
         $themesFolderName = basename($themesPath);
         $blockFolder = $this->getFolder();
