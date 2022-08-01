@@ -120,6 +120,20 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Block related settings
+     |--------------------------------------------------------------------------
+     |
+     | By default a the bundled dynamic renderer will be used to render the blocks.
+     | The default renderer renders PHP files only. However you may replace this class with your own to render other formats.
+     | such as Laravel Blade templates or Twig, etc;
+     |
+     */
+    'block' => [
+        'renderer' => PHPageBuilder\Modules\GrapesJS\Block\DynamicBlockRenderer::class
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | Cache settings
      |--------------------------------------------------------------------------
      |

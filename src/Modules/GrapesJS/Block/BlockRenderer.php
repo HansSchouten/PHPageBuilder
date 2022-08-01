@@ -11,17 +11,17 @@ class BlockRenderer
     /**
      * @var ThemeContract $theme
      */
-    protected $theme;
+    public $theme;
 
     /**
      * @var PageContract $page
      */
-    protected $page;
+    public $page;
 
     /**
      * @var bool $forPageBuilder
      */
-    protected $forPageBuilder;
+    public $forPageBuilder;
 
     /**
      * BlockRenderer constructor.
@@ -250,19 +250,14 @@ class BlockRenderer
         $controller->init($model, $this->page, $this->forPageBuilder);
         $controller->handleRequest();
 
-        // init additional variables that should be accessible in the view
-        $renderer = $this;
-        $page = $this->page;
-        $block = $model;
+        $renderer = new (phpb_config('block.renderer'));
 
-        // unset variables that should be inaccessible inside the view
-        unset($controller, $model, $blockData);
+        $vars = [
+            'renderer' => $this,
+            'page'     => $this->page,
+            'block'    => $model
+        ];
 
-        ob_start();
-        require $themeBlock->getViewFile();
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return $html;
+        return $renderer->render($themeBlock, $blockData, $vars, $controller, $model);
     }
 }

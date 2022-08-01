@@ -150,7 +150,9 @@ class ThemeBlock
     public function getViewFile()
     {
         if ($this->isPhpBlock()) {
-            return $this->getFolder() . '/view.php';
+            $renderer = new (phpb_config('block.renderer'));
+
+            return $renderer->getViewFile($this->getFolder());
         }
         return $this->getFolder() . '/view.html';
     }
@@ -224,7 +226,9 @@ class ThemeBlock
      */
     public function isPhpBlock()
     {
-        return file_exists($this->getFolder() . '/view.php');
+        $renderer = new (phpb_config('block.renderer'));
+
+        return $renderer->isDynamicBlock($this->getFolder());
     }
 
     /**

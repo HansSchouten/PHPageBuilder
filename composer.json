@@ -1,6 +1,7 @@
 {
     "name": "hansschouten/phpagebuilder",
     "description": "A drag and drop pagebuilder to manage pages in any PHP project.",
+    "version": "0.21.0",
     "keywords": [
         "pagebuilder"
     ],
