@@ -233,7 +233,7 @@ class ThemeBlock
      */
     public function getSlug()
     {
-        return ! $this->isExtension ? $this->blockSlug : $this->extensionSlug;
+        return (! $this->isExtension) ? $this->blockSlug : $this->extensionSlug;
     }
 
     /**

@@ -59,9 +59,7 @@ class ThemeLayout
      */
     public function getFolder()
     {
-        print_r($this->layoutSlug);
-
-        return !$this->isExtension ? $this->theme->getFolder() . '/layouts/' . $this->layoutSlug : $this->layoutSlug;
+        return (! $this->isExtension) ? ($this->theme->getFolder() . '/layouts/' . $this->layoutSlug) : $this->layoutSlug;
     }
 
     /**
