@@ -117,10 +117,10 @@ class DatabasePageRouter implements RouterContract
         // routes ending with (more) named parameters should be evaluated after exact matches, but before catch all
         $namedParameterCountRoute1 = substr_count(implode('/', $route1), '{');
         $namedParameterCountRoute2 = substr_count(implode('/', $route2), '{');
-        if ($namedParameterCountRoute1 > $namedParameterCountRoute2) {
+        if ($namedParameterCountRoute1 < $namedParameterCountRoute2) {
             return -1;
         }
-        if ($namedParameterCountRoute1 < $namedParameterCountRoute2) {
+        if ($namedParameterCountRoute1 > $namedParameterCountRoute2) {
             return 1;
         }
 
