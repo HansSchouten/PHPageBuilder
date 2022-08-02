@@ -2,19 +2,20 @@
 
 namespace PHPageBuilder;
 
-class Extensions {
+class Extensions
+{
 
     /**
      * Blocks that can be added by plugins / composer packages.
      */
-    protected static array $blocks  = [];
+    protected static $blocks = [];
 
     /**
      * Layouts that can be added by plugins / composer packages.
      */
-    protected static array $layouts = [];
+    protected static $layouts = [];
 
-    protected static array $assets = [
+    protected static $assets = [
         'header' => [],
         'footer' => []
     ];
