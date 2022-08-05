@@ -17,10 +17,6 @@ form {
   font-weight: normal;
   text-align: center;
   color: #5e5e5e;
-
-  &:not(.editable) {
-    display: none;
-  }
 }
 
 [data-gjs-type].gjs-comp-selected {
