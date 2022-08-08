@@ -41,6 +41,8 @@ class ThemeBlock
      *
      * @param ThemeContract $theme         the theme this block belongs to
      * @param string $blockSlug
+     * @param bool $isExtension
+     * @param string|null $extensionSlug
      */
     public function __construct(ThemeContract $theme, string $blockSlug, bool $isExtension = false, string $extensionSlug = null)
     {

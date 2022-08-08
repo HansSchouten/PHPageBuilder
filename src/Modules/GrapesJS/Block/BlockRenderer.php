@@ -74,7 +74,6 @@ class BlockRenderer
                     ? new ThemeBlock($this->theme, $path, true, $blockSlug) 
                     : new ThemeBlock($this->theme, $blockSlug);
 
-
         return $this->render($block, $blockData, $id);
     }
 

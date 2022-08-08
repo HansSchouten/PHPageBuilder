@@ -47,7 +47,6 @@ class Theme implements ThemeContract
     protected function attemptBlockRegistration($entry) {
         if ($entry->isDir() && ! $entry->isDot()) {
             $blockSlug = $entry->getFilename();
-
             $block = new ThemeBlock($this, $blockSlug);
 
             $isActive = true;
