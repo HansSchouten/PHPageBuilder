@@ -87,7 +87,7 @@ class ShortcodeParser
      */
     protected function doBlockShortcodes($html, array $context, $maxDepth)
     {
-        $matches = $this->findMatches('block', $html);
+        $matches = self::findMatches('block', $html);
         if (empty($matches)) {
             return $html;
         }
@@ -125,7 +125,7 @@ class ShortcodeParser
      */
     protected function doPageShortcodes($html)
     {
-        $matches = $this->findMatches('page', $html);
+        $matches = self::findMatches('page', $html);
 
         if (empty($matches)) {
             return $html;
@@ -155,7 +155,7 @@ class ShortcodeParser
      */
     protected function doThemeUrlShortcodes($html)
     {
-        $matches = $this->findMatches('theme-url', $html);
+        $matches = self::findMatches('theme-url', $html);
 
         if (empty($matches)) {
             return $html;
@@ -177,7 +177,7 @@ class ShortcodeParser
      */
     protected function doBlocksContainerShortcodes($html)
     {
-        $matches = $this->findMatches('blocks-container', $html);
+        $matches = self::findMatches('blocks-container', $html);
 
         if (empty($matches)) {
             return $html;
@@ -198,7 +198,7 @@ class ShortcodeParser
      * @param $html
      * @return array            an array with for each $shortcode occurrence an array of attributes
      */
-    protected function findMatches($shortcode, $html)
+    public static function findMatches($shortcode, $html)
     {
         // RegEx: https://www.regextester.com/104625
         $regex = '/\[' . $shortcode . '(\s.*?)?\](?:([^\[]+)?\[\/' . $shortcode . '\])?/';
