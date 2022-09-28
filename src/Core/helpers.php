@@ -370,14 +370,15 @@ if (! function_exists('phpb_redirect')) {
      *
      * @param string $url
      * @param array $flashData
+     * @param $statusCode
      */
-    function phpb_redirect($url, $flashData = [])
+    function phpb_redirect($url, $flashData = [], $statusCode = 302)
     {
         if (! empty($flashData)) {
             $_SESSION["phpb_flash"] = $flashData;
         }
 
-        header('Location: ' . $url);
+        header('Location: ' . $url, true, $statusCode);
         exit();
     }
 }
