@@ -6,7 +6,7 @@ use PHPageBuilder\Contracts\CacheContract;
 
 class Cache implements CacheContract
 {
-    public static $maxCacheDepth = 6;
+    public static $maxCacheDepth = 7;
     public static $maxCachedPageVariants = 50;
 
     /**

@@ -261,7 +261,7 @@ class PageRenderer
         $renderedBlock = $blockRenderer->render($themeBlock, $context ?? [], $id);
 
         // determine the context for rendering nested blocks
-        // if the current block is an html block, the context starts again at full page data
+        // if the current block is a html block, the context starts again at full page data
         // if the current block is a dynamic block, use the nested block data inside the current block's context
         $context = $context['blocks'] ?? [];
         if ($themeBlock->isHtmlBlock()) {
