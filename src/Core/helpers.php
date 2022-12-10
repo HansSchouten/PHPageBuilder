@@ -496,6 +496,28 @@ if (! function_exists('phpb_instance')) {
     }
 }
 
+if (! function_exists('phpb_static')) {
+    /**
+     * Return a static reference of the given class as defined in config, or with the given namespace (which is potentially overridden and mapped to an alternative namespace).
+     *
+     * @param string $name          the name of the config main section in which the class path is defined
+     * @return object|string|null
+     */
+    function phpb_static(string $name)
+    {
+        if (phpb_config($name . '.class')) {
+            return phpb_config($name . '.class');
+        }
+        if (class_exists($name)) {
+            if (phpb_config('class_replacements.' . $name)) {
+                return phpb_config('class_replacements.' . $name);
+            }
+            return $name;
+        }
+        return null;
+    }
+}
+
 if (! function_exists('phpb_slug')) {
     /**
      * Create a slug (safe URL or path) of the given string.

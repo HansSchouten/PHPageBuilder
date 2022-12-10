@@ -91,7 +91,7 @@ class Cache implements CacheContract
     }
 
     /**
-     * Analyse the given cache path to determine whether it can be to used, without server/disk space issues.
+     * Analyse the given cache path to determine whether it can be used, without server/disk space issues.
      * This prevents deep nested cache paths and large numbers of cached pages per path due to query string variations.
      *
      * @param string $cachePath
@@ -113,7 +113,7 @@ class Cache implements CacheContract
     }
 
     /**
-     * Invalidate all variants stored for the given page route (i.e an URL with * and {} placeholders).
+     * Invalidate all variants stored for the given page route (i.e. a URL with * and {} placeholders).
      *
      * @param string $route
      */

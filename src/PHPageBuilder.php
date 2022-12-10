@@ -393,7 +393,7 @@ class PHPageBuilder
         $url = str_replace('&refresh_cache', '', $url);
 
         $cache = phpb_instance('cache');
-        $cache->storeForUrl($url, $renderedContent, PageRenderer::getCacheLifetime());
+        $cache->storeForUrl($url, $renderedContent, phpb_static(PageRenderer::class)::getCacheLifetime());
     }
 
     /**
