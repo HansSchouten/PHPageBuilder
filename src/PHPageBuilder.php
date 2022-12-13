@@ -272,6 +272,7 @@ class PHPageBuilder
         if (phpb_in_module('website_manager')) {
             $this->auth->requireAuth();
             $this->websiteManager->handleRequest($route, $action);
+            header("HTTP/1.1 404 Not Found");
             die('PHPageBuilder WebsiteManager page not found');
         }
 
@@ -280,6 +281,7 @@ class PHPageBuilder
             $this->auth->requireAuth();
             phpb_set_in_editmode();
             $this->pageBuilder->handleRequest($route, $action);
+            header("HTTP/1.1 404 Not Found");
             die('PHPageBuilder PageBuilder page not found');
         }
 
@@ -293,6 +295,7 @@ class PHPageBuilder
             return true;
         }
 
+        header("HTTP/1.1 404 Not Found");
         die('PHPageBuilder page not found. Check your URL: <b>' . phpb_e(phpb_full_url(phpb_current_relative_url())) . '</b>');
     }
 
@@ -308,12 +311,14 @@ class PHPageBuilder
         // allowing direct /uploads access via .htaccess is preferred since it gives faster loading time)
         if (strpos(phpb_current_relative_url(), phpb_config('general.uploads_url') . '/') === 0) {
             $this->handleUploadedFileRequest();
-            die('File not found');
+            header("HTTP/1.1 404 Not Found");
+            exit();
         }
         // if we are on the URL of a PHPageBuilder asset, return the asset
         if (strpos(phpb_current_relative_url(), phpb_config('general.assets_url') . '/') === 0) {
             $this->handlePageBuilderAssetRequest();
-            die('Asset not found');
+            header("HTTP/1.1 404 Not Found");
+            exit();
         }
 
         // try to find page in cache
@@ -410,14 +415,16 @@ class PHPageBuilder
         // handle website manager requests
         if (phpb_config('website_manager.use_website_manager') && phpb_in_module('website_manager')) {
             $this->websiteManager->handleRequest($route, $action);
-            die('Page not found');
+            header("HTTP/1.1 404 Not Found");
+            exit();
         }
 
         // handle page builder requests
         if (phpb_in_module('pagebuilder')) {
             phpb_set_in_editmode();
             $this->pageBuilder->handleRequest($route, $action);
-            die('Page not found');
+            header("HTTP/1.1 404 Not Found");
+            exit();
         }
     }
 
@@ -430,17 +437,26 @@ class PHPageBuilder
         $file = substr(phpb_current_relative_url(), strlen(phpb_config('general.uploads_url')) + 1);
         // $file is in the format {file id}/{file name}.{file extension}, so get file id as the part before /
         $fileId = explode('/', $file)[0];
-        if (empty($fileId)) die('File not found');
+        if (empty($fileId)) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         $uploadRepository = new UploadRepository;
         $uploadedFile = $uploadRepository->findWhere('public_id', $fileId);
-        if (! $uploadedFile) die('File not found');
+        if (! $uploadedFile) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         $uploadedFile = $uploadedFile[0];
         $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . $uploadedFile->server_file);
         // add backwards compatibility for files uploaded with PHPageBuilder <= v0.12.0, stored as /uploads/{id}.{extension}
         if (! $serverFile) $serverFile = realpath(phpb_config('storage.uploads_folder') . '/' . basename($uploadedFile->server_file));
-        if (! $serverFile) die('File not found');
+        if (! $serverFile) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         header('Content-Type: ' . $uploadedFile->mime_type);
         header('Content-Disposition: inline; filename="' . basename($uploadedFile->original_file) . '"');
@@ -462,14 +478,23 @@ class PHPageBuilder
 
         $distPath = realpath(__DIR__ . '/../dist/');
         $requestedFile = realpath($distPath . '/' . $asset);
-        if (! $requestedFile) die('Asset not found');
+        if (! $requestedFile) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         // prevent path traversal by ensuring the requested file is inside the dist folder
-        if (strpos($requestedFile, $distPath) !== 0) die('Asset not found');
+        if (strpos($requestedFile, $distPath) !== 0) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         // only allow specific extensions
         $ext = pathinfo($requestedFile, PATHINFO_EXTENSION);
-        if (! in_array($ext, ['js', 'css', 'jpg', 'png', 'svg'])) die('Asset not found');
+        if (! in_array($ext, ['js', 'css', 'jpg', 'png', 'svg'])) {
+            header("HTTP/1.1 404 Not Found");
+            exit();
+        }
 
         $contentTypes = [
             'js' => 'application/javascript; charset=utf-8',
