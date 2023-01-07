@@ -326,7 +326,8 @@ class PHPageBuilder
         if (phpb_config('cache.enabled') &&
             ! isset($_GET['ignore_cache']) &&
             ! isset($_GET['refresh_cache']) &&
-            ! isset($_COOKIE['ignore_cache'])
+            ! isset($_COOKIE['ignore_cache']) &&
+            PageRenderer::canBeCached()
         ) {
             $cachedContent = $cache->getForUrl(phpb_current_relative_url());
             if ($cachedContent) {
