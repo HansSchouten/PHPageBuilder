@@ -128,6 +128,7 @@ return [
         'en' => 'Engels',
         'nl' => 'Nederlands',
         'es' => 'Spaans',
+        'it' => 'Italiaans',
         'fr' => 'Frans',
         'de' => 'Duits',
     ],
