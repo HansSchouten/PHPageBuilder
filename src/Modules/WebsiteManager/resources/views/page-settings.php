@@ -61,6 +61,16 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                             <input type="text" class="form-control" id="page-title" name="title[<?= phpb_e($languageCode) ?>]" value="<?= phpb_e($pageTranslations[$languageCode]['title'] ?? '') ?>" required>
                         </div>
 
+                        <div class="form-group">
+                            <label for="page-meta-title"><?= phpb_trans('website-manager.page-meta-title') ?></label>
+                            <input type="text" class="form-control" id="page-meta-title" name="meta_title[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['meta_title'] ?? '') ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="page-meta-description"><?= phpb_trans('website-manager.page-meta-description') ?></label>
+                            <input type="text" class="form-control" id="page-meta-description" name="meta_description[<?= e($languageCode) ?>]" value="<?= e($pageTranslations[$languageCode]['meta_description'] ?? '') ?>">
+                        </div>
+
                         <div class="form-group required">
                             <label for="route"><?= phpb_trans('website-manager.route') ?></label>
                             <input type="text" class="form-control" id="route" name="route[<?= phpb_e($languageCode) ?>]" value="<?= phpb_e($pageTranslations[$languageCode]['route'] ?? '') ?>" required>

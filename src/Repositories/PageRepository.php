@@ -91,7 +91,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
     protected function replaceTranslations(PageContract $page, array $data)
     {
         $activeLanguages = phpb_active_languages();
-        foreach (['title', 'route'] as $field) {
+        foreach (['title', 'meta_title', 'meta_description', 'route'] as $field) {
             foreach ($activeLanguages as $languageCode => $languageTranslation) {
                 if (! isset($data[$field][$languageCode])) {
                     return false;
@@ -106,6 +106,8 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
                 phpb_config('page.translation.foreign_key') => $page->getId(),
                 'locale' => $languageCode,
                 'title' => $data['title'][$languageCode],
+                'meta_title' => $data['meta_title'][$languageCode],
+                'meta_description' => $data['meta_description'][$languageCode],
                 'route' => $data['route'][$languageCode],
             ]);
         }
