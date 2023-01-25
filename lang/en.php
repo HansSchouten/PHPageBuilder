@@ -14,7 +14,7 @@ return [
         'pages' => 'Pages',
         'menus' => 'Menus',
         'name' => 'Name',
-        'page-title' => 'Menu title',
+        'page-title' => 'Page menu title',
         'page-meta-title' => 'Page meta title',
         'page-meta-description' => 'Page meta description',
         'route' => 'URL',

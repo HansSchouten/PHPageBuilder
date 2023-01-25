@@ -14,7 +14,7 @@ return [
         'pages' => 'Pagina\'s',
         'menus' => 'Menus',
         'name' => 'Naam',
-        'page-title' => 'Menu titel',
+        'page-title' => 'Page menu titel',
         'page-meta-title' => 'Pagina (meta) titel',
         'page-meta-description' => 'Pagina meta omschrijving',
         'route' => 'URL',
