@@ -563,7 +563,7 @@ if (! function_exists('phpb_autoload')) {
     }
 }
 
-if (! function_exists('phpb_registered_assets_header')) {
+if (! function_exists('phpb_registered_assets')) {
     /**
      * Render all manually registered assets.
      *
