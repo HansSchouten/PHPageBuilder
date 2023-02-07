@@ -11,7 +11,6 @@ use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 use Exception;
-use PHPageBuilder\Extensions;
 
 class PageBuilder implements PageBuilderContract
 {
@@ -36,7 +35,7 @@ class PageBuilder implements PageBuilderContract
     public function __construct()
     {
         $this->theme = phpb_instance('theme', [
-            phpb_config('theme'), 
+            phpb_config('theme'),
             phpb_config('theme.active_theme')
         ]);
     }
@@ -212,11 +211,10 @@ class PageBuilder implements PageBuilderContract
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
             $adapter = phpb_instance(BlockAdapter::class, [$pageRenderer, $themeBlock]);
-            $blockSettings[$slug] = $adapter->getBlockSettingsArray();
-
             if ($themeBlock->get('hidden') !== true) {
                 $blocks[$slug] = $adapter->getBlockManagerArray();
             }
+            $blockSettings[$slug] = $adapter->getBlockSettingsArray();
         }
 
         // create an array of all uploaded assets

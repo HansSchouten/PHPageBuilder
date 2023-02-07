@@ -15,6 +15,11 @@ class ThemeBlock
     protected $config;
 
     /**
+     * @var $dynamicConfig
+     */
+    public static $dynamicConfig = [];
+
+    /**
      * @var ThemeContract $theme
      */
     protected $theme;
@@ -264,8 +269,11 @@ class ThemeBlock
      * @param $key
      * @return mixed
      */
-    public function get($key)
+    public function get($key = null)
     {
+        if (empty($key)) {
+            return $this->config;
+        }
         // if no dot notation is used, return first dimension value or empty string
         if (strpos($key, '.') === false) {
             return $this->config[$key] ?? null;
@@ -288,20 +296,26 @@ class ThemeBlock
     /**
      * Replace configuration at the given key (as dot-separated multidimensional array selector) by the given value.
      *
+     * @param $slug
      * @param $key
      * @param $value
      * @return void
      */
-    public function set($key, $value)
+    public static function set($slug, $key, $value)
     {
+        if (empty($key)) {
+            self::$dynamicConfig[$slug] = $value;
+            return;
+        }
         // if no dot notation is used, replace first dimension value or empty string
         if (strpos($key, '.') === false) {
-            $this->config[$key] = $value;
+            self::$dynamicConfig[$slug][$key] = $value;
+            return;
         }
 
         // if dot notation is used, traverse config and replace at the right depth
         $segments = explode('.', $key);
-        $subArray = &$this->config;
+        $subArray = &self::$dynamicConfig[$slug];
         foreach ($segments as $i => $segment) {
             if (isset($subArray[$segment])) {
                 if ($i === count($segments) - 1) {
@@ -313,5 +327,16 @@ class ThemeBlock
                 return;
             }
         }
+    }
+
+    /**
+     * Get all dynamic configuration of the block with the given slug.
+     *
+     * @param $slug
+     * @return mixed
+     */
+    public static function getDynamicConfig($slug)
+    {
+        return self::$dynamicConfig[$slug] ?? null;
     }
 }
