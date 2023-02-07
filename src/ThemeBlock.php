@@ -284,4 +284,34 @@ class ThemeBlock
 
         return $subArray;
     }
+
+    /**
+     * Replace configuration at the given key (as dot-separated multidimensional array selector) by the given value.
+     *
+     * @param $key
+     * @param $value
+     * @return void
+     */
+    public function set($key, $value)
+    {
+        // if no dot notation is used, replace first dimension value or empty string
+        if (strpos($key, '.') === false) {
+            $this->config[$key] = $value;
+        }
+
+        // if dot notation is used, traverse config and replace at the right depth
+        $segments = explode('.', $key);
+        $subArray = &$this->config;
+        foreach ($segments as $i => $segment) {
+            if (isset($subArray[$segment])) {
+                if ($i === count($segments) - 1) {
+                    $subArray[$segment] = $value;
+                } else {
+                    $subArray = &$subArray[$segment];
+                }
+            } else {
+                return;
+            }
+        }
+    }
 }
