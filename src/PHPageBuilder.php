@@ -476,6 +476,7 @@ class PHPageBuilder
     {
         // get asset file path by stripping the configured assets_url prefix from the current request URI
         $asset = substr(phpb_current_relative_url(), strlen(phpb_config('general.assets_url')) + 1);
+        $asset = explode('?', $asset)[0];
 
         $distPath = realpath(__DIR__ . '/../dist/');
         $requestedFile = realpath($distPath . '/' . $asset);
