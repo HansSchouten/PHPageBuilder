@@ -72,13 +72,14 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
             }
         }
 
-        $page->invalidateCache();
         $this->replaceTranslations($page, $data);
 
-        return parent::update($page, [
+        $updateResult = parent::update($page, [
             'name' => $data['name'],
             'layout' => $data['layout'],
         ]);
+        $page->invalidateCache();
+        return $updateResult;
     }
 
     /**
@@ -116,7 +117,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
     }
 
     /**
-     * Update the given page with the given updated page data
+     * Update the given page with the given updated page data.
      *
      * @param $page
      * @param array $data
@@ -124,11 +125,11 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
      */
     public function updatePageData($page, array $data)
     {
-        $page->invalidateCache();
-
-        return parent::update($page, [
+        $updateResult = parent::update($page, [
             'data' => json_encode($data),
         ]);
+        $page->invalidateCache();
+        return $updateResult;
     }
 
     /**
