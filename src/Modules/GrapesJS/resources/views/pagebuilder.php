@@ -115,7 +115,11 @@ require __DIR__ . '/grapesjs/trait-manager.php';
             <?php
             foreach (phpb_active_languages() as $languageCode => $languageTranslation):
             ?>
-            <option value="<?= phpb_e($languageCode) ?>" <?= $languageCode === $currentLanguage ? 'selected' : '' ?>><?= phpb_e($languageTranslation) ?></option>
+            <option value="<?= phpb_e($languageCode) ?>" <?= $languageCode === $currentLanguage ? 'selected' : '' ?>
+                    data-content='<span class="flag-icon flag-icon-<?= phpb_e($languageCode) ?>"></span><span class="language-name ml-1"><?= phpb_e($languageTranslation) ?></span>'>
+                >
+                <?= phpb_e($languageTranslation) ?>
+            </option>
             <?php
             endforeach;
             ?>
@@ -124,6 +128,17 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     <?php
     endif;
     ?>
+    <style>
+        <?php
+        foreach (phpb_active_languages() as $languageCode => $languageTranslation):
+        ?>
+        .flag-icon-<?= $languageCode ?> {
+            background-image: url(<?= phpb_asset('pagebuilder/images/flags/' . $languageCode . '.svg') ?>);
+        }
+        <?php
+        endforeach;
+        ?>
+    </style>
 </div>
 
 <div id="sidebar-bottom-buttons">
