@@ -31,7 +31,11 @@ CKEDITOR.dtd.$editable.ul = 1;
 CKEDITOR.dtd.$editable.table = 1;
 
 <?php
-$currentLanguage = in_array(phpb_config('general.language'), phpb_active_languages()) ? phpb_config('general.language') : array_keys(phpb_active_languages())[0];
+$currentLanguage = in_array(phpb_config('general.language'), phpb_active_languages()) ?
+    phpb_config('general.language') : array_keys(phpb_active_languages())[0];
+if (! empty($_SESSION['phpagebuilder_language'])) {
+    $currentLanguage = $_SESSION['phpagebuilder_language'];
+}
 ?>
 window.languages = <?= json_encode(phpb_active_languages()) ?>;
 window.currentLanguage = <?= json_encode($currentLanguage) ?>;
@@ -111,7 +115,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
             <?php
             foreach (phpb_active_languages() as $languageCode => $languageTranslation):
             ?>
-            <option value="<?= phpb_e($languageCode) ?>" <?= phpb_config('general.language') === $languageCode ? 'selected' : '' ?>><?= phpb_e($languageTranslation) ?></option>
+            <option value="<?= phpb_e($languageCode) ?>" <?= $languageCode === $currentLanguage ? 'selected' : '' ?>><?= phpb_e($languageTranslation) ?></option>
             <?php
             endforeach;
             ?>

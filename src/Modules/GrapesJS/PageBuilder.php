@@ -204,6 +204,9 @@ class PageBuilder implements PageBuilderContract
         // init variables that should be accessible in the view
         $pageBuilder = $this;
         $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        if (! empty($_SESSION['phpagebuilder_language'])) {
+            $pageRenderer->setLanguage($_SESSION['phpagebuilder_language']);
+        }
 
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
@@ -276,6 +279,7 @@ class PageBuilder implements PageBuilderContract
     public function renderLanguageVariant(PageContract $page, string $language, $blockData = [])
     {
         phpb_set_in_editmode();
+        $_SESSION['phpagebuilder_language'] = $language;
 
         $blockData = is_array($blockData) ? $blockData : [];
         $page->setData(['data' => $blockData], false);
