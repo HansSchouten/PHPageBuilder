@@ -39,7 +39,10 @@ if (! function_exists('phpb_asset')) {
      */
     function phpb_asset($path)
     {
-        return phpb_full_url(phpb_config('general.assets_url') . '/' . $path);
+        $basePath = __DIR__ . '/../../dist/';
+        $distPath = realpath($basePath . $path);
+        $version = ($distPath && strpos($distPath, realpath($basePath)) === 0) ? filemtime($distPath) : '';
+        return phpb_full_url(phpb_config('general.assets_url') . '/' . $path) . '?v=' . $version;
     }
 }
 
