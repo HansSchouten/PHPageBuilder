@@ -74,7 +74,10 @@ class ThemeBlock
      */
     public function getFolder()
     {
-        return (! $this->isExtension) ? ($this->theme->getFolder() . '/blocks/' . basename($this->blockSlug)) : $this->blockSlug;
+        if ($this->isExtension) {
+            return $this->blockSlug;
+        }
+        return $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug);
     }
 
     /**
