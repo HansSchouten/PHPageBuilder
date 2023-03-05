@@ -78,15 +78,15 @@ class ThemeBlock
             return $this->blockSlug;
         }
         $folder = $this->theme->getFolder() . '/blocks/archived/' . basename($this->blockSlug);
-        if (realpath($folder)) {
+        if (file_exists($folder)) {
             return $folder;
         }
         $folder = $this->theme->getFolder() . '/blocks/html/' . basename($this->blockSlug);
-        if (realpath($folder)) {
+        if (file_exists($folder)) {
             return $folder;
         }
         $folder = $this->theme->getFolder() . '/blocks/php/' . basename($this->blockSlug);
-        if (realpath($folder)) {
+        if (file_exists($folder)) {
             return $folder;
         }
         return $this->theme->getFolder() . '/blocks/' . basename($this->blockSlug);

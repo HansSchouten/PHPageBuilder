@@ -115,10 +115,22 @@ class Theme implements ThemeContract
     {
         $this->blocks = [];
 
-        if (file_exists($this->getFolder() . '/blocks')) {
-            $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
-            foreach ($blocksDirectory as $entry) {
-                $this->attemptBlockRegistration($entry);
+        $folders = [
+            '',
+            '/archived',
+            '/html',
+            '/php',
+        ];
+        foreach ($folders as $folder) {
+            if (file_exists($this->getFolder() . '/blocks' . $folder)) {
+                $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks' . $folder);
+                foreach ($blocksDirectory as $entry) {
+                    // skip special subfolders containing blocks
+                    if (in_array('/' . $entry, $folders)) {
+                        continue;
+                    }
+                    $this->attemptBlockRegistration($entry);
+                }
             }
         }
 
