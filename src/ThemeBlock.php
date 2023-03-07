@@ -279,9 +279,9 @@ class ThemeBlock
     }
 
     /**
-     * The wrapper element for carrying style in case this block is a PHP block.
+     * The wrapper element to be used in the pagebuilder and for carrying style in case this block is a PHP block.
      */
-    public function phpBlockWrapperElement()
+    public function getWrapperElement()
     {
         return $this->config['wrapper'] ?? 'div';
     }

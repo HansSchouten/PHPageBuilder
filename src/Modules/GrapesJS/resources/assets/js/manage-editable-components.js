@@ -308,8 +308,9 @@
                 container.components().each(function(componentSibling) {
                     if (componentSibling.cid === component.cid) {
                         // replace the <phpb-block> by the actual component
-                        // the component is wrapped with a div to allow block styling (via a unique .style-identifier selector)
-                        blockRootComponent = component.replaceWith({tagName: 'div'});
+                        // the component is wrapped with a wrapper element to allow block styling (via a unique .style-identifier selector)
+                        let wrapperElement = ('wrapper' in component.attributes.attributes) ? component.attributes.attributes['wrapper'] : 'div';
+                        blockRootComponent = component.replaceWith({tagName: wrapperElement});
                         blockRootComponent.attributes['is-style-wrapper'] = true;
                         clone.components().each(function(componentChild) {
                             blockRootComponent.append(cloneComponent(componentChild));
