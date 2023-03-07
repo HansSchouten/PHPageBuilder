@@ -102,10 +102,11 @@ class BlockRenderer
                 . '</phpb-block>';
         } else {
             if (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
-                // add wrapper div around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
-                $html = '<div class="' . phpb_e($blockData['settings']['attributes']['style-identifier']) . '">'
+                // add wrapper element around pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
+                $wrapperElement = $themeBlock->phpBlockWrapperElement();
+                $html = '<' . $wrapperElement . ' class="' . phpb_e($blockData['settings']['attributes']['style-identifier']) . '">'
                     . $html . $this->renderScript($themeBlock)
-                    . '</div>';
+                    . '</' . $wrapperElement . '>';
             } else {
                 $html .= $this->renderScript($themeBlock);
             }

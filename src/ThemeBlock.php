@@ -279,6 +279,14 @@ class ThemeBlock
     }
 
     /**
+     * The wrapper element for carrying style in case this block is a PHP block.
+     */
+    public function phpBlockWrapperElement()
+    {
+        return $this->config['wrapper'] ?? 'div';
+    }
+
+    /**
      * Return configuration with the given key (as dot-separated multidimensional array selector).
      *
      * @param $key
