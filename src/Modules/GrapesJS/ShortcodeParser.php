@@ -98,6 +98,14 @@ class ShortcodeParser
             }
             $slug = $match['attributes']['slug'];
             $id = $match['attributes']['id'] ?? $slug;
+            if (isset($context[$id]['settings']['attributes'])) {
+                foreach ($match['attributes'] as $attribute => $value) {
+                    if (in_array($attribute, ['id', 'slug'])) {
+                        continue;
+                    }
+                    $context[$id]['settings']['attributes'][$attribute] = $value;
+                }
+            }
             $blockHtml = $this->pageRenderer->renderBlock($slug, $id, $context, $maxDepth);
 
             // store rendered block in a structure used for outputting all blocks to the pagebuilder

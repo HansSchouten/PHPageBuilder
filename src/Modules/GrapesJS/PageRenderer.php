@@ -250,9 +250,9 @@ class PageRenderer
      */
     public function renderBlock($slug, $id = null, $context = null, $maxDepth = 25)
     {
-        $themeBlock = ($blockPath = Extensions::getBlock($slug)) 
-                        ? new ThemeBlock($this->theme, $blockPath, true, $slug) 
-                        : new ThemeBlock($this->theme, $slug);
+        $themeBlock = ($blockPath = Extensions::getBlock($slug))
+            ? new ThemeBlock($this->theme, $blockPath, true, $slug)
+            : new ThemeBlock($this->theme, $slug);
 
         $id = $id ?? $themeBlock->getSlug();
         $context = $context[$id] ?? $this->pageBlocksData[$id] ?? [];
