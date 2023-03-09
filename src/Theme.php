@@ -118,7 +118,7 @@ class Theme implements ThemeContract
         $folders = [
             '',
             '/archived',
-            '/html',
+            '/elements',
             '/php',
         ];
         foreach ($folders as $folder) {

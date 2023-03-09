@@ -81,7 +81,7 @@ class ThemeBlock
         if (file_exists($folder)) {
             return $folder;
         }
-        $folder = $this->theme->getFolder() . '/blocks/html/' . basename($this->blockSlug);
+        $folder = $this->theme->getFolder() . '/blocks/elements/' . basename($this->blockSlug);
         if (file_exists($folder)) {
             return $folder;
         }
