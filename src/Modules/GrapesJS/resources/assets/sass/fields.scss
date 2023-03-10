@@ -1,5 +1,5 @@
 .gjs-field {
-  background-color: #d2f4ff;
+  background-color: #22272e;
 }
 .gjs-field select {
   option {
@@ -7,24 +7,36 @@
     color: #000;
   }
 }
+.gjs-input-unit {
+  color: #e1e1e1;
+}
+.gjs-field-arrows {
+  color: #e1e1e1;
+}
 .gjs-sm-field select.gjs-input-unit {
-  color: rgb(0, 135, 179);
+  color: #e1e1e1;
 
   option {
-    background-color: #16b8ec;
+    background-color: #22272e;
     color: #fff;
   }
 }
 .gjs-field-arrow-d {
-  border-top: 4px solid rgb(0, 135, 179);
+  border-top: 4px solid #e1e1e1;
 }
 .gjs-field-arrow-u {
-  border-bottom: 4px solid rgb(0, 135, 179);
+  border-bottom: 4px solid #e1e1e1;
 }
 
+.gjs-field-radio {
+  padding: 0 !important;
+}
 .gjs-radio-item .gjs-radio-item-label {
   padding-top: 10px;
   margin-bottom: 0;
   padding-bottom: 10px;
   width: 100%;
+}
+.gjs-radio-item input:checked + .gjs-radio-item-label {
+  background-color: #545d6c;
 }

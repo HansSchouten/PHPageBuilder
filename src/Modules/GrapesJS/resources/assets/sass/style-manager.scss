@@ -1,5 +1,6 @@
-.gjs-sm-header {
+.gjs-sm-header, .gjs-trt-header {
   font-weight: normal;
+  color: #8c909d;
 }
 
 .gjs-clm-tags {
@@ -12,16 +13,16 @@
     display: none;
   }
   #gjs-clm-new {
-    color: #000;
+    color: #e1e1e1;
   }
   #gjs-clm-add-tag {
-    background-color: rgb(22, 184, 236);
+    background-color: #0091d1;
     border: none;
     box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2) inset;
     color: #fff;
 
     &:hover {
-      background-color: #0087b3;
+      background-color: #004a6c;
     }
   }
 }
@@ -29,7 +30,7 @@
 .gjs-sm-sectors {
   .gjs-four-color,
   .gjs-color-warn {
-    color: #000;
+    color: #e1e1e1;
   }
 
   .gjs-sm-field.gjs-sm-composite {
@@ -47,12 +48,6 @@
     .gjs-field select {
       color: #000;
       background: #0087b33d;
-    }
-  }
-
-  .gjs-sm-properties {
-    .gjs-sm-field input {
-      color: #000;
     }
   }
 
