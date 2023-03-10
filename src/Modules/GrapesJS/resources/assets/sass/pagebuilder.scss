@@ -380,6 +380,11 @@ html, body, #gjs {
   font-size: 0.8rem;
   height: 100%;
   display: grid;
+
+  b {
+    display: contents;
+    font-weight: 800;
+  }
 }
 .gjs-block-category {
   background: #5a6371;
