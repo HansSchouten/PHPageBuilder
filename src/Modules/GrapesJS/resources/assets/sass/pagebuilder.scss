@@ -196,13 +196,12 @@ html, body, #gjs {
   overflow: hidden;
 
   > div:first-of-type {
-    margin-top: 33px;
+    margin-top: 44px;
   }
 
   > div {
     height: 100%;
     overflow-y: auto;
-    padding-top: 10px;
   }
 
   > div > div {
@@ -333,8 +332,9 @@ html, body, #gjs {
 
   input {
     background: #181b1e;
-    border: none;
     padding: 22px 20px 22px 30px;
+    border-radius: 0;
+    border: none;
 
     &::placeholder {
       color: #515664;
@@ -383,10 +383,10 @@ html, body, #gjs {
 }
 .gjs-block-category {
   background: #5a6371;
-  margin-bottom: 10px;
 }
 .gjs-block-category.gjs-open {
   border-bottom: none !important;
+  margin-bottom: 10px;
 }
 .gjs-blocks-cs {
   border-bottom: none !important;
@@ -409,11 +409,14 @@ html, body, #gjs {
 .gjs-clm-tags .gjs-sm-title,
 .gjs-block-category .gjs-title,
 .gjs-layer-title {
-  background: #545d6c !important;
-  border-bottom: 2px solid #3c434f !important;
+  background: #424853 !important;
+  border-bottom: 2px solid #363d48 !important;
   letter-spacing: 0;
   font-size: 16px;
   font-weight: normal;
+}
+.gjs-block-category.gjs-open .gjs-title {
+  background: #545d6c !important;
 }
 .gjs-layer-name {
   padding-top: 2px;
