@@ -345,6 +345,13 @@ html, body, #gjs {
 .gjs-block {
   border: none;
   box-shadow: none;
+  padding-bottom: 8px;
+  margin: 5px;
+  width: calc(50% - 10px);
+
+  &.fa {
+    padding: 8px;
+  }
 
   &:hover {
     color: #0091d1 !important;
@@ -353,6 +360,8 @@ html, body, #gjs {
   .block-thumb {
     height: 70px;
     overflow: hidden;
+    filter: brightness(70%);
+    margin-bottom: 5px;
 
     img {
       width: 100%;
@@ -361,6 +370,7 @@ html, body, #gjs {
 }
 .gjs-blocks-c {
   background: #22272e;
+  padding: 4px;
 }
 .gjs-block-categories {
   background: #22272e;
@@ -368,6 +378,8 @@ html, body, #gjs {
 }
 .gjs-block-label {
   font-size: 0.8rem;
+  height: 100%;
+  display: grid;
 }
 .gjs-block-category {
   background: #5a6371;
