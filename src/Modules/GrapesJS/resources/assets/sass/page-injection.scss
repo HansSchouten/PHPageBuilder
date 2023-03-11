@@ -31,11 +31,11 @@ span[draggable="true"] {
 
 [data-gjs-type].gjs-comp-selected {
   outline: 1px solid #0091d1 !important;
-  outline-offset: 1px !important;
+  outline-offset: 0 !important;
 }
 div[data-gjs-type].gjs-comp-selected {
   outline: 1px solid #0091d1 !important;
-  outline-offset: -2px !important;
+  outline-offset: -1px !important;
 }
 [phpb-content-container],
 [phpb-blocks-container] {
