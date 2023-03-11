@@ -131,14 +131,14 @@ html, body, #gjs {
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f5f5f5 !important;
+  background: #2f343e !important;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #0091d1 !important;
+  background-color: #a5acb9 !important;
   border-radius: 3px;
 
   &:hover {
-    background-color: #0079af !important;
+    background-color: #0091d1 !important;
   }
 }
 
