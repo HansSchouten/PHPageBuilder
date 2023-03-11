@@ -30,11 +30,11 @@ span[draggable="true"] {
 }
 
 [data-gjs-type].gjs-comp-selected {
-  outline: 2px solid #0091d1 !important;
+  outline: 1px solid #0091d1 !important;
   outline-offset: 1px !important;
 }
 div[data-gjs-type].gjs-comp-selected {
-  outline: 2px solid #0091d1 !important;
+  outline: 1px solid #0091d1 !important;
   outline-offset: -2px !important;
 }
 [phpb-content-container],
@@ -43,7 +43,7 @@ div[data-gjs-type].gjs-comp-selected {
   width: 100%;
 }
 [phpb-blocks-container] {
-  border: 2px dashed #0091d1;
+  border: 1px dashed #0091d1;
 }
 
 html,
