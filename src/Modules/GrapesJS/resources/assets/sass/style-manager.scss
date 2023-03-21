@@ -39,23 +39,30 @@
   }
 
   .gjs-sm-layers {
+    background-color: #3a3f4a;
+
     .gjs-sm-btn {
-      background: rgb(255, 255, 255);
+      background: #fff;
       color: #000;
       text-shadow: none;
     }
 
-    .gjs-field select {
-      color: #000;
-      background: #0087b33d;
+    .gjs-field {
+      padding: 0;
+      background-color: #3a3f4a;
+
+      select {
+        color: #fff;
+        background: #424853;
+      }
     }
   }
 
   .gjs-sm-stack #gjs-sm-add {
-    color: #333;
+    color: #fff;
 
     &:hover {
-      color: #000;
+      color: #aaa;
     }
   }
 }
