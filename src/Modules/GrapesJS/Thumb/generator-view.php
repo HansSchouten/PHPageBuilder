@@ -8,7 +8,7 @@ html, body {
     display:none;
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script src="<?= phpb_asset('pagebuilder/html2canvas-v0.4.1.min.js') ?>"></script>
 <script>
 $(document).ready(function() {
     html2canvas($("body"), {
