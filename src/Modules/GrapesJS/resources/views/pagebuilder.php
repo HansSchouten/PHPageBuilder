@@ -15,7 +15,7 @@
 
 <div id="gjs"></div>
 
-<script type="text/javascript" src="<?= phpb_asset('pagebuilder/ckeditor-full-all-v4.14.0.min.js') ?>"></script>
+<script type="text/javascript" src="https://cdn.ckeditor.com/4.14.0/full-all/ckeditor.js"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.9.min.js') ?>"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
 <script type="text/javascript">
