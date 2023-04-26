@@ -202,6 +202,9 @@
             if (! component.attributes.draggable) {
                 $(".gjs-toolbar .fa-arrows.gjs-toolbar-item").hide();
             }
+            if (! component.attributes.removable && ! component.attributes.copyable && ! component.attributes.draggable) {
+                window.editor.select(component.parent());
+            }
         }, 0);
     });
 
