@@ -90,6 +90,9 @@ html, body, #gjs {
   top: 0;
   width: calc(100% - #{$sidebar-width});
 }
+.gjs-toolbar {
+  z-index: 100 !important;
+}
 
 .gjs-pn-panel {
   padding: 0;
