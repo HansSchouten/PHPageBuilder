@@ -41,6 +41,10 @@
         if (component && component.attributes && component.attributes['block-id']) {
             window.runScriptsOfComponentAndChildren(component);
         }
+        // remove all existing CKEditors after dragging a block with active editor
+        for (let instanceName in CKEDITOR.instances) {
+            CKEDITOR.instances[instanceName].destroy(true);
+        }
     });
 
     /**
