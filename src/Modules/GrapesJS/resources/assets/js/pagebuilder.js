@@ -25,6 +25,25 @@ $(document).ready(function() {
         autoCollapseSidebar();
     });
 
+    window.editor.on('rteToolbarPosUpdate', function(toolbarPosition) {
+        if (! window.editor || ! window.editor.getSelected()) return;
+        let selectedDomComponent = window.editor.getSelected().getEl();
+        if (! selectedDomComponent) return;
+
+        setTimeout(function() {
+            let $toolbar = $(".gjs-rte-toolbar").first();
+            let toolbarInUpperHalf = $toolbar.offset().top < (toolbarPosition.elementTop + (0.5 * toolbarPosition.elementHeight));
+            if (toolbarInUpperHalf) {
+                let newTop = toolbarPosition.elementTop - $toolbar.height();
+                if (newTop > 0) {
+                    $toolbar.css('top', newTop + 'px');
+                } else {
+                    //$toolbar.css('top', (toolbarPosition.elementTop + toolbarPosition.elementHeight) + 'px');
+                }
+            }
+        }, 0);
+    });
+
     function autoCollapseSidebar() {
         if ($(window).width() < 1000) {
             $("#gjs").addClass('sidebar-collapsed');
