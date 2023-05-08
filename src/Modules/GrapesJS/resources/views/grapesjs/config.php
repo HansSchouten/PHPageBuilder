@@ -96,7 +96,7 @@ return [
             'options' => [
                 'startupFocus' => true,
                 'allowedContent' => true,
-                'forcePasteAsPlainText' => true,
+                'forcePasteAsPlainText' => false, // does not copy UL, random JS errors while pasting
                 //'extraAllowedContent' => '*(*);*[*];ul ol li span', // allows classes, inline styles and certain elements
                 'enterMode' => 'CKEDITOR.ENTER_BR',
                 'extraPlugins' => 'sourcedialog',

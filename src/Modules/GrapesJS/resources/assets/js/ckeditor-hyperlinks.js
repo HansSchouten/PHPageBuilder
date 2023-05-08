@@ -1,5 +1,39 @@
 $(document).ready(function() {
 
+    window.CKEDITOR.on('instanceReady', function (event) {
+        event.editor.on('paste', function (event) {
+            let result = event.data.dataValue;
+
+            // remove all not allowed tags
+            result = result.replace(/<(?!\/?(?:a|table|tr|td|th|thead|tbody|tfoot|caption|col|colgroup|p|ul|ol|li|br|strong|em|b|i|u|strike|sub|sup|h1|h2|h3|h4|h5|h6|blockquote|pre|hr)\b)[^>]+>/gm, '');
+
+            // remove all attributes of the allowed tags except from anchor
+            result = result.replace(/<(a|table|tr|td|th|thead|tbody|tfoot|caption|col|colgroup|p|ul|ol|li|br|strong|em|b|i|u|strike|sub|sup|h1|h2|h3|h4|h5|h6|blockquote|pre|hr)\b[^>]*>/gm, function(match, tag) {
+                // for anchor tags remove all attributes except href
+                if (tag === 'a') {
+                    let href = match.match(/href="([^"]*)"/);
+                    if (! href) {
+                        return match;
+                    }
+                    return '<a href="' + href[1] + '">';
+                }
+
+                // allow styling on some tags
+                if ('|table|tr|td|th|thead|tbody|tfoot|'.includes('|' + tag + '|')) {
+                    let style = match.match(/style="([^"]*)"/);
+                    if (! style) {
+                        return match;
+                    }
+                    return '<' + tag + ' style="' + style[1] + '">';
+                }
+
+                return '<' + tag + '>';
+            });
+
+            event.data.dataValue = result;
+        });
+    });
+
     window.CKEDITOR.on('dialogDefinition', function(event) {
         let dialogName = event.data.name;
         let dialogDefinition = event.data.definition;
