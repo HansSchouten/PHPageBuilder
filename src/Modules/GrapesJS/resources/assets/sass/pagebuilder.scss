@@ -489,12 +489,16 @@ html, body, #gjs {
   padding-bottom: 10px;
 }
 .gjs-trt-trait .gjs-field-image {
-  background: #fff;
+  background: none;
   padding: 0;
 
-  img {
-    max-width: 100%;
-    max-height: 200px;
+  .image__preview-container {
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      max-height: 150px;
+    }
   }
 }
 
