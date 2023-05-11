@@ -495,6 +495,17 @@ html, body, #gjs {
   .image__preview-container {
     text-align: center;
 
+    .image__remove-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-radius: 0;
+      background-color: #e9eef2;
+      border-color: #e9eef2;
+      color: #515664;
+      padding: 2px 6px;
+    }
+
     img {
       max-width: 100%;
       max-height: 150px;
