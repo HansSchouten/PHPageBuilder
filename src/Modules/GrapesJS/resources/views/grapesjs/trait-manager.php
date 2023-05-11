@@ -6,7 +6,7 @@ editor.TraitManager.addType('image', {
         const el = document.createElement('div');
         el.innerHTML = `
 <div class="image__preview-container">
-    <img class="image__preview cursor-pointer" src="<?= phpb_asset('pagebuilder/images/image-placeholder.png') ?>">
+    <img class="image__preview cursor-pointer" src="<?= phpb_asset('pagebuilder/images/image-placeholder-small.jpg') ?>">
 </div>
         `;
         const preview = el.querySelector('.image__preview');
