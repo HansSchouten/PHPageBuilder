@@ -70,7 +70,7 @@ class PageRenderer
         $this->theme = $theme;
         $this->page = $page;
         $this->pageData = $page->getBuilderData();
-        $this->shortcodeParser = new ShortcodeParser($this);
+        $this->shortcodeParser = phpb_instance(ShortcodeParser::class, [$this]);
         $this->setLanguage(phpb_current_language());
         $this->forPageBuilder = $forPageBuilder;
     }

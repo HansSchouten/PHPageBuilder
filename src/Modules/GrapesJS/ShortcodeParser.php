@@ -133,8 +133,11 @@ class ShortcodeParser
      */
     protected function doPageShortcodes($html)
     {
-        $matches = self::findMatches('page', $html);
+        if (phpb_in_editmode()) {
+            return $html;
+        }
 
+        $matches = self::findMatches('page', $html);
         if (empty($matches)) {
             return $html;
         }
