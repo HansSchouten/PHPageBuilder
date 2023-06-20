@@ -774,7 +774,7 @@
         // get component identifier class if one is already added to the component's html when saving the pagebuilder previously
         let componentIdentifier = false;
         component.getClasses().forEach(componentClass => {
-            if (componentClass.startsWith('ID') && componentClass.length === 16) {
+            if (componentClass.startsWith('ID') && componentClass.length >= 16) {
                 componentIdentifier = componentClass;
             }
         });
