@@ -357,6 +357,21 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
+     * Return this page's css in the format passed to GrapesJS.
+     *
+     * @param PageContract $page
+     * @return string
+     */
+    public function getPageStyleCss(PageContract $page)
+    {
+        $data = $page->getBuilderData();
+        if (isset($data['css'])) {
+            return $data['css'];
+        }
+        return '';
+    }
+
+    /**
      * Get or set custom css for customizing layout of the page builder.
      *
      * @param string|null $css

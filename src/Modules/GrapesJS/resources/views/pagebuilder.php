@@ -59,6 +59,7 @@ if (window.customConfig !== undefined) {
 
 window.initialComponents = <?= json_encode($pageRenderer->render()) ?>;
 window.initialStyle = <?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>;
+window.initialCss = <?= json_encode($pageBuilder->getPageStyleCss($page)) ?>;
 window.grapesJSTranslations = {
     <?= $currentLanguage ?>: {
         styleManager: {
