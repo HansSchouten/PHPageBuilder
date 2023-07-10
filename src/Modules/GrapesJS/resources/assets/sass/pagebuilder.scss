@@ -329,11 +329,11 @@ html, body, #gjs {
   }
 
   .block-thumb {
-    height: 70px;
-    overflow: hidden;
+    height: auto;
 
     img {
       width: 100%;
+      height: auto;
     }
   }
 }

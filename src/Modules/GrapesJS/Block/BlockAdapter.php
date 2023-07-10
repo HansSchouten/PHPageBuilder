@@ -83,9 +83,12 @@ class BlockAdapter
     {
         $content = $this->pageRenderer->renderBlock($this->block->getSlug());
 
+        $filepath = '/img/thumbnails/' . $this->block->getSlug() . '.png';
+
         $img = '';
-        if (file_exists($this->block->getThumbPath())) {
-            $img = '<div class="block-thumb"><img src="' . phpb_full_url($this->block->getThumbUrl()) . '"></div>';
+
+        if (file_exists(public_path($filepath))) {
+            $img = '<div class="block-thumb"><img src="' . $filepath . '"></div>';
         }
 
         $data = [
