@@ -124,7 +124,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
         $page->invalidateCache();
 
         return parent::update($page, [
-            'data' => json_encode($data),
+            'data' => json_encode($data, JSON_UNESCAPED_UNICODE),
         ]);
     }
 
