@@ -75,4 +75,10 @@ require __DIR__ . '/pagebuilder.php';
 <script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
 <?= $pageBuilder->customScripts('body'); ?>
 </body>
+
+<style>
+    #cke_93_uiElement {
+        display: none;
+    }
+</style>
 </html>
