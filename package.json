@@ -9,9 +9,9 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
-    "webpack-mix": "^2.0.2"
+    "webpack-mix": "^3.0.0"
   },
   "dependencies": {
-    "imagemin-pngquant": "^5.0.1"
+    "imagemin-pngquant": "^9.0.2"
   }
 }
