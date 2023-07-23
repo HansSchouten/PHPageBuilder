@@ -52,6 +52,11 @@ class PageRenderer
     public static $canBeCached;
 
     /**
+     * @var string $skeletonCacheUrl
+     */
+    public static $skeletonCacheUrl;
+
+    /**
      * The maximum number of minutes this page should be cached, one week by default.
      *
      * @var int $cacheLifetime

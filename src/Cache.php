@@ -31,6 +31,17 @@ class Cache implements CacheContract
             }
 
             return file_get_contents($currentPageCacheFolder . '/page.html');
+        } else {
+            // check if a skeleton page is available for a part of the given URL
+            $count = 0;
+            while ($relativeUrl !== '/' && $count < 10) {
+                $count++;
+                $relativeUrl = dirname($relativeUrl);
+                $currentPageCacheFolder = dirname($this->getPathForUrl($relativeUrl)) . '/skeleton';
+                if (is_dir($currentPageCacheFolder)) {
+                    return $this->getForUrl($relativeUrl . '/skeleton');
+                }
+            }
         }
 
         return null;
