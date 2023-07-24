@@ -32,6 +32,10 @@ class Cache implements CacheContract
 
             return file_get_contents($currentPageCacheFolder . '/page.html');
         } else {
+            // ensure /skeleton-data/ is not in URL
+            if (strpos($relativeUrl, '/skeleton-data/') !== false) {
+                return null;
+            }
             // check if a skeleton page is available for a part of the given URL
             $count = 0;
             while ($relativeUrl !== '/' && $count < 10) {
