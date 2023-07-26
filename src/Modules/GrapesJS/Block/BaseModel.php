@@ -33,6 +33,11 @@ class BaseModel
     protected $doNotRender;
 
     /**
+     * @var bool $hasSkeleton
+     */
+    protected $hasSkeleton;
+
+    /**
      * BaseModel constructor.
      *
      * @param ThemeBlock $block
@@ -109,6 +114,16 @@ class BaseModel
     public function doNotRender(): bool
     {
         return $this->doNotRender ?? false;
+    }
+
+    /**
+     * Whether this block has skeleton loading.
+     *
+     * @return false
+     */
+    public function hasSkeleton(): bool
+    {
+        return $this->hasSkeleton ?? false;
     }
 
 }

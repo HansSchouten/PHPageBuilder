@@ -262,6 +262,7 @@ class BlockRenderer
         $renderer = $this;
         $page = $this->page;
         $block = $model;
+        $hasSkeleton = $model->hasSkeleton();
 
         // unset variables that should be inaccessible inside the view
         unset($controller, $model, $blockData);
@@ -270,6 +271,16 @@ class BlockRenderer
         require $themeBlock->getViewFile();
         $html = ob_get_contents();
         ob_end_clean();
+
+        if ($hasSkeleton) {
+            $className = 'skeleton-' . $themeBlock->getSlug() . ' skeleton-data';
+            if (strpos(phpb_current_relative_url(), '/skeleton-data/') === false) {
+                return "<span class='{$className}'></span>";
+            } else {
+                $html = str_replace('addEventListener("app-loaded"', 'addEventListener("skeleton-data-loaded"', $html);
+                return "<span class='{$className}'>{$html}</span>";
+            }
+        }
 
         return $html;
     }
