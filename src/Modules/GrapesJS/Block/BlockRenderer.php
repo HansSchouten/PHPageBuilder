@@ -245,6 +245,9 @@ class BlockRenderer
             require_once $themeBlock->getModelFile();
             $modelClass = $themeBlock->getModelClass();
             $model = new $modelClass($themeBlock, $blockData, $this->page, $this->forPageBuilder);
+            if ($model->doNotRender()) {
+                return '';
+            }
         }
 
         if ($themeBlock->getControllerFile()) {
