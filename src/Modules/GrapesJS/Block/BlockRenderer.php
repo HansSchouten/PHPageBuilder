@@ -263,6 +263,7 @@ class BlockRenderer
         $page = $this->page;
         $block = $model;
         $hasSkeleton = $model->hasSkeleton();
+        $hasDynamicSkeleton = $model->hasDynamicSkeleton();
 
         // unset variables that should be inaccessible inside the view
         unset($controller, $model, $blockData);
@@ -275,7 +276,11 @@ class BlockRenderer
         if ($hasSkeleton) {
             $className = 'skeleton-' . $themeBlock->getSlug() . ' skeleton-data';
             if (strpos(phpb_current_relative_url(), '/skeleton-data/') === false) {
-                return "<span class='{$className}'></span>";
+                if ($hasDynamicSkeleton) {
+                    return "<span class='{$className}'>{$html}</span>";
+                } else {
+                    return "<span class='{$className}'></span>";
+                }
             } else {
                 $html = str_replace('addEventListener("app-loaded"', 'addEventListener("skeleton-data-loaded"', $html);
                 return "<span class='{$className}'>{$html}</span>";
