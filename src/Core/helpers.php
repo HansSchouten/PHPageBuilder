@@ -260,6 +260,9 @@ if (! function_exists('phpb_current_full_url')) {
         if (! $includeQueryString) {
             $currentFullUrl = explode('?', $currentFullUrl, 2)[0];
         }
+        if (phpb_is_skeleton_data_request()) {
+            $currentFullUrl = str_replace('/skeleton-data/', '/', $currentFullUrl);
+        }
         return $currentFullUrl;
     }
 }
@@ -280,6 +283,19 @@ if (! function_exists('phpb_current_relative_url')) {
         $relativeUrl = substr($currentFullUrl, strlen($baseUrl));
         $relativeUrl = ltrim($relativeUrl, '/'. DIRECTORY_SEPARATOR);
         return '/' . $relativeUrl;
+    }
+}
+
+if (! function_exists('phpb_is_skeleton_data_request')) {
+    /**
+     * Return whether the current request is a request to retrieve skeleton data.
+     *
+     * @return bool
+     */
+    function phpb_is_skeleton_data_request()
+    {
+        $skeletonDataPrefix = '/skeleton-data/';
+        return substr($_SERVER['REQUEST_URI'], 0, strlen($skeletonDataPrefix)) === $skeletonDataPrefix;
     }
 }
 

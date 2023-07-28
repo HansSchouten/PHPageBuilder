@@ -275,15 +275,15 @@ class BlockRenderer
 
         if ($hasSkeleton) {
             $className = 'skeleton-' . $themeBlock->getSlug() . ' skeleton-data';
-            if (strpos(phpb_current_relative_url(), '/skeleton-data/') === false) {
+            if (phpb_is_skeleton_data_request()) {
+                $html = str_replace('addEventListener("app-loaded"', 'addEventListener("skeleton-data-loaded"', $html);
+                return "<span class='{$className}'>{$html}</span>";
+            } else {
                 if ($hasDynamicSkeleton) {
                     return "<span class='{$className}'>{$html}</span>";
                 } else {
                     return "<span class='{$className}'></span>";
                 }
-            } else {
-                $html = str_replace('addEventListener("app-loaded"', 'addEventListener("skeleton-data-loaded"', $html);
-                return "<span class='{$className}'>{$html}</span>";
             }
         }
 
