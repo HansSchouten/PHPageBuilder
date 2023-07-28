@@ -242,7 +242,7 @@ if (! function_exists('phpb_current_full_url')) {
      *
      * @return string|null
      */
-    function phpb_current_full_url()
+    function phpb_current_full_url($includeQueryString = true)
     {
         // return null when running form CLI
         if (! isset($_SERVER['SERVER_NAME']) || ! isset($_SERVER['REQUEST_URI'])) {
@@ -257,6 +257,9 @@ if (! function_exists('phpb_current_full_url')) {
 
         $currentFullUrl = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . urldecode($_SERVER['REQUEST_URI']);
         $currentFullUrl = rtrim($currentFullUrl, '/' . DIRECTORY_SEPARATOR);
+        if (! $includeQueryString) {
+            $currentFullUrl = explode('?', $currentFullUrl, 2)[0];
+        }
         return $currentFullUrl;
     }
 }
