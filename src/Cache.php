@@ -36,14 +36,18 @@ class Cache implements CacheContract
             if (phpb_is_skeleton_data_request()) {
                 return null;
             }
+            // do not load a skeleton page if the user agent does not support it (or disabled otherwise)
+            if ($_SESSION['phpb_no_skeletons'] ?? false) {
+                return null;
+            }
             // check if a skeleton page is available for a part of the given URL
-            $count = 0;
-            while ($relativeUrl !== '/' && $count < 10) {
-                $count++;
+            $depth = 0;
+            while ($relativeUrl !== '/' && $depth < 10) {
+                $depth++;
                 $relativeUrl = dirname($relativeUrl);
-                $currentPageCacheFolder = dirname($this->getPathForUrl($relativeUrl)) . '/skeleton';
+                $currentPageCacheFolder = dirname($this->getPathForUrl($relativeUrl)) . "/skeleton-depth{$depth}";
                 if (is_dir($currentPageCacheFolder)) {
-                    return $this->getForUrl($relativeUrl . '/skeleton');
+                    return $this->getForUrl($relativeUrl . "/skeleton-depth{$depth}");
                 }
             }
         }
