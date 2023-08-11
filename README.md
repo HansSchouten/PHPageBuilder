@@ -27,7 +27,7 @@ Whether you are a novice or an experienced web developer, PHPagebuilder can make
 
 ### Page Builder
 PHPagebuilder features a page builder built on [GrapesJS](https://grapesjs.com/).
-![PageBuilder](https://user-images.githubusercontent.com/5946444/70818285-97c81a80-1dd3-11ea-84b0-2a6ff3a8765a.png)
+![PageBuilder](https://github.com/HansSchouten/PHPageBuilder/assets/5946444/ed65f20a-bad2-4194-af01-66f27140ba0c)
 
 ### Website Manager
 A basic website manager is included with a [Bootstrap](https://getbootstrap.com/) UI. This website manager offers basic functionality to add or remove pages and to edit page settings like page title or URL. Clicking the edit button will open the page builder.
