@@ -100,7 +100,7 @@ return [
                 //'extraAllowedContent' => '*(*);*[*];ul ol li span', // allows classes, inline styles and certain elements
                 //'enterMode' => 'CKEDITOR.ENTER_BR', // issues on pasting in Chromes
                 'extraPlugins' => 'sourcedialog',
-                'removePlugins' => 'exportpdf',
+                'removePlugins' => 'exportpdf,magicline',
                 'toolbar' => [
                     ['Bold', 'Italic', 'Underline', 'Strike', 'Undo', 'Redo'],
                     ['Link', 'Unlink'],
