@@ -82,7 +82,6 @@ class PageBuilder implements PageBuilderContract
             case 'edit':
                 $this->renderPageBuilder($page);
                 exit();
-                break;
             case 'store':
                 if (isset($_POST) && isset($_POST['data'])) {
                     $data = json_decode($_POST['data'], true);
