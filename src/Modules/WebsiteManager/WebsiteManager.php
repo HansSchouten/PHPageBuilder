@@ -50,7 +50,7 @@ class WebsiteManager implements WebsiteManagerContract
             if ($action === 'edit') {
                 $this->handleEdit($page);
                 exit();
-            } else if ($action === 'destroy') {
+            } elseif ($action === 'destroy') {
                 $this->handleDestroy($page);
             }
         }

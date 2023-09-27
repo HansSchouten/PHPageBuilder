@@ -15,7 +15,7 @@ class ShortcodeParser
     /**
      * @var array $renderedBlocks
      */
-    protected $renderedBlocks;
+    protected $renderedBlocks = [];
 
     /**
      * @var array $pages
@@ -35,7 +35,6 @@ class ShortcodeParser
     public function __construct(PageRenderer $pageRenderer)
     {
         $this->pageRenderer = $pageRenderer;
-        $this->renderedBlocks = [];
 
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll(['id']) as $page) {
@@ -72,8 +71,7 @@ class ShortcodeParser
         $html = $this->doBlockShortcodes($html, $context, $maxDepth);
         $html = $this->doPageShortcodes($html);
         $html = $this->doThemeUrlShortcodes($html);
-        $html = $this->doBlocksContainerShortcodes($html);
-        return $html;
+        return $this->doBlocksContainerShortcodes($html);
     }
 
     /**
@@ -232,15 +230,13 @@ class ShortcodeParser
                 if (strpos($remainingString, '"') === 0 && strpos($remainingString, '"', 1) !== false) {
                     list($empty, $value, $remainingString) = explode('"', $remainingString, 3);
                     $attributes[$attribute] = $value;
-                } else {
+                } elseif (strpos($remainingString, ' ') !== false) {
                     // attribute value was not between "", get value until next whitespace or until end of $remainingString
-                    if (strpos($remainingString, ' ') !== false) {
-                        list($value, $remainingString) = explode(' ', $remainingString, 2);
-                        $attributes[$attribute] = $value;
-                    } else {
-                        $attributes[$attribute] = $remainingString;
-                        $remainingString = '';
-                    }
+                    list($value, $remainingString) = explode(' ', $remainingString, 2);
+                    $attributes[$attribute] = $value;
+                } else {
+                    $attributes[$attribute] = $remainingString;
+                    $remainingString = '';
                 }
 
                 $matchAttributeString = $remainingString;

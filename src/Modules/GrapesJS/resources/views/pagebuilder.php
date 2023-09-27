@@ -109,7 +109,7 @@ require __DIR__ . '/grapesjs/trait-manager.php';
 </button>
 <div id="sidebar-header">
     <?php
-    if (sizeof(phpb_active_languages()) > 1):
+    if (count(phpb_active_languages()) > 1):
     ?>
     <div id="language-selector">
         <select class="selectpicker" data-width="fit">

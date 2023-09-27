@@ -130,14 +130,14 @@ class ResizeImage {
             case 'image/jpg':
             case 'image/jpeg':
                 // Check PHP supports this file type
-                if (imagetypes() & IMG_JPG) {
+                if ((imagetypes() & IMG_JPG) !== 0) {
                     imagejpeg($this->newImage, $savePath, $imageQuality);
                 }
                 break;
 
             case 'image/gif':
                 // Check PHP supports this file type
-                if (imagetypes() & IMG_GIF) {
+                if ((imagetypes() & IMG_GIF) !== 0) {
                     imagegif($this->newImage, $savePath);
                 }
                 break;
@@ -146,7 +146,7 @@ class ResizeImage {
                 $invertScaleQuality = 9 - round(($imageQuality / 100) * 9);
 
                 // Check PHP supports this file type
-                if (imagetypes() & IMG_PNG) {
+                if ((imagetypes() & IMG_PNG) !== 0) {
                     imagepng($this->newImage, $savePath, $invertScaleQuality);
                 }
                 break;
@@ -190,7 +190,7 @@ class ResizeImage {
                     if ($this->origWidth > $this->origHeight) {
                         $this->resizeHeight = $this->resizeHeightByWidth($width);
                         $this->resizeWidth = $width;
-                    } else if ($this->origWidth < $this->origHeight) {
+                    } elseif ($this->origWidth < $this->origHeight) {
                         $this->resizeWidth = $this->resizeWidthByHeight($height);
                         $this->resizeHeight = $height;
                     } else {

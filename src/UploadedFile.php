@@ -4,6 +4,8 @@ namespace PHPageBuilder;
 
 class UploadedFile
 {
+    public $public_id;
+    public $original_file;
     /**
      * Return the URL of this uploaded file.
      */

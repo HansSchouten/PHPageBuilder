@@ -118,17 +118,13 @@ class Cache implements CacheContract
      */
     public function cachePathCanBeUsed(string $cachePath): bool
     {
-        if (sizeof(explode('/', $cachePath)) > static::$maxCacheDepth) {
+        if (count(explode('/', $cachePath)) > static::$maxCacheDepth) {
             return false;
         }
 
         $cachePathWithoutHash = dirname($this->relativeToFullCachePath($cachePath));
         $numberOfCachedPageVariants = count(glob("{$cachePathWithoutHash}/*", GLOB_ONLYDIR));
-        if (is_dir($cachePathWithoutHash) && $numberOfCachedPageVariants >= static::$maxCachedPageVariants) {
-            return false;
-        }
-
-        return true;
+        return !(is_dir($cachePathWithoutHash) && $numberOfCachedPageVariants >= static::$maxCachedPageVariants);
     }
 
     /**

@@ -17,11 +17,7 @@ class Setting implements SettingContract
         self::$settings = [];
         $settingsRepository = new SettingRepository;
         foreach ($settingsRepository->getAll() as $setting) {
-            if ($setting['is_array']) {
-                self::$settings[$setting['setting']] = explode(',', $setting['value']);
-            } else {
-                self::$settings[$setting['setting']] = $setting['value'];
-            }
+            self::$settings[$setting['setting']] = $setting['is_array'] ? explode(',', $setting['value']) : $setting['value'];
         }
     }
 

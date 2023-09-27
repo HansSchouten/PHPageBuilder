@@ -101,15 +101,13 @@ class BlockRenderer
             $html = '<phpb-block block-slug="' . phpb_e($themeBlock->getSlug()) . '" block-id="' . phpb_e($id) . '" wrapper="' . $wrapperElement .'" is-html="' . ($themeBlock->isHtmlBlock() ? 'true' : 'false') . '">'
                 . $html . $this->renderBuilderScript($themeBlock)
                 . '</phpb-block>';
+        } elseif (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
+            // add wrapper element around dynamic pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
+            $html = '<' . $wrapperElement . ' class="' . phpb_e($blockData['settings']['attributes']['style-identifier']) . '">'
+                . $html . $this->renderScript($themeBlock)
+                . '</' . $wrapperElement . '>';
         } else {
-            if (! $themeBlock->isHtmlBlock() && isset($blockData['settings']['attributes']['style-identifier'])) {
-                // add wrapper element around dynamic pagebuilder blocks, which receives the style identifier class if additional styling is added to the block via the pagebuilder
-                $html = '<' . $wrapperElement . ' class="' . phpb_e($blockData['settings']['attributes']['style-identifier']) . '">'
-                    . $html . $this->renderScript($themeBlock)
-                    . '</' . $wrapperElement . '>';
-            } else {
-                $html .= $this->renderScript($themeBlock);
-            }
+            $html .= $this->renderScript($themeBlock);
         }
         return $html;
     }
@@ -197,8 +195,7 @@ class BlockRenderer
         $html .= 'let blockSelector = "." + block.className;';
         $html .= $script;
         $html .= '});';
-        $html .= '</script>';
-        return $html;
+        return $html . '</script>';
     }
 
     /**
@@ -219,13 +216,7 @@ class BlockRenderer
             $controller->init($model, $this->page, $this->forPageBuilder);
             $controller->handleRequest();
         }
-
-        if (isset($blockData['html'])) {
-            $html = $blockData['html'];
-        } else {
-            $html = file_get_contents($themeBlock->getViewFile());
-        }
-        return $html;
+        return $blockData['html'] ?? file_get_contents($themeBlock->getViewFile());
     }
 
     /**
@@ -277,12 +268,10 @@ class BlockRenderer
             $className = 'skeleton-' . $themeBlock->getSlug() . ' skeleton-data';
             if (phpb_is_skeleton_data_request()) {
                 return "<span class='{$className}'>{$html}</span>";
+            } elseif ($hasDynamicSkeleton) {
+                return "<span class='{$className}'>{$html}</span>";
             } else {
-                if ($hasDynamicSkeleton) {
-                    return "<span class='{$className}'>{$html}</span>";
-                } else {
-                    return "<span class='{$className}'></span>";
-                }
+                return "<span class='{$className}'></span>";
             }
         }
 
