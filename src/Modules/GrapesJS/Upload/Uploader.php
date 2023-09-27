@@ -327,11 +327,9 @@ class Uploader {
                     $resize->saveImage($path);
                 }
                 return true;
-            } else {
-                $this->was_uploaded = false;
-                $this->error = 'Moving uploaded file failed.';
-                return false;
             }
+            $this->was_uploaded = false;
+            $this->error = 'Moving uploaded file failed.';
         }
 
         return false;

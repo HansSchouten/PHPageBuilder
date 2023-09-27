@@ -159,9 +159,8 @@ class BlockRenderer
             $script = $this->removeWrappedScriptTags($scriptHtmlString);
             if ($forPageBuilder) {
                 return '<script>' . $script . '</script>';
-            } else {
-                return $this->wrapScriptWithScopeAndContextData($script);
             }
+            return $this->wrapScriptWithScopeAndContextData($script);
         }
         return '';
     }

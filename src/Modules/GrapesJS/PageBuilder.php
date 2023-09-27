@@ -133,28 +133,27 @@ class PageBuilder implements PageBuilderContract
 
         if (! $uploader->was_uploaded) {
             die("Upload error: {$uploader->error}");
-        } else {
-            $originalFile = str_replace(' ', '-', $uploader->file_src_name);
-            $originalMime = $uploader->file_src_mime;
-            $serverFile = $uploader->final_file_name;
-
-            $uploadRepository = new UploadRepository;
-            $uploadedFile = $uploadRepository->create([
-                'public_id' => $publicId,
-                'original_file' => $originalFile,
-                'mime_type' => $originalMime,
-                'server_file' => $serverFile
-            ]);
-
-            echo json_encode([
-                'data' => [
-                    'public_id' => $publicId,
-                    'src' => $uploadedFile->getUrl(),
-                    'type' => 'image'
-                ]
-            ]);
-            exit();
         }
+        $originalFile = str_replace(' ', '-', $uploader->file_src_name);
+        $originalMime = $uploader->file_src_mime;
+        $serverFile = $uploader->final_file_name;
+
+        $uploadRepository = new UploadRepository;
+        $uploadedFile = $uploadRepository->create([
+            'public_id' => $publicId,
+            'original_file' => $originalFile,
+            'mime_type' => $originalMime,
+            'server_file' => $serverFile
+        ]);
+
+        echo json_encode([
+            'data' => [
+                'public_id' => $publicId,
+                'src' => $uploadedFile->getUrl(),
+                'type' => 'image'
+            ]
+        ]);
+        exit();
     }
 
     /**
@@ -336,7 +335,7 @@ class PageBuilder implements PageBuilderContract
         $components = $data['components'] ?? [0 => []];
         // backwards compatibility, components are now stored for each main container (@todo: remove this at the first mayor version)
         if (isset($components[0]) && ! empty($components[0]) && ! isset($components[0][0])) {
-            $components = [0 => $components];
+            return [0 => $components];
         }
         return $components;
     }

@@ -230,7 +230,7 @@ class PageRenderer
 
         // include any style changes made via the page builder
         if (isset($data['css'])) {
-            $html = '<style>' . $data['css'] . '</style>' . $html;
+            return '<style>' . $data['css'] . '</style>' . $html;
         }
 
         return $html;
