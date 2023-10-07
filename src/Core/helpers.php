@@ -261,7 +261,7 @@ if (! function_exists('phpb_current_full_url')) {
             $currentFullUrl = explode('?', $currentFullUrl, 2)[0];
         }
         if (phpb_is_skeleton_data_request()) {
-            $currentFullUrl = str_replace('/skeleton-data/', '/', $currentFullUrl);
+            return str_replace('/skeleton-data/', '/', $currentFullUrl);
         }
         return $currentFullUrl;
     }
@@ -450,9 +450,8 @@ if (! function_exists('phpb_field_value')) {
         if (isset($instance)) {
             if (method_exists($instance, 'get')) {
                 return phpb_encode_or_null($instance->get($attribute));
-            } else {
-                return phpb_encode_or_null($instance->$attribute);
             }
+            return phpb_encode_or_null($instance->$attribute);
         }
         return null;
     }
@@ -552,9 +551,8 @@ if (! function_exists('phpb_slug')) {
     {
         if ($allowSlashes) {
             return strtolower(trim(preg_replace('/[^A-Za-z0-9-\/]+/', '-', $text)));
-        } else {
-            return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
         }
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
     }
 }
 

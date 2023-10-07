@@ -40,15 +40,16 @@ class ThumbGenerator
             $this->renderNextBlockThumb();
             exit();
         }
-        if ($action === 'upload' && isset($_POST) && isset($_POST['block']) && isset($_POST['data'])) {
-            foreach ($this->theme->getThemeBlocks() as $block) {
-                if ($_POST['block'] === $block->getSlug()) {
-                    $this->r_mkdir(dirname($block->getThumbPath()));
-                    $file = fopen($block->getThumbPath(), "wb");
-                    fwrite($file, $this->getRawData($_POST['data']));
-                    fclose($file);
-                    exit();
-                }
+        if ($action !== 'upload' || !isset($_POST) || !isset($_POST['block']) || !isset($_POST['data'])) {
+            return false;
+        }
+        foreach ($this->theme->getThemeBlocks() as $block) {
+            if ($_POST['block'] === $block->getSlug()) {
+                $this->r_mkdir(dirname($block->getThumbPath()));
+                $file = fopen($block->getThumbPath(), "wb");
+                fwrite($file, $this->getRawData($_POST['data']));
+                fclose($file);
+                exit();
             }
         }
         return false;
@@ -100,9 +101,8 @@ class ThumbGenerator
                 throw new Exception('Decode failed');
             }
             return $data;
-        } else {
-            throw new Exception('Invalid data URI');
         }
+        throw new Exception('Invalid data URI');
     }
 
     /**

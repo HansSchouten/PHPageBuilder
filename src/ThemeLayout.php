@@ -9,7 +9,7 @@ class ThemeLayout
     /**
      * @var $config
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * @var ThemeContract $theme
@@ -45,8 +45,6 @@ class ThemeLayout
         $this->layoutSlug = $layoutSlug;
         $this->isExtension = $isExtension;
         $this->extensionSlug = $extensionSlug;
-
-        $this->config = [];
         if (file_exists($this->getFolder() . '/config.php')) {
             $this->config = include $this->getFolder() . '/config.php';
         }
@@ -59,7 +57,7 @@ class ThemeLayout
      */
     public function getFolder()
     {
-        return (! $this->isExtension) ? ($this->theme->getFolder() . '/layouts/' . $this->layoutSlug) : $this->layoutSlug;
+        return ($this->isExtension) ? ($this->layoutSlug) : $this->theme->getFolder() . '/layouts/' . $this->layoutSlug;
     }
 
     /**
@@ -79,7 +77,7 @@ class ThemeLayout
      */
     public function getSlug()
     {
-        return !$this->isExtension ? $this->layoutSlug : $this->extensionSlug;
+        return $this->isExtension ? $this->extensionSlug : $this->layoutSlug;
     }
 
     /**

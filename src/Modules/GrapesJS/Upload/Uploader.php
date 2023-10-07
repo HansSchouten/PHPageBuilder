@@ -245,7 +245,7 @@ class Uploader {
             $path = $this->upload_to . $file;
         }
 
-        $get_mime = isset($this->mime_check) ? true : false;
+        $get_mime = isset($this->mime_check);
 
         // check MIME type which are allowed
         if ($get_mime && empty($this->file_src_mime)) {
@@ -327,11 +327,9 @@ class Uploader {
                     $resize->saveImage($path);
                 }
                 return true;
-            } else {
-                $this->was_uploaded = false;
-                $this->error = 'Moving uploaded file failed.';
-                return false;
             }
+            $this->was_uploaded = false;
+            $this->error = 'Moving uploaded file failed.';
         }
 
         return false;

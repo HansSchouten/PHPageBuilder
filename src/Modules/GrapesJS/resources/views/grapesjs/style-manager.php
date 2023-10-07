@@ -12,7 +12,8 @@ styleManager.addSector('advanced',{
 foreach (phpb_trans('pagebuilder.style-manager.properties') as $sector => $sectorProperties) {
     foreach ($sectorProperties as $property => $data) {
         if (is_array($data)) {
-            for ($i = 0; $i < sizeof($data['properties'] ?? []); $i++) {
+            $counter = count($data['properties'] ?? []);
+            for ($i = 0; $i < $counter; $i++) {
                 $translation = $data['properties'][array_keys($data['properties'])[$i]];
 ?>
 window.editor.StyleManager.getProperty('<?= phpb_e($sector) ?>', '<?= phpb_e($property) ?>').attributes.properties.models[<?= $i ?>].attributes.name = '<?= phpb_e($translation) ?>';
