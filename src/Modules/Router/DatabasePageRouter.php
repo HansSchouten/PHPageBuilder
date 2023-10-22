@@ -23,12 +23,12 @@ class DatabasePageRouter implements RouterContract
     /**
      * @var array $routeParameters
      */
-    protected $routeParameters;
+    protected $routeParameters = [];
 
     /**
      * @var array $routeToPageTranslationIdMapping
      */
-    protected $routeToPageTranslationIdMapping;
+    protected $routeToPageTranslationIdMapping = [];
 
     /**
      * DatabasePageRouter constructor.
@@ -37,8 +37,6 @@ class DatabasePageRouter implements RouterContract
     {
         $this->pageRepository = new PageRepository;
         $this->pageTranslationRepository = new PageTranslationRepository;
-        $this->routeParameters = [];
-        $this->routeToPageTranslationIdMapping = [];
     }
 
     /**
@@ -107,10 +105,10 @@ class DatabasePageRouter implements RouterContract
     public function routeOrderComparison($route1, $route2)
     {
         // routes with more segments should be evaluated first
-        if (sizeof($route1) > sizeof($route2)) {
+        if (count($route1) > count($route2)) {
             return -1;
         }
-        if (sizeof($route1) < sizeof($route2)) {
+        if (count($route1) < count($route2)) {
             return 1;
         }
 
@@ -163,7 +161,7 @@ class DatabasePageRouter implements RouterContract
     protected function onRoute($urlSegments, $routeSegments)
     {
         // URL does not match if segment counts don't match, except if the route ends with a *
-        if (sizeof($urlSegments) !== sizeof($routeSegments) && end($routeSegments) !== '*') {
+        if (count($urlSegments) !== count($routeSegments) && end($routeSegments) !== '*') {
             return false;
         }
 

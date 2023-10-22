@@ -52,7 +52,7 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                     </div>
 
                     <?php
-                    foreach (phpb_active_languages() as $languageCode => $languageTranslation):
+                    foreach (array_keys(phpb_active_languages()) as $languageCode):
                     ?>
                     <h5 class="pt-2"><?= phpb_trans('languages.' . $languageCode) ?></h5>
                     <div class="pt-2 pl-3 pr-3">

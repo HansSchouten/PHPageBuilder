@@ -58,7 +58,7 @@ class BaseRepository
             $column = $this->removeNonAlphaNumeric($column);
         }
         $columns = implode(', ', $columns);
-        $questionMarks = implode(', ', array_fill(0, sizeof($data), '?'));
+        $questionMarks = implode(', ', array_fill(0, count($data), '?'));
 
         $this->db->query(
             "INSERT INTO {$this->table} ({$columns}) VALUES ({$questionMarks})",

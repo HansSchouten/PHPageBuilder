@@ -97,10 +97,8 @@ class PageRenderer
                 break;
             }
         }
-        if ($blockKeysAreLanguages) {
-            if (! in_array($language, $supportedLanguages)) {
-                $language = $supportedLanguages[0] ?? $language;
-            }
+        if ($blockKeysAreLanguages && ! in_array($language, $supportedLanguages)) {
+            $language = $supportedLanguages[0] ?? $language;
         }
 
         $this->language = $language;
@@ -133,10 +131,10 @@ class PageRenderer
      */
     public static function setCanBeCached(bool $canBeCached, $cacheLifetime = null)
     {
-        if (! $canBeCached || ($cacheLifetime && intval($cacheLifetime) <= 0)) {
+        if (! $canBeCached || ($cacheLifetime && (int) $cacheLifetime <= 0)) {
             static::$canBeCached = false;
         } elseif ($cacheLifetime) {
-            static::$cacheLifetime = min(static::$cacheLifetime, intval($cacheLifetime));
+            static::$cacheLifetime = min(static::$cacheLifetime, (int) $cacheLifetime);
         }
     }
 
@@ -185,11 +183,7 @@ class PageRenderer
         // init variables that should be accessible in the view
         $renderer = $this;
         $page = $this->page;
-        if ($this->forPageBuilder) {
-            $body = '<div phpb-content-container="true"></div>';
-        } else {
-            $body = $this->renderBody();
-        }
+        $body = $this->forPageBuilder ? '<div phpb-content-container="true"></div>' : $this->renderBody();
 
         $layoutPath = $this->getPageLayoutPath();
         if ($layoutPath) {
@@ -236,7 +230,7 @@ class PageRenderer
 
         // include any style changes made via the page builder
         if (isset($data['css'])) {
-            $html = '<style>' . $data['css'] . '</style>' . $html;
+            return '<style>' . $data['css'] . '</style>' . $html;
         }
 
         return $html;

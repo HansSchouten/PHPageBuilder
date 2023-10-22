@@ -12,7 +12,7 @@ class ThemeBlock
     /**
      * @var $config
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * @var $dynamicConfig
@@ -55,14 +55,12 @@ class ThemeBlock
         $this->blockSlug = $blockSlug;
         $this->isExtension = $isExtension;
         $this->extensionSlug = $extensionSlug;
-
-        $this->config = [];
         if (file_exists($this->getFolder() . '/config.php')) {
             $this->config = require $this->getFolder() . '/config.php';
         }
 
         PageRenderer::setCanBeCached(
-            boolval($this->config['cache'] ?? true),
+            (bool) ($this->config['cache'] ?? true),
             $this->config['cache_lifetime'] ?? null
         );
     }
@@ -255,7 +253,7 @@ class ThemeBlock
      */
     public function getSlug()
     {
-        return (! $this->isExtension) ? $this->blockSlug : $this->extensionSlug;
+        return ($this->isExtension) ? $this->extensionSlug : $this->blockSlug;
     }
 
     /**

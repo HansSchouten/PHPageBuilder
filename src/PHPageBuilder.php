@@ -192,7 +192,7 @@ class PHPageBuilder
     public function setTheme(ThemeContract $theme)
     {
         $this->theme = $theme;
-        if (isset($this->pageBuilder)) {
+        if ($this->pageBuilder !== null) {
             $this->pageBuilder->setTheme($theme);
         }
     }
@@ -339,13 +339,13 @@ class PHPageBuilder
         // let the page router resolve the current URL
         $page = null;
         $pageTranslation = $this->resolvePageLanguageVariantFromUrl(phpb_current_relative_url());
-        if ($pageTranslation) {
+        if ($pageTranslation !== null) {
             $page = $pageTranslation->getPage();
         }
         // if the URL cannot be resolved, but the lowercase version of the URL can be resolved, redirect to the lowercase URL
         if (($page->logic ?? '') === 'page-not-found' && phpb_current_relative_url() !== strtolower(phpb_current_relative_url())) {
             $pageLowerCaseUrlTranslation = $this->resolvePageLanguageVariantFromUrl(strtolower(phpb_current_relative_url()));
-            if ($pageLowerCaseUrlTranslation) {
+            if ($pageLowerCaseUrlTranslation !== null) {
                 $pageLowerCaseUrl = $pageLowerCaseUrlTranslation->getPage();
                 if (($pageLowerCaseUrl->logic ?? '') !== 'page-not-found') {
                     header("HTTP/1.1 301 Moved Permanently");
@@ -355,7 +355,7 @@ class PHPageBuilder
             }
         }
         // render page if resolved
-        if ($page) {
+        if ($page !== null) {
             $renderedContent = $this->pageBuilder->renderPage($page, $pageTranslation->locale);
             if (strpos($pageTranslation->route, '/*') === false) {
                 $this->cacheRenderedPage($renderedContent);
@@ -374,11 +374,7 @@ class PHPageBuilder
      */
     protected function resolvePageLanguageVariantFromUrl($url)
     {
-        $pageTranslation = $this->router->resolve($url);
-        if ($pageTranslation instanceof PageTranslationContract) {
-            return $pageTranslation;
-        }
-        return null;
+        return $this->router->resolve($url);
     }
 
     /**
@@ -448,7 +444,7 @@ class PHPageBuilder
 
         $uploadRepository = new UploadRepository;
         $uploadedFile = $uploadRepository->findWhere('public_id', $fileId);
-        if (! $uploadedFile) {
+        if (empty($uploadedFile)) {
             header("HTTP/1.1 404 Not Found");
             exit();
         }

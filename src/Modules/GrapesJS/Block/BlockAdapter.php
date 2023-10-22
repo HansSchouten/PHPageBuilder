@@ -94,7 +94,7 @@ class BlockAdapter
             'content' => $content
         ];
 
-        if (! $img) {
+        if (empty($img)) {
             $iconClass = 'fa fa-bars';
             if ($this->block->get('icon')) {
                 $iconClass = $this->block->get('icon');
