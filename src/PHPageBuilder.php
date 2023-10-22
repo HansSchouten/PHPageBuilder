@@ -386,7 +386,7 @@ class PHPageBuilder
      *
      * @param string $renderedContent
      */
-    protected function cacheRenderedPage(string $renderedContent)
+    public function cacheRenderedPage(string $renderedContent)
     {
         if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached() || isset($_GET['ignore_cache'])) {
             return;
