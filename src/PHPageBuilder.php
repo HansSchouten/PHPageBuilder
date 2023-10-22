@@ -381,23 +381,29 @@ class PHPageBuilder
      * Cache the rendered page contents, if caching is enabled and the current page does not contain non-cacheable blocks.
      *
      * @param string $renderedContent
+     * @param $language
+     * @return void
      */
-    public function cacheRenderedPage(string $renderedContent)
+    public function cacheRenderedPage(string $renderedContent, $language = null)
     {
         if (! phpb_config('cache.enabled') || ! PageRenderer::canBeCached() || isset($_GET['ignore_cache'])) {
             return;
         }
+        $cache = phpb_instance('cache');
 
         // allow a forced cached page refresh, stored for the current URL but without the refresh parameter
         $url = phpb_current_relative_url();
         $url = str_replace('?refresh_cache&', '?', $url);
         $url = str_replace('?refresh_cache', '', $url);
         $url = str_replace('&refresh_cache', '', $url);
+        if ($language && strpos($url, '/' . $language . '/') !== 0) {
+            $cache->invalidate($url);
+            $url = '/' . $language . $url;
+        }
 
         if (! empty(PageRenderer::$skeletonCacheUrl)) {
             $url = PageRenderer::$skeletonCacheUrl;
         }
-        $cache = phpb_instance('cache');
         $cache->storeForUrl($url, $renderedContent, phpb_static(PageRenderer::class)::getCacheLifetime());
     }
 
