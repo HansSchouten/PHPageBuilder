@@ -276,13 +276,25 @@ if (! function_exists('phpb_current_relative_url')) {
      */
     function phpb_current_relative_url()
     {
+        $currentFullUrl = phpb_current_full_url();
+        $relativeUrl = substr($currentFullUrl, strpos($currentFullUrl, '://') + 3);
+        // return / if we are at the root of the domain
+        if (strpos($relativeUrl, '/') === false) {
+            return '/';
+        }
+
+        $baseDirectory = '';
         $baseUrl = phpb_config('general.base_url');
         $baseUrl = rtrim($baseUrl, '/'. DIRECTORY_SEPARATOR);
+        $baseUrl = substr($baseUrl, strpos($baseUrl, '://') + 3);
+        if (strpos($baseUrl, '/') !== false) {
+            $baseDirectory = substr($baseUrl, strpos($baseUrl, '/'));
+        }
 
-        $currentFullUrl = phpb_current_full_url();
-        $relativeUrl = substr($currentFullUrl, strlen($baseUrl));
-        $relativeUrl = ltrim($relativeUrl, '/'. DIRECTORY_SEPARATOR);
-        return '/' . $relativeUrl;
+        // remove everything before the first /
+        $relativeUrl = substr($relativeUrl, strpos($relativeUrl, '/'));
+        // return relative URL without base directory
+        return str_replace($baseDirectory, '', $relativeUrl);
     }
 }
 
