@@ -51,6 +51,8 @@ class DatabasePageRouter implements RouterContract
         $url = explode('?', $url, 2)[0];
         // remove trailing slash
         $url = rtrim($url, '/');
+        // ensure we did not remove the root slash
+        $url = empty($url) ? '/' : $url;
         // split URL into segments using / as separator
         $urlSegments = explode('/', $url);
 
