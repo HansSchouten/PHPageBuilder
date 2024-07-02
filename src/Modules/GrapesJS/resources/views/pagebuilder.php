@@ -15,7 +15,7 @@
 
 <div id="gjs"></div>
 
-<script type="text/javascript" src="https://cdn.ckeditor.com/4.21.0/full-all/ckeditor.js"></script>
+<script type="text/javascript" src="<?= phpb_asset('pagebuilder/ckeditor/ckeditor.js') ?>"></script> <?php // local copy of 4.21.0 (full-all) ?>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.10.min.js') ?>"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-touch-v0.1.1.min.js') ?>"></script>
 <script type="text/javascript">
@@ -164,3 +164,9 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     <i class="fa fa-search"></i>
     <input type="text" class="form-control" placeholder="<?= phpb_trans('pagebuilder.filter-placeholder') ?>">
 </div>
+
+<style>
+.cke_notifications_area {
+    display: none !important;
+}
+</style>
