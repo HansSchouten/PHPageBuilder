@@ -118,6 +118,8 @@ class PHPageBuilder
         if (file_exists($themeTranslationsFolder . '/' . $language . '.php')) {
             $phpb_translations = array_merge($phpb_translations, require $themeTranslationsFolder . '/' . $language . '.php');
         }
+
+        $phpb_translations = phpb_instance(Translator::class)->customize($phpb_translations);
         return $phpb_translations;
     }
 
