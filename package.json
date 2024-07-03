@@ -9,8 +9,8 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
+    "imagemin-pngquant": "^5.0.1",
     "webpack-mix": "^2.0.2",
-    "ckeditor4": "^4.21.0",
-    "imagemin-pngquant": "^5.0.1"
+    "ckeditor4": "ckeditor/ckeditor4-releases#full/4.21.0"
   }
 }
