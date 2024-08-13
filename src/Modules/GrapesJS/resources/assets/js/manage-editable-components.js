@@ -209,9 +209,11 @@
             let blockSlug = component.attributes['block-slug'];
             if (blockSlug) {
                 let labelHtml = window.themeBlocks[blockSlug]['label'];
-                let labelTextParts = labelHtml.split("</div>");
-                if (labelTextParts.length > 1) {
-                    $(".gjs-toolbar").attr('title', "Bloknaam: " + labelTextParts[1]);
+                if (labelHtml) {
+                    let labelTextParts = labelHtml.split("</div>");
+                    if (labelTextParts.length > 1) {
+                        $(".gjs-toolbar").attr('title', "Bloknaam: " + labelTextParts[1]);
+                    }
                 }
             }
         }, 0);

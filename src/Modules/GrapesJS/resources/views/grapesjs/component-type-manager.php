@@ -107,4 +107,32 @@ editor.DomComponents.addType('default', {
     },
 });
 
+let imageType = editor.DomComponents.getType('image');
+editor.DomComponents.addType('image', {
+    model: imageType.model.extend({
+        defaults: Object.assign({}, imageType.model.prototype.defaults, {
+            traits: [
+                {
+                    type: 'text',
+                    label: "<?= phpb_trans('pagebuilder.trait-manager.image.title') ?>",
+                    name: 'title',
+                },
+                {
+                    type: 'text',
+                    label: "<?= phpb_trans('pagebuilder.trait-manager.image.alt') ?>",
+                    name: 'alt',
+                },
+            ]
+        }),
+        init() {
+            if (this.attributes.attributes.title) {
+                this.getTrait('title').setTargetValue(this.attributes.attributes.title);
+            }
+            if (this.attributes.attributes.alt) {
+                this.getTrait('alt').setTargetValue(this.attributes.attributes.alt);
+            }
+        },
+    }),
+    view: imageType.view
+});
 </script>

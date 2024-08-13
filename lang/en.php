@@ -68,6 +68,10 @@ return [
                 'target' => 'Open in new tab?',
                 'tooltip' => 'Tooltip'
             ],
+            'image' => [
+                'title' => 'Title on mouse-over',
+                'alt' => 'Alternative text in case image can\'t be loaded',
+            ],
             'no-settings' => 'This block does not have settings.'
         ],
         'selector-manager' => [

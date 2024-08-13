@@ -68,10 +68,14 @@ return [
                 'target' => 'Open in nieuw tabblad?',
                 'tooltip' => 'knopinfo'
             ],
+            'image' => [
+                'title' => 'Titel bij muis over',
+                'alt' => 'Alternatieve tekst als afbeelding niet geladen wordt',
+            ],
             'no-settings' => 'Dit blok heeft geen instellingen.'
         ],
         'selector-manager' => [
-            'label' => 'CSS klasses',
+            'label' => 'CSS classes',
             'states-label' => 'Opmaak voor',
             'selected-label' => 'Geselecteerd',
             'state-hover' => 'Muis over element',

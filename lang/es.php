@@ -68,6 +68,10 @@ return [
                 'target' => '¿Abrir en otra pestaña?',
                 'tooltip' => 'Información'
             ],
+            'image' => [
+                'title' => 'Título al pasar el mouse',
+                'alt' => 'Texto alternativo',
+            ],
             'no-settings' => 'Este bloque no tiene ajustes.'
         ],
         'selector-manager' => [
