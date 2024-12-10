@@ -4,6 +4,7 @@
      * After loading GrapesJS, add all theme blocks and activate the editable blocks in the main language.
      */
     function afterGrapesJSLoaded() {
+        setupThemeBlockThumbsLazyLoading();
         addThemeBlocks();
 
         // add page injection script with page-loaded event to the end of the body tag of initialComponents,
@@ -45,6 +46,46 @@
                 }
             }
         }
+    }
+
+    /**
+     * Setup lazy loading for theme block thumbnails avoiding large number of thumb image requests on pagebuilder load.
+     */
+    function setupThemeBlockThumbsLazyLoading() {
+        if (! ("IntersectionObserver" in window)) {
+            return;
+        }
+
+        window.initLazyLoading = function() {
+            var lazyBackgroundObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("bg-in-view");
+                        lazyBackgroundObserver.unobserve(entry.target);
+                        // when loading the second swiper slide load all others
+                        if (entry.target.dataset && parseInt(entry.target.dataset.swiperSlideIndex) > 0) {
+                            entry.target.parentElement.classList.add('children-in-view');
+                        }
+                    }
+                });
+            });
+
+            var newLazyBackgrounds = [].slice.call(document.querySelectorAll(".block-thumb:not(.bg-observing)"));
+            newLazyBackgrounds.forEach(function(lazyBackground) {
+                lazyBackgroundObserver.observe(lazyBackground);
+                lazyBackground.classList.add("bg-observing");
+            });
+        }
+
+        // add style to hide all elements with lazy background loading
+        var cssString = '<style>' +
+            '*:not(.children-in-view) > .block-thumb:not(.bg-in-view) { background: none !important; }' +
+            '</style>';
+        document.head.insertAdjacentHTML('beforeend', cssString);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            window.initLazyLoading();
+        });
     }
 
     /**
