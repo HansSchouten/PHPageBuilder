@@ -521,6 +521,10 @@
                 relativeIds.push(blockId);
                 let componentToSelect = findChildViaBlockIdsPath(container, relativeIds.reverse());
                 window.editor.select(componentToSelect);
+
+                // trigger resize event to ensure all components are updated based on the new block settings
+                let iframeWindow = document.querySelector('iframe').contentWindow;
+                iframeWindow.dispatchEvent(new Event('resize'));
             },
             error: function() {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');

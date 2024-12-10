@@ -81,7 +81,7 @@ function onMessage(event) {
         addBlockSearch();
         window.isLoaded = true;
         $(window).trigger('pagebuilder-page-loaded');
-    } else if(event.data === 'touch-start') {
+    } else if (event.data === 'touch-start') {
         window.touchStart();
     }
 }
