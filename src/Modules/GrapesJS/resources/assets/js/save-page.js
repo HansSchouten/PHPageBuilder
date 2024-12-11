@@ -202,14 +202,49 @@ $(document).ready(function() {
     }
 
     /**
+     * Remove all page blocks that are never referred to.
+     */
+    function removeOldPageBlocks(pageBlocks) {
+        let htmlString = JSON.stringify(window.pageData.html);
+
+        let pageBlocksCleaned = {};
+        $.each(pageBlocks, (languageCode, languagePageBlocks) => {
+            let blockStrings = {};
+            $.each(languagePageBlocks, (blockId, blockData) => {
+                blockStrings[blockId] = JSON.stringify(blockData);
+            });
+
+            let filteredLanguagePageBlocks = {};
+            $.each(languagePageBlocks, (blockId, blockData) => {
+                if (htmlString.includes(blockId)) {
+                    filteredLanguagePageBlocks[blockId] = blockData;
+                    return true; // continue
+                }
+                $.each(blockStrings, (otherBlockId, otherBlockString) => {
+                    if (otherBlockString.includes(blockId)) {
+                        filteredLanguagePageBlocks[blockId] = blockData;
+                        return false; // break
+                    }
+                });
+            });
+            pageBlocksCleaned[languageCode] = filteredLanguagePageBlocks;
+        });
+        return pageBlocksCleaned;
+    }
+
+    /**
      * Remove the style selectors that are no longer present among the current page blocks.
      */
-    function removeOldStyleSelectors(styleComponents) {
-        let pageBlocksString = JSON.stringify(window.pageBlocks);
+    function removeOldStyleSelectors(pageBlocks, styleComponents) {
+        let pageBlocksString = JSON.stringify(pageBlocks);
 
+        // remove style components that are not used by any page block
         let updatedStyleComponents = [];
         styleComponents.forEach(styleComponent => {
             if (styleComponent.attributes.selectors.models.length) {
+                if (Object.keys(styleComponent.attributes.style).length === 0) {
+                    return; // skip components with empty style
+                }
                 let selector = styleComponent.attributes.selectors.models[0].id;
                 if (pageBlocksString.includes(selector)) {
                     updatedStyleComponents.push(styleComponent);
@@ -235,8 +270,8 @@ $(document).ready(function() {
             });
 
             let data = window.pageData;
-            data.style = removeOldStyleSelectors(data.style);
-            data.blocks = window.pageBlocks;
+            data.blocks = removeOldPageBlocks(window.pageBlocks);
+            data.style = removeOldStyleSelectors(data.blocks, data.style);
 
             $.ajax({
                 type: "POST",
