@@ -89,16 +89,20 @@ class PageRenderer
     {
         // if the given language is unknown, default the set language to the first available language
         $blockKeysAreLanguages = true;
-        $supportedLanguages = array_keys($this->pageData['blocks'] ?? []);
+        $storedBlockLanguages = array_keys($this->pageData['blocks'] ?? []);
         // check whether keys are valid languages (renderPageBuilderBlock uses pageData without language data)
-        foreach ($supportedLanguages as $supportedLanguage) {
+        foreach ($storedBlockLanguages as $supportedLanguage) {
             if (strlen($supportedLanguage) > 5) {
                 $blockKeysAreLanguages = false;
                 break;
             }
         }
-        if ($blockKeysAreLanguages && ! in_array($language, $supportedLanguages)) {
-            $language = $supportedLanguages[0] ?? $language;
+        if ($blockKeysAreLanguages && ! empty($storedBlockLanguages) && ! in_array($language, $storedBlockLanguages)) {
+            if (! isset(phpb_active_languages()[$language])) {
+                $language = $storedBlockLanguages[0];
+            } else {
+                $this->pageData['blocks'][$language] = $this->pageData['blocks'][$storedBlockLanguages[0]];
+            }
         }
 
         $this->language = $language;
