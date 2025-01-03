@@ -25,6 +25,11 @@ class PageBuilder implements PageBuilderContract
     protected $scripts = [];
 
     /**
+     * @var array $pages
+     */
+    protected $pages = [];
+
+    /**
      * @var string $css
      */
     protected $css;
@@ -303,14 +308,27 @@ class PageBuilder implements PageBuilderContract
     }
 
     /**
+     * Set the list of all pages.
+     *
+     * @param $pages
+     */
+    public function setPages($pages)
+    {
+        $this->pages = $pages;
+    }
+
+    /**
      * Return the list of all pages, used in CKEditor link editor.
      *
      * @return array
      */
     public function getPages()
     {
-        $pages = [];
+        if (! empty($this->pages)) {
+            return $this->pages;
+        }
 
+        $pages = [];
         $pageRepository = new PageRepository;
         foreach ($pageRepository->getAll() as $page) {
             $pages[] = [
@@ -318,7 +336,7 @@ class PageBuilder implements PageBuilderContract
                 phpb_e($page->getId())
             ];
         }
-
+        $this->pages = $pages;
         return $pages;
     }
 
