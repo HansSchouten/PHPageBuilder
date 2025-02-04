@@ -5,7 +5,7 @@ form {
   margin-block-end: 0;
 }
 #wrapper {
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 [data-cursor="default"] {
