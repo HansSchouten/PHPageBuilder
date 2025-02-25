@@ -23,9 +23,9 @@ class PageTranslationRepository extends BaseRepository implements PageTranslatio
     /**
      * PageTranslationRepository constructor.
      */
-    public function __construct()
+    public function __construct($table = null)
     {
-        $this->table = empty(phpb_config('page.translation.table')) ? 'page_translations' : phpb_config('page.translation.table');
+        $this->table = $table ?? (empty(phpb_config('page.translation.table')) ? 'page_translations' : phpb_config('page.translation.table'));
         parent::__construct();
         $this->class = phpb_instance('page.translation');
     }

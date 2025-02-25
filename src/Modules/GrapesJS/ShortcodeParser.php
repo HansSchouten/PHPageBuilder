@@ -2,7 +2,7 @@
 
 namespace PHPageBuilder\Modules\GrapesJS;
 
-use PHPageBuilder\Repositories\PageRepository;
+use PHPageBuilder\Repositories\PageTranslationRepository;
 use Exception;
 
 class ShortcodeParser
@@ -36,9 +36,13 @@ class ShortcodeParser
     {
         $this->pageRenderer = $pageRenderer;
 
-        $pageRepository = new PageRepository;
-        foreach ($pageRepository->getAll(['id']) as $page) {
-            $this->pages[$page->getId()] = $page->getRoute();
+        $pageTranslations = (new PageTranslationRepository('page_translations'))->findWhere('locale', phpb_current_language());
+        foreach ($pageTranslations as $pageTranslation) {
+            $routeTranslation = $pageTranslation->route;
+            foreach (phpb_route_parameters() as $routeParameter => $value) {
+                $routeTranslation = str_replace('{' . $routeParameter . '}', $value, $routeTranslation);
+            }
+            $this->pages[$pageTranslation->page_id] = $routeTranslation;
         }
     }
 
