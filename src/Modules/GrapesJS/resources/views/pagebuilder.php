@@ -44,6 +44,7 @@ window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.contentContainerComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
 window.themeBlocks = <?= json_encode($blocks) ?>;
 window.blockSettings = <?= json_encode($blockSettings) ?>;
+window.blockEditors = <?= json_encode($blockEditors ?? []) ?>;
 window.pageBlocks = <?= json_encode($pageRenderer->getPageBlocksData()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
 window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';

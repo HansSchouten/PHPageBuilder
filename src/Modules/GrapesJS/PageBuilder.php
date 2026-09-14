@@ -214,6 +214,7 @@ class PageBuilder implements PageBuilderContract
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
         $blockSettings = [];
+        $blockEditors = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
             $adapter = phpb_instance(BlockAdapter::class, [$pageRenderer, $themeBlock]);
@@ -221,6 +222,10 @@ class PageBuilder implements PageBuilderContract
                 $blocks[$slug] = $adapter->getBlockManagerArray();
             }
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
+            $editorConfig = $adapter->getEditorConfigArray();
+            if ($editorConfig !== null) {
+                $blockEditors[$slug] = $editorConfig;
+            }
         }
 
         // create an array of all uploaded assets

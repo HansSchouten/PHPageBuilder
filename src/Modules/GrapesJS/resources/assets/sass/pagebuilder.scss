@@ -571,3 +571,41 @@ html, body, #gjs {
 @import 'style-manager';
 @import 'asset-manager';
 @import 'ckeditor';
+
+// The general pagebuilder styles use light text for the dark sidebar inputs.
+// The AI editor lives in a Bootstrap modal with light textarea backgrounds.
+#phpb-ai-content-modal .form-control,
+#phpb-ai-content-modal .form-control:focus {
+    color: #212529;
+    background-color: #fff;
+}
+
+#phpb-ai-content-modal .form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.phpb-ai-content-source {
+    min-height: 360px;
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre;
+    tab-size: 4;
+}
+
+#phpb-ai-content-modal .modal-dialog {
+    max-width: 1100px;
+}
+
+#phpb-ai-content-modal .nav-link {
+    cursor: pointer;
+}
+
+#phpb-ai-content-modal [data-ai-tab]:focus:not(:focus-visible) {
+    outline: none;
+}
+
+#phpb-ai-content-warnings {
+    padding-left: 2rem;
+}

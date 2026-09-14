@@ -147,4 +147,23 @@ class BlockAdapter
 
         return $settings;
     }
+
+    /**
+     * Return the optional editor configuration of the theme block.
+     *
+     * Editor configuration is deliberately kept separate from block settings:
+     * settings are persisted as block attributes, while this metadata describes
+     * which pagebuilder interface should be shown for the block.
+     *
+     * @return array|null
+     */
+    public function getEditorConfigArray()
+    {
+        $editor = $this->block->get('editor');
+        if (! is_array($editor) || empty($editor['type'])) {
+            return null;
+        }
+
+        return $editor;
+    }
 }

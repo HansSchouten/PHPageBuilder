@@ -502,9 +502,21 @@
             return;
         }
 
-        // dynamic pagebuilder blocks can depend on data passed by dynamic parent blocks,
-        // so we need to update the closest parent which does not have a dynamic parent itself or the block that is inside a blocks container.
-        // also keep track of all intermediate block ids, for re-selecting the currently selected component.
+        let updateContext = window.getDynamicBlockUpdateContext(component);
+        let data = window.getComponentDataInStorageFormat(updateContext.component);
+        window.refreshDynamicBlock(updateContext.component, data, updateContext.relativeIds);
+    });
+
+    /**
+     * Find the dynamic block that must be sent to the server when a component
+     * changes. A component can be nested inside one or more dynamic blocks.
+     *
+     * @param component
+     * @returns {{component: *, relativeIds: Array}}
+     */
+    window.getDynamicBlockUpdateContext = function(component) {
+        // Dynamic blocks can depend on data passed by dynamic parent blocks,
+        // so update the closest parent that owns the stored block context.
         let relativeIds = [];
         let ancestorToUpdate = component;
         let hasDynamicAncestor = false;
@@ -522,20 +534,36 @@
             ancestorToUpdate = ancestorToUpdate.parent();
         }
 
-        if (hasDynamicAncestor) {
-            component = ancestorToUpdate;
-        } else {
+        if (! hasDynamicAncestor) {
             relativeIds = [];
         }
 
+        return {
+            component: hasDynamicAncestor ? ancestorToUpdate : component,
+            relativeIds: relativeIds
+        };
+    };
+
+    /**
+     * Re-render a dynamic block and replace its current GrapesJS component.
+     *
+     * This is shared by ordinary setting changes and custom block editors
+     * such as the AI content editor. The caller must provide storage data in
+     * the same format returned by getComponentDataInStorageFormat().
+     *
+     * @param component
+     * @param data
+     * @param relativeIds
+     * @param options
+     * @returns {*}
+     */
+    window.refreshDynamicBlock = function(component, data, relativeIds = [], options = {}) {
         component.attributes['is-updating'] = true;
         $(".gjs-frame").contents().find("#" + component.ccid).addClass('gjs-freezed');
 
         let container = window.editor.getWrapper().find("#" + component.ccid)[0].parent();
-        let data = window.getComponentDataInStorageFormat(component);
 
-        // refresh component contents with updated version requested via ajax call
-        $.ajax({
+        return $.ajax({
             type: "POST",
             url: window.renderBlockUrl,
             data: {
@@ -545,35 +573,51 @@
             success: function(blockHtml) {
                 let blockId = $(blockHtml).attr('block-id');
 
-                // set the block settings for the updated component to the new values
+                // Set the block settings for the updated component to the new values.
+                window.pageBlocks[window.currentLanguage] = window.pageBlocks[window.currentLanguage] || {};
                 window.pageBlocks[window.currentLanguage][blockId] = (data.blocks[blockId] === undefined) ? {} : data.blocks[blockId];
 
-                // replace old component for the rendered html returned by the server
+                // Replace the old component for the rendered version returned by the server.
                 component.replaceWith(blockHtml);
                 replacePlaceholdersForRenderedBlocks(container);
                 applyBlockAttributesToComponents(container);
                 restrictEditAccess(container, false, false);
 
-                // run builder scripts of the replaced component and all its children
+                // Run builder scripts of the replaced component and all its children.
                 let replacedComponent = findChildViaBlockIdsPath(container, [blockId]);
-                runScriptsOfComponentAndChildren(replacedComponent);
+                if (replacedComponent) {
+                    runScriptsOfComponentAndChildren(replacedComponent);
+                }
 
-                // select the component that was selected before the ajax call
-                relativeIds.push(blockId);
-                let componentToSelect = findChildViaBlockIdsPath(container, relativeIds.reverse());
-                window.editor.select(componentToSelect);
+                // Select the component that was selected before the ajax call.
+                let selectionPath = relativeIds.slice();
+                selectionPath.push(blockId);
+                let componentToSelect = findChildViaBlockIdsPath(container, selectionPath.reverse());
+                if (componentToSelect) {
+                    window.editor.select(componentToSelect);
+                }
 
-                // trigger resize event to ensure all components are updated based on the new block settings
-                let iframeWindow = document.querySelector('iframe').contentWindow;
-                iframeWindow.dispatchEvent(new Event('resize'));
+                // Trigger resize to ensure the canvas reflects the new content dimensions.
+                let iframe = document.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.dispatchEvent(new Event('resize'));
+                }
+
+                if (typeof options.success === 'function') {
+                    options.success(replacedComponent, blockId);
+                }
             },
-            error: function() {
+            error: function(xhr) {
                 $(".gjs-frame").contents().find("#" + component.ccid).removeClass('gjs-freezed');
                 component.attributes['is-updating'] = false;
-                window.toastr.error(window.translations['toastr-component-update-failed']);
+                if (typeof options.error === 'function') {
+                    options.error(xhr);
+                } else {
+                    window.toastr.error(window.translations['toastr-component-update-failed']);
+                }
             }
         });
-    });
+    };
 
     /**
      * Traverse the children of the given component via the given path of block IDs

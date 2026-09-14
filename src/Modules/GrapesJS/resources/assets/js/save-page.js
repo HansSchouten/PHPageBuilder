@@ -255,9 +255,81 @@ $(document).ready(function() {
     }
 
     /**
+     * Remove AI styles left behind by older AI blocks that rendered their
+     * <style> tag as a sibling instead of keeping it inside the block root.
+     * GrapesJS' normal style cleanup only sees CSS Composer rules, not these
+     * inline HTML style components.
+     */
+    function removeOrphanedAiContentStyles() {
+        let wrapper = window.editor.getWrapper();
+        let activeScopes = {};
+
+        function collectActiveScopes(component) {
+            let tagName = (component.get('tagName') || '').toLowerCase();
+            if (tagName !== 'style' && typeof component.getClasses === 'function') {
+                let classes = component.getClasses();
+                if (classes.indexOf('ai-content-block') !== -1) {
+                    classes.forEach(function(className) {
+                        if (className.indexOf('ai-content-') === 0 && className !== 'ai-content-block') {
+                            activeScopes[className] = true;
+                        }
+                    });
+                }
+            }
+
+            component.get('components').each(collectActiveScopes);
+        }
+
+        function removeOrphanedStyles(component) {
+            let children = component.get('components');
+            if (! children) {
+                return;
+            }
+
+            children.models.slice().forEach(function(child) {
+                let tagName = (child.get('tagName') || '').toLowerCase();
+                if (tagName !== 'style') {
+                    removeOrphanedStyles(child);
+                    return;
+                }
+
+                let holder = document.createElement('div');
+                holder.innerHTML = child.toHTML();
+                let styleElement = holder.querySelector('style');
+                let css = styleElement ? (styleElement.textContent || '') : '';
+                let scopes = css.match(/\.ai-content-[A-Za-z0-9_-]+/g) || [];
+                if (! scopes.length || scopes.some(function(scope) {
+                    return activeScopes[scope.slice(1)];
+                })) {
+                    return;
+                }
+
+                let parent = child.parent();
+                let parentIsGeneratedStyleWrapper = parent
+                    && parent !== wrapper
+                    && (parent.get('tagName') || '').toLowerCase() === 'div'
+                    && typeof parent.getClasses === 'function'
+                    && parent.getClasses().some(function(className) {
+                        return /^ID[A-Z0-9]{10,}$/i.test(className);
+                    })
+                    && parent.get('components').length === 1;
+
+                child.remove();
+                if (parentIsGeneratedStyleWrapper) {
+                    parent.remove();
+                }
+            });
+        }
+
+        collectActiveScopes(wrapper);
+        removeOrphanedStyles(wrapper);
+    }
+
+    /**
      * Save the data of all translation variants on the server.
      */
     function saveAllTranslationsToServer() {
+        removeOrphanedAiContentStyles();
         toggleSaving();
 
         saveCurrentTranslationLocally(function() {
