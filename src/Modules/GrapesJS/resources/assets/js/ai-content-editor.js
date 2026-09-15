@@ -204,6 +204,15 @@
         return toString(settings.ai_model || '');
     }
 
+    function getSelectedReasoningEffort(block, editorConfig) {
+        let blockData = readBlockData(block, editorConfig);
+        let settings = blockData.rootData.settings && blockData.rootData.settings.attributes
+            ? blockData.rootData.settings.attributes
+            : {};
+
+        return toString(settings.ai_reasoning_effort || '');
+    }
+
     function getGenerateUrl(editorConfig) {
         return editorConfig.generate_url || window.aiContentGenerateUrl ||
             (window.aiContentConfig && window.aiContentConfig.generate_url) || '';
@@ -650,6 +659,7 @@
             data: {
                 prompt: prompt,
                 model: getSelectedModel(activeBlock, activeEditorConfig),
+                reasoning_effort: getSelectedReasoningEffort(activeBlock, activeEditorConfig),
                 context: {
                     block_slug: activeBlock.attributes['block-slug'],
                     current_html: source.html,

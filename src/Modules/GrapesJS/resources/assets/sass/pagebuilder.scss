@@ -585,8 +585,14 @@ html, body, #gjs {
     opacity: 1;
 }
 
+#phpb-ai-content-prompt {
+    min-height: max(300px, 50vh);
+    max-height: 70vh;
+}
+
 .phpb-ai-content-source {
-    min-height: 360px;
+    min-height: max(300px, 50vh);
+    max-height: 70vh;
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     font-size: 12px;
     line-height: 1.45;
