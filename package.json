@@ -1,16 +1,23 @@
 {
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/webpack-mix/setup/webpack.config.js",
-    "watch": "NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/webpack-mix/setup/webpack.config.js",
-    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/webpack-mix/setup/webpack.config.js",
-    "production": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/webpack-mix/setup/webpack.config.js",
+    "dev": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "production": "node scripts/build.mjs --production",
     "prod": "npm run production"
   },
+  "browserslist": [
+    "> 2%"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
-    "cross-env": "^6.0.3",
-    "imagemin-pngquant": "^5.0.1",
-    "webpack-mix": "^2.0.2",
-    "ckeditor4": "ckeditor/ckeditor4-releases#full/4.21.0"
+    "autoprefixer": "^10.6.1",
+    "ckeditor4": "ckeditor/ckeditor4-releases#full/4.21.0",
+    "esbuild": "^0.28.2",
+    "html-minifier-terser": "^7.2.0",
+    "postcss": "^8.5.28",
+    "sass": "^1.104.1"
   }
 }
