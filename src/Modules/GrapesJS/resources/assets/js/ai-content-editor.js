@@ -1,3 +1,5 @@
+import aiContentModalHtml from '../html/ai-content-modal.html';
+
 (function() {
     let initialized = false;
     let activeBlock = null;
@@ -218,6 +220,53 @@
             (window.aiContentConfig && window.aiContentConfig.generate_url) || '';
     }
 
+    function getAiContentJobContext() {
+        return window.aiContentJobContext && typeof window.aiContentJobContext === 'object'
+            ? Object.assign({}, window.aiContentJobContext)
+            : {};
+    }
+
+    function pollGenerationJob(response, success, error) {
+        let statusUrl = response && response.status_url;
+        if (! statusUrl) {
+            success(response);
+            return;
+        }
+
+        let startedAt = Date.now();
+        let poll = function() {
+            $.ajax({
+                type: 'GET',
+                url: statusUrl,
+                dataType: 'json'
+            }).done(function(jobResponse) {
+                if (jobResponse && jobResponse.status === 'success') {
+                    success({
+                        data: jobResponse.data,
+                        debug: jobResponse.debug
+                    });
+                    return;
+                }
+
+                if (jobResponse && jobResponse.status === 'failed') {
+                    error({responseJSON: jobResponse});
+                    return;
+                }
+
+                if (Date.now() - startedAt >= 30 * 60 * 1000) {
+                    error({responseJSON: {
+                        message: 'De AI-taak duurt langer dan verwacht. Probeer het later opnieuw.'
+                    }});
+                    return;
+                }
+
+                window.setTimeout(poll, 1000);
+            }).fail(error);
+        };
+
+        poll();
+    }
+
     /**
      * Return a compact, model-readable representation of the rendered layout
      * from <body> to the AI content insertion point.
@@ -306,60 +355,7 @@
             return;
         }
 
-        $('body').append(`
-<div class="modal fade" id="phpb-ai-content-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Website aanpassen met AI</h5>
-                <div class="d-flex align-items-center ml-auto">
-                    <button type="button" id="phpb-ai-content-mode-toggle" class="btn btn-light border text-secondary px-3" data-ai-mode-toggle aria-label="Code bewerken">
-                        <i class="fa fa-code mr-2" style="color:#6394c9" aria-hidden="true"></i><span>Code bewerken</span>
-                    </button>
-                    <button type="button" class="close" style="margin:0 0 0 30px;padding:0;outline:none;box-shadow:none" data-dismiss="modal" aria-label="Sluiten"><span aria-hidden="true">&times;</span></button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div id="phpb-ai-content-message" class="alert d-none" role="status"></div>
-                <div class="phpb-ai-content-tab mt-3" data-ai-mode-pane="prompt">
-                    <label id="phpb-ai-content-prompt-label" for="phpb-ai-content-prompt"><strong style="font-weight:500">Wat wil je maken?</strong></label>
-                    <button type="button" id="phpb-ai-content-prompt-info-button" class="btn btn-link text-secondary p-0 ml-1" aria-label="Uitleg over de opdracht" data-toggle="tooltip" data-placement="top" title="Beschrijf wat je op de pagina wilt zien en plak hierbij eventueel de tekst die je wilt gebruiken."><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                    <textarea id="phpb-ai-content-prompt" class="form-control" rows="7" aria-describedby="phpb-ai-content-prompt-error"></textarea>
-                    <div id="phpb-ai-content-prompt-error" class="invalid-feedback">Vul eerst een opdracht in.</div>
-                </div>
-                <div class="phpb-ai-content-tab mt-3" data-ai-mode-pane="source" style="display:none">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" type="button" data-ai-tab="html">HTML</button></li>
-                        <li class="nav-item"><button class="nav-link" type="button" data-ai-tab="css">CSS</button></li>
-                        <li class="nav-item"><button class="nav-link" type="button" data-ai-tab="javascript">JavaScript</button></li>
-                    </ul>
-                    <div class="phpb-ai-content-tab mt-3" data-ai-pane="html">
-                        <label for="phpb-ai-content-html">HTML-fragment</label>
-                        <textarea id="phpb-ai-content-html" class="form-control phpb-ai-content-source" rows="18" spellcheck="false"></textarea>
-                    </div>
-                    <div class="phpb-ai-content-tab mt-3" data-ai-pane="css" style="display:none">
-                        <label for="phpb-ai-content-css">CSS voor dit blok</label>
-                        <textarea id="phpb-ai-content-css" class="form-control phpb-ai-content-source" rows="18" spellcheck="false"></textarea>
-                        <small class="form-text text-muted">De CSS wordt automatisch beperkt tot dit blok.</small>
-                    </div>
-                    <div class="phpb-ai-content-tab mt-3" data-ai-pane="javascript" style="display:none">
-                        <label for="phpb-ai-content-javascript">JavaScript</label>
-                        <textarea id="phpb-ai-content-javascript" class="form-control phpb-ai-content-source" rows="18" spellcheck="false"></textarea>
-                        <small class="form-text text-muted">Gebruik aiContentRoot om dit blok te bereiken. JavaScript wordt uitgevoerd op de gepubliceerde pagina, niet in de PageBuilder zelf.</small>
-                    </div>
-                </div>
-            </div>
-            <div id="phpb-ai-content-footer" class="modal-footer">
-                    <button id="phpb-ai-content-generate" type="button" class="btn btn-secondary" data-ai-mode-action="prompt" disabled>
-                    Aanpassing maken<span id="phpb-ai-content-generate-spinner" class="spinner-border spinner-border-sm d-none ml-2" role="status" aria-hidden="true"></span>
-                </button>
-                <button id="phpb-ai-content-apply" type="button" class="btn btn-secondary" disabled>
-                    Wijzigingen toepassen<span id="phpb-ai-content-apply-spinner" class="spinner-border spinner-border-sm d-none ml-2" role="status" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>`);
+        $('body').append(aiContentModalHtml);
 
         $(document).on('click', '[data-ai-mode-toggle]', function() {
             let currentMode = $(this).attr('data-current-mode');
@@ -660,6 +656,7 @@
                 prompt: prompt,
                 model: getSelectedModel(activeBlock, activeEditorConfig),
                 reasoning_effort: getSelectedReasoningEffort(activeBlock, activeEditorConfig),
+                job_context: getAiContentJobContext(),
                 context: {
                     block_slug: activeBlock.attributes['block-slug'],
                     current_html: source.html,
@@ -669,17 +666,27 @@
                 }
             },
             success: function(response) {
-                let generated = response && response.data ? response.data : response;
-                generated = generated || {};
-                $('#phpb-ai-content-html').val(toString(generated.html));
-                $('#phpb-ai-content-css').val(toString(generated.css));
-                $('#phpb-ai-content-javascript').val(toString(generated.javascript));
-                updateApplyButtonState();
-                updateBlockValues({
-                    html: toString(generated.html),
-                    css: toString(generated.css),
-                    javascript: toString(generated.javascript)
-                }, generated.warnings || [], 'generate');
+                pollGenerationJob(response, function(completedResponse) {
+                    let generated = completedResponse && completedResponse.data
+                        ? completedResponse.data
+                        : completedResponse;
+                    generated = generated || {};
+                    $('#phpb-ai-content-html').val(toString(generated.html));
+                    $('#phpb-ai-content-css').val(toString(generated.css));
+                    $('#phpb-ai-content-javascript').val(toString(generated.javascript));
+                    updateApplyButtonState();
+                    updateBlockValues({
+                        html: toString(generated.html),
+                        css: toString(generated.css),
+                        javascript: toString(generated.javascript)
+                    }, generated.warnings || [], 'generate');
+                }, function(xhr) {
+                    setBusy(false);
+                    let message = xhr && xhr.responseJSON && xhr.responseJSON.message
+                        ? xhr.responseJSON.message
+                        : 'AI-generatie is mislukt.';
+                    showMessage(message, 'danger');
+                });
             },
             error: function(xhr) {
                 setBusy(false);
