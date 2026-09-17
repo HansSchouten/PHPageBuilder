@@ -5,6 +5,7 @@ namespace PHPageBuilder\Modules\WebsiteManager;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\WebsiteManagerContract;
 use PHPageBuilder\Extensions;
+use PHPageBuilder\LanguageValidator;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\SettingRepository;
 
@@ -117,8 +118,26 @@ class WebsiteManager implements WebsiteManagerContract
     public function handleUpdateSettings()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $settings = $_POST;
+            if (array_key_exists('languages', $settings)) {
+                if (! is_array($settings['languages']) || empty($settings['languages'])) {
+                    http_response_code(400);
+                    die('Invalid language selection');
+                }
+
+                $languages = [];
+                foreach ($settings['languages'] as $languageCode) {
+                    if (! LanguageValidator::isValidCode($languageCode)) {
+                        http_response_code(400);
+                        die('Invalid language selection');
+                    }
+                    $languages[] = $languageCode;
+                }
+                $settings['languages'] = array_values(array_unique($languages));
+            }
+
             $settingRepository = new SettingRepository;
-            $success = $settingRepository->updateSettings($_POST);
+            $success = $settingRepository->updateSettings($settings);
             if ($success) {
                 phpb_redirect(phpb_url('website_manager', ['tab' => 'settings']), [
                     'message-type' => 'success',

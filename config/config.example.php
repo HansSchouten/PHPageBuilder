@@ -38,7 +38,10 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
         ],
-        'uploads_folder' => __DIR__ . '/uploads'
+        'uploads_folder' => __DIR__ . '/uploads',
+        // Add extensions handled as executable by your own web-server setup.
+        // Common PHP extensions and server configuration files are always blocked.
+        'additional_blocked_upload_extensions' => []
     ],
 
     /*

@@ -8,6 +8,7 @@ use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Block\BlockAdapter;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
+use PHPageBuilder\Modules\GrapesJS\Upload\UploadValidator;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 use Exception;
@@ -128,18 +129,30 @@ class PageBuilder implements PageBuilderContract
      */
     public function handleFileUpload()
     {
-        $publicId = sha1(uniqid(rand(), true));
         $uploader = phpb_instance(Uploader::class, ['files']);
+        $originalFile = UploadValidator::sanitizeFileName($uploader->file_src_name);
+        $additionalBlockedExtensions = phpb_config('storage.additional_blocked_upload_extensions');
+        if (! is_array($additionalBlockedExtensions)) {
+            $additionalBlockedExtensions = [];
+        }
+
+        if ($originalFile === false || ! UploadValidator::isAllowedFileName($originalFile, $additionalBlockedExtensions)) {
+            http_response_code(400);
+            die('Upload error: This file name or type is not allowed');
+        }
+
+        $originalMime = UploadValidator::detectMimeType($uploader->file_src_temp);
+        $publicId = bin2hex(random_bytes(20));
+        $uploader->file_src_name = $originalFile;
+        $uploader->file_src_name_ext = pathinfo($originalFile, PATHINFO_EXTENSION);
         $uploader
-            ->file_name($publicId . '/' . str_replace(' ', '-', $uploader->file_src_name))
+            ->file_name($publicId . '/' . $originalFile)
             ->upload_to(phpb_config('storage.uploads_folder') . '/')
             ->run();
 
         if (! $uploader->was_uploaded) {
             die("Upload error: {$uploader->error}");
         }
-        $originalFile = str_replace(' ', '-', $uploader->file_src_name);
-        $originalMime = $uploader->file_src_mime;
         $serverFile = $uploader->final_file_name;
 
         $uploadRepository = new UploadRepository;

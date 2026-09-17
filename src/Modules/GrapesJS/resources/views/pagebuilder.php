@@ -32,13 +32,14 @@ CKEDITOR.dtd.$editable.ul = 1;
 CKEDITOR.dtd.$editable.table = 1;
 
 <?php
-$currentLanguage = in_array(phpb_config('general.language'), phpb_active_languages()) ?
-    phpb_config('general.language') : array_keys(phpb_active_languages())[0];
-if (! empty($_SESSION['phpagebuilder_language'])) {
+$activeLanguages = phpb_active_languages();
+$currentLanguage = isset($activeLanguages[phpb_config('general.language')]) ?
+    phpb_config('general.language') : array_keys($activeLanguages)[0];
+if (! empty($_SESSION['phpagebuilder_language']) && isset($activeLanguages[$_SESSION['phpagebuilder_language']])) {
     $currentLanguage = $_SESSION['phpagebuilder_language'];
 }
 ?>
-window.languages = <?= json_encode(phpb_active_languages()) ?>;
+window.languages = <?= json_encode($activeLanguages) ?>;
 window.currentLanguage = <?= json_encode($currentLanguage) ?>;
 window.translations = <?= json_encode(phpb_trans('pagebuilder')) ?>;
 window.contentContainerComponents = <?= json_encode($pageBuilder->getPageComponents($page)) ?>;
@@ -63,7 +64,7 @@ window.initialComponents = <?= json_encode($pageRenderer->render()) ?>;
 window.initialStyle = <?= json_encode($pageBuilder->getPageStyleComponents($page)) ?>;
 window.initialCss = <?= json_encode($pageBuilder->getPageStyleCss($page)) ?>;
 window.grapesJSTranslations = {
-    <?= $currentLanguage ?>: {
+    <?= json_encode($currentLanguage) ?>: {
         styleManager: {
             empty: '<?= phpb_trans('pagebuilder.style-no-element-selected') ?>'
         },
@@ -111,12 +112,12 @@ require __DIR__ . '/grapesjs/trait-manager.php';
 </button>
 <div id="sidebar-header">
     <?php
-    if (count(phpb_active_languages()) > 1):
+    if (count($activeLanguages) > 1):
     ?>
     <div id="language-selector">
         <select class="selectpicker" data-width="fit">
             <?php
-            foreach (phpb_active_languages() as $languageCode => $languageTranslation):
+            foreach ($activeLanguages as $languageCode => $languageTranslation):
             ?>
             <option value="<?= phpb_e($languageCode) ?>" <?= $languageCode === $currentLanguage ? 'selected' : '' ?>
                     data-content='<span class="flag-icon flag-icon-<?= phpb_e($languageCode) ?>"></span><span class="language-name ml-1"><?= phpb_e($languageTranslation) ?></span>'>
@@ -133,9 +134,9 @@ require __DIR__ . '/grapesjs/trait-manager.php';
     ?>
     <style>
         <?php
-        foreach (phpb_active_languages() as $languageCode => $languageTranslation):
+        foreach ($activeLanguages as $languageCode => $languageTranslation):
         ?>
-        .flag-icon-<?= $languageCode ?> {
+        .flag-icon-<?= phpb_e($languageCode) ?> {
             background-image: url(<?= phpb_asset('pagebuilder/images/flags/' . $languageCode . '.svg') ?>);
         }
         <?php

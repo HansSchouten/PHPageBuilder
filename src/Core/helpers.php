@@ -480,13 +480,40 @@ if (! function_exists('phpb_active_languages')) {
         $configLanguageCode = phpb_config('general.language');
         $languages = phpb_instance('setting')::get('languages') ?? [$configLanguageCode];
 
+        if (! is_array($languages)) {
+            $languages = [];
+        }
+
+        $availableLanguageTranslations = phpb_trans('languages');
+        if (! is_array($availableLanguageTranslations)) {
+            $availableLanguageTranslations = [];
+        }
+
         // if the array has numeric indices (which is the default), create a languageCode => languageTranslation structure
         if (array_values($languages) === $languages) {
             $newLanguagesStructure = [];
             foreach ($languages as $languageCode) {
-                $newLanguagesStructure[$languageCode] = phpb_trans('languages')[$languageCode] ?? [];
+                if (! \PHPageBuilder\LanguageValidator::isValidCode($languageCode)) {
+                    continue;
+                }
+                $newLanguagesStructure[$languageCode] = $availableLanguageTranslations[$languageCode] ?? $languageCode;
             }
             $languages = $newLanguagesStructure;
+        } else {
+            foreach ($languages as $languageCode => $languageTranslation) {
+                if (! \PHPageBuilder\LanguageValidator::isValidCode($languageCode)) {
+                    unset($languages[$languageCode]);
+                }
+            }
+        }
+
+        // Recover safely from invalid legacy or manually modified settings.
+        if (empty($languages)) {
+            $fallbackLanguageCode = \PHPageBuilder\LanguageValidator::isValidCode($configLanguageCode)
+                ? $configLanguageCode
+                : 'en';
+            $languages[$fallbackLanguageCode] = $availableLanguageTranslations[$fallbackLanguageCode]
+                ?? $fallbackLanguageCode;
         }
 
         if (! isset($languages[$configLanguageCode])) {

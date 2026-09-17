@@ -10,6 +10,7 @@ use PHPageBuilder\Contracts\PageBuilderContract;
 use PHPageBuilder\Contracts\RouterContract;
 use PHPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
+use PHPageBuilder\Modules\GrapesJS\Upload\UploadValidator;
 use PHPageBuilder\Repositories\UploadRepository;
 use PHPageBuilder\Core\DB;
 
@@ -104,19 +105,22 @@ class PHPageBuilder
     {
         global $phpb_translations;
 
-        $phpbLanguageFile = __DIR__ . '/../lang/' . $language . '.php';
-        if (! file_exists($phpbLanguageFile)) {
-            $phpbLanguageFile = __DIR__ . '/../lang/en.php';
+        $phpbTranslationsFolder = __DIR__ . '/../lang';
+        $phpbLanguageFile = LanguageValidator::resolveTranslationFile($phpbTranslationsFolder, $language);
+        if (! $phpbLanguageFile) {
+            $phpbLanguageFile = LanguageValidator::resolveTranslationFile($phpbTranslationsFolder, 'en');
         }
         $phpb_translations = require $phpbLanguageFile;
 
         // load default and current language translations of the current theme
         $themeTranslationsFolder = phpb_config('theme.folder') . '/' . phpb_config('theme.active_theme') . '/translations';
-        if (file_exists($themeTranslationsFolder . '/en.php')) {
-            $phpb_translations = array_merge($phpb_translations, require $themeTranslationsFolder . '/en.php');
+        $themeEnglishLanguageFile = LanguageValidator::resolveTranslationFile($themeTranslationsFolder, 'en');
+        if ($themeEnglishLanguageFile) {
+            $phpb_translations = array_merge($phpb_translations, require $themeEnglishLanguageFile);
         }
-        if (file_exists($themeTranslationsFolder . '/' . $language . '.php')) {
-            $phpb_translations = array_merge($phpb_translations, require $themeTranslationsFolder . '/' . $language . '.php');
+        $themeLanguageFile = LanguageValidator::resolveTranslationFile($themeTranslationsFolder, $language);
+        if ($themeLanguageFile && $themeLanguageFile !== $themeEnglishLanguageFile) {
+            $phpb_translations = array_merge($phpb_translations, require $themeLanguageFile);
         }
 
         $phpb_translations = phpb_instance(Translator::class)->customize($phpb_translations);
@@ -466,8 +470,11 @@ class PHPageBuilder
             exit();
         }
 
-        header('Content-Type: ' . $uploadedFile->mime_type);
-        header('Content-Disposition: inline; filename="' . basename($uploadedFile->original_file) . '"');
+        $mimeType = UploadValidator::normalizeMimeType($uploadedFile->mime_type);
+        $downloadName = str_replace(['"', "\r", "\n"], '', basename($uploadedFile->original_file));
+        header('Content-Type: ' . $mimeType);
+        header('Content-Disposition: inline; filename="' . $downloadName . '"');
+        header('X-Content-Type-Options: nosniff');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Content-Length: ' . filesize($serverFile));

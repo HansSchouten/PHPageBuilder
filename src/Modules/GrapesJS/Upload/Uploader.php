@@ -215,7 +215,7 @@ class Uploader {
         $this->file_src_temp = $file["tmp_name"];
         $this->file_src_size = $file["size"];
         $this->file_src_errors = $file['error'];
-        $this->file_src_mime = $file['type'];
+        $this->file_src_mime = UploadValidator::detectMimeType($this->file_src_temp);
         $this->file_src_name_ext = pathinfo($file["name"], PATHINFO_EXTENSION);
 
         $this->was_uploaded = true;
@@ -233,7 +233,10 @@ class Uploader {
         if ($this->file_name !== true) {
             // preserve file extension if provided
             if (! pathinfo($this->file_name, PATHINFO_EXTENSION)) {
-                $file = $this->file_name . '.' . $this->file_src_name_ext;
+                $file = $this->file_name;
+                if ($this->file_src_name_ext !== '') {
+                    $file .= '.' . $this->file_src_name_ext;
+                }
             } else {
                 $file = $this->file_name;
             }
@@ -315,10 +318,13 @@ class Uploader {
             if (move_uploaded_file($this->file_src_temp, $path)) {
                 $this->final_file_name = $file;
 
-                // extract image dimensions
-                list($w, $h) = getimagesize($path);
-                $this->file_width = $w;
-                $this->file_height = $h;
+                // Extract dimensions when the upload is an image. Other asset
+                // types are valid too and should not emit getimagesize warnings.
+                $imageSize = @getimagesize($path);
+                if (is_array($imageSize)) {
+                    $this->file_width = $imageSize[0];
+                    $this->file_height = $imageSize[1];
+                }
 
                 // resize image if necessary
                 if (isset($this->resize)) {
@@ -395,8 +401,8 @@ class Uploader {
     }
 
     /**
-     * Set the variable this function to false if you don't want to check the MIME against the allowed list.
-     * This variable is set to true by default for security reason.
+     * Enable or disable checking the detected MIME type against the allowed list.
+     * The check is disabled until this method is called.
      *
      * @param boolean $bool         Set to false to not check
      * @return Uploader

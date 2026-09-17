@@ -23,5 +23,10 @@
         "files": [
             "src/Core/helpers.php"
         ]
+    },
+    "scripts": {
+        "test": [
+            "@php tests/UploadValidatorTest.php"
+        ]
     }
 }
