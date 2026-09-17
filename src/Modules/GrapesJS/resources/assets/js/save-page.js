@@ -162,14 +162,26 @@ $(document).ready(function() {
             window.editor.getWrapper().find("[phpb-content-container]").forEach((container, index) => {
                 let data = getContainerContentInStorageFormat(container);
 
-                window.pageData['css'] = mergeCss(existingCss, data.css);
-                window.pageData['style'] = data.style;
                 window.pageData['html'][index] = data.html;
                 window.pageData['components'][index] = data.components;
 
                 window.pageBlocks[window.currentLanguage] = {...window.pageBlocks[window.currentLanguage], ...data.blocks};
                 window.contentContainerComponents[index] = data.components;
             });
+
+            // GrapesJS contains the complete rendered layout, including headers,
+            // footers and its own protected CSS. Only persist rules referenced by
+            // the page content we just serialized.
+            let storedPageData = {
+                components: window.pageData.components,
+                blocks: window.pageBlocks
+            };
+            window.pageData['style'] = removeOldStyleSelectors(storedPageData, window.editor.getStyle());
+            window.pageData['css'] = mergeCss(
+                existingCss,
+                getCssFromStyleComponents(window.pageData.style),
+                window.pageBlocks
+            );
 
             if (callback) {
                 callback();
@@ -181,11 +193,11 @@ $(document).ready(function() {
      * Add all selectors from existingCss that are missing in newCss.
      * Backwards compatibility fix: losing CSS due to having different block style identifiers for different languages.
      */
-    function mergeCss(existingCss, newCss) {
+    function mergeCss(existingCss, newCss, pageBlocks = window.pageBlocks) {
         if (! existingCss) {
             return newCss;
         }
-        let pageBlocksString = JSON.stringify(window.pageBlocks);
+        let pageBlocksString = JSON.stringify(pageBlocks || {});
         let regex = "\\.ID(.*?){(.*?)}"
         let matches = existingCss.match(new RegExp(regex, 'g'));
         if (! matches) {
@@ -233,25 +245,242 @@ $(document).ready(function() {
     }
 
     /**
-     * Remove the style selectors that are no longer present among the current page blocks.
+     * Remove style rules that are not referenced by the stored page content.
+     *
+     * GrapesJS manages the complete rendered layout in one component tree. Its
+     * style collection therefore also contains generated rules for layout
+     * elements. Stored components, block HTML and block style identifiers are
+     * the authoritative list of selectors owned by the page itself.
      */
-    function removeOldStyleSelectors(pageBlocks, styleComponents) {
-        let pageBlocksString = JSON.stringify(pageBlocks);
+    function removeOldStyleSelectors(storedData, styleComponents) {
+        let references = getStoredStyleReferences(storedData);
 
-        // remove style components that are not used by any page block
-        let updatedStyleComponents = [];
-        styleComponents.forEach(styleComponent => {
-            if (styleComponent.attributes.selectors.models.length) {
-                if (Object.keys(styleComponent.attributes.style).length === 0) {
-                    return; // skip components with empty style
+        return styleComponents.filter(function(styleComponent) {
+            let style = styleComponent.get('style') || {};
+            if (Object.keys(style).length === 0) {
+                return false;
+            }
+
+            let selectors = styleComponent.get('selectors');
+            if (! selectors || ! selectors.models.length) {
+                return false;
+            }
+
+            return selectors.models.some(function(selector) {
+                let name = selector.get('name');
+                let type = selector.get('type');
+
+                // GrapesJS selector types: 1 = class, 2 = id. Element and
+                // universal selectors from the surrounding layout are not
+                // page-owned style selectors.
+                return (type === 1 && references.classes[name] === true)
+                    || (type === 2 && references.ids[name] === true);
+            });
+        });
+    }
+
+    /**
+     * Collect class and id selectors from serialized GrapesJS components and
+     * page block data.
+     */
+    function getStoredStyleReferences(storedData) {
+        let references = {classes: {}, ids: {}};
+        collectStoredStyleReferences(storedData, references, null, new WeakSet());
+        return references;
+    }
+
+    function collectStoredStyleReferences(value, references, key = null, visited = new WeakSet()) {
+        if (typeof value === 'string') {
+            if (key === 'style-identifier') {
+                references.classes[value] = true;
+            } else if (key === 'class') {
+                addClassReferences(value, references);
+            } else if (key === 'html') {
+                collectHtmlStyleReferences(value, references);
+            }
+            return;
+        }
+        if (value === null || typeof value !== 'object') {
+            return;
+        }
+        if (visited.has(value)) {
+            return;
+        }
+        visited.add(value);
+
+        if (key === 'classes' && Array.isArray(value)) {
+            value.forEach(function(componentClass) {
+                if (typeof componentClass === 'string') {
+                    references.classes[componentClass] = true;
+                } else if (componentClass && typeof componentClass.name === 'string') {
+                    references.classes[componentClass.name] = true;
                 }
-                let selector = styleComponent.attributes.selectors.models[0].id;
-                if (pageBlocksString.includes(selector)) {
-                    updatedStyleComponents.push(styleComponent);
-                }
+            });
+        }
+
+        if (key === 'attributes') {
+            if (typeof value.id === 'string' && value.id) {
+                references.ids[value.id] = true;
+            }
+            if (typeof value.class === 'string') {
+                addClassReferences(value.class, references);
+            }
+        }
+
+        Object.keys(value).forEach(function(childKey) {
+            collectStoredStyleReferences(value[childKey], references, childKey, visited);
+        });
+    }
+
+    function collectHtmlStyleReferences(html, references) {
+        if (! html || html.indexOf('<') === -1) {
+            return;
+        }
+
+        let htmlDom = $("<container>" + html + "</container>");
+        htmlDom.find('[id]').each(function() {
+            references.ids[$(this).attr('id')] = true;
+        });
+        htmlDom.find('[class]').each(function() {
+            addClassReferences($(this).attr('class') || '', references);
+        });
+    }
+
+    function addClassReferences(classNames, references) {
+        classNames.split(/\s+/).forEach(function(className) {
+            if (className) {
+                references.classes[className] = true;
             }
         });
-        return updatedStyleComponents;
+    }
+
+    /**
+     * Generate CSS from the same filtered style models that are persisted.
+     */
+    function getCssFromStyleComponents(styleComponents) {
+        return styleComponents.map(function(styleComponent) {
+            return styleComponent.toCSS({important: styleComponent.get('important')});
+        }).join('');
+    }
+
+    /**
+     * Remove editor state that GrapesJS reconstructs while loading the page.
+     * Generated ID... classes are retained only when CSS or block JavaScript
+     * actually refers to them.
+     */
+    function cleanStoredGrapesJsData(data) {
+        let referenceSources = [typeof data.css === 'string' ? data.css : ''];
+        collectStyleIdentifierReferences(data.blocks, referenceSources);
+        let references = referenceSources.join('\n');
+
+        data.html = cleanStoredGrapesJsValue(data.html, references, 'html');
+        data.components = cleanStoredGrapesJsValue(data.components, references, 'components');
+        data.blocks = cleanStoredGrapesJsValue(data.blocks, references, 'blocks');
+    }
+
+    /**
+     * Collect authored code, but not HTML declarations, that may intentionally
+     * refer to a generated class. This includes block-level CSS and JavaScript.
+     */
+    function collectStyleIdentifierReferences(value, references, key = null) {
+        let codeKeys = ['css', 'style', 'styles', 'javascript', 'js', 'script'];
+        if (typeof value === 'string') {
+            if (key !== null && codeKeys.indexOf(key.toLowerCase()) !== -1) {
+                references.push(value);
+            }
+            return;
+        }
+        if (value === null || typeof value !== 'object') {
+            return;
+        }
+
+        Object.keys(value).forEach(function(childKey) {
+            collectStyleIdentifierReferences(value[childKey], references, childKey);
+        });
+    }
+
+    function cleanStoredGrapesJsValue(value, references, key = null) {
+        if (typeof value === 'string') {
+            if (key === 'html') {
+                return cleanStoredHtml(value, references);
+            }
+            if (key === 'class') {
+                return cleanStyleIdentifierClassList(value, references);
+            }
+            if (key === 'data-raw-content') {
+                return undefined;
+            }
+            if (key === 'style-identifier' && isUnusedStyleIdentifier(value, references)) {
+                return undefined;
+            }
+            return value;
+        }
+        if (value === null || typeof value !== 'object') {
+            return value;
+        }
+
+        if (Array.isArray(value)) {
+            for (let index = value.length - 1; index >= 0; index--) {
+                let cleanedValue = cleanStoredGrapesJsValue(value[index], references, key);
+                if (key === 'classes' && typeof cleanedValue === 'string'
+                    && isUnusedStyleIdentifier(cleanedValue, references)
+                ) {
+                    value.splice(index, 1);
+                    continue;
+                }
+                value[index] = cleanedValue;
+            }
+            return value;
+        }
+
+        Object.keys(value).forEach(function(childKey) {
+            let cleanedValue = cleanStoredGrapesJsValue(value[childKey], references, childKey);
+            if (cleanedValue === undefined) {
+                delete value[childKey];
+            } else {
+                value[childKey] = cleanedValue;
+            }
+        });
+        return value;
+    }
+
+    function cleanStoredHtml(html, references) {
+        let normalizedHtml = html.toLowerCase();
+        if (normalizedHtml.indexOf('class=') === -1
+            && normalizedHtml.indexOf('data-raw-content') === -1
+        ) {
+            return html;
+        }
+
+        let htmlDom = $("<container>" + html + "</container>");
+        htmlDom.find('[data-raw-content]').each(function() {
+            $(this).removeAttr('data-raw-content');
+        });
+        htmlDom.find('[class]').each(function() {
+            let className = cleanStyleIdentifierClassList($(this).attr('class') || '', references);
+            if (className) {
+                $(this).attr('class', className);
+            } else {
+                $(this).removeAttr('class');
+            }
+        });
+        return htmlDom.html();
+    }
+
+    function cleanStyleIdentifierClassList(className, references) {
+        return className.split(/\s+/).filter(function(componentClass) {
+            return componentClass && ! isUnusedStyleIdentifier(componentClass, references);
+        }).join(' ');
+    }
+
+    function isUnusedStyleIdentifier(value, references) {
+        if (! /^ID[A-Z0-9]{14,}$/i.test(value)) {
+            return false;
+        }
+
+        let escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        let referencePattern = new RegExp('(^|[^A-Za-z0-9_-])' + escapedValue + '($|[^A-Za-z0-9_-])');
+        return ! referencePattern.test(references);
     }
 
     /**
@@ -269,11 +498,12 @@ $(document).ready(function() {
             if (tagName !== 'style' && typeof component.getClasses === 'function') {
                 let classes = component.getClasses();
                 if (classes.indexOf('ai-content-block') !== -1) {
-                    classes.forEach(function(className) {
-                        if (className.indexOf('ai-content-') === 0 && className !== 'ai-content-block') {
-                            activeScopes[className] = true;
-                        }
-                    });
+                    let attributes = typeof component.getAttributes === 'function'
+                        ? component.getAttributes()
+                        : component.attributes.attributes || {};
+                    if (attributes.id) {
+                        activeScopes[attributes.id] = true;
+                    }
                 }
             }
 
@@ -296,11 +526,8 @@ $(document).ready(function() {
                 let holder = document.createElement('div');
                 holder.innerHTML = child.toHTML();
                 let styleElement = holder.querySelector('style');
-                let css = styleElement ? (styleElement.textContent || '') : '';
-                let scopes = css.match(/\.ai-content-[A-Za-z0-9_-]+/g) || [];
-                if (! scopes.length || scopes.some(function(scope) {
-                    return activeScopes[scope.slice(1)];
-                })) {
+                let scope = styleElement ? styleElement.getAttribute('data-ai-content-style') : '';
+                if (! scope || activeScopes[scope]) {
                     return;
                 }
 
@@ -343,7 +570,12 @@ $(document).ready(function() {
 
             let data = window.pageData;
             data.blocks = removeOldPageBlocks(window.pageBlocks);
-            data.style = removeOldStyleSelectors(data.blocks, data.style);
+            data.style = removeOldStyleSelectors({
+                components: data.components,
+                blocks: data.blocks
+            }, data.style);
+            data.css = mergeCss(data.css, getCssFromStyleComponents(data.style), data.blocks);
+            cleanStoredGrapesJsData(data);
 
             $.ajax({
                 type: "POST",
@@ -404,9 +636,15 @@ $(document).ready(function() {
         let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
 
         let html = window.html_beautify(getContainerHtml(container));
-        let css = window.editor.getCss();
-        let style = window.editor.getStyle();
         let components = JSON.parse(JSON.stringify(container.get('components')));
+
+        let storedData = {
+            html: html,
+            components: components,
+            blocks: blocksData
+        };
+        let style = removeOldStyleSelectors(storedData, window.editor.getStyle());
+        let css = getCssFromStyleComponents(style);
 
         // switch back to original GrapesJS component references
         window.editor.DomComponents.componentsById = componentReferences;

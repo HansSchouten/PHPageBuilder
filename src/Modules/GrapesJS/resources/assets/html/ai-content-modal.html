@@ -36,7 +36,7 @@
                     <div class="phpb-ai-content-tab mt-3" data-ai-pane="javascript" style="display:none">
                         <label for="phpb-ai-content-javascript">JavaScript</label>
                         <textarea id="phpb-ai-content-javascript" class="form-control phpb-ai-content-source" rows="18" spellcheck="false"></textarea>
-                        <small class="form-text text-muted">Gebruik aiContentRoot om dit blok te bereiken. JavaScript wordt uitgevoerd op de gepubliceerde pagina, niet in de PageBuilder zelf.</small>
+                        <small class="form-text text-muted"><code>contentRoot</code> is hier al beschikbaar als het buitenste DOM-element van dit onderdeel. Bijvoorbeeld: <code>contentRoot.querySelector('.button')</code>. De code wordt alleen uitgevoerd op de gepubliceerde pagina.</small>
                     </div>
                 </div>
             </div>

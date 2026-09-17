@@ -185,9 +185,6 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
         if (html === '' && blockData.contentComponent) {
             html = componentHtml(blockData.contentComponent);
         }
-        if (html === '') {
-            html = toString(settings.html);
-        }
 
         return {
             html: removePageBuilderAttributes(html),
@@ -290,10 +287,9 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
             return '';
         }
 
-        // Generated content is inserted into the AI block's body when it is
-        // available. For an empty block, the block itself is the best stable
-        // insertion marker until the first render creates that body.
-        let targetElement = blockElement.querySelector('.ai-content-body') || blockElement;
+        // Prefer the configured content wrapper as the insertion marker. The
+        // block itself remains a safe fallback for older AI content views.
+        let targetElement = blockElement.querySelector('[data-ai-content-body]') || blockElement;
         let path = [];
         let current = targetElement;
 
@@ -589,7 +585,6 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
         contentData.is_html = true;
         rootData.blocks[blockData.contentBlockId] = contentData;
 
-        rootData.settings.attributes.html = toString(values.html);
         rootData.settings.attributes.css = toString(values.css);
         rootData.settings.attributes.javascript = toString(values.javascript);
         rootData.settings.attributes.generation_status = 'ready';
