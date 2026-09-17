@@ -6,6 +6,10 @@ require_once __DIR__ . '/../src/Modules/GrapesJS/Upload/Uploader.php';
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Modules\GrapesJS\Upload\UploadValidator;
 
+class TestCustomUploader extends Uploader
+{
+}
+
 function assertUploadValidation($condition, $message)
 {
     if (! $condition) {
@@ -82,6 +86,13 @@ $uploader = new Uploader([
     'error' => 0,
     'type' => "text/html\r\nX-Injected: yes"
 ], false);
+$customUploader = new TestCustomUploader([
+    'name' => 'document.txt',
+    'tmp_name' => $temporaryFile,
+    'size' => filesize($temporaryFile),
+    'error' => 0,
+    'type' => 'application/x-fake-client-mime'
+], false);
 unlink($temporaryFile);
 assertUploadValidation(
     UploadValidator::normalizeMimeType($detectedMimeType) === $detectedMimeType,
@@ -90,6 +101,10 @@ assertUploadValidation(
 assertUploadValidation(
     $uploader->file_src_mime === $detectedMimeType,
     'the MIME type supplied by the client should not be trusted'
+);
+assertUploadValidation(
+    $customUploader->file_src_mime === $detectedMimeType,
+    'custom uploader subclasses should expose the detected MIME type without accessing the protected temp path'
 );
 
 echo "UploadValidator tests passed.\n";

@@ -141,7 +141,9 @@ class PageBuilder implements PageBuilderContract
             die('Upload error: This file name or type is not allowed');
         }
 
-        $originalMime = UploadValidator::detectMimeType($uploader->file_src_temp);
+        // Uploader already detects the MIME type from the temporary file bytes.
+        // Use its public result instead of reaching into its protected temp path.
+        $originalMime = $uploader->file_src_mime;
         $publicId = bin2hex(random_bytes(20));
         $uploader->file_src_name = $originalFile;
         $uploader->file_src_name_ext = pathinfo($originalFile, PATHINFO_EXTENSION);
