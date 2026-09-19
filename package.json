@@ -4,7 +4,8 @@
     "dev": "node scripts/build.mjs",
     "watch": "node scripts/build.mjs --watch",
     "production": "node scripts/build.mjs --production",
-    "prod": "npm run production"
+    "prod": "npm run production",
+    "test:page-storage": "node tests/PageStorageOptimizerTest.mjs"
   },
   "browserslist": [
     "> 2%"

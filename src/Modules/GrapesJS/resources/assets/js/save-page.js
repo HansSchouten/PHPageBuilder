@@ -1,3 +1,5 @@
+import { optimizePageStorage } from './page-storage-optimizer';
+
 $(document).ready(function() {
 
     window.pageData = {};
@@ -149,7 +151,6 @@ $(document).ready(function() {
     function saveCurrentTranslationLocally(callback) {
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
         setTimeout(function() {
-            let existingCss = window.pageData['css'] ? window.pageData['css'] : window.initialCss;
             window.pageData = {
                 html: [],
                 components: [],
@@ -158,9 +159,13 @@ $(document).ready(function() {
             };
             window.pageBlocks[window.currentLanguage] = [];
 
-            // get the data of each page content container (so skip all layout blocks) and prepare data for being stored
-            window.editor.getWrapper().find("[phpb-content-container]").forEach((container, index) => {
-                let data = getContainerContentInStorageFormat(container);
+            // Clone every content container first. The storage optimizer is
+            // intentionally allowed to mutate only these detached clones.
+            let storedPage = getContainersContentInStorageFormat(
+                window.editor.getWrapper().find("[phpb-content-container]")
+            );
+
+            storedPage.containers.forEach((data, index) => {
 
                 window.pageData['html'][index] = data.html;
                 window.pageData['components'][index] = data.components;
@@ -169,48 +174,13 @@ $(document).ready(function() {
                 window.contentContainerComponents[index] = data.components;
             });
 
-            // GrapesJS contains the complete rendered layout, including headers,
-            // footers and its own protected CSS. Only persist rules referenced by
-            // the page content we just serialized.
-            let storedPageData = {
-                components: window.pageData.components,
-                blocks: window.pageBlocks
-            };
-            window.pageData['style'] = removeOldStyleSelectors(storedPageData, window.editor.getStyle());
-            window.pageData['css'] = mergeCss(
-                existingCss,
-                getCssFromStyleComponents(window.pageData.style),
-                window.pageBlocks
-            );
+            window.pageData['style'] = storedPage.style;
+            window.pageData['css'] = storedPage.css;
 
             if (callback) {
                 callback();
             }
         }, 200);
-    }
-
-    /**
-     * Add all selectors from existingCss that are missing in newCss.
-     * Backwards compatibility fix: losing CSS due to having different block style identifiers for different languages.
-     */
-    function mergeCss(existingCss, newCss, pageBlocks = window.pageBlocks) {
-        if (! existingCss) {
-            return newCss;
-        }
-        let pageBlocksString = JSON.stringify(pageBlocks || {});
-        let regex = "\\.ID(.*?){(.*?)}"
-        let matches = existingCss.match(new RegExp(regex, 'g'));
-        if (! matches) {
-            return newCss;
-        }
-        matches.forEach(function(css) {
-            let selector = css.split('{')[0];
-            let pageBlocksStringSelector = selector.replace('.', ' ').trim();
-            if (newCss.indexOf(selector) === -1 && pageBlocksString.indexOf(pageBlocksStringSelector) >= 0) {
-                newCss += css;
-            }
-        });
-        return newCss;
     }
 
     /**
@@ -245,253 +215,14 @@ $(document).ready(function() {
     }
 
     /**
-     * Remove style rules that are not referenced by the stored page content.
-     *
-     * GrapesJS manages the complete rendered layout in one component tree. Its
-     * style collection therefore also contains generated rules for layout
-     * elements. Stored components, block HTML and block style identifiers are
-     * the authoritative list of selectors owned by the page itself.
-     */
-    function removeOldStyleSelectors(storedData, styleComponents) {
-        let references = getStoredStyleReferences(storedData);
-
-        return styleComponents.filter(function(styleComponent) {
-            let style = styleComponent.get('style') || {};
-            if (Object.keys(style).length === 0) {
-                return false;
-            }
-
-            let selectors = styleComponent.get('selectors');
-            if (! selectors || ! selectors.models.length) {
-                return false;
-            }
-
-            return selectors.models.some(function(selector) {
-                let name = selector.get('name');
-                let type = selector.get('type');
-
-                // GrapesJS selector types: 1 = class, 2 = id. Element and
-                // universal selectors from the surrounding layout are not
-                // page-owned style selectors.
-                return (type === 1 && references.classes[name] === true)
-                    || (type === 2 && references.ids[name] === true);
-            });
-        });
-    }
-
-    /**
-     * Collect class and id selectors from serialized GrapesJS components and
-     * page block data.
-     */
-    function getStoredStyleReferences(storedData) {
-        let references = {classes: {}, ids: {}};
-        collectStoredStyleReferences(storedData, references, null, new WeakSet());
-        return references;
-    }
-
-    function collectStoredStyleReferences(value, references, key = null, visited = new WeakSet()) {
-        if (typeof value === 'string') {
-            if (key === 'style-identifier') {
-                references.classes[value] = true;
-            } else if (key === 'class') {
-                addClassReferences(value, references);
-            } else if (key === 'html') {
-                collectHtmlStyleReferences(value, references);
-            }
-            return;
-        }
-        if (value === null || typeof value !== 'object') {
-            return;
-        }
-        if (visited.has(value)) {
-            return;
-        }
-        visited.add(value);
-
-        if (key === 'classes' && Array.isArray(value)) {
-            value.forEach(function(componentClass) {
-                if (typeof componentClass === 'string') {
-                    references.classes[componentClass] = true;
-                } else if (componentClass && typeof componentClass.name === 'string') {
-                    references.classes[componentClass.name] = true;
-                }
-            });
-        }
-
-        if (key === 'attributes') {
-            if (typeof value.id === 'string' && value.id) {
-                references.ids[value.id] = true;
-            }
-            if (typeof value.class === 'string') {
-                addClassReferences(value.class, references);
-            }
-        }
-
-        Object.keys(value).forEach(function(childKey) {
-            collectStoredStyleReferences(value[childKey], references, childKey, visited);
-        });
-    }
-
-    function collectHtmlStyleReferences(html, references) {
-        if (! html || html.indexOf('<') === -1) {
-            return;
-        }
-
-        let htmlDom = $("<container>" + html + "</container>");
-        htmlDom.find('[id]').each(function() {
-            references.ids[$(this).attr('id')] = true;
-        });
-        htmlDom.find('[class]').each(function() {
-            addClassReferences($(this).attr('class') || '', references);
-        });
-    }
-
-    function addClassReferences(classNames, references) {
-        classNames.split(/\s+/).forEach(function(className) {
-            if (className) {
-                references.classes[className] = true;
-            }
-        });
-    }
-
-    /**
-     * Generate CSS from the same filtered style models that are persisted.
-     */
-    function getCssFromStyleComponents(styleComponents) {
-        return styleComponents.map(function(styleComponent) {
-            return styleComponent.toCSS({important: styleComponent.get('important')});
-        }).join('');
-    }
-
-    /**
-     * Remove editor state that GrapesJS reconstructs while loading the page.
-     * Generated ID... classes are retained only when CSS or block JavaScript
-     * actually refers to them.
-     */
-    function cleanStoredGrapesJsData(data) {
-        let referenceSources = [typeof data.css === 'string' ? data.css : ''];
-        collectStyleIdentifierReferences(data.blocks, referenceSources);
-        let references = referenceSources.join('\n');
-
-        data.html = cleanStoredGrapesJsValue(data.html, references, 'html');
-        data.components = cleanStoredGrapesJsValue(data.components, references, 'components');
-        data.blocks = cleanStoredGrapesJsValue(data.blocks, references, 'blocks');
-    }
-
-    /**
-     * Collect authored code, but not HTML declarations, that may intentionally
-     * refer to a generated class. This includes block-level CSS and JavaScript.
-     */
-    function collectStyleIdentifierReferences(value, references, key = null) {
-        let codeKeys = ['css', 'style', 'styles', 'javascript', 'js', 'script'];
-        if (typeof value === 'string') {
-            if (key !== null && codeKeys.indexOf(key.toLowerCase()) !== -1) {
-                references.push(value);
-            }
-            return;
-        }
-        if (value === null || typeof value !== 'object') {
-            return;
-        }
-
-        Object.keys(value).forEach(function(childKey) {
-            collectStyleIdentifierReferences(value[childKey], references, childKey);
-        });
-    }
-
-    function cleanStoredGrapesJsValue(value, references, key = null) {
-        if (typeof value === 'string') {
-            if (key === 'html') {
-                return cleanStoredHtml(value, references);
-            }
-            if (key === 'class') {
-                return cleanStyleIdentifierClassList(value, references);
-            }
-            if (key === 'data-raw-content') {
-                return undefined;
-            }
-            if (key === 'style-identifier' && isUnusedStyleIdentifier(value, references)) {
-                return undefined;
-            }
-            return value;
-        }
-        if (value === null || typeof value !== 'object') {
-            return value;
-        }
-
-        if (Array.isArray(value)) {
-            for (let index = value.length - 1; index >= 0; index--) {
-                let cleanedValue = cleanStoredGrapesJsValue(value[index], references, key);
-                if (key === 'classes' && typeof cleanedValue === 'string'
-                    && isUnusedStyleIdentifier(cleanedValue, references)
-                ) {
-                    value.splice(index, 1);
-                    continue;
-                }
-                value[index] = cleanedValue;
-            }
-            return value;
-        }
-
-        Object.keys(value).forEach(function(childKey) {
-            let cleanedValue = cleanStoredGrapesJsValue(value[childKey], references, childKey);
-            if (cleanedValue === undefined) {
-                delete value[childKey];
-            } else {
-                value[childKey] = cleanedValue;
-            }
-        });
-        return value;
-    }
-
-    function cleanStoredHtml(html, references) {
-        let normalizedHtml = html.toLowerCase();
-        if (normalizedHtml.indexOf('class=') === -1
-            && normalizedHtml.indexOf('data-raw-content') === -1
-        ) {
-            return html;
-        }
-
-        let htmlDom = $("<container>" + html + "</container>");
-        htmlDom.find('[data-raw-content]').each(function() {
-            $(this).removeAttr('data-raw-content');
-        });
-        htmlDom.find('[class]').each(function() {
-            let className = cleanStyleIdentifierClassList($(this).attr('class') || '', references);
-            if (className) {
-                $(this).attr('class', className);
-            } else {
-                $(this).removeAttr('class');
-            }
-        });
-        return htmlDom.html();
-    }
-
-    function cleanStyleIdentifierClassList(className, references) {
-        return className.split(/\s+/).filter(function(componentClass) {
-            return componentClass && ! isUnusedStyleIdentifier(componentClass, references);
-        }).join(' ');
-    }
-
-    function isUnusedStyleIdentifier(value, references) {
-        if (! /^ID[A-Z0-9]{14,}$/i.test(value)) {
-            return false;
-        }
-
-        let escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        let referencePattern = new RegExp('(^|[^A-Za-z0-9_-])' + escapedValue + '($|[^A-Za-z0-9_-])');
-        return ! referencePattern.test(references);
-    }
-
-    /**
      * Remove AI styles left behind by older AI blocks that rendered their
      * <style> tag as a sibling instead of keeping it inside the block root.
      * GrapesJS' normal style cleanup only sees CSS Composer rules, not these
      * inline HTML style components.
      */
-    function removeOrphanedAiContentStyles() {
-        let wrapper = window.editor.getWrapper();
+    function removeOrphanedAiContentStyles(roots) {
         let activeScopes = {};
+        let rootSet = new Set(roots);
 
         function collectActiveScopes(component) {
             let tagName = (component.get('tagName') || '').toLowerCase();
@@ -507,7 +238,10 @@ $(document).ready(function() {
                 }
             }
 
-            component.get('components').each(collectActiveScopes);
+            let components = component.get('components');
+            if (components) {
+                components.each(collectActiveScopes);
+            }
         }
 
         function removeOrphanedStyles(component) {
@@ -533,7 +267,7 @@ $(document).ready(function() {
 
                 let parent = child.parent();
                 let parentIsGeneratedStyleWrapper = parent
-                    && parent !== wrapper
+                    && ! rootSet.has(parent)
                     && (parent.get('tagName') || '').toLowerCase() === 'div'
                     && typeof parent.getClasses === 'function'
                     && parent.getClasses().some(function(className) {
@@ -548,15 +282,14 @@ $(document).ready(function() {
             });
         }
 
-        collectActiveScopes(wrapper);
-        removeOrphanedStyles(wrapper);
+        roots.forEach(collectActiveScopes);
+        roots.forEach(removeOrphanedStyles);
     }
 
     /**
      * Save the data of all translation variants on the server.
      */
     function saveAllTranslationsToServer() {
-        removeOrphanedAiContentStyles();
         toggleSaving();
 
         saveCurrentTranslationLocally(function() {
@@ -570,12 +303,6 @@ $(document).ready(function() {
 
             let data = window.pageData;
             data.blocks = removeOldPageBlocks(window.pageBlocks);
-            data.style = removeOldStyleSelectors({
-                components: data.components,
-                blocks: data.blocks
-            }, data.style);
-            data.css = mergeCss(data.css, getCssFromStyleComponents(data.style), data.blocks);
-            cleanStoredGrapesJsData(data);
 
             $.ajax({
                 type: "POST",
@@ -609,53 +336,117 @@ $(document).ready(function() {
      * @param component
      */
     window.getComponentDataInStorageFormat = function(component) {
-        // clone component's parent, enabling us to temporarily remove all component's siblings without updating the pagebuilder
-        let container = window.cloneComponent(component.parent());
+        return withIsolatedComponentIds(function() {
+            // Work with detached clones only. Appending the live component model
+            // could otherwise move it or expose it to storage cleanup.
+            let clones = cloneComponentsForStorage([component.parent(), component]);
+            let container = clones[0];
+            let componentClone = clones[1];
 
-        // remove all component's siblings since we only want to return the given component in storage format
-        container.get('components').reset();
-        container.append(component);
+            // Remove all component's siblings since we only want to return the
+            // selected component in storage format.
+            container.get('components').reset();
+            container.append(componentClone);
 
-        return getContainerContentInStorageFormat(container);
+            let storedPage = optimizeAndSerializeStorageContainers([container]);
+            let data = storedPage.containers[0];
+
+            return {
+                html: data.html,
+                css: storedPage.css,
+                components: data.components,
+                blocks: data.blocks,
+                style: storedPage.style,
+            };
+        });
     };
 
     /**
-     * Get the given container in storage format.
-     *
-     * @param container
+     * Clone, optimize and serialize page content without touching the component
+     * models currently mounted in the GrapesJS editor.
      */
-    function getContainerContentInStorageFormat(container) {
-        // remove all existing references while cloning GrapesJS components,
-        // this prevents GrapesJS from changing our IDs due to ID collisions
+    function getContainersContentInStorageFormat(containers) {
+        return withIsolatedComponentIds(function() {
+            return optimizeAndSerializeStorageContainers(cloneComponentsForStorage(containers));
+        });
+    }
+
+    /**
+     * Optimize detached containers and serialize them while GrapesJS' live ID
+     * registry is still hidden. Placeholder IDs can therefore never receive an
+     * automatic -2 suffix because their live equivalents exist in the editor.
+     */
+    function optimizeAndSerializeStorageContainers(storageContainers) {
+        let contentRoots = [];
+
+        // This historical inline-style cleanup also runs on detached storage
+        // clones, never on components mounted in the editor.
+        removeOrphanedAiContentStyles(storageContainers);
+
+        storageContainers.forEach(function(container) {
+            let components = container.get('components');
+            if (components && Array.isArray(components.models)) {
+                components.models.forEach(function(component) {
+                    contentRoots.push(component);
+                });
+            }
+        });
+
+        let optimized = optimizePageStorage({
+            contentRoots: contentRoots,
+            styleComponents: window.editor.getStyle(),
+            // Other languages may contain block-local CSS or JavaScript that
+            // refers to the shared style identifier. It is read only and is
+            // never interpreted or rewritten by the optimizer.
+            additionalCode: window.pageBlocks
+        });
+
+        return {
+            containers: storageContainers.map(serializeStorageContainer),
+            style: optimized.style,
+            css: optimized.css
+        };
+    }
+
+    /**
+     * Temporarily hide GrapesJS' live ID registry for the complete storage
+     * operation and restore that exact registry even when storage preparation
+     * throws an error.
+     */
+    function withIsolatedComponentIds(callback) {
         let componentReferences = window.editor.DomComponents.componentsById;
         window.editor.DomComponents.componentsById = [];
 
-        // we need to clone the container, since we will be replacing components with placeholders and we don't want to update the page builder
-        container = window.cloneComponent(container);
-        // replace each pagebuilder block for a shortcode and phpb-block element and return an array of all page blocks data
-        let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
+        try {
+            return callback();
+        } finally {
+            window.editor.DomComponents.componentsById = componentReferences;
+        }
+    }
 
+    function cloneComponentsForStorage(components) {
+        let componentList = Array.isArray(components)
+            ? components
+            : (components && Array.isArray(components.models) ? components.models : []);
+
+        return componentList.map(function(component) {
+            return window.cloneComponent(component);
+        });
+    }
+
+    /**
+     * Convert one already-cleaned clone to the persisted page format.
+     */
+    function serializeStorageContainer(container) {
+        let blocksData = replaceDynamicBlocksWithPlaceholders(container).blocks;
         let html = window.html_beautify(getContainerHtml(container));
         let components = JSON.parse(JSON.stringify(container.get('components')));
 
-        let storedData = {
+        return {
             html: html,
             components: components,
             blocks: blocksData
         };
-        let style = removeOldStyleSelectors(storedData, window.editor.getStyle());
-        let css = getCssFromStyleComponents(style);
-
-        // switch back to original GrapesJS component references
-        window.editor.DomComponents.componentsById = componentReferences;
-
-        return {
-            html: html,
-            css: css,
-            components: components,
-            blocks: blocksData,
-            style: style,
-        }
     }
 
     /**
