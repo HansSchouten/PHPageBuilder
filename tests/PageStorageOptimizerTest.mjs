@@ -135,8 +135,17 @@ function idRule(id, css = `#${id}{color:red;}`) {
         'style-identifier': identifier
     });
     optimizePageStorage({ contentRoots: [component] });
+    assert.deepEqual(component.getClasses(), [identifier]);
+    assert.equal(component.get('style-identifier'), identifier);
+}
+
+{
+    // A loose generated class can still be removed when it has no CSS, code,
+    // or structural style-identifier reference.
+    const identifier = 'IDUNUSEDCLASS1234';
+    const component = new Component({classes: [identifier]});
+    optimizePageStorage({contentRoots: [component]});
     assert.deepEqual(component.getClasses(), []);
-    assert.equal(component.get('style-identifier'), undefined);
 }
 
 {
@@ -188,8 +197,9 @@ function idRule(id, css = `#${id}{color:red;}`) {
 
 {
     const identifier = 'IDDETACHED123456';
+    const unusedIdentifier = 'IDUNUSEDCLONE123';
     const liveComponent = new Component({
-        classes: [identifier],
+        classes: [identifier, unusedIdentifier],
         attributes: { 'data-raw-content': 'true' },
         'style-identifier': identifier
     });
@@ -201,10 +211,10 @@ function idRule(id, css = `#${id}{color:red;}`) {
 
     optimizePageStorage({ contentRoots: [storageClone] });
 
-    assert.deepEqual(storageClone.getClasses(), []);
+    assert.deepEqual(storageClone.getClasses(), [identifier]);
     assert.equal(storageClone.get('attributes')['data-raw-content'], undefined);
-    assert.equal(storageClone.get('style-identifier'), undefined);
-    assert.deepEqual(liveComponent.getClasses(), [identifier]);
+    assert.equal(storageClone.get('style-identifier'), identifier);
+    assert.deepEqual(liveComponent.getClasses(), [identifier, unusedIdentifier]);
     assert.equal(liveComponent.get('attributes')['data-raw-content'], 'true');
     assert.equal(liveComponent.get('style-identifier'), identifier);
 }

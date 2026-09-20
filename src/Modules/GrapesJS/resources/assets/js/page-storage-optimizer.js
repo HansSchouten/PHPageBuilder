@@ -22,10 +22,17 @@ export function optimizePageStorage({
         ids: new Set()
     };
     let generatedCandidates = [];
+    let structuralIdentifiers = new Set();
     let authoredCode = [];
 
     toArray(contentRoots).forEach(function(root) {
-        collectComponentTree(root, references, generatedCandidates, authoredCode);
+        collectComponentTree(
+            root,
+            references,
+            generatedCandidates,
+            structuralIdentifiers,
+            authoredCode
+        );
     });
     collectAdditionalCode(additionalCode, authoredCode);
 
@@ -34,7 +41,10 @@ export function optimizePageStorage({
     });
     let css = styles.map(styleToCss).join('');
 
-    let usedGeneratedIdentifiers = new Set();
+    // A style identifier is also a structural marker: for dynamic blocks its
+    // presence controls whether BlockRenderer emits the wrapper element. It
+    // must therefore survive even when no CSS rule currently references it.
+    let usedGeneratedIdentifiers = new Set(structuralIdentifiers);
     collectGeneratedIdentifiers(css, usedGeneratedIdentifiers);
     authoredCode.forEach(function(code) {
         collectGeneratedIdentifiers(code, usedGeneratedIdentifiers);
@@ -91,7 +101,13 @@ function collectAdditionalCode(value, authoredCode) {
  * Walk a GrapesJS component tree iteratively, so deeply nested page content
  * cannot exhaust the JavaScript call stack.
  */
-function collectComponentTree(root, references, generatedCandidates, authoredCode) {
+function collectComponentTree(
+    root,
+    references,
+    generatedCandidates,
+    structuralIdentifiers,
+    authoredCode
+) {
     let pending = root ? [root] : [];
 
     while (pending.length) {
@@ -101,7 +117,12 @@ function collectComponentTree(root, references, generatedCandidates, authoredCod
         }
 
         removeRawContentMarker(component);
-        collectComponentSelectors(component, references, generatedCandidates);
+        collectComponentSelectors(
+            component,
+            references,
+            generatedCandidates,
+            structuralIdentifiers
+        );
         collectComponentCode(component, authoredCode);
 
         let children = component.get('components');
@@ -126,7 +147,12 @@ function removeRawContentMarker(component) {
     }
 }
 
-function collectComponentSelectors(component, references, generatedCandidates) {
+function collectComponentSelectors(
+    component,
+    references,
+    generatedCandidates,
+    structuralIdentifiers
+) {
     let attributes = typeof component.getAttributes === 'function'
         ? component.getAttributes()
         : component.get('attributes') || {};
@@ -153,6 +179,7 @@ function collectComponentSelectors(component, references, generatedCandidates) {
     if (typeof styleIdentifier === 'string' && styleIdentifier) {
         references.classes.add(styleIdentifier);
         if (GENERATED_IDENTIFIER.test(styleIdentifier)) {
+            structuralIdentifiers.add(styleIdentifier.toUpperCase());
             generatedCandidates.push({component: component, identifier: styleIdentifier, type: 'style-identifier'});
         }
     }
