@@ -1,4 +1,12 @@
 import { optimizePageStorage } from './page-storage-optimizer';
+import { createPageTranslationSynchronizer } from './page-translation-synchronizer';
+
+// Capture the original language values before GrapesJS consumes rendered block
+// HTML or any editor interaction can update window.pageBlocks.
+let pageTranslationSynchronizer = createPageTranslationSynchronizer({
+    initialVariants: window.pageBlocks || {},
+    blockSettings: window.blockSettings || {}
+});
 
 $(document).ready(function() {
 
@@ -43,12 +51,14 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         window.setWaiting(true);
+        let sourceLanguageChanged = currentLanguageHasChanges();
 
         saveCurrentTranslationLocally(function() {
-            applyChangesFromCurrentLanguageToNewLanguage(newLanguage);
+            let synchronization = synchronizeCurrentLanguageToAllVariants();
 
-            let data = window.pageData;
-            data.blocks = {[newLanguage]: window.pageBlocks[newLanguage]};
+            let data = Object.assign({}, window.pageData, {
+                blocks: {[newLanguage]: window.pageBlocks[newLanguage]}
+            });
 
             // render the language variant server-side
             $.ajax({
@@ -59,15 +69,27 @@ $(document).ready(function() {
                     language: newLanguage
                 },
                 success: function(response) {
-                    response = JSON.parse(response);
-                    window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
-                    callback();
+                    try {
+                        response = JSON.parse(response);
+                        window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
+                        commitCurrentLanguageBaseline(sourceLanguageChanged);
+                        callback(true);
+                    } catch (error) {
+                        rollbackLanguageSynchronization(synchronization);
+                        window.setWaiting(false);
+                        callback(false);
+                        console.error(error);
+                        window.toastr.error(window.translations['toastr-switching-language-failed']);
+                    }
                 },
                 error: function(error) {
-                    callback();
+                    rollbackLanguageSynchronization(synchronization);
+                    window.setWaiting(false);
+                    callback(false);
                     console.log(error);
                     let errorMessage = error.statusText + ' ' + error.status;
-                    errorMessage = error.responseJSON.message ? (errorMessage + ': "' + error.responseJSON.message + '"') : errorMessage;
+                    let responseMessage = error.responseJSON && error.responseJSON.message;
+                    errorMessage = responseMessage ? (errorMessage + ': "' + responseMessage + '"') : errorMessage;
                     window.toastr.error(errorMessage);
                     window.toastr.error(window.translations['toastr-switching-language-failed']);
                 }
@@ -76,71 +98,48 @@ $(document).ready(function() {
     };
 
     /**
-     * Copy new blocks of the current language to the new language or remove old blocks from the new language.
-     *
-     * @param newLanguage
+     * Synchronize the active language to every other variant using its last
+     * authored checkpoint as merge base. The returned snapshot makes the
+     * in-memory operation transactional when the following request fails.
      */
-    function applyChangesFromCurrentLanguageToNewLanguage(newLanguage) {
-        let newLanguageBlocks = window.pageBlocks[newLanguage];
-        let currentLanguageBlocks = window.pageBlocks[window.currentLanguage];
+    function synchronizeCurrentLanguageToAllVariants() {
+        // The merger is pure and returns detached data, so retaining the old
+        // object is enough for rollback and avoids cloning a potentially large
+        // multilingual page an extra time.
+        let before = window.pageBlocks;
+        let merged = pageTranslationSynchronizer.synchronize(
+            window.pageBlocks,
+            window.currentLanguage
+        );
 
-        if (newLanguageBlocks === undefined) {
-            newLanguageBlocks = currentLanguageBlocks;
-        } else {
-            updateNestedBlocks(currentLanguageBlocks, newLanguageBlocks);
+        window.pageBlocks = merged.variants;
+        window.lastLanguageMergeConflicts = merged.conflicts;
 
-            // copy missing blocks from the current language to the target language
-            for (let blockId in currentLanguageBlocks) {
-                if (newLanguageBlocks[blockId] === undefined) {
-                    newLanguageBlocks[blockId] = currentLanguageBlocks[blockId];
-                }
-            }
-        }
+        return {before: before};
+    }
 
-        // copy the content of blocks containers of the current language to the blocks containers of the new language
-        for (let blockId in currentLanguageBlocks) {
-            let $currentLanguageBlockHtmlDom = $("<container>" + currentLanguageBlocks[blockId]['html'] + "</container>");
-            let $newLanguageBlockHtmlDom = $("<container>" + newLanguageBlocks[blockId]['html'] + "</container>");
-            $currentLanguageBlockHtmlDom.find("[phpb-blocks-container]").each(function(index) {
-                let currentLanguageBlockContainerHtml = $(this).html();
-                $newLanguageBlockHtmlDom.find("[phpb-blocks-container]").eq(index).html(currentLanguageBlockContainerHtml);
-            });
-            newLanguageBlocks[blockId]['html'] = $newLanguageBlockHtmlDom.html();
-        }
-
-        window.pageBlocks[newLanguage] = newLanguageBlocks;
+    function rollbackLanguageSynchronization(synchronization) {
+        window.pageBlocks = synchronization.before;
+        window.lastLanguageMergeConflicts = [];
     }
 
     /**
-     * Replace phpb-blocks-container html snippets if a block of the current language already exists in the target language.
-     * This ensures all child blocks are present for all languages and they remain in the same order
+     * Only an actually edited source language advances its merge base. Values
+     * merely received from another language therefore remain linked until the
+     * user makes a real change in this language.
      */
-    function updateNestedBlocks(currentLanguageBlocks, newLanguageBlocks) {
-        for (let blockId in currentLanguageBlocks) {
-            // skip if the parent block does not yet exist in the target language
-            if (newLanguageBlocks[blockId] === undefined) {
-                continue;
-            }
-
-            for (let subBlockId in currentLanguageBlocks[blockId].blocks) {
-                let updatedSubBlock = currentLanguageBlocks[blockId].blocks[subBlockId];
-                let oldSubBlock = newLanguageBlocks[blockId].blocks[subBlockId];
-                if (! updatedSubBlock || ! oldSubBlock) {
-                    continue;
-                }
-
-                let updatedSubBlockMatches = updatedSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
-                let oldSubBlockMatches = oldSubBlock.html.match(/phpb-blocks-container(.*)>(.*)</g);
-                if (! updatedSubBlockMatches || ! oldSubBlockMatches) {
-                    continue;
-                }
-
-                for (let i = 0; i < updatedSubBlockMatches.length; i++) {
-                    newLanguageBlocks[blockId].blocks[subBlockId].html =
-                        newLanguageBlocks[blockId].blocks[subBlockId].html.replace(oldSubBlockMatches[i], updatedSubBlockMatches[i]);
-                }
-            }
+    function commitCurrentLanguageBaseline(sourceLanguageChanged) {
+        if (! sourceLanguageChanged) {
+            return;
         }
+        pageTranslationSynchronizer.commitBaseline(
+            window.currentLanguage,
+            window.pageBlocks[window.currentLanguage]
+        );
+    }
+
+    function currentLanguageHasChanges() {
+        return window.editor.getModel().get('changesCount') - window.changesOffset > 0;
     }
 
     /**
@@ -291,18 +290,14 @@ $(document).ready(function() {
      */
     function saveAllTranslationsToServer() {
         toggleSaving();
+        let sourceLanguageChanged = currentLanguageHasChanges();
 
         saveCurrentTranslationLocally(function() {
+            let synchronization = synchronizeCurrentLanguageToAllVariants();
 
-            // update all language variants with the latest data of the current language we just saved locally
-            $.each(window.languages, (languageCode, languageTranslation) => {
-                if (languageCode !== window.currentLanguage) {
-                    applyChangesFromCurrentLanguageToNewLanguage(languageCode);
-                }
+            let data = Object.assign({}, window.pageData, {
+                blocks: removeOldPageBlocks(window.pageBlocks)
             });
-
-            let data = window.pageData;
-            data.blocks = removeOldPageBlocks(window.pageBlocks);
 
             $.ajax({
                 type: "POST",
@@ -311,6 +306,8 @@ $(document).ready(function() {
                     data: JSON.stringify(data)
                 },
                 success: function() {
+                    window.pageBlocks = data.blocks;
+                    commitCurrentLanguageBaseline(sourceLanguageChanged);
                     toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
 
@@ -319,10 +316,12 @@ $(document).ready(function() {
                     }, 250);
                 },
                 error: function(error) {
+                    rollbackLanguageSynchronization(synchronization);
                     toggleSaving();
                     console.log(error);
                     let errorMessage = error.statusText + ' ' + error.status;
-                    errorMessage = error.responseJSON.message ? (errorMessage + ': "' + error.responseJSON.message + '"') : errorMessage;
+                    let responseMessage = error.responseJSON && error.responseJSON.message;
+                    errorMessage = responseMessage ? (errorMessage + ': "' + responseMessage + '"') : errorMessage;
                     window.toastr.error(errorMessage);
                     window.toastr.error(window.translations['toastr-saving-failed']);
                 }
@@ -571,6 +570,14 @@ $(document).ready(function() {
             if (component.attributes['style-identifier'] !== undefined) {
                 data.current_block['settings']['attributes']['style-identifier'] = component.attributes['style-identifier'];
             }
+
+            // Keep the slug as transient metadata on the detached storage
+            // object. WeakMap data is never serialized or written to the live
+            // GrapesJS component tree.
+            pageTranslationSynchronizer.registerSerializedBlock(
+                data.current_block,
+                component.attributes['block-slug']
+            );
 
             // replace this dynamic component by a shortcode with a unique id
             let instanceId = component.attributes['block-id'];

@@ -116,7 +116,13 @@
     $("#language-selector select").on("change", function() {
         let selectedLanguage = $(this).find("option:selected").val();
 
-        window.switchLanguage(selectedLanguage, function() {
+        window.switchLanguage(selectedLanguage, function(success) {
+            if (success === false) {
+                $("#language-selector select")
+                    .val(window.currentLanguage)
+                    .selectpicker('refresh');
+                return;
+            }
             activateLanguage(selectedLanguage);
         });
     });

@@ -132,6 +132,10 @@ class BlockAdapter
                 'placeholder' => $blockSetting['placeholder'] ?? '',
             ];
 
+            if (array_key_exists('always_sync_across_languages', $blockSetting)) {
+                $setting['always_sync_across_languages'] = (bool) $blockSetting['always_sync_across_languages'];
+            }
+
             if ($type === 'select') {
                 $setting['options'] = $blockSetting['options'] ?? [];
             } elseif ($type === 'yes_no') {
