@@ -1,21 +1,23 @@
 const STRUCTURAL_ATTRIBUTES = new Set(['style-identifier']);
 const GENERATED_STYLE_IDENTIFIER = /^ID[A-Z0-9]{14,}$/i;
 const GENERATED_STYLE_IDENTIFIER_REFERENCE = /ID[A-Z0-9]{14,}/i;
+const ORIGIN_LANGUAGE = 'origin_language';
 
 /**
- * Keep the merge state and block-setting rules out of the page save workflow.
- * The caller only has to register freshly serialized blocks, request a
- * synchronization and commit an accepted source-language checkpoint.
+ * Keep merge state, block origins and setting rules out of the save workflow.
  */
 export function createPageTranslationSynchronizer({
     initialVariants = {},
     blockSettings = {},
+    defaultOriginLanguage = null,
     synchronizeContainerHtml = synchronizeBlockContainerHtml,
     synchronizeStyleHtml = synchronizeGeneratedStyleClassesInHtml
 } = {}) {
+    initializeBlockOrigins(initialVariants, defaultOriginLanguage);
     let baselines = cloneTranslationData(initialVariants);
     let settingPolicies = buildSettingSynchronizationPolicies(blockSettings);
     let serializedBlockSlugs = new WeakMap();
+    let languages = Object.keys(initialVariants || {});
 
     function shouldAlwaysSynchronizeAttribute(sourceBlock, attributeName) {
         let blockSlug = serializedBlockSlugs.get(sourceBlock);
@@ -31,7 +33,24 @@ export function createPageTranslationSynchronizer({
             }
         },
 
+        prepareSerializedVariant: function(variant, previousVariant, language) {
+            return preserveBlockOrigins(
+                variant,
+                previousVariant,
+                language,
+                languages
+            );
+        },
+
         synchronize: function(variants, sourceLanguage) {
+            if (sourceLanguage && hasOwn(variants, sourceLanguage)) {
+                preserveBlockOrigins(
+                    variants[sourceLanguage],
+                    baselines[sourceLanguage],
+                    sourceLanguage,
+                    languages
+                );
+            }
             return synchronizePageTranslations({
                 baselines: baselines,
                 variants: variants,
@@ -42,19 +61,118 @@ export function createPageTranslationSynchronizer({
             });
         },
 
-        commitBaselines: function(variants) {
-            baselines = cloneTranslationData(variants || {});
+        commitSourceBaseline: function(variants, sourceLanguage) {
+            if (sourceLanguage && hasOwn(variants, sourceLanguage)) {
+                baselines[sourceLanguage] = cloneTranslationData(variants[sourceLanguage]);
+            }
         }
     };
 }
 
 /**
- * Merge every target language from the language currently being edited.
- *
- * The previous authored snapshot of the source language is the common base.
- * This makes synchronization symmetric: whichever language is being edited
- * can be the source, while values already changed in another language remain
- * untouched.
+ * Add persistent provenance to legacy blocks. A block already carrying a
+ * valid origin keeps it. Otherwise the first configured language containing
+ * that block becomes its origin. The same origin is written to every variant.
+ */
+export function initializeBlockOrigins(variants, defaultOriginLanguage = null) {
+    let languages = Object.keys(variants || {});
+    if (languages.length === 0) {
+        return variants;
+    }
+
+    let preferredLanguages = orderedLanguages(languages, defaultOriginLanguage);
+    let pending = [languageBlockMaps(variants, preferredLanguages)];
+
+    while (pending.length) {
+        let blockMaps = pending.pop();
+        let blockIds = new Set();
+        preferredLanguages.forEach(function(language) {
+            Object.keys(blockMaps[language] || {}).forEach(function(blockId) {
+                blockIds.add(blockId);
+            });
+        });
+
+        blockIds.forEach(function(blockId) {
+            let blocks = {};
+            preferredLanguages.forEach(function(language) {
+                let block = asBlockMap(blockMaps[language])[blockId];
+                if (isPlainObject(block)) {
+                    blocks[language] = block;
+                }
+            });
+
+            let origin = findStoredOrigin(blocks, preferredLanguages)
+                || preferredLanguages.find(function(language) {
+                    return hasOwn(blocks, language);
+                });
+
+            if (! origin) {
+                return;
+            }
+
+            let childMaps = {};
+            Object.keys(blocks).forEach(function(language) {
+                blocks[language][ORIGIN_LANGUAGE] = origin;
+                childMaps[language] = asBlockMap(blocks[language].blocks);
+            });
+            pending.push(childMaps);
+        });
+    }
+
+    return variants;
+}
+
+/**
+ * Reattach internal origin metadata after GrapesJS has serialized a language.
+ * Existing blocks retain their origin; a newly created (nested) block belongs
+ * to the language in which it was added.
+ */
+export function preserveBlockOrigins(
+    variant,
+    previousVariant,
+    language,
+    allowedLanguages = []
+) {
+    let languages = allowedLanguages.length ? allowedLanguages : [language];
+    let pending = [{
+        blocks: asBlockMap(variant),
+        previousBlocks: asBlockMap(previousVariant)
+    }];
+
+    while (pending.length) {
+        let current = pending.pop();
+        Object.keys(current.blocks).forEach(function(blockId) {
+            let block = current.blocks[blockId];
+            if (! isPlainObject(block)) {
+                return;
+            }
+
+            let previousBlock = current.previousBlocks[blockId];
+            let previousOrigin = isPlainObject(previousBlock)
+                ? previousBlock[ORIGIN_LANGUAGE]
+                : null;
+            let serializedOrigin = block[ORIGIN_LANGUAGE];
+
+            block[ORIGIN_LANGUAGE] = isValidOrigin(previousOrigin, languages)
+                ? previousOrigin
+                : (isValidOrigin(serializedOrigin, languages) ? serializedOrigin : language);
+
+            pending.push({
+                blocks: asBlockMap(block.blocks),
+                previousBlocks: isPlainObject(previousBlock)
+                    ? asBlockMap(previousBlock.blocks)
+                    : {}
+            });
+        });
+    }
+
+    return variant;
+}
+
+/**
+ * Merge shared structure from the language currently being edited. Localized
+ * values are propagated only for blocks which originated in that language.
+ * Their previous authored snapshot is the common base for the three-way merge.
  */
 export function synchronizePageTranslations({
     baselines = {},
@@ -90,6 +208,7 @@ export function synchronizePageTranslations({
             base: base,
             source: source,
             target: asBlockMap(variants[language]),
+            sourceLanguage: sourceLanguage,
             shouldAlwaysSynchronizeAttribute: shouldAlwaysSynchronizeAttribute
         });
         let languageConflicts = merged.conflicts;
@@ -131,6 +250,7 @@ export function mergeBlockTranslations({
     base = {},
     source = {},
     target = {},
+    sourceLanguage = null,
     shouldAlwaysSynchronizeAttribute = null
 } = {}) {
     let conflicts = [];
@@ -141,6 +261,7 @@ export function mergeBlockTranslations({
         [],
         conflicts,
         false,
+        sourceLanguage,
         shouldAlwaysSynchronizeAttribute
     );
 
@@ -192,6 +313,7 @@ function mergeBlockMap(
     path,
     conflicts,
     preserveEmptyArray = true,
+    sourceLanguage = null,
     shouldAlwaysSynchronizeAttribute = null
 ) {
     let baseMap = asBlockMap(base);
@@ -219,6 +341,7 @@ function mergeBlockMap(
                 targetState.value,
                 blockPath,
                 conflicts,
+                sourceLanguage,
                 shouldAlwaysSynchronizeAttribute
             );
             return;
@@ -240,22 +363,44 @@ function mergeBlockMap(
     return result;
 }
 
-function mergeBlock(base, source, target, path, conflicts, shouldAlwaysSynchronizeAttribute) {
+function mergeBlock(
+    base,
+    source,
+    target,
+    path,
+    conflicts,
+    sourceLanguage,
+    shouldAlwaysSynchronizeAttribute
+) {
     let result = {};
-    let reservedKeys = new Set(['settings', 'blocks', 'html', 'is_html']);
+    let reservedKeys = new Set(['settings', 'blocks', 'html', 'is_html', ORIGIN_LANGUAGE]);
     let keys = new Set([
         ...Object.keys(base),
         ...Object.keys(source),
         ...Object.keys(target)
     ]);
+    let originLanguage = blockOrigin(source, base, target, sourceLanguage);
+    let sourceOwnsLocalizedContent = ! sourceLanguage || originLanguage === sourceLanguage;
 
     keys.forEach(function(key) {
         if (! reservedKeys.has(key)) {
-            applyAtomicProperty(result, key, base, source, target, path.concat(key), conflicts);
+            applyLocalizedProperty(
+                result,
+                key,
+                base,
+                source,
+                target,
+                path.concat(key),
+                conflicts,
+                sourceOwnsLocalizedContent
+            );
         }
     });
 
     // Block type, membership and nesting are shared page structure.
+    if (originLanguage) {
+        result[ORIGIN_LANGUAGE] = originLanguage;
+    }
     copyState(result, 'is_html', propertyState(source, 'is_html'));
 
     let settingsState = mergeSettings(
@@ -265,6 +410,7 @@ function mergeBlock(base, source, target, path, conflicts, shouldAlwaysSynchroni
         path.concat('settings'),
         conflicts,
         source,
+        sourceOwnsLocalizedContent,
         shouldAlwaysSynchronizeAttribute
     );
     copyState(result, 'settings', settingsState);
@@ -277,6 +423,7 @@ function mergeBlock(base, source, target, path, conflicts, shouldAlwaysSynchroni
             path.concat('blocks'),
             conflicts,
             true,
+            sourceLanguage,
             shouldAlwaysSynchronizeAttribute
         );
     }
@@ -284,7 +431,16 @@ function mergeBlock(base, source, target, path, conflicts, shouldAlwaysSynchroni
     // Authored HTML is language-dependent. Dynamic block HTML is merely a
     // rendered pagebuilder cache and remains local to the target language.
     if (source.is_html === true) {
-        applyAtomicProperty(result, 'html', base, source, target, path.concat('html'), conflicts);
+        applyLocalizedProperty(
+            result,
+            'html',
+            base,
+            source,
+            target,
+            path.concat('html'),
+            conflicts,
+            sourceOwnsLocalizedContent
+        );
     } else if (hasOwn(target, 'html')) {
         result.html = cloneValue(target.html);
     } else if (hasOwn(source, 'html')) {
@@ -301,17 +457,26 @@ function mergeSettings(
     path,
     conflicts,
     sourceBlock,
+    sourceOwnsLocalizedContent,
     shouldAlwaysSynchronizeAttribute
 ) {
     if (! sourceState.exists || ! targetState.exists
-        || ! isPlainObject(sourceState.value) || ! isPlainObject(targetState.value)
+        || ! isSettingsMap(sourceState.value) || ! isSettingsMap(targetState.value)
     ) {
-        return resolveAtomicState(baseState, sourceState, targetState, path, conflicts, 'settings');
+        return resolveLocalizedState(
+            baseState,
+            sourceState,
+            targetState,
+            path,
+            conflicts,
+            'settings',
+            sourceOwnsLocalizedContent
+        );
     }
 
-    let base = baseState.exists && isPlainObject(baseState.value) ? baseState.value : {};
-    let source = sourceState.value;
-    let target = targetState.value;
+    let base = baseState.exists && isSettingsMap(baseState.value) ? asBlockMap(baseState.value) : {};
+    let source = asBlockMap(sourceState.value);
+    let target = asBlockMap(targetState.value);
     let result = {};
     let keys = new Set([
         ...Object.keys(base),
@@ -329,12 +494,22 @@ function mergeSettings(
                     path.concat('attributes'),
                     conflicts,
                     sourceBlock,
+                    sourceOwnsLocalizedContent,
                     shouldAlwaysSynchronizeAttribute
                 );
             }
             return;
         }
-        applyAtomicProperty(result, key, base, source, target, path.concat(key), conflicts);
+        applyLocalizedProperty(
+            result,
+            key,
+            base,
+            source,
+            target,
+            path.concat(key),
+            conflicts,
+            sourceOwnsLocalizedContent
+        );
     });
 
     return {exists: true, value: result};
@@ -352,6 +527,7 @@ function mergeAtomicMap(
     path,
     conflicts,
     sourceBlock,
+    sourceOwnsLocalizedContent,
     shouldAlwaysSynchronizeAttribute
 ) {
     let baseMap = isPlainObject(base) ? base : {};
@@ -372,7 +548,16 @@ function mergeAtomicMap(
             copyState(result, key, propertyState(sourceMap, key));
             return;
         }
-        applyAtomicProperty(result, key, baseMap, sourceMap, targetMap, path.concat(key), conflicts);
+        applyLocalizedProperty(
+            result,
+            key,
+            baseMap,
+            sourceMap,
+            targetMap,
+            path.concat(key),
+            conflicts,
+            sourceOwnsLocalizedContent
+        );
     });
     return result;
 }
@@ -607,15 +792,43 @@ function synchronizeBlockStructure(
     }
 }
 
-function applyAtomicProperty(result, key, base, source, target, path, conflicts) {
-    copyState(result, key, resolveAtomicState(
+function applyLocalizedProperty(
+    result,
+    key,
+    base,
+    source,
+    target,
+    path,
+    conflicts,
+    sourceOwnsLocalizedContent
+) {
+    copyState(result, key, resolveLocalizedState(
         propertyState(base, key),
         propertyState(source, key),
         propertyState(target, key),
         path,
         conflicts,
-        'value'
+        'value',
+        sourceOwnsLocalizedContent
     ));
+}
+
+function resolveLocalizedState(
+    base,
+    source,
+    target,
+    path,
+    conflicts,
+    type,
+    sourceOwnsLocalizedContent
+) {
+    if (sourceOwnsLocalizedContent) {
+        return resolveAtomicState(base, source, target, path, conflicts, type);
+    }
+
+    // A translation may edit its own localized value, but it cannot become a
+    // source for sibling languages merely by being saved or reloaded.
+    return target.exists ? cloneState(target) : cloneState(source);
 }
 
 function resolveAtomicState(base, source, target, path, conflicts, type) {
@@ -714,12 +927,54 @@ function cloneValue(value) {
     return clone;
 }
 
+function blockOrigin(source, base, target, fallbackLanguage) {
+    let origin = source[ORIGIN_LANGUAGE]
+        || base[ORIGIN_LANGUAGE]
+        || target[ORIGIN_LANGUAGE];
+    return typeof origin === 'string' && origin !== '' ? origin : fallbackLanguage;
+}
+
+function orderedLanguages(languages, preferredLanguage) {
+    if (! preferredLanguage || languages.indexOf(preferredLanguage) === -1) {
+        return languages.slice();
+    }
+    return [preferredLanguage].concat(languages.filter(function(language) {
+        return language !== preferredLanguage;
+    }));
+}
+
+function languageBlockMaps(variants, languages) {
+    let maps = {};
+    languages.forEach(function(language) {
+        maps[language] = asBlockMap(variants[language]);
+    });
+    return maps;
+}
+
+function findStoredOrigin(blocks, languages) {
+    for (let index = 0; index < languages.length; index++) {
+        let block = blocks[languages[index]];
+        if (isPlainObject(block) && isValidOrigin(block[ORIGIN_LANGUAGE], languages)) {
+            return block[ORIGIN_LANGUAGE];
+        }
+    }
+    return null;
+}
+
+function isValidOrigin(origin, languages) {
+    return typeof origin === 'string' && languages.indexOf(origin) !== -1;
+}
+
 function asBlockMap(value) {
     return value && typeof value === 'object' ? value : {};
 }
 
 function isPlainObject(value) {
     return value !== null && typeof value === 'object' && ! Array.isArray(value);
+}
+
+function isSettingsMap(value) {
+    return isPlainObject(value) || (Array.isArray(value) && value.length === 0);
 }
 
 function hasOwn(value, key) {

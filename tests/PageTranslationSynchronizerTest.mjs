@@ -124,7 +124,7 @@ function testElement(tagName, className = '', children = []) {
     assert.notStrictEqual(result.variants.nl, variants.nl);
     assert.notStrictEqual(result.variants.nl.block, variants.nl.block);
 
-    synchronizer.commitBaselines(result.variants);
+    synchronizer.commitSourceBaseline(result.variants, 'nl');
 }
 
 {
@@ -220,7 +220,7 @@ function testElement(tagName, className = '', children = []) {
     assert.equal(englishMerge.variants.en.block.settings.attributes.ai_reasoning_effort, 'medium');
 
     variants = englishMerge.variants;
-    synchronizer.commitBaselines(variants);
+    synchronizer.commitSourceBaseline(variants, 'en');
     variants.nl.block.settings.attributes.ai_reasoning_effort = 'high';
     synchronizer.registerSerializedBlock(variants.nl.block, 'ai-content');
     let dutchMerge = synchronizer.synchronize(variants, 'nl');
@@ -330,7 +330,7 @@ function testElement(tagName, className = '', children = []) {
     );
 
     variants = dutchSave.variants;
-    synchronizer.commitBaselines(variants);
+    synchronizer.commitSourceBaseline(variants, 'nl');
     variants.en.cssBlock.settings.attributes.css = 'h1 { color: green}';
     synchronizer.registerSerializedBlock(variants.en.cssBlock, 'css');
     let englishSave = synchronizer.synchronize(variants, 'en');
@@ -364,7 +364,11 @@ function testElement(tagName, className = '', children = []) {
 
     let generatedSave = synchronizer.synchronize(variants, 'nl');
     variants = generatedSave.variants;
-    synchronizer.commitBaselines(variants);
+    synchronizer.commitSourceBaseline(variants, 'nl');
+    assert.equal(variants.nl.aiContent.origin_language, 'nl');
+    assert.equal(variants.en.aiContent.origin_language, 'nl');
+    assert.equal(variants.nl.aiContent.blocks.content.origin_language, 'nl');
+    assert.equal(variants.en.aiContent.blocks.content.origin_language, 'nl');
 
     variants.nl.aiContent.blocks.content.html = '<h1>Abstracte kunst!</h1>';
     let inlineEditSave = synchronizer.synchronize(variants, 'nl');
@@ -374,6 +378,106 @@ function testElement(tagName, className = '', children = []) {
         '<h1>Abstracte kunst!</h1>'
     );
     assert.deepEqual(inlineEditSave.conflicts, []);
+}
+
+{
+    // A language that merely received copied text is not its origin. Editing
+    // that language creates a translation and must not write back into the
+    // language from which the text originally came.
+    let synchronizer = createPageTranslationSynchronizer({
+        initialVariants: {nl: {}, en: {}}
+    });
+    let variants = {
+        nl: {
+            content: dynamicBlock({}, {
+                body: htmlBlock('<h1>Hallo wereld</h1>')
+            })
+        },
+        en: {}
+    };
+
+    let firstDutchSave = synchronizer.synchronize(variants, 'nl');
+    variants = firstDutchSave.variants;
+    synchronizer.commitSourceBaseline(variants, 'nl');
+
+    variants.nl.content.blocks.body.html = '<h1>Hallo wereld!</h1>';
+    let secondDutchSave = synchronizer.synchronize(variants, 'nl');
+    variants = secondDutchSave.variants;
+    synchronizer.commitSourceBaseline(variants, 'nl');
+    assert.equal(
+        variants.en.content.blocks.body.html,
+        '<h1>Hallo wereld!</h1>'
+    );
+
+    // A real page reload reconstructs all in-memory merge state. The persisted
+    // origin must still prevent an English translation from flowing into NL.
+    variants = cloneTranslationData(variants);
+    synchronizer = createPageTranslationSynchronizer({
+        initialVariants: variants,
+        defaultOriginLanguage: 'nl'
+    });
+    variants.en.content.blocks.body.html = '<h1>Hello world!</h1>';
+    let englishTranslationSave = synchronizer.synchronize(variants, 'en');
+    variants = englishTranslationSave.variants;
+    synchronizer.commitSourceBaseline(variants, 'en');
+
+    assert.equal(
+        variants.en.content.blocks.body.html,
+        '<h1>Hello world!</h1>'
+    );
+    assert.equal(
+        variants.nl.content.blocks.body.html,
+        '<h1>Hallo wereld!</h1>'
+    );
+
+    // Reload once more and edit the origin. The existing translation has
+    // diverged from the old NL base and therefore remains English.
+    variants = cloneTranslationData(variants);
+    synchronizer = createPageTranslationSynchronizer({
+        initialVariants: variants,
+        defaultOriginLanguage: 'nl'
+    });
+    variants.nl.content.blocks.body.html = '<h1>Hallo abstracte wereld!</h1>';
+    let laterDutchSave = synchronizer.synchronize(variants, 'nl');
+
+    assert.equal(
+        laterDutchSave.variants.nl.content.blocks.body.html,
+        '<h1>Hallo abstracte wereld!</h1>'
+    );
+    assert.equal(
+        laterDutchSave.variants.en.content.blocks.body.html,
+        '<h1>Hello world!</h1>'
+    );
+}
+
+{
+    // Origins are per nested block, not merely per root. A new child added in
+    // EN to an NL-origin parent can therefore propagate from EN independently.
+    let variants = {
+        nl: {layout: dynamicBlock({}, {})},
+        en: {layout: dynamicBlock({}, {})}
+    };
+    let synchronizer = createPageTranslationSynchronizer({
+        initialVariants: variants,
+        defaultOriginLanguage: 'nl'
+    });
+
+    variants.en.layout.blocks.englishChild = htmlBlock('<span>Hello</span>');
+    let englishChildSave = synchronizer.synchronize(variants, 'en');
+
+    assert.equal(englishChildSave.variants.en.layout.origin_language, 'nl');
+    assert.equal(
+        englishChildSave.variants.en.layout.blocks.englishChild.origin_language,
+        'en'
+    );
+    assert.equal(
+        englishChildSave.variants.nl.layout.blocks.englishChild.origin_language,
+        'en'
+    );
+    assert.equal(
+        englishChildSave.variants.nl.layout.blocks.englishChild.html,
+        '<span>Hello</span>'
+    );
 }
 
 {

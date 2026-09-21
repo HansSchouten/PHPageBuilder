@@ -5,7 +5,8 @@ import { createPageTranslationSynchronizer } from './page-translation-synchroniz
 // HTML or any editor interaction can update window.pageBlocks.
 let pageTranslationSynchronizer = createPageTranslationSynchronizer({
     initialVariants: window.pageBlocks || {},
-    blockSettings: window.blockSettings || {}
+    blockSettings: window.blockSettings || {},
+    defaultOriginLanguage: Object.keys(window.languages || {})[0] || window.currentLanguage
 });
 
 $(document).ready(function() {
@@ -97,14 +98,13 @@ $(document).ready(function() {
     };
 
     /**
-     * Synchronize the active language to every other variant using its last
-     * authored checkpoint as merge base. The returned snapshot makes the
-     * in-memory operation transactional when the following request fails.
+     * Synchronize shared data plus origin-owned localized values to every
+     * variant. The returned snapshot makes the operation transactional when
+     * the following request fails.
      */
     function synchronizeCurrentLanguageToAllVariants() {
-        // The merger is pure and returns detached data, so retaining the old
-        // object is enough for rollback and avoids cloning a potentially large
-        // multilingual page an extra time.
+        // The merger returns detached data, so retaining the old object is
+        // enough for rollback and avoids cloning a large page an extra time.
         let before = window.pageBlocks;
         let merged = pageTranslationSynchronizer.synchronize(
             window.pageBlocks,
@@ -123,13 +123,14 @@ $(document).ready(function() {
     }
 
     /**
-     * A successful save or language render accepts the complete synchronized
-     * state as the next merge checkpoint. This deliberately uses serialized
-     * content instead of GrapesJS' changesCount: custom editors can replace a
-     * block without incrementing that counter reliably.
+     * Accept the active language after a successful request as its next merge
+     * baseline. Per-block origins determine which values it may propagate.
      */
     function commitTranslationCheckpoint() {
-        pageTranslationSynchronizer.commitBaselines(window.pageBlocks);
+        pageTranslationSynchronizer.commitSourceBaseline(
+            window.pageBlocks,
+            window.currentLanguage
+        );
     }
 
     /**
@@ -140,6 +141,7 @@ $(document).ready(function() {
     function saveCurrentTranslationLocally(callback) {
         // use timeout to ensure the waiting spinner is fully displayed before the page briefly freezes due to high JS workload
         setTimeout(function() {
+            let previousVariant = window.pageBlocks[window.currentLanguage] || {};
             window.pageData = {
                 html: [],
                 components: [],
@@ -162,6 +164,12 @@ $(document).ready(function() {
                 window.pageBlocks[window.currentLanguage] = {...window.pageBlocks[window.currentLanguage], ...data.blocks};
                 window.contentContainerComponents[index] = data.components;
             });
+
+            pageTranslationSynchronizer.prepareSerializedVariant(
+                window.pageBlocks[window.currentLanguage],
+                previousVariant,
+                window.currentLanguage
+            );
 
             window.pageData['style'] = storedPage.style;
             window.pageData['css'] = storedPage.css;
