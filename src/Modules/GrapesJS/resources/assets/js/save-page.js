@@ -51,7 +51,6 @@ $(document).ready(function() {
      */
     window.switchLanguage = function(newLanguage, callback) {
         window.setWaiting(true);
-        let sourceLanguageChanged = currentLanguageHasChanges();
 
         saveCurrentTranslationLocally(function() {
             let synchronization = synchronizeCurrentLanguageToAllVariants();
@@ -72,7 +71,7 @@ $(document).ready(function() {
                     try {
                         response = JSON.parse(response);
                         window.pageBlocks[newLanguage] = response.dynamicBlocks ? response.dynamicBlocks : {};
-                        commitCurrentLanguageBaseline(sourceLanguageChanged);
+                        commitTranslationCheckpoint();
                         callback(true);
                     } catch (error) {
                         rollbackLanguageSynchronization(synchronization);
@@ -124,22 +123,13 @@ $(document).ready(function() {
     }
 
     /**
-     * Only an actually edited source language advances its merge base. Values
-     * merely received from another language therefore remain linked until the
-     * user makes a real change in this language.
+     * A successful save or language render accepts the complete synchronized
+     * state as the next merge checkpoint. This deliberately uses serialized
+     * content instead of GrapesJS' changesCount: custom editors can replace a
+     * block without incrementing that counter reliably.
      */
-    function commitCurrentLanguageBaseline(sourceLanguageChanged) {
-        if (! sourceLanguageChanged) {
-            return;
-        }
-        pageTranslationSynchronizer.commitBaseline(
-            window.currentLanguage,
-            window.pageBlocks[window.currentLanguage]
-        );
-    }
-
-    function currentLanguageHasChanges() {
-        return window.editor.getModel().get('changesCount') - window.changesOffset > 0;
+    function commitTranslationCheckpoint() {
+        pageTranslationSynchronizer.commitBaselines(window.pageBlocks);
     }
 
     /**
@@ -290,7 +280,6 @@ $(document).ready(function() {
      */
     function saveAllTranslationsToServer() {
         toggleSaving();
-        let sourceLanguageChanged = currentLanguageHasChanges();
 
         saveCurrentTranslationLocally(function() {
             let synchronization = synchronizeCurrentLanguageToAllVariants();
@@ -307,7 +296,7 @@ $(document).ready(function() {
                 },
                 success: function() {
                     window.pageBlocks = data.blocks;
-                    commitCurrentLanguageBaseline(sourceLanguageChanged);
+                    commitTranslationCheckpoint();
                     toggleSaving();
                     window.toastr.success(window.translations['toastr-changes-saved']);
 

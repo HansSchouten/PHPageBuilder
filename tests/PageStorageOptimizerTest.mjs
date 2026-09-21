@@ -132,11 +132,25 @@ function idRule(id, css = `#${id}{color:red;}`) {
     const identifier = 'IDABCDEFGHIJKLMN';
     const component = new Component({
         classes: [identifier],
-        'style-identifier': identifier
+        'style-identifier': identifier,
+        'is-html': 'false'
     });
     optimizePageStorage({ contentRoots: [component] });
     assert.deepEqual(component.getClasses(), [identifier]);
     assert.equal(component.get('style-identifier'), identifier);
+}
+
+{
+    // An identifier on an ordinary HTML element does not control rendering
+    // structure and can be removed when no CSS or code refers to it.
+    const identifier = 'IDHTMLELEMENT1234';
+    const component = new Component({
+        classes: ['button', identifier],
+        'style-identifier': identifier
+    });
+    optimizePageStorage({contentRoots: [component]});
+    assert.deepEqual(component.getClasses(), ['button']);
+    assert.equal(component.get('style-identifier'), undefined);
 }
 
 {
@@ -201,12 +215,14 @@ function idRule(id, css = `#${id}{color:red;}`) {
     const liveComponent = new Component({
         classes: [identifier, unusedIdentifier],
         attributes: { 'data-raw-content': 'true' },
-        'style-identifier': identifier
+        'style-identifier': identifier,
+        'is-html': false
     });
     const storageClone = new Component({
         classes: liveComponent.getClasses(),
         attributes: {...liveComponent.get('attributes')},
-        'style-identifier': liveComponent.get('style-identifier')
+        'style-identifier': liveComponent.get('style-identifier'),
+        'is-html': liveComponent.get('is-html')
     });
 
     optimizePageStorage({ contentRoots: [storageClone] });

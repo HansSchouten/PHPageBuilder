@@ -124,7 +124,7 @@ function testElement(tagName, className = '', children = []) {
     assert.notStrictEqual(result.variants.nl, variants.nl);
     assert.notStrictEqual(result.variants.nl.block, variants.nl.block);
 
-    synchronizer.commitBaseline('nl', result.variants.nl);
+    synchronizer.commitBaselines(result.variants);
 }
 
 {
@@ -220,7 +220,7 @@ function testElement(tagName, className = '', children = []) {
     assert.equal(englishMerge.variants.en.block.settings.attributes.ai_reasoning_effort, 'medium');
 
     variants = englishMerge.variants;
-    synchronizer.commitBaseline('en', variants.en);
+    synchronizer.commitBaselines(variants);
     variants.nl.block.settings.attributes.ai_reasoning_effort = 'high';
     synchronizer.registerSerializedBlock(variants.nl.block, 'ai-content');
     let dutchMerge = synchronizer.synchronize(variants, 'nl');
@@ -330,7 +330,7 @@ function testElement(tagName, className = '', children = []) {
     );
 
     variants = dutchSave.variants;
-    synchronizer.commitBaseline('nl', variants.nl);
+    synchronizer.commitBaselines(variants);
     variants.en.cssBlock.settings.attributes.css = 'h1 { color: green}';
     synchronizer.registerSerializedBlock(variants.en.cssBlock, 'css');
     let englishSave = synchronizer.synchronize(variants, 'en');
@@ -344,6 +344,36 @@ function testElement(tagName, className = '', children = []) {
         'h1 { color: green}'
     );
     assert.deepEqual(englishSave.conflicts, []);
+}
+
+{
+    // AI/custom editors can replace a block without reliably changing
+    // GrapesJS' changesCount. A successful first save must still checkpoint
+    // the generated block so a later inline text edit has a valid merge base.
+    const synchronizer = createPageTranslationSynchronizer({
+        initialVariants: {nl: {}, en: {}}
+    });
+    let variants = {
+        nl: {
+            aiContent: dynamicBlock({css: '.page { color: red; }'}, {
+                content: htmlBlock('<h1>Abstracte kunst</h1>')
+            })
+        },
+        en: {}
+    };
+
+    let generatedSave = synchronizer.synchronize(variants, 'nl');
+    variants = generatedSave.variants;
+    synchronizer.commitBaselines(variants);
+
+    variants.nl.aiContent.blocks.content.html = '<h1>Abstracte kunst!</h1>';
+    let inlineEditSave = synchronizer.synchronize(variants, 'nl');
+
+    assert.equal(
+        inlineEditSave.variants.en.aiContent.blocks.content.html,
+        '<h1>Abstracte kunst!</h1>'
+    );
+    assert.deepEqual(inlineEditSave.conflicts, []);
 }
 
 {

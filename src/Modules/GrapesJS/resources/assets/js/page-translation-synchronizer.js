@@ -42,10 +42,8 @@ export function createPageTranslationSynchronizer({
             });
         },
 
-        commitBaseline: function(sourceLanguage, sourceVariant) {
-            if (sourceLanguage) {
-                baselines[sourceLanguage] = cloneTranslationData(sourceVariant);
-            }
+        commitBaselines: function(variants) {
+            baselines = cloneTranslationData(variants || {});
         }
     };
 }

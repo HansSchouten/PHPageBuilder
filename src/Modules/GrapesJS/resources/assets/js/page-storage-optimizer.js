@@ -41,9 +41,10 @@ export function optimizePageStorage({
     });
     let css = styles.map(styleToCss).join('');
 
-    // A style identifier is also a structural marker: for dynamic blocks its
-    // presence controls whether BlockRenderer emits the wrapper element. It
-    // must therefore survive even when no CSS rule currently references it.
+    // A style identifier on a dynamic block is also a structural marker: its
+    // presence controls whether BlockRenderer emits the wrapper element. Only
+    // those identifiers must survive without CSS; identifiers on ordinary
+    // HTML elements remain eligible for cleanup.
     let usedGeneratedIdentifiers = new Set(structuralIdentifiers);
     collectGeneratedIdentifiers(css, usedGeneratedIdentifiers);
     authoredCode.forEach(function(code) {
@@ -179,10 +180,17 @@ function collectComponentSelectors(
     if (typeof styleIdentifier === 'string' && styleIdentifier) {
         references.classes.add(styleIdentifier);
         if (GENERATED_IDENTIFIER.test(styleIdentifier)) {
-            structuralIdentifiers.add(styleIdentifier.toUpperCase());
+            if (isDynamicBlock(component)) {
+                structuralIdentifiers.add(styleIdentifier.toUpperCase());
+            }
             generatedCandidates.push({component: component, identifier: styleIdentifier, type: 'style-identifier'});
         }
     }
+}
+
+function isDynamicBlock(component) {
+    let isHtml = component.get('is-html');
+    return isHtml === false || isHtml === 'false';
 }
 
 function collectComponentCode(component, authoredCode) {
