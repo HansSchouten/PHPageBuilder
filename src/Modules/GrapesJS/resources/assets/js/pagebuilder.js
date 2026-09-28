@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     $(".gjs-editor").append($("#toggle-sidebar"));
+    $(".gjs-editor").append($("#phpb-ai-page-action"));
     $(".gjs-pn-panels").prepend($("#sidebar-header"));
     $(".gjs-pn-panels").append($("#sidebar-bottom-buttons"));
 

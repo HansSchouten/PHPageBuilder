@@ -381,6 +381,34 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
         });
     }
 
+    /**
+     * Open the shared AI modal in page-wide mode. The page editor owns the
+     * request; this module only supplies the common modal shell and controls.
+     */
+    window.openAiPageEditorModal = function() {
+        createModal();
+
+        let modal = $('#phpb-ai-content-modal');
+        modal.attr('data-ai-scope', 'page');
+        modal.find('.modal-title').text('Pagina wijzigen met AI');
+        $('#phpb-ai-content-mode-toggle')
+            .removeClass('d-none')
+            .prop('disabled', true)
+            .attr('title', 'Codebewerking is niet beschikbaar voor een paginawijziging.');
+        $('[data-ai-mode-pane="source"]').hide();
+        $('[data-ai-mode-pane="prompt"]').show();
+        $('#phpb-ai-content-prompt-label strong').text('Wat wil je aanpassen?');
+        $('#phpb-ai-content-prompt').val('').removeClass('is-invalid').removeAttr('aria-invalid');
+        $('#phpb-ai-content-generate .phpb-ai-content-generate-label').text('Wijzigingen toepassen');
+        $('#phpb-ai-content-apply').addClass('d-none');
+        $('#phpb-ai-content-generate').removeClass('d-none');
+        $('#phpb-ai-content-generate').prop('disabled', true)
+            .removeClass('btn-primary').addClass('btn-secondary');
+        $('#phpb-ai-content-message').addClass('d-none').hide().text('');
+        $('#phpb-ai-content-modal').modal('show');
+        $('#phpb-ai-content-prompt').trigger('focus');
+    };
+
     function setEditorMode(mode) {
         let isPromptMode = mode === 'prompt';
         let toggleLabel = isPromptMode ? 'Code bewerken' : 'Bewerk met tekst';
@@ -442,6 +470,13 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
     function populateModal(block, editorConfig) {
         let source = getSourceValues(block, editorConfig);
         source.html = stripRawContentMarkers(source.html);
+        $('#phpb-ai-content-modal').attr('data-ai-scope', 'block');
+        $('#phpb-ai-content-modal .modal-title').text('Website aanpassen met AI');
+        $('#phpb-ai-content-mode-toggle')
+            .removeClass('d-none')
+            .prop('disabled', false)
+            .removeAttr('title');
+        $('#phpb-ai-content-generate .phpb-ai-content-generate-label').text('Aanpassing maken');
         $('#phpb-ai-content-prompt-label strong').text(
             hasExistingContent(source) ? 'Wat wil je aanpassen?' : 'Wat wil je maken?'
         );
@@ -621,6 +656,13 @@ import aiContentModalHtml from '../html/ai-content-modal.html';
     }
 
     function generateContent() {
+        if ($('#phpb-ai-content-modal').attr('data-ai-scope') === 'page') {
+            if (typeof window.generateAiPageUpdate === 'function') {
+                window.generateAiPageUpdate();
+            }
+            return;
+        }
+
         if (! activeBlock || ! activeEditorConfig) {
             return;
         }

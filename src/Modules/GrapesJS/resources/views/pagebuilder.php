@@ -15,6 +15,10 @@
 
 <div id="gjs"></div>
 
+<button id="phpb-ai-page-action" type="button" class="btn" style="display:none">
+    <i class="fa fa-magic" aria-hidden="true"></i>
+</button>
+
 <!--<script type="text/javascript" src="https://cdn.ckeditor.com/4.21.0/full-all/ckeditor.js"></script>-->
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/ckeditor4-full-4.21.0/ckeditor.js') ?>"></script>
 <script type="text/javascript" src="<?= phpb_asset('pagebuilder/grapesjs-plugin-ckeditor-v0.0.10.min.js') ?>"></script>

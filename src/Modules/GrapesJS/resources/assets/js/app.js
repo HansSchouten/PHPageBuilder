@@ -4,6 +4,7 @@ import './run-builder-scripts';
 import './save-page';
 import './manage-editable-components';
 import './ai-content-editor';
+import './ai-page-editor';
 import './ckeditor-hyperlinks';
 import './responsive';
 

@@ -182,6 +182,15 @@
      * @param component
      */
     function replacePlaceholdersForRenderedBlocks(component) {
+        if (! component || typeof component.get !== 'function') {
+            if (component && typeof component.each === 'function') {
+                component.each(childComponent => replacePlaceholdersForRenderedBlocks(childComponent));
+            } else if (Array.isArray(component)) {
+                component.forEach(childComponent => replacePlaceholdersForRenderedBlocks(childComponent));
+            }
+            return;
+        }
+
         let newComponent = component;
 
         // if we encounter a pagebuilder block, replace it with the server-side rendered html
@@ -193,8 +202,19 @@
             }
         }
 
+        // GrapesJS returns a component collection when the rendered block has
+        // multiple root elements. Continue through every returned component
+        // instead of assuming replaceWith() always returns one model.
+        if (! newComponent || typeof newComponent.get !== 'function') {
+            replacePlaceholdersForRenderedBlocks(newComponent);
+            return;
+        }
+
         // replace placeholders inside child components
-        newComponent.get('components').each(childComponent => replacePlaceholdersForRenderedBlocks(childComponent));
+        let children = newComponent.get('components');
+        if (children && typeof children.each === 'function') {
+            children.each(childComponent => replacePlaceholdersForRenderedBlocks(childComponent));
+        }
     }
 
     /**

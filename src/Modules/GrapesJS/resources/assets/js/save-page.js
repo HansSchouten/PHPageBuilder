@@ -181,6 +181,165 @@ $(document).ready(function() {
     }
 
     /**
+     * Serialize the current editor state and return the editable HTML blocks
+     * with the same paths that are used in pagebuilder storage.
+     *
+     * The callback form is intentional: the normal translation serializer
+     * must finish before an AI request can safely read the current content.
+     */
+    window.prepareCurrentPageForAi = function(callback) {
+        saveCurrentTranslationLocally(function() {
+            let blocks = [];
+            collectHtmlBlocksForAi(
+                window.pageBlocks[window.currentLanguage] || {},
+                [],
+                blocks
+            );
+
+            callback({
+                language: window.currentLanguage,
+                blocks: blocks
+            });
+        });
+    };
+
+    function collectHtmlBlocksForAi(blocks, path, result) {
+        if (! blocks || typeof blocks !== 'object') {
+            return;
+        }
+
+        Object.keys(blocks).forEach(function(blockId) {
+            let block = blocks[blockId];
+            if (! block || typeof block !== 'object') {
+                return;
+            }
+
+            let blockPath = path.concat([String(blockId)]);
+            let isHtml = block.is_html === true || block.is_html === 'true';
+            if (isHtml && typeof block.html === 'string') {
+                result.push({
+                    path: blockPath,
+                    html: block.html
+                });
+            }
+
+            if (block.blocks && typeof block.blocks === 'object') {
+                collectHtmlBlocksForAi(
+                    block.blocks,
+                    blockPath.concat(['blocks']),
+                    result
+                );
+            }
+        });
+    }
+
+    /**
+     * Apply the server's validated HTML replacements to the current language
+     * and render the active canvas again. The ordinary Save action remains the
+     * only operation that writes the result to the database.
+     */
+    function renderAiLanguageVariant(language, variant, callback) {
+        if (! window.renderLanguageVariantUrl || ! window.pageData) {
+            callback(false, 'De pagina kon na de AI-wijziging niet opnieuw worden geladen.');
+            return;
+        }
+
+        let data = Object.assign({}, window.pageData, {
+            blocks: {[language]: variant}
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: window.renderLanguageVariantUrl,
+            dataType: 'json',
+            data: {
+                data: JSON.stringify(data),
+                language: language
+            }
+        }).done(function(response) {
+            if (! response || ! response.dynamicBlocks) {
+                callback(false, 'De pagina kon na de AI-wijziging niet opnieuw worden geladen.');
+                return;
+            }
+
+            window.pageBlocks[language] = response.dynamicBlocks;
+            window.activateLanguage(language);
+            callback(true);
+        }).fail(function(xhr) {
+            let message = xhr && xhr.responseJSON && xhr.responseJSON.message
+                ? xhr.responseJSON.message
+                : 'De pagina kon na de AI-wijziging niet opnieuw worden geladen.';
+            callback(false, message);
+        });
+    }
+
+    window.applyAiPageHtmlBlocks = function(htmlBlocks, language, callback) {
+        language = language || window.currentLanguage;
+        let variant = window.pageBlocks[language];
+        if (! variant || ! Array.isArray(htmlBlocks)) {
+            return false;
+        }
+
+        let replacements = [];
+        htmlBlocks.forEach(function(item) {
+            if (! item || ! Array.isArray(item.path) || typeof item.html !== 'string') {
+                return;
+            }
+
+            let block = variant;
+            for (let index = 0; index < item.path.length; index++) {
+                let pathPart = String(item.path[index]);
+                if (! block || typeof block !== 'object' || ! Object.prototype.hasOwnProperty.call(block, pathPart)) {
+                    return;
+                }
+                block = block[pathPart];
+            }
+
+            if (! block || typeof block !== 'object') {
+                return;
+            }
+
+            replacements.push({block: block, html: item.html});
+        });
+
+        if (replacements.length !== htmlBlocks.length) {
+            return false;
+        }
+
+        replacements.forEach(function(replacement) {
+            replacement.block.html = replacement.html;
+        });
+
+        window.pageBlocks[language] = variant;
+
+        let markAsChanged = function() {
+            if (window.editor && window.editor.getModel) {
+                let changesCount = window.editor.getModel().get('changesCount') || 0;
+                window.editor.getModel().set('changesCount', changesCount + 1);
+                window.changesOffset = changesCount;
+            }
+        };
+
+        if (language === window.currentLanguage && typeof window.activateLanguage === 'function') {
+            renderAiLanguageVariant(language, variant, function(success, message) {
+                if (success) {
+                    markAsChanged();
+                }
+                if (callback) {
+                    callback(success, message);
+                }
+            });
+        } else {
+            markAsChanged();
+            if (callback) {
+                callback(true);
+            }
+        }
+
+        return true;
+    };
+
+    /**
      * Remove all page blocks that are never referred to.
      */
     function removeOldPageBlocks(pageBlocks) {

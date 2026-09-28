@@ -314,6 +314,52 @@ html, body, #gjs {
   transition-duration: unset;
 }
 
+#phpb-ai-page-action {
+  position: fixed;
+  top: initial;
+  bottom: 11px;
+  left: 340px;
+  transform: initial;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  padding: 0;
+  border: none;
+  border-radius: 100%;
+  background: #0091d1;
+  color: #fff;
+  font-size: 25px;
+  line-height: 1;
+  box-shadow: 0 3px 8px rgba(20, 44, 67, .22), 0 1px 3px rgba(20, 44, 67, .16) !important;
+  transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: #007eaf;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(20, 44, 67, .26), 0 2px 5px rgba(20, 44, 67, .18);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(0, 145, 209, .35);
+    outline-offset: 3px;
+  }
+
+  &:active {
+    box-shadow: 0 2px 5px rgba(20, 44, 67, .2);
+    transform: translateY(0);
+  }
+}
+
+#gjs.sidebar-collapsed #phpb-ai-page-action {
+  left: 20px;
+}
+
 
 /*   BLOCKS PANEL VIEW   */
 
