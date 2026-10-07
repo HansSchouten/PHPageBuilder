@@ -5,6 +5,7 @@
     "watch": "node scripts/build.mjs --watch",
     "production": "node scripts/build.mjs --production",
     "prod": "npm run production",
+    "test:builder-scripts": "node tests/BuilderScriptRunnerTest.mjs",
     "test:page-storage": "node tests/PageStorageOptimizerTest.mjs",
     "test:translation-sync": "node tests/PageTranslationSynchronizerTest.mjs"
   },

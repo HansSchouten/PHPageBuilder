@@ -164,6 +164,10 @@
     };
 
     $(window).on('pagebuilder-page-loaded', function(event) {
+        // Run scripts from inherited layout blocks first, while keeping the
+        // editable page-content containers for their normal runner below.
+        window.runScriptsOfComponentAndChildren(window.editor.getWrapper(), true);
+
         window.editor.getWrapper().find("[phpb-content-container]").forEach(container => {
             restrictEditAccess(container);
             window.runScriptsOfComponentAndChildren(container);

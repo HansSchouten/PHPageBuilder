@@ -3,29 +3,17 @@
     window.customBuilderScripts = {};
 
     /**
-     * On instantiating the component model, before it is mounted in the canvas.
+     * On instantiating a block component, before it is mounted in the canvas.
+     * Keep its builder script out of the component tree; scripts can belong to
+     * either editable page content or a reusable layout.
      */
     window.editor.on('component:create', component => {
         // extract the script tag of the given component (if it has one)
         if (component.components().length) {
             let lastChild = component.components().models[component.components().length - 1];
             if (lastChild.attributes.type === 'script') {
-                let blockId = component.attributes.attributes['block-id'];
-                if (blockId === undefined) {
-                    blockId = component.attributes.attributes['id'];
-                }
-
-                let rootComponent = lastChild;
-                let insideEditablePartOfPage = false;
-                while (rootComponent.parent()) {
-                    rootComponent = rootComponent.parent();
-                    if (rootComponent.attributes.attributes['phpb-content-container']) {
-                        insideEditablePartOfPage = true;
-                        break;
-                    }
-                }
-
-                if (insideEditablePartOfPage) {
+                let blockId = getBlockId(component);
+                if (blockId !== undefined && blockId !== null && blockId !== '') {
                     window.customBuilderScripts[blockId] = lastChild.toHTML();
                     lastChild.remove();
                 }
@@ -42,7 +30,7 @@
             let originalCustomBuilderScripts = customBuilderScripts;
 
             window.customBuilderScripts[component.attributes['block-id']] = customBuilderScripts[component.attributes['run-builder-script']];
-            runScriptsOfComponentAndChildren(component);
+            window.runScriptsOfComponentAndChildren(component);
 
             window.customBuilderScripts = originalCustomBuilderScripts;
             delete component.attributes['run-builder-script'];
@@ -68,10 +56,16 @@
      *
      * @param component
      */
-    window.runScriptsOfComponentAndChildren = function(component) {
-        runComponentScript(component);
+    window.runScriptsOfComponentAndChildren = function(component, skipContentContainers = false) {
+        let componentAttributes = component.attributes || {};
+        let htmlAttributes = componentAttributes.attributes || {};
+        if (skipContentContainers && htmlAttributes['phpb-content-container'] !== undefined) {
+            return;
+        }
+
+        runComponentScript(component, skipContentContainers);
         component.components().each(function(child) {
-            runScriptsOfComponentAndChildren(child);
+            window.runScriptsOfComponentAndChildren(child, skipContentContainers);
         });
     }
 
@@ -80,13 +74,40 @@
      *
      * @param component
      */
-    function runComponentScript(component) {
-        let blockId = component.attributes['block-id'];
+    function getBlockId(component) {
+        let componentAttributes = component.attributes || {};
+        let htmlAttributes = componentAttributes.attributes || {};
+        let blockId = componentAttributes['block-id'];
         if (blockId === undefined) {
-            blockId = component.attributes.attributes['id'];
+            blockId = htmlAttributes['block-id'];
         }
+        if (blockId === undefined) {
+            blockId = htmlAttributes['id'];
+        }
+        return blockId;
+    }
+
+    let layoutScriptStyleIdentifier = 0;
+
+    function runComponentScript(component, isLayoutComponent = false) {
+        let blockId = getBlockId(component);
         if (blockId && window.customBuilderScripts[blockId] !== undefined) {
-            let styleIdentifier = component.attributes["style-identifier"];
+            let componentAttributes = component.attributes || {};
+            let htmlAttributes = componentAttributes.attributes || {};
+            let styleIdentifier = componentAttributes["style-identifier"] || htmlAttributes["style-identifier"];
+
+            if (isLayoutComponent) {
+                let element = component.getEl();
+                if (!element) return;
+
+                styleIdentifier = styleIdentifier || element.getAttribute('data-phpb-layout-script-class');
+                if (!styleIdentifier) {
+                    styleIdentifier = 'phpb-layout-script-preview-' + Date.now().toString(36) + '-' + (++layoutScriptStyleIdentifier);
+                    element.setAttribute('data-phpb-layout-script-class', styleIdentifier);
+                }
+                element.classList.add(styleIdentifier);
+            }
+
             let $scriptTag = $("<container>").append(window.customBuilderScripts[blockId]);
             // prepend block and blockSelector variables allowing the script to refer to this exact block instance
             $scriptTag.find('script').prepend('let inPageBuilder = true;');
