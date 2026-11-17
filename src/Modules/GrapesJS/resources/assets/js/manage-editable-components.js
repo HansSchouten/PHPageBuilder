@@ -302,7 +302,15 @@
                 delete component.attributes['style-identifier'];
                 addUniqueClass(component);
             }
-            component.attributes['block-id'] = component.attributes['block-slug'];
+
+            // IDs such as "col0" and "col1" are relative keys in a dynamic
+            // parent's stored blocks, not generated page block IDs. Keep them
+            // stable so sibling containers do not overwrite each other when
+            // the cloned parent is serialized. Generated IDs must be reset so
+            // the save handler can assign each cloned block a fresh ID.
+            if (component.attributes['block-id'] && component.attributes['block-id'].startsWith('ID')) {
+                component.attributes['block-id'] = component.attributes['block-slug'];
+            }
 
             // pass a reference of the scripts of the original component to run on the cloned component
             if (originalComponent && window.customBuilderScripts[originalComponent.attributes['block-id']] !== undefined) {
