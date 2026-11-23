@@ -92,6 +92,15 @@ html, body, #gjs {
 }
 .gjs-toolbar {
   z-index: 100 !important;
+
+  &:has(.phpb-swap-decision) {
+    width: max-content;
+
+    > div {
+      display: flex;
+      align-items: center;
+    }
+  }
 }
 
 .gjs-pn-panel {

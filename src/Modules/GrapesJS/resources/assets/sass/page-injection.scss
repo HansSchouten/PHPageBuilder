@@ -1,6 +1,37 @@
 html, body {
   overflow-x: initial !important;
 }
+.phpb-swap-slot-active {
+  position: relative;
+
+  [phpb-blocks-container], [phpb-hide-if-not-editable] {
+    border-color: transparent;
+  }
+
+  .gjs-dashed & [data-highlightable] {
+    outline-color: transparent;
+  }
+}
+.phpb-swap-target {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: transparent;
+  border: 2px dashed #0079ad;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+
+  &:hover, &:focus-visible, &.phpb-swap-over, &[aria-pressed="true"] {
+    background: rgba(0, 121, 173, 0.12);
+    border-style: solid;
+  }
+  &[aria-pressed="true"] {
+    border-color: #004868;
+  }
+}
 form {
   margin-block-end: 0;
 }

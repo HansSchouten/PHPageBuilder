@@ -1,5 +1,12 @@
 <script type="text/javascript">
 
+    // Keep editor-managed values in the normal block settings and save pipeline.
+    editor.TraitManager.addType('hidden', {
+        onRender() {
+            this.el.style.display = 'none';
+        }
+    });
+
     editor.TraitManager.addType('image', {
         createInput({ trait }) {
             const previewImageUrl = '<?= phpb_asset('pagebuilder/images/image-placeholder-small.jpg') ?>';

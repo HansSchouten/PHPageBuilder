@@ -62,6 +62,10 @@ return [
         'toastr-switching-language-failed' => 'Fout opgetreden bij het wisselen van taal',
         'yes' => 'Ja',
         'no' => 'Nee',
+        'swap-items' => 'Items wisselen',
+        'swap-items-done' => 'OK',
+        'swap-items-cancel' => 'Annuleren',
+        'swap-items-hint' => 'Sleep naar een andere plek of kies twee items om ze te wisselen.',
         'trait-manager' => [
             'link' => [
                 'text' => 'Tekst',

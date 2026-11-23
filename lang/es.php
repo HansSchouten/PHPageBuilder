@@ -62,6 +62,10 @@ return [
         'toastr-switching-language-failed' => 'Error al cambiar de idioma',
         'yes' => 'Si',
         'no' => 'No',
+        'swap-items' => 'Intercambiar elementos',
+        'swap-items-done' => 'Aceptar',
+        'swap-items-cancel' => 'Cancelar',
+        'swap-items-hint' => 'Arrastra sobre otro elemento o selecciona dos para intercambiarlos.',
         'trait-manager' => [
             'link' => [
                 'text' => 'Texto',
